@@ -1,0 +1,300 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Monarch矩阵 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文章来源：Monarch矩阵-计算高效的稀疏型矩阵分解 最佳排版请看原博客：Monarch矩阵：计算高效的稀疏型矩阵分解 - 科学空间|Scientific Spaces  在矩阵压缩这个问题上，我们通常有两个策略可以选择，分别是低秩化和稀疏化。低秩化通过寻找矩阵的低秩近似来减少矩阵尺寸，而稀疏化则是通过减少矩阵中的非零元素来降低矩阵的复杂性。如果说SVD是奔着矩阵的低秩近似去的，那么相应地寻找">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Monarch矩阵">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/15.Monarch%E7%9F%A9%E9%98%B5/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="文章来源：Monarch矩阵-计算高效的稀疏型矩阵分解 最佳排版请看原博客：Monarch矩阵：计算高效的稀疏型矩阵分解 - 科学空间|Scientific Spaces  在矩阵压缩这个问题上，我们通常有两个策略可以选择，分别是低秩化和稀疏化。低秩化通过寻找矩阵的低秩近似来减少矩阵尺寸，而稀疏化则是通过减少矩阵中的非零元素来降低矩阵的复杂性。如果说SVD是奔着矩阵的低秩近似去的，那么相应地寻找">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:38:26.723Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="矩阵">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Monarch矩阵",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/15.Monarch%E7%9F%A9%E9%98%B5/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:38:26.723Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/15.Monarch%E7%9F%A9%E9%98%B5/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Monarch矩阵',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">Monarch矩阵</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Monarch矩阵</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:38:26.723Z" title="更新于 2026-03-01 16:38:26">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E6%95%B0%E5%AD%A6/">数学</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E6%95%B0%E5%AD%A6/%E7%9F%A9%E9%98%B5/">矩阵</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>文章来源：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/714259385">Monarch矩阵-计算高效的稀疏型矩阵分解</a> <br><br>最佳排版请看原博客：<a target="_blank" rel="noopener" href="https://kexue.fm/archives/10249">Monarch矩阵：计算高效的稀疏型矩阵分解 - 科学空间|Scientific Spaces</a></p>
+</blockquote>
+<p>在矩阵压缩这个问题上，我们通常有两个策略可以选择，分别是<strong>低秩化</strong>和<strong>稀疏化</strong>。低秩化通过寻找矩阵的低秩近似来减少矩阵尺寸，而稀疏化则是通过减少矩阵中的非零元素来降低矩阵的复杂性。如果说SVD是奔着矩阵的低秩近似去的，那么相应地寻找矩阵稀疏近似的算法又是什么呢？</p>
+<p>接下来我们要学习的是论文<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2204.00595">《Monarch: Expressive Structured Matrices for Efficient and Accurate Training》</a>，它为上述问题给出了一个答案——“Monarch矩阵”，这是一簇能够分解为若干置换矩阵与稀疏矩阵乘积的矩阵，同时具备计算高效且表达能力强的特点，论文还讨论了如何求一般矩阵的Monarch近似，以及利用Monarch矩阵参数化LLM来提高LLM速度等内容。</p>
+<p>值得指出的是，该论文的作者也正是著名的Flash Attention的作者Tri Dao，其工作几乎都在致力于改进LLM的性能，这篇Monarch也是<a target="_blank" rel="noopener" href="https://tridao.me/">个人主页</a>上特意展示的几篇论文之一，单从这一点看就非常值得学习一番。</p>
+<h2 id="SVD回顾"><a href="#SVD回顾" class="headerlink" title="SVD回顾"></a>SVD回顾</h2><p>首先我们来简单回顾一下SVD（奇异值分解）。对于矩阵$n\times m$ 小的矩阵$A$，SVD将它分解为</p>
+<p>$$A &#x3D; U\Sigma V \$$</p>
+<p>其中$U,V$ 别是形状为$n\times n$、$m\times m$ 正交矩阵，$\Sigma$ 是$n\times m$ 对角矩阵，对角线元素非负且从大到小排列。当我们只保留$\Sigma$ 前$r$ 对角线元素时，就得到了$A$ 一个秩不超过$r$ 近似分解：</p>
+<p>$$A \approx U_{[:,:r]}\Sigma_{[:r,:r]} V_{[:r,:]} \$$</p>
+<p>这里下标就按照Python的切片来执行，所以$U_{[:,:r]}$ 形状为$n\times r$、 $\Sigma_{[:r,:r]}$ 形状为$r\times r$ 及$V_{[:r,:]}$ 形状为$r\times m$，这意味着$U_{[:,:r]}\Sigma_{[:r,:r]} V_{[:r,:]}$ 秩至多为$r$。</p>
+<p>特别地，由SVD得到的如上低秩近似，正好是如下优化问题的精确解：</p>
+<p>$$U_{[:,:r]}\Sigma_{[:r,:r]} V_{[:r,:]} &#x3D; \mathop{\text{argmin&#125;&#125;_{rank(B)\leq r} \Vert A - B\Vert_F^2 \$$</p>
+<p>其中$\Vert\cdot\Vert_F^2$ 矩阵的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm">Frobenius范数</a>的平方，即矩阵每个元素的平方和。也就是说，在Frobenius范数下，矩阵$A$ 最优$r$ 近似就是$U_{[:,:r]}\Sigma_{[:r,:r]} V_{[:r,:]}$，该结论被称为“<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Low-rank_approximation">Eckart-Young-Mirsky定理</a>”。也正是因为这个结论，我们在文章开头才说“SVD是奔着矩阵的低秩近似去的”。</p>
+<p>SVD可以展开讨论的内容非常多，甚至写成一本书也不为过，这里就不再继续深入了。最后说一下，SVD的计算复杂度是$\mathcal{O}(nm\cdot\min(m,n))$，因为我们至少要对$A^{\top} A$ $A A^{\top}$ 一做特征值分解。如果我们确定做SVD是为了寻找$r$ 近似，那么复杂度可以有所降低，这便是Truncated SVD。</p>
+<h2 id="Monarch矩阵"><a href="#Monarch矩阵" class="headerlink" title="Monarch矩阵"></a>Monarch矩阵</h2><p>低秩分解应用非常广，但它未必总是符合我们的需求，比如可逆方阵的低秩近似必然不可逆，这意味着低秩近似不适合需要求逆的场景。此时另一个选择是稀疏近似，稀疏矩阵通常能够保证秩不退化。</p>
+<p>注意稀疏和低秩并无必然联系，比如单位阵就是很稀疏的矩阵，但它可逆（满秩）。寻找矩阵的稀疏近似并不难，比如将绝对值最大的$k$ 元素外的所有元素都置零就是一个很朴素的稀疏近似，但问题是它通常不实用，所以难在寻找实用的稀疏近似。所谓“实用”，指的是保留足够表达能力或近似程度的同时，实现一定程度的稀疏化，并且这种稀疏化具有适当的结构，有助于矩阵运算（比如乘法、求逆）的提速。</p>
+<p>Monarch矩阵正是为此而生，假设$n&#x3D;m^2$ 一个平方数，那么Monarch矩阵是全体$n$ 矩阵的一个子集，我们记为$\mathcal{M}^{(n)}$，它定义为如下形式的矩阵的集合：</p>
+<p>$$M &#x3D; PLPR \$$</p>
+<p>其中$P$ $n\times n$ 置换矩阵（正交矩阵），$L,R$ 分块对角矩阵。下面我们来逐一介绍它们。</p>
+<h3 id="置换矩阵"><a href="#置换矩阵" class="headerlink" title="置换矩阵"></a>置换矩阵</h3><p>置换矩阵$P$ 现的效果是将向量$[x_1,x_2,\cdots,x_n]$ 换成新的向量</p>
+<p>$$[x_1, x_{1+m}, \cdots , x_{1+(m−1)m}, x_2, x_{2+m}, \cdots , x_{2+(m−1)m}, \cdots , x_m, x_{2m}, \cdots , x_n] \$$</p>
+<p>当然这样写大家可能依然觉得迷糊，然事实上用代码实现非常简单：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">Px = x.reshape(m, m).transpose().reshape(n)<br></code></pre></td></tr></table></figure>
+
+<p>如下图所示：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241106145524.png" style="zoom: 60%;" /></div>
+
+<p>之前做CV的读者可能会觉得这个操作有点熟悉，它其实就是<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1707.01083">ShuffleNet</a>中的“Shuffle”操作，这样对向量先reshape然后transpose最后再reshape回来的组合运算，起到一种“伪Shuffle”的效果，它也可以视为$m$ 制的“<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Bit-reversal_permutation">位反转排序</a>”。很明显，这样的操作做两次，所得向量将复原为原始向量，所以我们有$P^2&#x3D;I$，所以$P^{-1}&#x3D;P^{\top}&#x3D;P$。</p>
+<h3 id="分块对角"><a href="#分块对角" class="headerlink" title="分块对角"></a>分块对角</h3><p>说完$P$，我们再来说$L,R$，它们也是$n\times n$ 小的矩阵，不过它们还是$m\times m$ 分块对角矩阵，每个块是$m\times m$ 小，如下图所示： </p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241107124914.png" style="zoom: 60%;" /></div>
+
+<p>当$n$ 够大时，$L,R$ 零的数量占主导，所以$L,R$ 是稀疏矩阵，即Monarch矩阵是具备稀疏特性的矩阵分解形式。由于$P$ 固定的，所以$PLPR$ 的可变元素就来源于$L,R$ 非零元素，因此，矩阵$M$ 然是$n\times n$ 矩阵，但它实际自由参数不超过$2m^3&#x3D;2n^{1.5}$ 。从$1.5$ 个数字我们就可以窥见Monarch矩阵的意图了，它希望将原本需要平方复杂度的运算，通过Monarch矩阵近似降低到1.5次方复杂度。</p>
+<h3 id="效率简析"><a href="#效率简析" class="headerlink" title="效率简析"></a>效率简析</h3><p>那么Monarch矩阵能否达到这个目的呢？换句话说Monarch矩阵能否达到前面说的“实用”标准？表达能力方面我们后面再谈，我们先看计算高效方面。</p>
+<p>比如“矩阵-向量”乘法，标准的复杂度是$\mathcal{O}(n^2)$，但如果是Monarch矩阵的话我们有$Mx &#x3D; P(L(P(Rx)))$，由于乘$P$ 是简单的reshape和transpose，所以它几乎不占计算量，主要计算量来源于$L$ $R$ 一个向量相乘。由于$L,R$ 分块对角矩阵的特点，我们可以将向量为$m$ ，继而转化为$m$ $m\times m$ 矩阵与$m$ 向量相乘，总复杂度是$2m\times\mathcal{O}(m^2)&#x3D;\mathcal{O}(2n^{1.5})$，比$\mathcal{O}(n^2)$ 低。</p>
+<p>再比如求逆，我们考虑$M^{-1}x$，$n$ 矩阵求逆的标准复杂度是$\mathcal{O}(n^3)$，但对于Monarch矩阵我们有$M^{-1} x &#x3D;R^{-1}PL^{-1}P x$，主要计算量来源于$L^{-1}$、$R^{-1}$ 及对应的“矩阵-向量”乘法，由于$L,R$ 是分块对角阵，我们只需要分别对每个对角线上的块矩阵求逆，也就是共有$2m$ $m\times m$ 矩阵求逆，复杂度是$2m\times\mathcal{O}(m^3)&#x3D;\mathcal{O}(2n^2)$，同样低于标准的$\mathcal{O}(n^3)$。要单独写出$M^{-1}$ 是可以的，但需要利用到后面的恒等式(8)。</p>
+<p>所以结论就是，由于$P$ 法几乎不占计算量以及$L,R$ 分块对角矩阵的特点，$n$ Monarch矩阵相关运算，基本上可以转化为$2m$ $m\times m$ 阵的独立运算，从而降低总的计算复杂度。所以至少计算高效这一点，Monarch矩阵是没有问题的，并且由于$L,R$ 非零元素本身已经方形结构，实现上也很方便，可以充分利用GPU进行计算，不会带来不必要的浪费。</p>
+<h2 id="Monarch分解"><a href="#Monarch分解" class="headerlink" title="Monarch分解"></a>Monarch分解</h2><p>确认Monarch矩阵的有效性后，接下来应用方面的一个关键问题就是：给定任意的$n&#x3D;m^2$ 矩阵$A$，如何求它的Monarch近似呢？跟SVD类似，我们定义如下优化问题</p>
+<p>$$\mathop{\text{argmin&#125;&#125;_{M\in\mathcal{M}^{(n)&#125;&#125; \Vert A - M\Vert_F^2 \$$</p>
+<p>非常幸运的是，这个问题有一个复杂度不超过$\mathcal{O}(n^{2.5})$ 求解算法，这比SVD的$\mathcal{O}(n^3)$ 要更高效一些。</p>
+<h3 id="高维数组"><a href="#高维数组" class="headerlink" title="高维数组"></a>高维数组</h3><p>理解这个算法的关键一步，是将Monarch相关的矩阵、向量都转化为更高维数组的形式。具体来说，Monarch矩阵$M$ 来是一个二维数组，每个元素记为$M_{i,j}$，表示该元素位于第$i$ 、第$j$ ，现在我们要按照分块矩阵的特点，将它等价地表示为四维数组，每个元素记为$M_{i,j,k,l}$，表示第$i$ 行、第$j$ 行、第$k$ 列、第$l$ 列的元素，如下图所示： </p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241106145556.png" style="zoom: 60%;" /></div>
+
+<p>虽然说起来挺费劲的，但事实上代码就一行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">M.reshape(m, m, m, m)<br></code></pre></td></tr></table></figure>
+
+<p>同理，$n$ （列）向量$x$ 被转为$m\times m$ 二维数据，代码也是一行<code>x.reshape(m, m)</code>。剩下的$L,R$ 然是表示为$m\times m\times m$ 三维数组，如$L_{i,j,k}$ 示第$i$ 、第$j$ 行、第$k$ 列的元素，这本来也是$L,R$ 高效的储存方式，但为了统一处理，我们也可以用<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Kronecker_delta">Kronecker delta符号</a>将它们升到四维，比如$L_{i,j,k,l} &#x3D; \delta_{i,k}L_{i,j,l}$、$R_{i,j,k,l} &#x3D; \delta_{i,k}R_{i,j,l}$。</p>
+<h3 id="新恒等式"><a href="#新恒等式" class="headerlink" title="新恒等式"></a>新恒等式</h3><p>接下来，我们将推出$M$ $L,R$ 一个新关系式。首先，可以证明在二维表示中，矩阵$P$ 向量$x$ 乘法变得更简单了，结果就是$x$ 转置，即$(Px)<em>{i,j} &#x3D; x</em>{j,i}$，所以我们有$(PR)<em>{i,j,k,l} &#x3D; R</em>{j,i,k,l} &#x3D; \delta_{j,k}R_{j,i,l}$；接着，两个矩阵的乘法，在四维表示之下求和指标也有两个，所以</p>
+<p>$$(L P R)<em>{\alpha,\beta,k,l} &#x3D; \sum</em>{i,j} L_{\alpha,\beta,i,j}(PR)<em>{i,j,k,l} &#x3D; \sum</em>{i,j} \delta_{\alpha, i} L_{\alpha,\beta,j}\delta_{j,k}R_{j,i,l} &#x3D; L_{\alpha,\beta,k}R_{k,\alpha,l} \$$</p>
+<p>最后就是$(P L P R)<em>{\alpha,\beta,k,l}&#x3D;L</em>{\beta,\alpha,k}R_{k,\beta,l}$，将$\alpha,\beta$ 回$i,j$ 到$(P L P R)<em>{i,j,k,l}&#x3D;L</em>{j,i,k}R_{k,j,l}$，又因为$M&#x3D;PLPR$，所以有</p>
+<p>$$M_{i,j,k,l} &#x3D; L_{j,i,k}R_{k,j,l} \tag{8}$$</p>
+<p>从这个等式可以看出，当我们固定一对$(j,k)$ ，左边是一个子矩阵，右边是两个向量的外积，这意味着如果我们要给矩阵$A$ Monarch近似，只需要将$A$ 照同样方式转为四维数组，并固定一对$(j,k)$，那么问题就变成了找对应子矩阵的“秩-1近似”！换句话说，有了这个恒等式之后，给矩阵$A$ Monarch近似可以转化为给$m^2$ 子矩阵找“秩-1近似”，这可以用SVD完成，每个复杂度不超过$\mathcal{O}(m^3)$，所以总复杂度不超过$m^2\times\mathcal{O}(m^3) &#x3D; \mathcal{O}(n^{2.5})$。</p>
+<h3 id="参考实现"><a href="#参考实现" class="headerlink" title="参考实现"></a>参考实现</h3><p>笔者简单用Numpy写的参考实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">monarch_factorize</span>(<span class="hljs-params">A</span>):<br>    M = A.reshape(m, m, m, m).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">3</span>)<br>    U, S, V = np.linalg.svd(M)<br>    L = (U[:, :, :, <span class="hljs-number">0</span>] * S[:, :, :<span class="hljs-number">1</span>]**<span class="hljs-number">0.5</span>).transpose(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)<br>    R = (V[:, :, <span class="hljs-number">0</span>] * S[..., :<span class="hljs-number">1</span>]**<span class="hljs-number">0.5</span>).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>)<br>    <span class="hljs-keyword">return</span> L, R<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">convert_3D_to_2D</span>(<span class="hljs-params">LR</span>):<br>    X = np.zeros((m, m, m, m))<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(m):<br>        X[i, i] += LR[i]<br>    <span class="hljs-keyword">return</span> X.transpose(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>).reshape(n, n)<br><br>m = <span class="hljs-number">8</span><br>n = m**<span class="hljs-number">2</span><br>A = np.where(np.random.rand(n, n) &gt; <span class="hljs-number">0.8</span>, np.random.randn(n, n), <span class="hljs-number">0</span>)<br><br>L, R = monarch_factorize(A)<br>L = convert_3D_to_2D(L)<br>R = convert_3D_to_2D(R)<br>PL = L.reshape(m, m, n).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>).reshape(n, n)<br>PR = R.reshape(m, m, n).transpose(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>).reshape(n, n)<br><br>U, S, V = np.linalg.svd(A)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Monarch error:&#x27;</span>, np.square(A - PL.dot(PR)).mean())<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Low-Rank error:&#x27;</span>, np.square(A - (U[:, :m] * S[:m]).dot(V[:m])).mean())<br></code></pre></td></tr></table></figure>
+
+<p>笔者简单对比了一下SVD求出的秩-$m$ 似（此时低秩近似跟Monarch近似参数量相当），发现如果是完全稠密的矩阵，那么秩-$m$ 似的平方误差往往优于Monarch近似（但不多），这也是意料之中，因为从Monarch近似的算法就可以看出它本质上也是个定制版的SVD。不过，如果待逼近矩阵是稀疏矩阵时，那么Monarch近似的误差往往更优，并且越稀疏越优。</p>
+<h2 id="Monarch推广"><a href="#Monarch推广" class="headerlink" title="Monarch推广"></a>Monarch推广</h2><p>到目前为止，我们约定所讨论的矩阵都是$n$ 方阵，并且$n&#x3D;m^2$ 一个平方数。如果说方阵这个条件尚能接受，那么$n&#x3D;m^2$ 个条件终究还是太多限制了，因此有必要至少将Monarch矩阵的概念推广到非平方数$n$。</p>
+<h3 id="非平方阶"><a href="#非平方阶" class="headerlink" title="非平方阶"></a>非平方阶</h3><p>为此，我们先引入一些记号。假设$b$ $n$ 一个因数，$\mathcal{BD}^{(b,n)}$ 示全体$\frac{n}{b}\times \frac{n}{b}$ 小的分块对角矩阵，其中每个块大小是$b\times b$ 子矩阵，很明显它是前面$L,R$ 一般化，按照这个记号我们可以写出$L,R\in\mathcal{BD}^{(\sqrt{n},n)}$。此外，我们还要一般化置换矩阵$P$，前面我们说了$P$ 实现是<code>Px = x.reshape(m, m).transpose().reshape(n)</code>，现在我们一般化为<code>Px = x.reshape(n // b, b).transpose().reshape(n)</code>，记为$P_{(\frac{n}{b},b)}$。</p>
+<p>有了这些记号，我们可以定义一般的Monarch矩阵（原论文的附录）：</p>
+<p>$$\mathcal{M}^{(b,n)} &#x3D; \Bigg{M &#x3D; P_{(b,\frac{n}{b})} L P_{(\frac{n}{b},b)} R,\Bigg|, L\in\mathcal{BD}^{(\frac{n}{b},n)}, R\in\mathcal{BD}^{(b,n)} \Bigg} \$$</p>
+<p>示意图如下：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241106145613.png" style="zoom: 60%;" /></div>
+
+<p>前面所定义的Monarch矩阵，在这里可以简单记为$\mathcal{M}^{(n)} &#x3D; \mathcal{M}^{(\sqrt{n},n)}$。不难计算，$L$ 非零元素至多有$\frac{n^2}{b}$ ，$R$ 非零元素至多有$nb$ ，加起来是$\frac{n^2}{b} + nb$，它在$b&#x3D;\sqrt{n}$ 得最小值，所以$b&#x3D;\sqrt{n}$ 于最稀疏的一个例子。</p>
+<h3 id="只要形式"><a href="#只要形式" class="headerlink" title="只要形式"></a>只要形式</h3><p>可能读者会困惑，为什么要区分$L\in\mathcal{BD}^{(\frac{n}{b},n)}, R\in\mathcal{BD}^{(b,n)}$，统一用一个不行吗？事实上，这样设计是为了保持高维表示下式(8)依然成立，从而可以推出类似的分解算法（请读者补充一下），以及可以从理论上保证它的表达能力。</p>
+<p>如果我们不在意这些理论细节，只希望构造一个带有稀疏特性的矩阵参数化方式，那么就可以更灵活地对Monarch矩阵进行推广了，比如</p>
+<p>$$M &#x3D; \left(\prod_{i&#x3D;1}^k P_i B_i\right)P_0 \$$</p>
+<p>其中$B_1,B_2,\cdots,B_k \in \mathcal{BD}^{(b,n)}$，$P_0,P_1,\cdots,P_k$ 是置换矩阵，最后多乘一个$P_0$ 出于对称性的考虑，并不是必须的，如果你觉得有必要，还可以给每个$B_i$ 择不同的$b$，即$B_i\in \mathcal{BD}^{(b_i,n)}$。</p>
+<p>甚至，你可以结合低秩分解的形式，推广到非方阵的块矩阵，如下图： </p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241106145626.png" style="zoom: 60%;" /></div>
+
+<p>基于这个类比，我们还可以进一步将Monarch矩阵的概念推广到非方阵。总之，如果只是需要一种类似Monarch矩阵的稀疏化结构矩阵，而不在意理论细节，那么结果就仅限于我们的想象力了。</p>
+<h2 id="应用例子"><a href="#应用例子" class="headerlink" title="应用例子"></a>应用例子</h2><p>目前看来，Monarch矩阵最大的特点就是对矩阵乘法比较友好，所以最大的用途无非就是替换全连接层的参数矩阵，从而提高全连接层的效率，这也是原论文实验部分的主要内容。</p>
+<p>我们又可以将其分为“事前处理”和“事后处理”两类：“事前处理”就是在训练模型之前就将全连接层的参数矩阵改为Monarch矩阵，这样训练和推理都能提速，训练出来的模型也最贴合Monarch矩阵；“事后处理”就是已经有一个训练好的模型，此时我们可以用Monarch分解给全连接层的参数矩阵找一个Monarch近似，然后替换掉原来的矩阵，必要时再简单微调一下，以此提高原始模型的微调效率或推理效率。</p>
+<p>除了替换全连接层外，<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2310.12109">《Monarch Mixer: A Simple Sub-Quadratic GEMM-Based Architecture》</a>还讨论了更极端的做法——作为一个Token-Mixer模块直接替换Attention层。不过就笔者看来，Monarch-Mixer并不算太优雅，因为它跟<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2105.01601">MLP-Mixer</a>一样，都是用一个可学的矩阵替换掉Attention矩阵，只不过在Monarch-Mixer这里换成了Monarch矩阵。这样的模式学到的是静态的注意力，个人对其普适性是存疑的。</p>
+<p>最后，对如今的LLM来说，Monarch矩阵还可以用来构建参数高效的微调方案（Parameter-Efficient Fine-Tuning，PEFT）。我们知道，LoRA是从低秩分解出发设计的，既然低秩和稀疏是两条平行的路线，那么作为稀疏的代表作Monarch矩阵不应该也可以用来构建一种PEFT方案？Google了一下，还真有这样做的，论文名是<a target="_blank" rel="noopener" href="https://openreview.net/forum?id=AzTz27n6O2">《MoRe Fine-Tuning with 10x Fewer Parameters》</a>，还很新鲜，是ICML2024的Workshop之一。</p>
+<h2 id="蝶之帝王"><a href="#蝶之帝王" class="headerlink" title="蝶之帝王"></a>蝶之帝王</h2><p>最后再简单说说Monarch矩阵的拟合能力。“Monarch”意为“帝王”、“君主”，取自“Monarch Butterfly（帝王蝴蝶）”一词，之所以这样命名，是因为它对标的是更早的“<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1903.05895">utterfly矩阵</a>”。</p>
+<p>什么是Butterfly矩阵？这个说起来还真有点费劲。Butterfly矩阵是一系列（$\log_2 n$ ）Butterfly因子矩阵的乘积，而Butterfly因子矩阵则是一个分块对角矩阵矩阵，其对角线上的矩阵叫做Butterfly因子（没有“矩阵”两个字），Butterfly因子则是一个$2\times 2$ 的分块矩阵，它的每个块矩阵则是一个对角阵（套娃结束）。如下图所示： </p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241106145639.png" style="zoom: 60%;" /></div>
+
+<p>准确的Butterfly矩阵定义大家自行看论文就好，这里不详细展开。Butterfly这个名字来源于作者觉得每个Butterfly因子的形状像Butterfly（蝴蝶），当然像不像大家见仁见智，反正作者觉得像。从字面上来看，“Monarch Butterfly”比“Butterfly”更高级（毕竟是“帝王”），这暗示着Monarch矩阵比Butterfly矩阵更强。确实如此，Monarch论文附录证明了，不管$b$ 什么，$\mathcal{M}^{(b,n)}$ 能覆盖所有的$n$ Butterfly矩阵，并且$n &gt; 512$ $\mathcal{M}^{(b,n)}$ 格大于全体$n$ Butterfly矩阵集合，换言之Butterfly矩阵能做到的Monarch矩阵也能做到，反之未必。</p>
+<p>我们也可以从“矩阵-向量”乘法复杂度来直观感知Monarch矩阵表达能力。我们知道，一个$n\times n$ 阵乘以$n$ 向量的标准复杂度是$\mathcal{O}(n^2)$，但对于某些结构化矩阵可以更低，比如傅立叶变换可以做到$\mathcal{O}(n\log n)$，Butterfly矩阵也是$\mathcal{O}(n\log n)$，Monarch矩阵则是$\mathcal{O}(n^{1.5})$，所以Monarch矩阵“应该”是不弱于Butterfly矩阵的。当然，Butterfly矩阵也有它的好处，比如它的逆和行列式都比较好算，这对于Flow模型等需要求逆和行列式的场景更为方便。</p>
+<h2 id="文章小结"><a href="#文章小结" class="headerlink" title="文章小结"></a>文章小结</h2><p>本文介绍了Monarch矩阵，这是Tri Dao前两年提出的一簇能够分解为转置矩阵与稀疏矩阵乘积的矩阵，具备计算高效的特点（众所周知，Tri Dao是高性能的代名词），可以用来为全连接层提速、构建参数高效的微调方式等。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/15.Monarch%E7%9F%A9%E9%98%B5/">https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/15.Monarch%E7%9F%A9%E9%98%B5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E6%95%B0%E5%AD%A6/">数学</a><a class="post-meta__tags" href="/blog/tags/%E7%9F%A9%E9%98%B5/">矩阵</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/01.%E7%BB%9F%E8%AE%A1%E9%87%8F%E5%8F%8A%E5%85%B6%E5%88%86%E5%B8%83/" title="统计量及其分布"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">统计量及其分布</div></div><div class="info-2"><div class="info-item-1">统计量及其分布总体与样本 总体 &emsp;&emsp;在一个统计问题里，研究对象的全体叫做总体，构成总体的每个成员称为个体。根据个体的数量指标数量，定义总体的维度，如每个个体只有一个数量指标，总体就是一维的，同理，个体有两个数量指标，总体就是二维的。总体就是一个分布，数量指标就是服从这个分布的随机变量。&emsp;&emsp;总体根据个体数分为有限总体和无限总体，当有限总体的个体数充分大时，其可以看为无限总体。  样本  定义：  &emsp;&emsp;从总体中随机抽取的部分个体组成的集合称为样本，样本个数称为样本容量。  性质：  二重性：抽取前随机，是随机变量；抽取后确定，是一组...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/13.%E4%BD%8E%E7%A7%A9%E8%BF%91%E4%BC%BC%E4%B9%8B%E8%B7%AF%E4%B8%89CR/" title="低秩近似之路三CR"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">低秩近似之路三CR</div></div><div class="info-2"><div class="info-item-1">低秩近似之路（三）：CR Author: [苏剑林]  Link: [https://zhuanlan.zhihu.com/p/3977810830] 最佳排版请看原博客： 低秩近似之路（三）：CR - 科学空间|Scientific Spaces在https://kexue.fm/archives/10407中，我们证明了SVD可以给出任意矩阵的最优低秩近似。那里的最优近似是无约束的，也就是说SVD给出的结果只管误差上的最小，不在乎矩阵的具体结构，而在很多应用场景中，出于可解释性或者非线性处理等需求，我们往往希望得到具有某些特殊结构的近似分解。 因此，从这篇文章开始，我们将探究一些具有...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/01.%E7%90%86%E8%A7%A3%E7%9F%A9%E9%98%B5-%E5%AD%9F%E5%B2%A9/" title="理解矩阵-孟岩"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">理解矩阵-孟岩</div></div><div class="info-2"><div class="info-item-1"> 理解矩阵（转载自孟岩）  前不久chensh出于不可告人的目的，要充当老师，教别人线性代数。于是我被揪住就线性代数中一些务虚性的问题与他讨论了几次。很明显，chensh觉得，要让自己在讲线性代数的时候不被那位强势的学生认为是神经病，还是比较难的事情。 可怜的chensh，谁让你趟这个地雷阵？！色令智昏啊！ 线性代数课程，无论你从行列式入手还是直接从矩阵入手，从一开始就充斥着莫名其妙。比如说，在全国一般工科院系教学中应用最广泛的同济线性代数教材（现在到了第四版），一上来就介绍逆序数这个“前无古人，后无来者”的古怪概念，然后用逆序数给出行列式的一个极不直观的定义，接着是一些简直犯傻的行列式...</div></div></div></a><a class="pagination-related no-desc" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/14.%E4%BD%8E%E7%A7%A9%E8%BF%91%E4%BC%BC%E4%B9%8B%E8%B7%AF%E5%9B%9BID/" title="低秩近似之路四ID"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">低秩近似之路四ID</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/12.%E4%BD%8E%E7%A7%A9%E8%BF%91%E4%BC%BC%E4%B9%8B%E8%B7%AF%E4%BA%8CSVD/" title="低秩近似之路二SVD"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">低秩近似之路二SVD</div></div><div class="info-2"><div class="info-item-1">低秩近似之路（二）：SVD Author: [苏剑林]  Link: [https://zhuanlan.zhihu.com/p/2957340022] 最佳排版请看原博客： 低秩近似之路（二）：SVD - 科学空间|Scientific Spaces上一篇文章中我们介绍了“https://kexue.fm/archives/10366”，它关系到给定矩阵$\boldsymbol{M}$ $\boldsymbol{A}$（或$\boldsymbol{B}$）时优化目标$\Vert \boldsymbol{A}\boldsymbol{B} - \boldsymbol{M}\Vert_F^2...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/13.%E4%BD%8E%E7%A7%A9%E8%BF%91%E4%BC%BC%E4%B9%8B%E8%B7%AF%E4%B8%89CR/" title="低秩近似之路三CR"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">低秩近似之路三CR</div></div><div class="info-2"><div class="info-item-1">低秩近似之路（三）：CR Author: [苏剑林]  Link: [https://zhuanlan.zhihu.com/p/3977810830] 最佳排版请看原博客： 低秩近似之路（三）：CR - 科学空间|Scientific Spaces在https://kexue.fm/archives/10407中，我们证明了SVD可以给出任意矩阵的最优低秩近似。那里的最优近似是无约束的，也就是说SVD给出的结果只管误差上的最小，不在乎矩阵的具体结构，而在很多应用场景中，出于可解释性或者非线性处理等需求，我们往往希望得到具有某些特殊结构的近似分解。 因此，从这篇文章开始，我们将探究一些具有...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/02.%E6%96%B0%E7%90%86%E8%A7%A3%E7%9F%A9%E9%98%B5-%E8%8B%8F%E5%89%91%E6%9E%97/" title="新理解矩阵-苏剑林"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">新理解矩阵-苏剑林</div></div><div class="info-2"><div class="info-item-1">《新理解矩阵1》：矩阵是什么？前边我承诺过会写一些关于自己对矩阵的理解。其实孟岩在《理解矩阵》这三篇文章中，已经用一种很直观的方法告诉了我们有关矩阵以及线性代数的一些性质和思想。而我对矩阵的理解，大多数也是来源于他的文章。当然，为了更好地理解线性代数，我还阅读了很多相关书籍，以求得到一种符合直觉的理解方式。孟岩的blog已经很久没有更新了，在此谨引用他的标题，来叙述我对矩阵的理解。 当然，我不打算追求那些空间、算子那些高抽象性的问题，我只是想发表一下自己对线性代数中一些常用工具的看法，比如说矩阵、行列式等。同时，文章命名为“理解矩阵”，也就是说这不是矩阵入门教程，而是与已经有一定的线性代...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/04.%E7%9F%A9%E9%98%B5/11.%E4%BD%8E%E7%A7%A9%E8%BF%91%E4%BC%BC%E4%B9%8B%E8%B7%AF%E4%B8%80%E4%BC%AA%E9%80%86/" title="低秩近似之路一伪逆"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">低秩近似之路一伪逆</div></div><div class="info-2"><div class="info-item-1">低秩近似之路（一）：伪逆 Author: [苏剑林]  Link: [https://zhuanlan.zhihu.com/p/790279779] 最佳排版请看原博客： 低秩近似之路（一）：伪逆 - 科学空间|Scientific Spaces可能很多读者跟笔者一样，对矩阵的低秩近似有种熟悉而又陌生的感觉。熟悉是因为，低秩近似的概念和意义都不难理解，加之目前诸如LoRA等基于低秩近似的微调技术遍地开花，让低秩近似的概念在耳濡目染间就已经深入人心；然而，低秩近似所覆盖的内容非常广，在低秩近似相关的论文中时常能看到一些不熟悉但又让我们叹为观止的新技巧，这就导致了一种似懂非懂的陌生感。 因此...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SVD%E5%9B%9E%E9%A1%BE"><span class="toc-number">1.</span> <span class="toc-text">SVD回顾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Monarch%E7%9F%A9%E9%98%B5"><span class="toc-number">2.</span> <span class="toc-text">Monarch矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%AE%E6%8D%A2%E7%9F%A9%E9%98%B5"><span class="toc-number">2.1.</span> <span class="toc-text">置换矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%9D%97%E5%AF%B9%E8%A7%92"><span class="toc-number">2.2.</span> <span class="toc-text">分块对角</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%88%E7%8E%87%E7%AE%80%E6%9E%90"><span class="toc-number">2.3.</span> <span class="toc-text">效率简析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Monarch%E5%88%86%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text">Monarch分解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E7%BB%B4%E6%95%B0%E7%BB%84"><span class="toc-number">3.1.</span> <span class="toc-text">高维数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E6%81%92%E7%AD%89%E5%BC%8F"><span class="toc-number">3.2.</span> <span class="toc-text">新恒等式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.3.</span> <span class="toc-text">参考实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Monarch%E6%8E%A8%E5%B9%BF"><span class="toc-number">4.</span> <span class="toc-text">Monarch推广</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E5%B9%B3%E6%96%B9%E9%98%B6"><span class="toc-number">4.1.</span> <span class="toc-text">非平方阶</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AA%E8%A6%81%E5%BD%A2%E5%BC%8F"><span class="toc-number">4.2.</span> <span class="toc-text">只要形式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E4%BE%8B%E5%AD%90"><span class="toc-number">5.</span> <span class="toc-text">应用例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%9D%B6%E4%B9%8B%E5%B8%9D%E7%8E%8B"><span class="toc-number">6.</span> <span class="toc-text">蝶之帝王</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E5%B0%8F%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">文章小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

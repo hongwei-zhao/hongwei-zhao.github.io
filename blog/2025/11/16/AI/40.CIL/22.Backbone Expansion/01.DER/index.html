@@ -1,0 +1,323 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>DER | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="DER: Dynamically Expandable Representation for Class Incremental Learning](https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2103.16788) | CVPR 2021 | Code  0. 摘要我们解决了类别增量学习的问题，这是实现自适应视觉智能的核心步骤。特别是，我们考虑了在有限内存下的增量学习任务设置，旨在实现更好的稳">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DER">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/22.Backbone%20Expansion/01.DER/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="DER: Dynamically Expandable Representation for Class Incremental Learning](https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2103.16788) | CVPR 2021 | Code  0. 摘要我们解决了类别增量学习的问题，这是实现自适应视觉智能的核心步骤。特别是，我们考虑了在有限内存下的增量学习任务设置，旨在实现更好的稳">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.349Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Backbone Expansion">
+<meta property="article:tag" content="CIL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "DER",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/22.Backbone%20Expansion/01.DER/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.349Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/22.Backbone%20Expansion/01.DER/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'DER',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">DER</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">DER</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.349Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/CIL/">CIL</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/CIL/Backbone-Expansion/">Backbone Expansion</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>DER: Dynamically Expandable Representation for Class Incremental Learning](<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2103.16788">https://arxiv.org/abs/2103.16788</a>) | CVPR 2021 | <a target="_blank" rel="noopener" href="https://github.com/Rhyssiyan/DER-ClassIL.pytorch">Code</a></p>
+</blockquote>
+<h2 id="0-摘要"><a href="#0-摘要" class="headerlink" title="0. 摘要"></a>0. 摘要</h2><p>我们解决了类别增量学习的问题，这是实现自适应视觉智能的核心步骤。特别是，我们考虑了在有限内存下的增量学习任务设置，旨在实现更好的稳定性与可塑性之间的权衡。为此，我们提出了一种新颖的两阶段学习方法，利用动态可扩展的表示来更有效地建模增量概念。具体来说，在每个增量步骤中，我们冻结先前学习到的表示，并通过一个新的可学习特征提取器增加额外的特征维度。这使我们能够在保留已学知识的同时整合新的视觉概念。我们通过引入基于通道级掩码的剪枝策略，根据新概念的复杂性动态扩展表示。此外，我们引入了一个辅助损失，以鼓励模型学习新颖概念的多样化和区分性特征。我们在三个类别增量学习基准上进行了广泛的实验，我们的方法始终以较大优势超越其他方法。</p>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p>人类可以轻松地从过去的经验中积累视觉知识，并逐步学习新的概念。受此启发，类别增量学习问题旨在设计能够以顺序方式学习新概念并最终在所有观察到的类别上表现良好的算法。这种能力对于许多现实世界的应用（如智能机器人、人脸识别和自动驾驶）是不可或缺的。然而，实现人类水平的增量学习对于现代视觉识别系统仍然具有挑战性。</p>
+<p>在文献中，已有许多尝试解决增量学习问题的努力。其中，最有效的策略可能是保持一个内存缓冲区，存储部分观察到的数据以供未来复习。然而，由于数据内存的有限性，这种增量学习方法在一般的持续学习任务中仍然面临几个典型的挑战。特别是，它要求模型能够有效地整合新概念而不忘记现有知识，这被称为稳定性与可塑性之间的困境。具体来说，过度的可塑性通常会导致旧类别的大幅性能下降，称为灾难性遗忘。相反，过度的稳定性会阻碍新概念的适应。</p>
+<p>现有的大多数工作试图通过逐步更新数据表示和类别决策边界来实现稳定性与可塑性之间的权衡。例如，正则化方法惩罚先前学习模型的重要权重的变化，而知识蒸馏则通过可用数据保留网络输出，基于结构的方法在为新类别分配更多参数时保持旧参数不变。然而，这些方法要么牺牲了模型的可塑性以换取稳定性，要么由于旧概念的特征退化而容易遗忘。如图1所示，在所有数据上训练的模型（Joint）与先前的最先进模型之间仍然存在较大的性能差距。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250224091426.png" style="zoom: 80%;" /></div>
+
+<p>在本工作中，我们旨在解决上述弱点，并在类别增量学习中实现更好的稳定性与可塑性之间的权衡。为此，我们采用了两阶段学习策略，将特征表示的适应与深度网络的最终分类器头（简称分类器）解耦。在这个框架内，我们提出了一种新颖的数据表示，称为超级特征，能够增加其维度以适应新类别。我们的主要思想是冻结先前学习到的表示，并在每个增量步骤中通过一个新的可学习提取器增加额外的特征维度。这使得我们能够保留现有知识，并提供足够的灵活性来学习新概念。此外，我们的超级特征根据新概念的复杂性动态扩展，以保持紧凑的表示。</p>
+<p>为了实现这一点，我们开发了一个模块化的深度分类网络，由超级特征提取器网络和线性分类器组成。我们的超级特征提取器网络由多个不同大小的特征提取器组成，每个增量步骤一个。具体来说，在新的步骤中，我们通过一个新的特征提取器扩展超级特征提取器网络，同时保持先前提取器的参数冻结。所有提取器生成的特征被连接在一起，并输入到分类器中进行类别预测。</p>
+<p>我们在memory和新数据上训练新的特征提取器和分类器。为了鼓励新的提取器学习新类别的多样化和区分性特征，我们设计了一个辅助损失来区分新旧类别。此外，为了去除模型冗余并学习新类别的紧凑特征，我们应用了基于通道级掩码的可微分剪枝方法，根据新概念的难度动态剪枝网络。最后，在更新表示后，我们冻结超级特征提取器，并在平衡的训练子集上微调分类器，以解决类别不平衡问题。</p>
+<p>我们在三个常用的基准（包括CIFAR-100、ImageNet-100和ImageNet-1000数据集）上验证了我们的方法。实验结果和消融研究表明，我们的方法优于先前的最先进方法。有趣的是，我们还发现我们的方法可以在步骤之间实现正向和反向迁移。我们的主要贡献有三点：</p>
+<ul>
+<li>为了实现更好的稳定性与可塑性之间的权衡，我们开发了动态可扩展的表示和两阶段策略用于类别增量学习。</li>
+<li>我们提出了一个辅助损失，以促进新添加的特征模块有效学习新类别，并提出了模型剪枝步骤以学习紧凑特征。</li>
+<li>我们的方法在所有三个基准上实现了新的最先进性能，模型复杂度范围广泛，如图1所示。</li>
+</ul>
+<h2 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2. 相关工作"></a>2. 相关工作</h2><p>类别增量学习旨在连续学习新类别。一些工作尝试在没有访问先前数据的情况下解决问题。然而，主流的方法是基于有限数据内存的复习策略，可以从表示学习和分类器学习两个主要方面进行分析。</p>
+<p><strong>表示学习</strong>：当前的工作主要分为以下三类。基于正则化的方法采用最大后验估计，期望重要参数发生小的变化，并顺序更新模型参数的后验。然而，其复杂的计算通常需要基于强模型假设的近似。例如，EWC使用拉普拉斯近似，假设权重落在上一步最优权重的局部区域内。这严重限制了模型适应新概念的能力。基于蒸馏的方法使用知识蒸馏来保留表示。iCaRL和EE2L在网络的输出上计算蒸馏损失。UCIR使用归一化的特征向量来应用蒸馏损失，而不是网络的预测。PODNet使用基于空间的蒸馏损失来限制模型的变化。TPCIL使模型保留CNN特征空间的拓扑结构。知识蒸馏的性能取决于保存数据的质量和数量。基于结构的方法保持与先前类别相关的学习参数不变，并以不同形式（如未使用的参数、额外的网络）分配新参数以学习新知识。CPG提出了一种压缩和选择&#x2F;扩展机制，通过选择性权重共享交替剪枝深度模型并扩展架构。然而，大多数基于结构的方法是为任务持续学习设计的，需要在推理时知道任务身份。对于类别增量学习，RPSNet提出了一种随机路径选择算法，逐步选择最优路径作为新类别的子网络。CCGN为每个卷积层配备了任务特定的门控模块，以选择应用于给定输入的过滤器，并使用任务预测器在推理时选择门控模块。</p>
+<p><strong>分类器学习</strong>：由于内存有限，类别不平衡问题是分类器学习的主要挑战。一些工作（如LWF.MC、RWalk）在一阶段训练中联合训练提取器和分类器。相比之下，最近有许多工作通过在表示学习后引入独立的分类器学习阶段来解决类别不平衡问题。EEIL在平衡的训练子集上微调分类器。BiC添加了一个偏差校正层来校正模型的输出，该层在单独的验证集上训练。WA通过对齐新旧类别的权重向量的范数来校正偏差权重。</p>
+<p><strong>讨论</strong>：我们的工作是基于结构的方法，与我们的工作最相似的是RPSNet和CCGN。RPSNet无法保留每个旧概念的内在结构，并且通过在每个ConvNet阶段将先前学习的特征与新学习的特征相加，逐渐忘记已学概念。在CCGN中，由于只有部分层的参数被冻结，学习到的表示可能会逐渐退化。相比之下，我们保持先前学习到的表示不变，并通过新的特征提取器参数化的新特征来增强它。这使得我们能够在先前学习到的表示的子空间中保留旧概念的内在结构，并通过最终分类器重用该结构以减轻遗忘。</p>
+<h2 id="3-方法"><a href="#3-方法" class="headerlink" title="3. 方法"></a>3. 方法</h2><p>在本节中，我们提出了解决类别增量学习问题的方法，旨在实现更好的稳定性与可塑性之间的权衡。为此，我们提出了动态可扩展的表示（DER），逐步用新特征增强先前学习到的表示，并提出了一种两阶段学习策略。</p>
+<p>下面我们首先在第3.1节中介绍类别增量学习的问题设置和我们方法的概述。然后我们在第3.2节中介绍可扩展表示学习及其损失函数。接着，我们在第3.3节中描述表示的动态扩展，并在第3.4节中介绍分类器学习的第二阶段。</p>
+<h3 id="3-1-问题设置与方法概述"><a href="#3-1-问题设置与方法概述" class="headerlink" title="3.1. 问题设置与方法概述"></a>3.1. 问题设置与方法概述</h3><p>首先，我们介绍类别增量学习的问题设置。与任务增量学习不同，类别增量学习在推理时不需要任务ID。具体来说，在类别增量学习中，模型观察到一系列类别组${Y_t}$ 其对应的训练数据${D_t}$。特别地，第$t$ 的输入数据集$D_t$ 形式为$(x_t^i, y_t^i)$，其中$x_t^i$ 输入图像，$y_t^i \in Y_t$ 标签集$Y_t$ 的标签。模型的标签空间是所有已见类别的并集$\tilde{Y}<em>t &#x3D; \cup</em>{i&#x3D;1}^t Y_i$，模型期望在所有类别$\tilde{Y}_t$ 表现良好。</p>
+<p>我们的方法采用复习策略，将部分数据保存为内存$M_t$ 供未来训练。对于第$t$ 的学习，我们将学习过程解耦为以下两个顺序阶段：</p>
+<ol>
+<li><p><strong>表示学习阶段</strong>：为了在稳定性与可塑性之间实现更好的权衡，我们固定先前的特征表示，并通过一个新的特征提取器在输入数据和内存数据上进行训练来扩展它。我们设计了一个辅助损失来促进新提取器学习多样化和区分性特征。为了提高模型效率，我们通过引入基于通道级掩码的剪枝方法，根据新类别的复杂性动态扩展表示。我们提出的表示的概述如图2所示。</p>
+</li>
+<li><p><strong>分类器学习阶段</strong>：在表示学习之后，我们使用当前可用的数据$\tilde{D}_t &#x3D; D_t \cup M_t$ 第$t$ 重新训练分类器，以通过采用平衡微调方法解决类别不平衡问题。</p>
+</li>
+</ol>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250221101248.png" style="zoom: 80%;" /></div>
+
+<h3 id="3-2-可扩展表示学习"><a href="#3-2-可扩展表示学习" class="headerlink" title="3.2 可扩展表示学习"></a>3.2 可扩展表示学习</h3><p>我们首先介绍<strong>可扩展表示</strong>。在第 $t$ 步，我们的模型由<strong>超级特征提取器</strong>$\Phi_t$ 和分类器 $H_t$ 组成。超级特征提取器 $\Phi_t$ 通过扩展特征提取器 $\Phi_{t-1}$ 并添加一个新创建的特征提取器 $F_t$ 来构建。具体来说，给定一个图像 $x \in \tilde{D}<em>t$，通过 $\Phi_t$ 提取的特征 $u$ 通过以下方式连接得到：<br>$$<br>    u &#x3D; \Phi_t(x) &#x3D; [\Phi</em>{t-1}(x), F_t(x)]<br>$$<br>这里我们重新使用之前的 $F_1, \dots, F_{t-1}$，并鼓励新的提取器 $F_t$ 仅学习新类的新特征。特征 $u$ 随后被输入分类器 $H_t$ 进行预测，如下所示：<br>$$<br>    p_{H_t}(y|x) &#x3D; \text{Softmax}(H_t(u))<br>$$<br>然后预测结果 $\hat{y} &#x3D; \arg\max p_{H_t}(y|x)$，其中 $\hat{y} \in \tilde{Y}<em>t$。分类器设计为匹配其新的输入和输出维度以适应第 $t$ 步。$H_t$ 中旧特征的参数从 $H</em>{t-1}$ 继承以保留旧知识，而新添加的参数则随机初始化。</p>
+<p>为了减少灾难性遗忘，我们在第 $t$ 步冻结之前学习到的函数 $\Phi_{t-1}$，因为它捕获了先前数据的内在结构。具体来说，上一步超级特征提取器 $\theta_{\Phi_{t-1&#125;&#125;$ 的参数和批量归一化 [14] 的统计量不会被更新。此外，我们使用 $F_{t-1}$ 作为初始化来实例化 $F_t$，以便重用先前的知识以实现快速适应和前向迁移。</p>
+<p>我们可以从<strong>估计先验分布</strong>$p(\theta_{\Phi_t}|D_{1:t-1})$ 的角度来理解这个问题，其中 $D_{1:t-1}$ 是先前的数据。与之前的正则化方法（如 EWC）不同，我们并不假设第 $t$ 步的先验分布是单峰的，因为这种假设限制了模型的灵活性，并且在实践中通常不成立。对于我们的方法，模型通过为输入数据创建一个单独的特征提取器 $F_t$ 来扩展新的参数，并<strong>将均匀分布作为先验分布</strong> $p(\theta_{F_t}|D_{1:t-1})$，这为模型适应新概念提供了足够的灵活性。同时，为了简化，我们将旧参数 $\theta_{\Phi_{t-1&#125;&#125;$ 的先验分布 $p(\theta_{\Phi_{t-1&#125;&#125;|D_{1:t-1})$ <strong>近似为狄拉克分布</strong>，以保留在 $D_{1:t-1}$ 上学到的信息。通过对 $p(\theta_{\Phi_{t-1&#125;&#125;|D_{1:t-1})$ 和 $p(\theta_{F_t}|D_{1:t-1})$ 的两个先验分布假设进行整合，我们在实现更好的<strong>稳定性 - 可塑性权衡</strong>方面具有更大的灵活性。</p>
+<h4 id="训练损失"><a href="#训练损失" class="headerlink" title="训练损失"></a>训练损失</h4><p>我们使用交叉熵损失在记忆和新数据上学习模型，如下所示：<br>$$<br>    L_{H_t} &#x3D; -\frac{1}{|\tilde{D}<em>t|} \sum</em>{i&#x3D;1}^{|\tilde{D}<em>t|} \log\left(p</em>{H_t}(y&#x3D;y_i|x_i)\right)<br>$$<br>其中 $x_i$ 是图像，$y_i$ 是对应的标签。</p>
+<p>为了强制网络学习新概念的多样化和判别性特征，我们进一步开发了一个<strong>辅助损失</strong>，作用于新特征 $F_t(x)$。具体来说，我们引入了一个辅助分类器 $H_t^a$，它预测概率 $p_{H_t^a}(y|x) &#x3D; \text{Softmax}(H_t^a(F_t(x)))$。为了鼓励网络学习能够区分新旧概念的特征，$H_t^a$ 的标签空间为 $|Y_t| + 1$，包括新类别集 $Y_t$ 和将所有旧概念视为一个类别的其他类。因此，我们引入辅助损失，并得到可扩展表示损失如下：<br>$$<br>    L_{\text{ER&#125;&#125; &#x3D; L_{H_t} + \lambda_a L_{H_t^a}<br>$$<br>其中 $\lambda_a$ 是控制辅助分类器效果的超参数。值得注意的是，对于第一步 $t&#x3D;1$，$\lambda_a &#x3D; 0$。</p>
+<h3 id="3-3-动态扩展"><a href="#3-3-动态扩展" class="headerlink" title="3.3. 动态扩展"></a>3.3. 动态扩展</h3><p>为了去除模型冗余并保持紧凑的表示，我们根据新类别的复杂性动态扩展超级特征。具体来说，我们采用基于通道级掩码的可微分剪枝方法，将提取器$F_t$ 过滤器剪枝，掩码与表示联合学习。在掩码学习之后，我们将掩码二值化并剪枝特征提取器$F_t$ 获得剪枝后的网络$F_t^P$。</p>
+<p><strong>通道级掩码</strong>：我们的剪枝方法基于可微分的通道级掩码，改编自HAT。对于新特征提取器$F_t$，卷积层$l$ 输入特征图对于给定图像$x$ 示为$f_l$。我们引入通道掩码$m_l \in \mathbb{R}^{c_l}$ 控制层$l$ 大小，其中$m_i^l \in [0, 1]$，$c_l$ 层$l$ 通道数。$f_l$ 过掩码调制如下：</p>
+<p>$$<br>f’_l &#x3D; f_l \odot m_l \tag{5}<br>$$</p>
+<p>其中$f’_l$ 掩码后的特征图，$\odot$ 示通道级乘法。为了使$m_l$ 值落在区间$[0, 1]$ ，采用以下门控函数：</p>
+<p>$$<br>m_l &#x3D; \sigma(s e_l) \tag{6}<br>$$</p>
+<p>其中$e_l$ 示可学习的掩码参数，门控函数$\sigma(\cdot)$ 本工作中使用sigmoid函数，$s$ 控制函数锐度的缩放因子。通过这种掩码机制，第$t$ 的超级特征$\tilde{u}$ 以重写为：</p>
+<p>$$<br>\tilde{u} &#x3D; \Phi_t^P(x) &#x3D; [F_1^P(x), F_2^P(x), \dots, \phi_t(x)] \tag{7}<br>$$</p>
+<p>在训练期间，$\phi_t(x)$ 带有软掩码的$F_t(x)$。在推理时，我们赋予$s$ 个较大的值以二值化掩码并获得剪枝后的网络$F_t^P$，且$\phi_t(x) &#x3D; F_t^P(x)$。</p>
+<p><strong>掩码学习</strong>：在每个epoch中，$s$ 过以下线性退火调度进行更新：</p>
+<p>$$<br>s &#x3D; \frac{1}{s_{\max&#125;&#125; + \left(s_{\max} - \frac{1}{s_{\max&#125;&#125;\right) \frac{b - 1}{B - 1} \tag{8}<br>$$</p>
+<p>其中$b$ 批次索引，$s_{\max} \geq 1$ 控制调度的超参数，$B$ 一个epoch中的批次数量。训练epoch开始时，所有通道以均匀的方式激活。然后，随着批次索引的增加，掩码逐渐二值化。</p>
+<p>sigmoid函数的一个问题是梯度由于$s$ 度而不稳定。我们通过以下方式补偿$e_l$ 梯度$g_{e_l}$，以消除$s$ 影响：</p>
+<p>$$<br>g’<em>{e_l} &#x3D; \frac{\sigma(e_l)[1 - \sigma(e_l)]}{s \sigma(s e_l)[1 - \sigma(s e_l)]} g</em>{e_l} \tag{9}<br>$$</p>
+<p>其中$g’_{e_l}$ 补偿后的梯度。</p>
+<p><strong>稀疏损失</strong>：在每个步骤中，我们鼓励模型在最小性能下降的情况下最大限度地减少参数数量。出于此动机，我们添加了一个基于所有可用权重中使用权重的比率的稀疏损失：</p>
+<p>$$<br>L_S &#x3D; \frac{\sum_{l&#x3D;1}^L K_l |m_{l-1}|<em>1 |m_l|<em>1}{\sum</em>{l&#x3D;1}^L K_l c</em>{l-1} c_l} \tag{10}<br>$$</p>
+<p>其中$L$ 层数，$K_l$ 卷积层$l$ 核大小，层$l&#x3D;0$ 示输入图像，且$|m_0|_1 &#x3D; 3$。</p>
+<p>在添加稀疏损失后，最终的损失函数为：</p>
+<p>$$<br>L_{\text{DER&#125;&#125; &#x3D; L_{H_t} + \lambda_a L_{H_a^t} + \lambda_s L_S \tag{11}<br>$$</p>
+<p>其中$\lambda_s$ 控制模型大小的超参数。</p>
+<hr>
+<h3 id="3-4-分类器学习"><a href="#3-4-分类器学习" class="headerlink" title="3.4. 分类器学习"></a>3.4. 分类器学习</h3><p>在表示学习阶段，我们重新训练分类器头，以减少由不平衡训练引入的分类器权重偏差。具体来说，我们首先用随机权重重新初始化分类器，然后从当前可用数据$\tilde{D}_t$ 采样一个类别平衡的子集。我们仅使用带有温度$\delta$ 交叉熵损失来训练分类器头，温度$\delta$ 制Softmax函数的平滑性，以提高类别之间的间隔。</p>
+<hr>
+<h2 id="4-实验"><a href="#4-实验" class="headerlink" title="4. 实验"></a>4. 实验</h2><p>在本节中，我们进行了广泛的实验以验证我们算法的有效性。特别是在CIFAR-100、ImageNet-100和ImageNet-1000数据集上使用两种广泛使用的基准协议评估了我们的方法。我们还进行了一系列消融研究，以评估每个组件的重要性，并进一步深入了解我们的方法。下面我们首先在第4.1节中介绍实验设置和实现细节，然后在第4.2节中介绍CIFAR100数据集的实验结果。接着，我们在第4.3节中展示ImageNet-100和ImageNet-1000数据集的评估结果。最后，我们在第4.4节中介绍我们方法的消融研究和分析。</p>
+<hr>
+<h3 id="4-1-实验设置与实现细节"><a href="#4-1-实验设置与实现细节" class="headerlink" title="4.1. 实验设置与实现细节"></a>4.1. 实验设置与实现细节</h3><p><strong>数据集</strong>：CIFAR-100由32x32像素的彩色图像组成，包含100个类别。它有50,000张训练图像，每个类别500张，以及10,000张评估图像，每个类别100张。ImageNet-1000是一个包含1,000个类别的大规模数据集，包含约120万张RGB训练图像和50,000张验证图像。ImageNet-100是从ImageNet-1000数据集中选择100个类别构建的。</p>
+<p><strong>基准协议</strong>：对于CIFAR-100基准，我们在两个流行的协议上测试我们的方法，包括：</p>
+<ol>
+<li><strong>CIFAR100-B0</strong>：我们遵循[27]中提出的协议，将100个类别分为5、10、20、50个增量步骤，每个批次的固定内存大小为2,000个样本；</li>
+<li><strong>CIFAR100-B50</strong>：我们遵循[12]中引入的协议，从训练50个类别的模型开始，剩余的50个类别分为2、5、10个步骤，每个类别的内存为20个样本。我们比较了每个步骤的平均增量精度，即每个步骤精度的平均值。</li>
+</ol>
+<p>我们还在ImageNet-100上评估了我们的方法，使用了两个协议：</p>
+<ol>
+<li><strong>ImageNet100-B0</strong>：协议[27]从零开始以10个类别为批次训练模型，每个批次的固定内存大小为2,000；</li>
+<li><strong>ImageNet100-B50</strong>：协议[12]从训练50个类别的模型开始，剩余的50个类别以10个步骤引入，每个类别的内存为20个样本。为了公平起见，我们使用与协议[27, 12]相同的ImageNet子集和类别顺序。对于ImageNet-1000，我们评估了我们的方法在协议[27]上，称为ImageNet1000-B0基准，该协议以100个类别为批次训练模型，总共10个步骤，固定内存大小为20,000。具体来说，我们使用与[27]相同的类别顺序进行ImageNet-1000。此外，我们比较了ImageNet-100和ImageNet-1000数据集上的top-1和top-5平均增量精度以及最后一步的精度。</li>
+</ol>
+<p><strong>实现细节</strong>：我们的方法使用PyTorch实现。对于CIFAR-100，我们采用ResNet-18作为特征提取器$F_t$，遵循RPSNet[26]。我们注意到，大多数先前的工作使用修改后的32层ResNet[27]，与标准ResNet-32相比，其通道和残差块更少。我们认为这样的小网络不适合，因为它在CIFAR100上无法与标准18层ResNet[10]相比取得有竞争力的结果，可能会低估方法的性能。我们基于相同的类别顺序运行这些方法的标准ResNet-18，基于它们的代码实现。对于那些没有发布代码的，我们基于我们的实现报告结果。对于RPSNet，我们直接使用其论文中的结果。对于ImageNet-100和ImageNet-1000基准，我们使用18层ResNet作为基本网络。在这些实验中，我们基于herding选择策略[32]选择样本作为内存，遵循先前的工作[27]。此外，我们在三个不同的类别顺序上运行实验，并在结果中报告平均值±标准差。我们还在附录中提供了基于修改后的32层ResNet[27]的CIFAR-100实验结果，这再次证明了我们方法的优越性。我们遵循[6, 30]中的协议，并在从原始训练数据中保留一部分创建的验证集上调整超参数。超参数的详细信息添加到附录中。</p>
+<hr>
+<h3 id="4-2-CIFAR100上的评估"><a href="#4-2-CIFAR100上的评估" class="headerlink" title="4.2. CIFAR100上的评估"></a>4.2. CIFAR100上的评估</h3><p><strong>定量结果</strong>：表1总结了CIFAR100-B0基准的结果。我们可以看到，我们的方法在不同增量分割中始终以显著优势优于其他方法。随着分割中步骤数量的增加，我们的方法与其他方法之间的差距持续增加，这表明我们的方法在步骤较长的困难分割上表现更好。特别是在50个步骤的增量设置下，我们将平均增量精度从64.32%提高到72.05%（+7.73%），且参数数量更少。值得注意的是，尽管大幅减少了模型参数，但我们的方法由于剪枝导致的性能下降可以忽略不计，这表明我们的剪枝方法的成功。如图3的左面板所示，可以看到我们的方法在每个步骤中始终优于其他方法。此外，随着新类别的不断添加，我们的方法与其他方法之间的差距也在增加。具体来说，在50个步骤的增量分割下，最后一步的精度从42.75%提高到58.66%（+15.91%），这进一步证明了我们方法的有效性。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250224101344.png" style="zoom: 80%;" /></div>
+
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250224101430.png" style="zoom: 80%;" /></div>
+
+<p>我们还在CIFAR100-B50基准上比较了我们方法与先前方法的性能，如表2所示，结果显示我们的方法在所有分割中均以显著增益提高了性能。特别是在10个步骤的增量设置下，我们的方法比PODNet高出8.41%的平均增量精度。如图3的右面板所示，我们的方法在每个步骤中均优于其他方法。特别是，在10个步骤的分割中，我们的方法将最后一步的精度从52.56%提高到65.58%（+13.02%）。此外，与未剪枝的方法相比，我们的方法以更少的参数实现了类似的性能。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250224101356.png" style="zoom: 80%;" /></div>
+
+<p>值得注意的是，先前的方法通常只在其中一个协议上表现良好，其中WA在CIFAR100-B0上是最先进的，而PODNet在CIFAR100-B50上是最先进的。相比之下，我们的方法在两个协议上始终优于其他方法。</p>
+<p><strong>模型大小的影响</strong>：我们进行了广泛的实验，研究模型大小对性能的影响。如图1所示，我们可以看到我们的方法在各种模型大小下始终显著优于其他方法。我们还注意到，随着模型大小的增加，我们的方法相比于大多数其他方法的改进变得更加显著，这表明我们的方法能够充分利用大模型的潜力。</p>
+<h3 id="4-3-ImageNet上的评估"><a href="#4-3-ImageNet上的评估" class="headerlink" title="4.3. ImageNet上的评估"></a>4.3. ImageNet上的评估</h3><p>表3总结了ImageNet-100和ImageNet-1000数据集的实验结果。我们可以看到，我们的方法在ImageNet-100和ImageNet-1000数据集的所有分割中均以显著优势优于其他方法，特别是最后一步的精度。具体来说，我们的方法在ImageNet100-B0基准上的平均top-5精度比最先进方法高出约1.79%。对于ImageNet100-B50基准，最后一步的top-1精度从66.91%提高到72.06%（+5.15%）。此外，我们的方法在ImageNet1000-B0基准上将最后一步的top-1精度从55.6%提高到58.62%（+3.02%）。尽管top-5精度的差距较小，但我们认为这是因为top-5精度对稍微不准确的预测更具容忍性，因此对遗忘不太敏感。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250224101519.png" style="zoom: 80%;" /></div>
+
+<h3 id="4-4-消融研究与分析"><a href="#4-4-消融研究与分析" class="headerlink" title="4.4. 消融研究与分析"></a>4.4. 消融研究与分析</h3><p>我们进行了详尽的消融研究，以评估我们方法中每个组件的贡献。我们还在附录中对超参数进行了敏感性研究。此外，我们研究了每种方法的表示的反向迁移和正向迁移。</p>
+<p><strong>每个组件的影响</strong>：表4总结了我们在CIFAR100-B0上进行的10个步骤的消融实验结果。我们可以看到，通过表示扩展，平均精度从61.84%显著提高到73.26%。我们还表明，使用辅助损失后，模型的性能进一步提高了2.10%。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250224101543.png" style="zoom: 80%;" /></div>
+
+<p><strong>表示的反向迁移</strong>：为了评估表示的质量，我们引入了一个通过使用所有观察到的数据微调分类器获得的理想决策边界，这使我们能够排除分类器的影响。然后，我们定义第$t$ 在类别集$Y_k$ 的分类精度$A_t^{Y_k}$，其中模型的预测空间限制为$Y_k$。通过观察$A_t^{Y_k}$ $t$ 变化曲线，我们可以看到表示质量如何随增量变化。图4显示了CIFAR100-B0上10个增量步骤的结果。我们还计算了不同方法的反向迁移值如下：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250224101624.png" style="zoom: 80%;" /></div>
+
+<p>$$<br>\text{BWT} &#x3D; \frac{1}{T-1} \sum_{i&#x3D;2}^T \frac{1}{i} \sum_{j&#x3D;1}^i \left(A_i^{Y_j} - A_j^{Y_j}\right) \tag{12}<br>$$</p>
+<p>结果如表5所示。我们可以看到，其他方法遭受了严重的遗忘。相比之下，我们的方法甚至实现了正向反向迁移+1.36%，并且精度随步骤增加而提高，这进一步证明了我们方法的优越性。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250224101558.png" style="zoom: 80%;" /></div>
+
+<p><strong>表示的正向迁移</strong>：我们还测量了现有知识对后续概念性能的影响，称为正向迁移。具体来说，我们定义了表示的正向迁移率如下：</p>
+<p>$$<br>\text{FWT} &#x3D; \frac{1}{T-1} \sum_{i&#x3D;2}^T \left(A_i^{Y_i} - \bar{A}_i^{Y_i}\right) \tag{13}<br>$$</p>
+<p>其中$\bar{A}_i^{Y_i}$ 通过使用仅交叉熵损失在随机初始化时训练的模型在可用数据$\tilde{D}_t$ 获得的测试精度。如表5所示，大多数方法具有负向迁移，这表明它们牺牲了适应新概念的灵活性。相比之下，我们的方法实现了+1.49%的正向迁移，这表明我们的方法不仅使模型具有高度灵活性，还带来了正向迁移。</p>
+<h2 id="5-结论"><a href="#5-结论" class="headerlink" title="5. 结论"></a>5. 结论</h2><p>在本工作中，我们提出了动态可扩展的表示，以改进类别增量学习的表示。在每个步骤中，我们冻结先前学习到的表示，并通过新的参数化特征增强它。我们还引入了基于通道级掩码的剪枝方法，根据新概念的难度动态扩展表示，并引入了一个辅助损失以更好地学习新颖的区分性特征。我们在三个主要的增量分类基准上进行了详尽的实验。实验结果表明，我们的方法始终以显著优势优于其他方法。有趣的是，我们还发现我们的方法甚至可以实现正向和反向迁移。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/22.Backbone%20Expansion/01.DER/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/22.Backbone%20Expansion/01.DER/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/CIL/">CIL</a><a class="post-meta__tags" href="/blog/tags/Backbone-Expansion/">Backbone Expansion</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/22.Backbone%20Expansion/02.FOSTER/" title="FOSTER"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">FOSTER</div></div><div class="info-2"><div class="info-item-1"> FOSTER: Feature Boosting and Compression for Class-Incremental Learning | Code   0. 摘要在不断变化的世界中，持续学习新概念的能力是必要的。然而，深度神经网络在学习新类别时会出现灾难性遗忘的问题。许多工作已经提出以缓解这一现象，但大多数方法要么陷入稳定性与可塑性之间的困境，要么需要过多的计算或存储开销。受梯度提升算法的启发，我们提出了一种新的两阶段学习范式 FOSTER，使模型能够自适应地学习新类别。具体来说，我们首先动态扩展新模块以拟合目标模型与原始模型输出之间的残差。接着，我们通过有效的蒸馏策略移除冗...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/21.Neuron%20Expansion/01.PackNet/" title="PackNet"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">PackNet</div></div><div class="info-2"><div class="info-item-1">PackNet: Adding Multiple Tasks to a Single Network by Iterative PruningKimi全文翻译 :arrow_down:0. 摘要本文提出了一种将多个任务添加到单个深度神经网络的方法，同时避免了灾难性遗忘。受网络剪枝技术的启发，我们利用大型深度网络中的冗余来释放可以用于学习新任务的参数。通过执行迭代剪枝和网络重新训练，我们能够顺序地将多个任务“打包”到单个网络中，同时确保性能的最小下降和最小的存储开销。与使用代理损失来维持旧任务准确性的先前工作不同，我们始终优化手头的任务。我们在各种网络架构和大规模数据集上进行了广泛的实验，...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/22.Backbone%20Expansion/02.FOSTER/" title="FOSTER"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">FOSTER</div></div><div class="info-2"><div class="info-item-1"> FOSTER: Feature Boosting and Compression for Class-Incremental Learning | Code   0. 摘要在不断变化的世界中，持续学习新概念的能力是必要的。然而，深度神经网络在学习新类别时会出现灾难性遗忘的问题。许多工作已经提出以缓解这一现象，但大多数方法要么陷入稳定性与可塑性之间的困境，要么需要过多的计算或存储开销。受梯度提升算法的启发，我们提出了一种新的两阶段学习范式 FOSTER，使模型能够自适应地学习新类别。具体来说，我们首先动态扩展新模块以拟合目标模型与原始模型输出之间的残差。接着，我们通过有效的蒸馏策略移除冗...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/16.HiDe-Prompt/" title="HiDe-Prompt"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">HiDe-Prompt</div></div><div class="info-2"><div class="info-item-1">0. 摘要基于提示的持续学习利用预训练知识进行下游持续学习，在监督预训练下几乎达到了性能的顶峰。然而，我们的实证研究表明，当前策略在更现实的自监督预训练下未能充分发挥其潜力，而自监督预训练对于处理实践中大量未标记数据至关重要。这主要是由于任务特定知识难以通过提示参数融入到指导表示中，并且在测试时由未指导表示进行预测。为了克服这种次优性，我们对预训练背景下的持续学习目标进行了理论分析，并将其分解为层次化组件：任务内预测、任务身份推断和任务自适应预测。基于这些实证和理论见解，我们提出了层次化分解（HiDe-）提示，这是一种创新方法，通过任务特定提示的集成以及未指导和指导表示的统计信息，显式优...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/18.CPrompt/" title="CPrompt"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">CPrompt</div></div><div class="info-2"><div class="info-item-1">0. 摘要持续学习使模型能够自主适应不断变化的环境或数据流，而不会忘记旧知识。基于提示的方法建立在冻结的预训练模型上，以高效地学习任务特定的提示和分类器。现有的基于提示的方法在训练和测试之间存在不一致，限制了其有效性。本文揭示了两种类型的不一致性。测试预测是从所有分类器中得出的，而训练仅关注当前任务分类器，缺乏整体对齐，导致分类器不一致。提示不一致表明测试期间选择的提示可能不对应于训练期间与此任务相关的提示。本文提出了一种新的基于提示的方法，称为一致提示（CPrompt），以实现更对齐的训练和测试。具体来说，所有现有的分类器都参与提示训练，从而实现分类器一致性学习。此外，提出提示一致性学...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/00.Survey/04.Recent%20Advances%20of%20Foundation%20Language%20Models-based%20Continual%20Learning-A%20Survey/" title="Recent Advances of Foundation Language Models-based Continual Learning-A Survey"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Recent Advances of Foundation Language Models-based Continual Learning-A Survey</div></div><div class="info-2"><div class="info-item-1">0. 摘要近期，在自然语言处理（NLP）和计算机视觉（CV）领域，基础语言模型（LMs）取得了显著成就。与传統神经网络模型不同，基础LMs通过在大量无监督数据集上进行预训练，获得了丰富的常识知识，并通过大量参数获得了巨大的迁移学习能力。然而，由于灾难性遗忘，它们仍无法模拟类似人类的持续学习能力。因此，开发了各种基于持续学习（CL）的方法来改进LMs，使它们能够在不遗忘以前知识的情况下适应新任务。然而，目前还缺乏现有方法的系统分类和性能比较，这正是我们的综述旨在填补的空白。我们深入进行了全面的回顾、总结和分类，对应用于基础语言模型的基于CL的方法进行了研究，如预训练语言模型（PLMs）、大...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/04.CODA-Prompt/" title="CODA-Prompt"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">CODA-Prompt</div></div><div class="info-2"><div class="info-item-1">0. 摘要计算机视觉模型在学习不断变化的训练数据中的新概念时，会遭受一种称为灾难性遗忘的现象。这种持续学习问题的典型解决方案需要广泛复习以前见过的数据，这增加了内存成本，并且可能违反数据隐私。最近，大规模预训练视觉变换器模型的出现使得提示方法成为数据复述的替代方案。这些方法依赖于关键 - 查询机制来生成提示，并且被发现在免复习的持续学习设置中高度抵抗灾难性遗忘。然而，这些方法的关键机制并没有与任务序列一起端到端训练。我们的实验表明，这导致它们的可塑性降低，因此牺牲了新任务的准确性，并且无法从扩展的参数容量中受益。我们提出学习一组提示组件，这些组件用输入条件权重组装，产生输入条件提示，从而...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/00.Survey/11.Architecture%20Matters%20in%20Continual%20Learning/" title="Architecture Matters in Continual Learning"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Architecture Matters in Continual Learning</div></div><div class="info-2"><div class="info-item-1">0. 摘要在持续学习（Continual Learning）领域，大量研究致力于通过设计能够应对分布变化的新算法，来克服神经网络的灾难性遗忘问题。然而，这些研究大多仅专注于为“固定的神经网络架构”开发新的算法，并在很大程度上忽略了使用不同架构的影响。即便是少数修改模型的持续学习方法，也假定架构固定，并试图开发一种算法以在整个学习过程中高效利用该模型。   在这项工作中，我们展示了架构选择会显著影响持续学习的性能，不同架构在记住先前任务和学习新任务的能力之间存在不同的权衡。此外，我们研究了各种架构决策的影响，并提出了一些最佳实践和建议，可以改善持续学习的性能。    1. 引言持续学习（C...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">0. 摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-number">2.</span> <span class="toc-text">1. 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">2. 相关工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">3. 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E9%97%AE%E9%A2%98%E8%AE%BE%E7%BD%AE%E4%B8%8E%E6%96%B9%E6%B3%95%E6%A6%82%E8%BF%B0"><span class="toc-number">4.1.</span> <span class="toc-text">3.1. 问题设置与方法概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%8F%AF%E6%89%A9%E5%B1%95%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 可扩展表示学习</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%8D%9F%E5%A4%B1"><span class="toc-number">4.2.1.</span> <span class="toc-text">训练损失</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%8A%A8%E6%80%81%E6%89%A9%E5%B1%95"><span class="toc-number">4.3.</span> <span class="toc-text">3.3. 动态扩展</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E5%88%86%E7%B1%BB%E5%99%A8%E5%AD%A6%E4%B9%A0"><span class="toc-number">4.4.</span> <span class="toc-text">3.4. 分类器学习</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%AE%9E%E9%AA%8C"><span class="toc-number">5.</span> <span class="toc-text">4. 实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE%E4%B8%8E%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="toc-number">5.1.</span> <span class="toc-text">4.1. 实验设置与实现细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-CIFAR100%E4%B8%8A%E7%9A%84%E8%AF%84%E4%BC%B0"><span class="toc-number">5.2.</span> <span class="toc-text">4.2. CIFAR100上的评估</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-ImageNet%E4%B8%8A%E7%9A%84%E8%AF%84%E4%BC%B0"><span class="toc-number">5.3.</span> <span class="toc-text">4.3. ImageNet上的评估</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">5.4.</span> <span class="toc-text">4.4. 消融研究与分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%BB%93%E8%AE%BA"><span class="toc-number">6.</span> <span class="toc-text">5. 结论</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

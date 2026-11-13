@@ -1,0 +1,332 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Scaling Law | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="解析大模型中的Scaling Law  在大模型的研发中，通常会有下面一些需求：  计划训练一个10B的模型，想知道至少需要多大的数据？ 收集到了1T的数据，想知道能训练一个多大的模型？ 老板准备1个月后开发布会，给的资源是100张A100，应该用多少数据训多大的模型效果最好？ 老板对现在10B的模型不满意，想知道扩大到100B模型的效果能提升到多少？  以上这些问题都可以基于Scaling L">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scaling Law">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/103.Scaling%20Law/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="解析大模型中的Scaling Law  在大模型的研发中，通常会有下面一些需求：  计划训练一个10B的模型，想知道至少需要多大的数据？ 收集到了1T的数据，想知道能训练一个多大的模型？ 老板准备1个月后开发布会，给的资源是100张A100，应该用多少数据训多大的模型效果最好？ 老板对现在10B的模型不满意，想知道扩大到100B模型的效果能提升到多少？  以上这些问题都可以基于Scaling L">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T07:12:03.328Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Deep Learning">
+<meta property="article:tag" content="Machine Learning">
+<meta property="article:tag" content="Mathematics">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Scaling Law",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/103.Scaling%20Law/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T07:12:03.328Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/103.Scaling%20Law/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Scaling Law',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">Scaling Law</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Scaling Law</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T07:12:03.328Z" title="更新于 2026-03-01 15:12:03">2026-03-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/667489780">解析大模型中的Scaling Law</a></p>
+</blockquote>
+<p>在大模型的研发中，通常会有下面一些需求：</p>
+<ol>
+<li>计划训练一个10B的模型，想知道至少需要多大的数据？</li>
+<li>收集到了1T的数据，想知道能训练一个多大的模型？</li>
+<li>老板准备1个月后开发布会，给的资源是100张A100，应该用多少数据训多大的模型效果最好？</li>
+<li>老板对现在10B的模型不满意，想知道扩大到100B模型的效果能提升到多少？</li>
+</ol>
+<p>以上这些问题都可以基于Scaling Law的理论进行回答。本文是阅读了一系列 Scaling Law的文章后的整理和思考，包括Scaling Law的概念和推导以及反Scaling Law的场景，不当之处，欢迎指正。</p>
+<h2 id="核心结论"><a href="#核心结论" class="headerlink" title="核心结论"></a>核心结论</h2><p>大模型的Scaling Law是OpenAI在2020年提出的概念[1]，具体如下:</p>
+<ol>
+<li>对于Decoder-only的模型，计算量$C$(Flops), 模型参数量$N$, 数据大小$D$(token数)，三者满足: $C ≈ 6ND$ 。(推导见本文最后)</li>
+<li>模型的最终性能<strong>主要与</strong>计算量$C$，模型参数量$N$ 数据大小$D$ 者相关，而与模型的具体结构(层数&#x2F;深度&#x2F;宽度)基本无关。</li>
+</ol>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656010.jpg">  </p>
+<blockquote>
+<p>固定模型的总参数量，调整层数&#x2F;深度&#x2F;宽度，不同模型的性能差距很小，大部分在2%以内</p>
+</blockquote>
+<ol start="3">
+<li>对于计算量$C$，模型参数量$N$ 数据大小$D$，当不受其他两个因素制约时，模型性能与每个因素都呈现<strong>幂律关系</strong></li>
+</ol>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656011.jpg">  </p>
+<ol start="4">
+<li><p>为了提升模型性能，模型参数量$N$ 数据大小$D$ 要同步放大，但模型和数据分别放大的比例还存在争议。</p>
+</li>
+<li><p>Scaling Law不仅适用于语言模型，还适用于其他模态以及跨模态的任务[4]：</p>
+</li>
+</ol>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656012.jpg">  </p>
+<blockquote>
+<p>这里横轴单位为PF-days: 如果每秒钟可进行$10^{15}$ 运算，就是1 peta flops，那么一天的运算就是$10^{15} × 24 × 3600 &#x3D; 8.64 × 10^{19}$，这个算力消耗被称为1个petaflop&#x2F;s-day。</p>
+</blockquote>
+<h2 id="核心公式"><a href="#核心公式" class="headerlink" title="核心公式"></a>核心公式</h2><p>$L(x) &#x3D; L_{\infty} + (\frac{x_{0} }{x})^{\alpha} \$ </p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656013.jpg">  </p>
+<ul>
+<li>第一项$L_{\infty}$ 指无法通过增加模型规模来减少的损失，可以认为是数据自身的熵（例如数据中的噪音）</li>
+<li>第二项$(x_{0} &#x2F; x)^{\alpha}$ 指能通过增加计算量来减少的损失，可以认为是模型拟合的分布与实际分布之间的差。</li>
+</ul>
+<p>根据公式，增大$x$(例如计算量$C$)，模型整体loss下降，模型性能提升；伴随$x$ 向于无穷大，模型能拟合数据的真实分布，让第二项逼近0，整体趋向于$L_{\infty}$ </p>
+<h2 id="大模型中的Scaling-Law"><a href="#大模型中的Scaling-Law" class="headerlink" title="大模型中的Scaling Law"></a>大模型中的Scaling Law</h2><h3 id="GPT4"><a href="#GPT4" class="headerlink" title="GPT4"></a>GPT4</h3><p>下图是GPT4报告[5]中的Scaling Law曲线，计算量$C$ 模型性能满足幂律关系</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656014.jpg">  </p>
+<ul>
+<li>横轴是归一化之后的计算量，假设GPT4的计算量为1。基于10,000倍小的计算规模，就能预测最终GPT4的性能。</li>
+<li>纵轴是”Bits for words”, 这也是交叉熵的一个单位。在计算交叉熵时，如果使用以 2 为底的对数，交叉熵的单位就是 “bits per word”，与信息论中的比特（bit）概念相符。所以这个值越低，说明模型的性能越好。</li>
+</ul>
+<h3 id="Baichuan2"><a href="#Baichuan2" class="headerlink" title="Baichuan2"></a>Baichuan2</h3><p>下图是Baichuan2[6]技术报告中的Scaling Law曲线。基于10M到3B的模型在1T数据上训练的性能，可预测出最后7B模型和13B模型在2.6T数据上的性能</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656015.jpg">  </p>
+<h3 id="MindLLM"><a href="#MindLLM" class="headerlink" title="MindLLM"></a>MindLLM</h3><p>下图是MindLLM[7]技术报告中的Scaling Law曲线。基于10M到500M的模型在10B数据上训练的性能，预测出最后3B模型在500B数据上的性能。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656016.jpg">  </p>
+<h2 id="Scaling-Law实操-计算效率最优"><a href="#Scaling-Law实操-计算效率最优" class="headerlink" title="Scaling Law实操: 计算效率最优"></a>Scaling Law实操: 计算效率最优</h2><p>根据幂律定律，模型的参数固定，无限堆数据并不能无限提升模型的性能，模型最终性能会慢慢趋向一个固定的值</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656017.jpg"><br>如图所示，如果模型的参数量为$10^3$（图中紫色的线），在数量达到$10^9$，模型基本收敛。所以在数据量达到$10^9$ ，继续增加数据产生的计算量，没有同样计算量下提升模型参数量带来的收益大（<strong>计算效率更优</strong>）。根据$C&#x3D;6ND$，可以进一步转换成模型参数与计算量的关系，即: 模型参数为$10^3$，在计算量为$6 \times 10^{12}$ Flops，即$7 \times 10^{-8}$ PF-days时基本收敛。也就是右图中紫色线的拐点。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656018.jpg"><br>根据Baichuan[6]的实验，在中英场景下，7B模型收敛时的算力是 $10^{23}$ FLOPS，对应的数据量应该是 $D &#x3D; \frac{10^{23} }{6<em>7</em>10^{9} } &#x3D; 2.3T$ </p>
+<p>按照上面的思路，下面进行Scaling Law的实操。</p>
+<p>首先准备充足的数据（例如1T），设计不同模型参数量的小模型(例如0.001B - 1B)，独立训练每个模型，每个模型都训练到基本收敛（假设数据量充足）。根据训练中不同模型的参数和数据量的组合，收集计算量与模型性能的关系。然后可以进一步获得<strong>计算效率最优</strong>时，即同样计算量下性能最好的模型规模和数据大小的组合，模型大小与计算量的关系，以及数据大小与计算量的关系。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656019.jpg"><br>如图所示，根据左图可以看到计算量与模型性能呈现幂律关系（可以认为数据和模型都不受限制），根据中图和右图，可以发现$N_{opt} \propto C^{a}, D_{opt} \propto C^{b}$，即计算效率最优时，模型的参数与计算量的幂次成线性关系，数据量的大小也与计算量的幂次成线性关系。</p>
+<p>根据$C&#x3D;6ND$，可以推算出$a+b&#x3D;1$，但是$a,b$ 别是多少存在分歧。</p>
+<p>OpenAI[1]认为模型规模更重要，即$a&#x3D;0.73, b&#x3D;0.27$，而DeepMind在Chinchilla工作[2]和Google在PaLM工作[3]中都验证了 $a&#x3D;b&#x3D;0.5$ ，即模型和数据同等重要。</p>
+<p>所以假定计算量整体放大10倍，OpenAI认为模型参数更重要，模型应放大$10^{0.73}$ (5.32)倍，数据放大 $10^{0.27}$ (1.86)倍；后来DeepMind和Google认为模型参数量与数据同等重要，两者都应该分别放大 $10^{0.5}$ (3.16)倍。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656020.jpg"><br>例如在PaLM的实验中，计算量从$1 \times 10^{21}$ 大10倍到$1 \times 10^{22}$， 模型参数也提升了3.2倍，3.35B-&gt;10.7B。</p>
+<p>具体最好在自己的数据上做实验来获得你场景下的$a$ $b$。</p>
+<h2 id="LLaMA-反Scaling-Law的大模型"><a href="#LLaMA-反Scaling-Law的大模型" class="headerlink" title="LLaMA: 反Scaling Law的大模型"></a>LLaMA: 反Scaling Law的大模型</h2><p>假设遵循<strong>计算效率最优</strong>来研发LLM，那么根据Scaling Law，给定模型大小，可以推算出最优的计算量，进一步根据最优计算量就能推算出需要的token数量，然后训练就行。</p>
+<p>但是<strong>计算效率最优</strong>这个观点是针对<strong>训练阶段</strong>而言的，并不是**推理阶段，**实际应用中推理阶段效率更实用。</p>
+<p>Meta在LLaMA[8]的观点是：给定模型的目标性能，并不需要用最优的计算效率在<strong>最快</strong>时间训练好模型，而应该在更大规模的数据上，训练一个相对<strong>更小</strong>模型，这样的模型在推理阶段的成本更低，尽管训练阶段的效率不是最优的（同样的算力其实能获得更优的模型，但是模型尺寸也会更大）。根据Scaling Law，10B模型只需要200B的数据，但是作者发现7B的模型性能在1T的数据后还能继续提升。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656021.jpg"><br>所以LLaMA工作的重点是训练一系列语言模型，通过使用更多的数据，让模型在<strong>有限推理资源下有最佳的性能</strong>。</p>
+<p>具体而言，确定模型尺寸后，Scaling Law给到的只是最优的数据量，或者说是一个<strong>至少</strong>的数据量，实际在训练中观察在各个指标上的性能表现，只要还在继续增长，就可以持续增加训练数据。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409241656022.jpg">  </p>
+<h2 id="计算量、模型和数据大小的关系推导"><a href="#计算量、模型和数据大小的关系推导" class="headerlink" title="计算量、模型和数据大小的关系推导"></a>计算量、模型和数据大小的关系推导</h2><p>对于Decoder-only的模型，计算量$C$(Flops), 模型参数量$N$(除去Embedding部分), 数据大小$D$(token数), 三者的关系为: $C ≈ 6ND$</p>
+<p>推导如下，记模型的结构为:</p>
+<p>decoder层数: $l$ </p>
+<p>attention 隐层维度: $d$ </p>
+<p>attention feedforward层维度: $d_{ff}$， 一般来说 $d_{ff} &#x3D; 4*d$ </p>
+<p>首先推导模型的参数量$N$（忽略embedding，norm和bias）计算如下:</p>
+<p>transformer每层包括: self-attetion 和 MLP 两个部分:</p>
+<p>self-attention的参数为$W_{Q}, W_{K}, W_{V}, W_{O}$，每个矩阵的维度均为$\mathbb{R}^{d \times d}$，整体参数量: $4d^{2}$ </p>
+<p>MLP的层数的参数为$W_{1} \in \mathbb{R}^{d \times d_{ff} }, W_{2} \in \mathbb{R}^{d_{ff} \times d}$，整体参数量: $2 * d * d_{ff} &#x3D; 2 * d * 4d &#x3D; 8d^2$ </p>
+<p>所以每层的参数量为: $4d^2 + 8d^2 &#x3D; 12d^2$，全部的$l$ 的参数量为: $12ld^{2}$，即$N&#x3D;12ld^{2}$</p>
+<p>继续推导模型的前向推理的计算量:</p>
+<blockquote>
+<p>计算量的单位是FLOPs，floating point operations 对于矩阵$A \in \mathbb{R}^{m \times n}, B \in \mathbb{R}^{n \times p}$，$AB$ 乘的计算量为$2mnp$，一次加法一次乘法。</p>
+</blockquote>
+<p>假设Decoder层的输入$X \in \mathbb{R}^{b \times s \times d}$, $b$ batch size，$s$ 序列长度, $d$ 模型维度。</p>
+<ul>
+<li>self-attention部分的计算:</li>
+</ul>
+<p>输入线性层: $XW_{Q}, XW_{K}, XW_{V}$，计算量为:$3 * b * s * d * d * 2 &#x3D; 6bsd^2$ </p>
+<p>atention计算: $QK^{T}$，计算量为:$2 * b * s * s * d &#x3D; 2bs^2d$ </p>
+<p>socre与V的计算: $S_{attention}V$，计算量为: $b * 2 * s * s * d &#x3D; 2bs^2d$ </p>
+<p>输出线性层: $X^{‘}W_{O}$，计算量为: $b * 2 * s * d * d &#x3D; 2bsd^2$ </p>
+<ul>
+<li>MLP部分的计算</li>
+</ul>
+<p>升维: $XW_{1}$，计算量为: $b * 2 * s * d * 4d &#x3D; 8bsd^2$ </p>
+<p>降维: $XW_{2}$，计算量为: $b * 2 * s * 4d * d &#x3D; 8bsd^2$ </p>
+<p>所以整个decoder层的计算量为:$24bsd^2 + 4bs^2d$，全部$l$ 为: $C_{forward} &#x3D; 24lbsd^2 + 4lbs^2d$</p>
+<p>反向传播计算量是正向的2倍，所以全部的计算量为: $C &#x3D; 3*C_{forward} &#x3D; 72lbsd^2 + 12lbs^2d$</p>
+<p>平均每个token的计算量为 $C_{token} &#x3D; \frac{C}{bs} &#x3D; 72ld^2 + 12lsd &#x3D; 6N(1+\frac{s}{6d}) \approx 6N$ ($s \ll 6d$)</p>
+<p>所以对于全部包含$D$ token的数据集: $C &#x3D; C_{token}D  \approx 6ND$ </p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>[1] <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2001.08361">https://arxiv.org/abs/2001.08361</a></li>
+<li>[2] <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2203.15556">https://arxiv.org/abs/2203.15556</a></li>
+<li>[3] <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2305.10403">https://arxiv.org/abs/2305.10403</a></li>
+<li>[4] <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2010.14701">https://arxiv.org/abs/2010.14701</a></li>
+<li>[5] <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2303.08774">https://arxiv.org/abs/2303.08774</a></li>
+<li>[6] <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2309.10305">https://arxiv.org/abs/2309.10305</a></li>
+<li>[7] <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2310.15777">https://arxiv.org/abs/2310.15777</a></li>
+<li>[8] <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2302.13971">https://arxiv.org/abs/2302.13971</a></li>
+<li>[9] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/106406433">https://zhuanlan.zhihu.com/p/106406433</a></li>
+<li>[10] <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/629230332/answer/3278779348">https://www.zhihu.com/question/629230332/answer/3278779348</a></li>
+<li>[11] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/631357320">https://zhuanlan.zhihu.com/p/631357320</a></li>
+<li>[12] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/624740065">https://zhuanlan.zhihu.com/p/624740065</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/103.Scaling%20Law/">https://hongwei-zhao.github.io/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/103.Scaling%20Law/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/%E7%BC%96%E7%A8%8B/03.%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" title="汇编语言"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">汇编语言</div></div><div class="info-2"><div class="info-item-1">学习编程其实就是学高级语言，即那些为人类设计的计算机语言。 但是，计算机不理解高级语言，必须通过编译器转成二进制代码，才能运行。学会高级语言，并不等于理解计算机实际的运行步骤。  计算机真正能够理解的是低级语言，它专门用来控制硬件。汇编语言就是低级语言，直接描述&#x2F;控制 CPU 的运行。如果你想了解 CPU 到底干了些什么，以及代码的运行步骤，就一定要学习汇编语言。 汇编语言不容易学习，就连简明扼要的介绍都很难找到。下面我尝试写一篇最好懂的汇编语言教程，解释 CPU 如何执行代码。  一、汇编语言是什么？我们知道，CPU 只负责计算，本身不具备智能。你输入一条指令（instruc...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/01.ProximalGradientMethod/" title="ProximalGradientMethod"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">ProximalGradientMethod</div></div><div class="info-2"><div class="info-item-1">数学知识可导：即设$y&#x3D;f(x)$ 一个单变量函数， 如果$y$ $x&#x3D;x_0$ 左右导数分别存在且相等,则称$y$ $x&#x3D;x_0$ 可导。如果一个函数在$x_0$ 可导，那么它一定在$x_0$ 是连续函数。 可微：设函数$y&#x3D; f(x)$，若自变量在点$x$ 改变量$\Delta x$ 函数相应的改变量$\Delta y$ 关系$\Delta y&#x3D;A\times \Delta x + O(\Delta x)$，其中$A$ $\Delta x$ 关，则称函数$f(x)$ 点$x$ 微，并称$A\times \Delta x$ 函数$f(x...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%93%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">核心结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%85%AC%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">核心公式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84Scaling-Law"><span class="toc-number">3.</span> <span class="toc-text">大模型中的Scaling Law</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GPT4"><span class="toc-number">3.1.</span> <span class="toc-text">GPT4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Baichuan2"><span class="toc-number">3.2.</span> <span class="toc-text">Baichuan2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MindLLM"><span class="toc-number">3.3.</span> <span class="toc-text">MindLLM</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Scaling-Law%E5%AE%9E%E6%93%8D-%E8%AE%A1%E7%AE%97%E6%95%88%E7%8E%87%E6%9C%80%E4%BC%98"><span class="toc-number">4.</span> <span class="toc-text">Scaling Law实操: 计算效率最优</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LLaMA-%E5%8F%8DScaling-Law%E7%9A%84%E5%A4%A7%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.</span> <span class="toc-text">LLaMA: 反Scaling Law的大模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E9%87%8F%E3%80%81%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%85%B3%E7%B3%BB%E6%8E%A8%E5%AF%BC"><span class="toc-number">6.</span> <span class="toc-text">计算量、模型和数据大小的关系推导</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">7.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

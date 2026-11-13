@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Hongwei Zhao's Blog - AI &amp; Machine Learning Notes</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Research notes on AI, ML, Mathematics and Programming">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/page/35/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="Research notes on AI, ML, Mathematics and Programming">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/Geeks-Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Deep Learning">
+<meta property="article:tag" content="Machine Learning">
+<meta property="article:tag" content="Mathematics">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/u/Geeks-Z"><script type="application/ld+json"></script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/page/35/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hongwei Zhao\'s Blog',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">Hongwei Zhao's Blog</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="post_cover left"><a href="/blog/2025/11/16/AI/14.PEFT/03.PromptTuning/01.Prompt-Tuning/" title="Prompt-Tuning"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="Prompt-Tuning"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/03.PromptTuning/01.Prompt-Tuning/" title="Prompt-Tuning">Prompt-Tuning</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/PromptTuning/">PromptTuning</a></span></div><div class="content">面向预训练语言模型的 Prompt-Tuning 技术发展历程 Prompt-Tuning 自从 GPT-3 被提出以来，从传统的离散、连续的 Prompt 的构建、走向面向超大规模模型的 In-Context Learning、Instruction-tuning 和 Chain-of-Thought。 自从 GPT、EMLO、BERT 的相继提出，以Pre-training + Fine-tuning 的模式在诸多自然语言处理（NLP）任务中被广泛使用，其先在Pre-training阶段通过一个模型在大规模无监督语料上预先训练一个 预训练语言模型（Pre-trained Langua...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/2025/11/16/AI/14.PEFT/00.Survey/01.Towards%20a%20Unified%20View%20of%20Parameter-Efficient%20Transfer%20Learning/" title="Towards a Unified View of Parameter-Efficient Transfer Learning"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="Towards a Unified View of Parameter-Efficient Transfer Learning"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/00.Survey/01.Towards%20a%20Unified%20View%20of%20Parameter-Efficient%20Transfer%20Learning/" title="Towards a Unified View of Parameter-Efficient Transfer Learning">Towards a Unified View of Parameter-Efficient Transfer Learning</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/Survey/">Survey</a></span></div><div class="content"> Code  0. 摘要微调大型预训练语言模型（PLMs）以适应下游任务已成为自然语言处理（NLP）中的默认学习范式。然而，传统方法通常微调预训练模型的所有参数，随着模型规模和任务数量的增加，这种做法变得不可行。最近的研究提出了多种参数高效的迁移学习方法，只需微调少量（额外的）参数即可达到强大的性能。尽管这些方法效果显著，但其成功的关键因素以及各方法之间的联系尚不清楚。在本文中，我们分解了最新的参数高效迁移学习方法的设计，并提出了一个统一的框架，建立了它们之间的联系。具体来说，我们将它们重新框架化为对预训练模型中特定隐藏状态的修改，并定义了一组设计维度，这些方法在这些维度上有所不同，例如...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/blog/2025/11/16/AI/14.PEFT/05.Adapter/01.Adapter%E7%BB%BC%E8%BF%B0/" title="Adapter综述"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="Adapter综述"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/05.Adapter/01.Adapter%E7%BB%BC%E8%BF%B0/" title="Adapter综述">Adapter综述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/Adapter/">Adapter</a></span></div><div class="content">Parameter-Efficient Transfer Learning for NLP Adapter（ICML 2019）这项工作第一次提出了 Adapter 方法。在对预训练模型进行微调时，我们可以冻结在保留原模型参数的情况下对已有结构添加一些额外参数，对该部分参数进行训练从而达到微调的效果。作者采用 Bert 作为实验模型，在每个 Transformer Block 的 Attention 层以及两个全连接层后增加了一个 Adapter 结构，其总体结构如下： </div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/2025/11/16/AI/14.PEFT/00.Survey/02.Parameter-Efficient%20Fine-Tuning%20Methods%20for%20Pretrained%20Language%20Models%20A%20Critical%20Review%20and%20Assessment/" title="Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models A Critical Review and Assessment"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models A Critical Review and Assessment"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/00.Survey/02.Parameter-Efficient%20Fine-Tuning%20Methods%20for%20Pretrained%20Language%20Models%20A%20Critical%20Review%20and%20Assessment/" title="Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models A Critical Review and Assessment">Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models A Critical Review and Assessment</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/Survey/">Survey</a></span></div><div class="content">0 摘要随着基于 Transformer 的预训练语言模型（PLMs）参数数量的不断增长，特别是具有数十亿参数的大型语言模型（LLMs）的出现，许多自然语言处理（NLP）任务展示出了显著的成功。然而，这些模型的巨大规模和计算需求对其适应特定下游任务提出了重大挑战，尤其是在计算资源有限的环境中。参数高效微调（PEFT）通过减少微调参数数量和内存使用量，同时实现与完全微调相当的性能，提供了一种有效的解决方案。对 PLMs，特别是 LLMs 的微调需求导致了 PEFT 方法的快速发展，如图 1 所示。在本文中，我们对 PLMs 的 PEFT 方法进行了全面和系统的回顾。我们总结了这些 PEFT...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/blog/2025/11/16/AI/14.PEFT/05.Adapter/101.R-Adapter/" title="R-Adapter"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="R-Adapter"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/05.Adapter/101.R-Adapter/" title="R-Adapter">R-Adapter</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/Adapter/">Adapter</a></span></div><div class="content"> R-Adapter：零样本模型微调新突破，提升鲁棒性与泛化能力 | ECCV 2024   大规模图像-文本预训练模型实现了零样本分类，并在不同数据分布下提供了一致的准确性。然而，这些模型在下游任务中通常需要微调优化，这会降低对于超出分布范围的数据的泛化能力，并需要大量的计算资源。论文提出新颖的Robust Adapter（R-Adapter），可以在微调零样本模型用于下游任务的同时解决这两个问题。该方法将轻量级模块集成到预训练模型中，并采用新颖的自我集成技术以提高超出分布范围的鲁棒性，并大幅减少存储开销。此外，论文提出了针对视觉-语言下游任务设计的MPM-NCE损失，确保多个图像-文...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/02.AdaLoRA/" title="AdaLoRA"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="AdaLoRA"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/02.AdaLoRA/" title="AdaLoRA">AdaLoRA</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/LoRA/">LoRA</a></span></div><div class="content">一、AdaLoRA在做一件什么事1.1 LoRA是怎么做微调的 假设原始参数为 $W$ ，全参数微调后对原始参数的改变量为 $\Delta W$ 。在LoRA中，我们用两个矩阵的乘积 $BA$ 来近似$\Delta W$做SVD分解后的结果，则模型的输出结果满足：$$h &#x3D; Wx + \Delta W x&#x3D;Wx + \frac{\alpha}{r}BAx$$ 其中，$r$ 就是我们设定的矩阵的秩**，在微调过程中，所有做LoRA适配器的module，它们的 $r$ 都是一致的，且在训练过程中不会改变**（对秩的含义不理解的，可参见这篇文章的4.1。对 $\frac{\...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/01.LoRA/" title="LoRA"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="LoRA"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/01.LoRA/" title="LoRA">LoRA</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/LoRA/">LoRA</a></span></div><div class="content">一、全参数微调  我们知道，微调的含义，就是把已经训练好的模型（pretrained model）拿来，给它吃特定的下游任务数据，使得模型在预训练权重上继续训练，直至满足下游任务性能标准。预训练模型就像一个特征提取器，能够基于先前训练数据中学到的经验，为我们提取有效的特征，大大提升下游任务的训练效果和收敛速度。   全量微调指的是，在下游任务的训练中，对预训练模型的每一个参数都做更新。例如图中，给出了Transformer的Q&#x2F;K&#x2F;V矩阵的全量微调示例，对每个矩阵来说，在微调时，其d*d个参数，都必须参与更新。   全量微调的显著缺点是，训练代价昂贵。同时，由于模型在...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/03.LoRA-GA/" title="LoRA-GA"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="LoRA-GA"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/03.LoRA-GA/" title="LoRA-GA">LoRA-GA</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/LoRA/">LoRA</a></span></div><div class="content"> 来源：对齐全量微调！这是我看过最精彩的LoRA改进（一）  众所周知，LoRA是一种常见的参数高效的微调方法。LoRA利用低秩分解来降低微调参数量，节省微调显存，同时训练好的权重可以合并到原始权重上，推理架构不需要作出改变，是一种训练和推理都比较友好的微调方案。此外，https://kexue.fm/archives/10001还讨论过LoRA的不对称性，指出给$A,B$ 置不同的学习率能取得更好的效果，该结论被称为“LoRA+”。 基础回顾首先我们再来温习一下LoRA。假设预训练参数为$W_0 \in \mathbb{R}^{n\times m}$，那么全量微调时的更新量自然也是一个...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/05.LoRAPlus/" title="LoRAPlus"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="LoRAPlus"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/05.LoRAPlus/" title="LoRAPlus">LoRAPlus</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/LoRA/">LoRA</a></span></div><div class="content"> 《LoRA+: Efficient Low Rank Adaptation of Large Models》   解读来源：配置不同的学习率，LoRA还能再涨一点？  为了使LoRA的效果尽可能接近最优，权重$B$ 学习率应该要大于权重$A$ 学习率$$\frac{\eta_B}{\eta_A} &#x3D; \mathscr{O}(\sqrt{n}) $$ 论文解读给LoRA的两个矩阵分配不同的学习率，LoRA的效果还能进一步提升。该结论出自论文《LoRA+: Efficient Low Rank Adaptation of Large Models》（下称“LoRA+”）。咋看之下...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/04.LoRA-Pro/" title="LoRA-Pro"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="LoRA-Pro"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/04.LoRA-Pro/" title="LoRA-Pro">LoRA-Pro</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/LoRA/">LoRA</a></span></div><div class="content">  解读来源：对齐全量微调！这是我看过最精彩的LoRA改进（二） 文章：LoRA-Pro: Are Low-Rank Adapters Properly Optimized?   文章解读“LoRA-GA”通过梯度SVD来改进LoRA的初始化，从而实现LoRA与全量微调的对齐。当然，从理论上来讲，这样做也只能尽量对齐第一步更新后的$W_1$，LoRA-Pro同样是想着对齐全量微调，但它对齐的是每一步梯度，从而对齐整条优化轨迹，这正好是跟LoRA-GA互补的改进点。 对齐全量LoRA的参数化方式是 $$W &#x3D; (W_0 - A_0 B_0) + AB\tag{1}$$其中$W_0...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/06.MoSLoRA/" title="MoSLoRA"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="MoSLoRA"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/06.MoSLoRA/" title="MoSLoRA">MoSLoRA</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/LoRA/">LoRA</a></span></div><div class="content">Kimi全文翻译 :arrow_down:0. 摘要在本文中，我们介绍了一种受子空间启发的低秩适应（LoRA）方法，该方法计算效率高，易于实现，并且可以轻松应用于大型语言、多模态和扩散模型。最初，我们将 LoRA 的权重等价地分解为两个子空间，并发现简单地混合它们可以增强性能。为了研究这种现象，我们通过细粒度的子空间视角重新审视它，表明这种修改等同于使用固定混合器融合子空间。为了更加灵活，我们与原始 LoRA 权重一起学习混合器，并称之为子空间混合 LoRA（MoSLoRA）。MoSLoRA 在不同模态的任务上一致性地优于 LoRA，包括常识推理、视觉指令调整和主题驱动的文本到图像生成，...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/blog/2025/11/16/AI/14.PEFT/04.P-Tuning/01.P-tuning/" title="P-tuning"><img class="post-bg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="P-tuning"></a></div><div class="recent-post-info"><a class="article-title" href="/blog/2025/11/16/AI/14.PEFT/04.P-Tuning/01.P-tuning/" title="P-tuning">P-tuning</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/blog/categories/AI/PEFT/P-Tuning/">P-Tuning</a></span></div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/blog/page/34/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/34/#content-inner">34</a><span class="page-number current">35</span><a class="page-number" href="/blog/page/36/#content-inner">36</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/41/#content-inner">41</a><a class="extend next" rel="next" href="/blog/page/36/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            <a class="card-more-btn" href="/blog/categories/" title="查看更多">
+      <i class="fas fa-angle-right"></i></a>
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/AI/"><span class="card-category-list-name">AI</span><span class="card-category-list-count">341</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/AI/CIL/"><span class="card-category-list-name">CIL</span><span class="card-category-list-count">46</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/AI/CIL/Backbone-Expansion/"><span class="card-category-list-name">Backbone Expansion</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/AI/CIL/Data-Regularization/"><span class="card-category-list-name">Data Regularization</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/AI/CIL/Direct-Replay/"><span class="card-category-list-name">Direct Replay</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/AI/CIL/Energy/"><span class="card-category-list-name">Energy</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/AI/CIL/Feature-Distillation/"><span class="card-category-list-name">Feature Distillation</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/blog/categories/AI/CIL/Feature-Rectify/"><span class="card-category-list-name">Feature Rectify</span><span class="card-category-list-count">8</span></a></li></ul></li></ul></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/blog/tags/General/" style="font-size: 1.15em; color: rgb(67, 50, 183);">General</a><a href="/blog/tags/AI/" style="font-size: 1.45em; color: rgb(58, 72, 179);">AI</a><a href="/blog/tags/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 1.17em; color: rgb(84, 77, 150);">循环神经网络</a><a href="/blog/tags/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 1.15em; color: rgb(56, 157, 50);">卷积神经网络</a><a href="/blog/tags/Transformer/" style="font-size: 1.36em; color: rgb(153, 50, 152);">Transformer</a><a href="/blog/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/" style="font-size: 1.24em; color: rgb(111, 50, 50);">扩散模型</a><a href="/blog/tags/VisionTransformer/" style="font-size: 1.28em; color: rgb(165, 113, 110);">VisionTransformer</a><a href="/blog/tags/PTM/" style="font-size: 1.17em; color: rgb(172, 61, 66);">PTM</a><a href="/blog/tags/MoE/" style="font-size: 1.32em; color: rgb(50, 84, 89);">MoE</a><a href="/blog/tags/GPU/" style="font-size: 1.3em; color: rgb(60, 103, 74);">GPU</a><a href="/blog/tags/LongTailed/" style="font-size: 1.17em; color: rgb(50, 162, 114);">LongTailed</a><a href="/blog/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" style="font-size: 1.21em; color: rgb(131, 50, 58);">多模态</a><a href="/blog/tags/%E7%9F%A5%E8%AF%86%E8%92%B8%E9%A6%8F/" style="font-size: 1.21em; color: rgb(163, 50, 89);">知识蒸馏</a><a href="/blog/tags/%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/" style="font-size: 1.15em; color: rgb(117, 50, 190);">对比学习</a><a href="/blog/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" style="font-size: 1.17em; color: rgb(143, 84, 100);">计算机视觉</a><a href="/blog/tags/%E5%B0%8F%E6%A0%B7%E6%9C%AC%E5%AD%A6%E4%B9%A0/" style="font-size: 1.19em; color: rgb(152, 84, 197);">小样本学习</a><a href="/blog/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/" style="font-size: 1.26em; color: rgb(50, 51, 50);">迁移学习</a><a href="/blog/tags/%E9%9B%B6%E6%A0%B7%E6%9C%AC%E5%AD%A6%E4%B9%A0/" style="font-size: 1.15em; color: rgb(50, 123, 165);">零样本学习</a><a href="/blog/tags/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/" style="font-size: 1.21em; color: rgb(199, 141, 121);">集成学习</a><a href="/blog/tags/Mamba/" style="font-size: 1.24em; color: rgb(158, 173, 50);">Mamba</a><a href="/blog/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/" style="font-size: 1.32em; color: rgb(105, 50, 182);">论文阅读与写作</a><a href="/blog/tags/PyTorch/" style="font-size: 1.43em; color: rgb(192, 188, 145);">PyTorch</a><a href="/blog/tags/PEFT/" style="font-size: 1.39em; color: rgb(86, 50, 120);">PEFT</a><a href="/blog/tags/CL/" style="font-size: 1.15em; color: rgb(140, 93, 50);">CL</a><a href="/blog/tags/Tex/" style="font-size: 1.15em; color: rgb(50, 76, 69);">Tex</a><a href="/blog/tags/%E5%B0%8F%E6%A0%B7%E6%9C%AC%E7%B1%BB%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0FSCIL/" style="font-size: 1.26em; color: rgb(124, 76, 50);">小样本类增量学习FSCIL</a><a href="/blog/tags/UCIL/" style="font-size: 1.24em; color: rgb(184, 139, 170);">UCIL</a><a href="/blog/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/" style="font-size: 1.34em; color: rgb(50, 124, 50);">多模态增量学习MMCL</a><a href="/blog/tags/%E5%88%86%E5%B8%83%E5%A4%96%E6%A3%80%E6%B5%8B/" style="font-size: 1.19em; color: rgb(50, 178, 167);">分布外检测</a><a href="/blog/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E6%8C%87%E5%8D%97/" style="font-size: 1.32em; color: rgb(87, 75, 50);">深度学习调参指南</a><a href="/blog/tags/Others/" style="font-size: 1.41em; color: rgb(87, 50, 50);">Others</a><a href="/blog/tags/mac/" style="font-size: 1.15em; color: rgb(97, 50, 56);">mac</a><a href="/blog/tags/DIL/" style="font-size: 1.15em; color: rgb(52, 72, 170);">DIL</a><a href="/blog/tags/win/" style="font-size: 1.17em; color: rgb(122, 50, 146);">win</a><a href="/blog/tags/LTCIL/" style="font-size: 1.17em; color: rgb(63, 112, 50);">LTCIL</a><a href="/blog/tags/ai-tools/" style="font-size: 1.19em; color: rgb(146, 154, 55);">ai</a><a href="/blog/tags/linux/" style="font-size: 1.41em; color: rgb(61, 50, 101);">linux</a><a href="/blog/tags/GitHub/" style="font-size: 1.17em; color: rgb(193, 192, 50);">GitHub</a><a href="/blog/tags/IDE/" style="font-size: 1.17em; color: rgb(50, 130, 157);">IDE</a><a href="/blog/tags/NAS/" style="font-size: 1.24em; color: rgb(149, 174, 173);">NAS</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/blog/archives/2026/08/">
+            <span class="card-archive-list-date">
+              八月 2026
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/blog/archives/2026/07/">
+            <span class="card-archive-list-date">
+              七月 2026
+            </span>
+            <span class="card-archive-list-count">6</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/blog/archives/2025/11/">
+            <span class="card-archive-list-date">
+              十一月 2025
+            </span>
+            <span class="card-archive-list-count">479</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">486</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-11-13T03:06:24.116Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js@3.0.0/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = ["AI & Machine Learning Notes","但愿功不唐捐"].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  typedJSFn.processSubtitle(["AI & Machine Learning Notes","但愿功不唐捐"])
+}
+typedJSFn.run(subtitleType)</script></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

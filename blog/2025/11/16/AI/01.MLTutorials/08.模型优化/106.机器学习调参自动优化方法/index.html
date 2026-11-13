@@ -1,0 +1,335 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>机器学习调参自动优化方法 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="机器学习调参自动优化方法https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;qFhRjBBXXwCKnyPIh5GSiQ?poc_token&#x3D;HCyh4majWbZFpbSQ_WGjood0-_0r1y-AtxO64-tQ  Datawhale   以下文章来源于宅码  ，作者Ai 宅码 .  print(“Hello, world!”) 本文旨在介绍当前被大家广为所知的超参自动优化方法，像网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习调参自动优化方法">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/106.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E8%87%AA%E5%8A%A8%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="机器学习调参自动优化方法https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;qFhRjBBXXwCKnyPIh5GSiQ?poc_token&#x3D;HCyh4majWbZFpbSQ_WGjood0-_0r1y-AtxO64-tQ  Datawhale   以下文章来源于宅码  ，作者Ai 宅码 .  print(“Hello, world!”) 本文旨在介绍当前被大家广为所知的超参自动优化方法，像网">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.354Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="MLTutorials">
+<meta property="article:tag" content="模型优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "机器学习调参自动优化方法",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/106.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E8%87%AA%E5%8A%A8%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.354Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/106.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E8%87%AA%E5%8A%A8%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '机器学习调参自动优化方法',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">机器学习调参自动优化方法</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">机器学习调参自动优化方法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.354Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/MLTutorials/">MLTutorials</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/MLTutorials/%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/">模型优化</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://mmbiz.qlogo.cn/mmbiz_jpg/vI9nYe94fsEdWl1RjERNWqia63EmoBmWJFgw9TUA0ibJm5hvHWMcHXm4YmAkBibr3yZX8b4RZic2VR0yuLRGL9BibOg/0?wx_fmt=jpeg" alt="cover_image"></p>
+<h1 id="机器学习调参自动优化方法"><a href="#机器学习调参自动优化方法" class="headerlink" title="机器学习调参自动优化方法"></a>机器学习调参自动优化方法</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qFhRjBBXXwCKnyPIh5GSiQ?poc_token=HCyh4majWbZFpbSQ_WGjood0-_0r1y-AtxO64-tQ">https://mp.weixin.qq.com/s/qFhRjBBXXwCKnyPIh5GSiQ?poc_token=HCyh4majWbZFpbSQ_WGjood0-_0r1y-AtxO64-tQ</a></p>
+<p><a href="javascript:void(0);"> Datawhale </a></p>
+<hr>
+<p>以下文章来源于宅码  ，作者Ai</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="http://wx.qlogo.cn/mmhead/Q3auHgzwzM4sr9616HCZ2SH6cWOrqDEruxuBv7v4Cxyu0iaz4IEoMYg/0"><br><strong>宅码</strong> .  print(“Hello, world!”)</p>
+<p>本文旨在介绍当前被大家广为所知的超参自动优化方法，像网格搜索、随机搜索、贝叶斯优化和Hyperband，并附有相关的样例代码供大家学习。</p>
+<p><strong>一、网格搜索(Grid Search)</strong>  </p>
+<p>网格搜索是暴力搜索，在给定超参搜索空间内，尝试所有超参组合，最后搜索出最优的超参组合。sklearn已实现该方法，使用样例如下:</p>
+<hr>
+<p>​<br>    from sklearn import svm, datasetsfrom sklearn.model_selection import GridSearchCVimport pandas as pd<br>    # 导入数据iris &#x3D; datasets.load_iris()# 定义超参搜索空间parameters &#x3D; {‘kernel’:(‘linear’, ‘rbf’), ‘C’:[1, 10]}# 初始化模型svc &#x3D; svm.SVC()# 网格搜索clf &#x3D; GridSearchCV(estimator &#x3D; svc,                   param_grid &#x3D; parameters,                   scoring &#x3D; ‘accuracy’,                   n_jobs &#x3D; -1,                   cv &#x3D; 5)clf.fit(iris.data, iris.target)返回：GridSearchCV(cv&#x3D;5, estimator&#x3D;SVC(), n_jobs&#x3D;-1,                   param_grid&#x3D;{‘C’: [1, 10], ‘kernel’: (‘linear’, ‘rbf’)},                   scoring&#x3D;’accuracy’)<br>    # 打印结果print(‘详细结果:\n’, pd.DataFrame.from_dict(clf.cv_results_))print(‘最佳分类器:\n’, clf.best_estimator_)print(‘最佳分数:\n’, clf.best_score_)print(‘最佳参数:\n’, clf.best_params_).返回：详细结果:    mean_fit_time  std_fit_time  mean_score_time  std_score_time param_C  … split3_test_score split4_test_score  mean_test_score  std_test_score  rank_test_score0       0.000788      0.000394         0.000194        0.000389       1  …          0.966667               1.0         0.980000        0.016330                11       0.000804      0.000402         0.000199        0.000399       1  …          0.933333               1.0         0.966667        0.021082                42       0.000593      0.000484         0.000593        0.000484      10  …          0.966667               1.0         0.973333        0.038873                33       0.000593      0.000484         0.000399        0.000489      10  …          0.966667               1.0         0.980000        0.016330                1[4 rows x 15 columns]最佳分类器: SVC(C&#x3D;1, kernel&#x3D;’linear’)最佳分数:0.9800000000000001最佳参数: {‘C’: 1, ‘kernel’: ‘linear’}</p>
+<p>sklearn.model_selection.GridSearchCV  [1]  的重要参数说明:</p>
+<ul>
+<li><p>estimator: scikit-learn模型。 </p>
+</li>
+<li><p>param_grid: 超参搜索空间，即超参数字典。 </p>
+</li>
+<li><p>scoring: 在交叉验证中使用的评估策略。 </p>
+</li>
+<li><p>n_jobs: 并行任务数，-1为使用所有CPU。 </p>
+</li>
+<li><p>cv: 决定采用几折交叉验证。</p>
+</li>
+</ul>
+<p><strong>二、随机搜索(Randomized Search)</strong></p>
+<p>随机搜索是在搜索空间中采样出超参组合，然后选出采样组合中最优的超参组合。随机搜索的好处如下图所示：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://mmbiz.qpic.cn/mmbiz_png/CcRHkXzUruV0YVWsHkLT7aBon0ibOBibXuuSML2dfbQY2qqNkun9fuMfmUibWFuoPfqE0EOVlWbTGJ8NHibDf3D70g/640?wx_fmt=png"></p>
+<p>图1: 网格搜索和随机搜索的对比  [2]</p>
+<p>解释图1，如果目前我们要搜索两个参数，但参数A重要而另一个参数B并没有想象中重要，网格搜索9个参数组合(A,<br>B)，而由于模型更依赖于重要参数A，所以只有3个参数值是真正参与到最优参数的搜索工作中。反观随机搜索，随机采样9种超参组合，在重要参数A上会有9个参数值参与到搜索工作中，所以，<br><strong>在某些参数对模型影响较小时，使用随机搜索能让我们有更多的探索空间</strong> 。  </p>
+<p>同样地，sklearn实现了随机搜索  [3]  ，样例代码如下:</p>
+<hr>
+<p>​<br>    from sklearn import svm, datasetsfrom sklearn.model_selection import RandomizedSearchCVimport pandas as pdfrom scipy.stats import uniform  </p>
+<pre><code># 导入数据iris = datasets.load_iris()# 定义超参搜索空间distributions = {&#39;kernel&#39;:[&#39;linear&#39;, &#39;rbf&#39;], &#39;C&#39;:uniform(loc=1, scale=9)}# 初始化模型svc = svm.SVC()# 网格搜索clf = RandomizedSearchCV(estimator = svc,                         param_distributions = distributions,                         n_iter = 4,                         scoring = &#39;accuracy&#39;,                         cv = 5,                         n_jobs = -1,                         random_state = 2021)clf.fit(iris.data, iris.target)返回：RandomizedSearchCV(cv=5, estimator=SVC(), n_iter=4, n_jobs=-1,                         param_distributions={&#39;C&#39;: &lt;scipy.stats._distn_infrastructure.rv_frozen object at 0x000001F372F9A190&gt;,                                              &#39;kernel&#39;: [&#39;linear&#39;, &#39;rbf&#39;]},                         random_state=2021, scoring=&#39;accuracy&#39;)  
+  
+# 打印结果print(&#39;详细结果:\n&#39;, pd.DataFrame.from_dict(clf.cv_results_))print(&#39;最佳分类器:\n&#39;, clf.best_estimator_)print(&#39;最佳分数:\n&#39;, clf.best_score_)print(&#39;最佳参数:\n&#39;, clf.best_params_)返回：详细结果:    mean_fit_time  std_fit_time  mean_score_time  std_score_time  param_C  ... split3_test_score split4_test_score  mean_test_score  std_test_score  rank_test_score0       0.000598      0.000489         0.000200        0.000400   6.4538  ...          0.966667               1.0         0.986667        0.016330                11       0.000997      0.000002         0.000000        0.000000  4.99782  ...          0.966667               1.0         0.980000        0.026667                32       0.000798      0.000399         0.000399        0.000488  3.81406  ...          0.966667               1.0         0.980000        0.016330                33       0.000598      0.000488         0.000200        0.000399  5.36286  ...          0.966667               1.0         0.986667        0.016330                1[4 rows x 15 columns]最佳分类器: SVC(C=6.453804509266643)最佳分数:0.9866666666666667最佳参数: {&#39;C&#39;: 6.453804509266643, &#39;kernel&#39;: &#39;rbf&#39;}
+</code></pre>
+<p>相比于网格搜索，sklearn随机搜索中主要改变的参数是param_distributions，负责提供超参值分布范围。</p>
+<p><strong>三、贝叶斯优化(Bayesian Optimization)</strong></p>
+<p>我写本文的目的主要是冲着贝叶斯优化来的，一直有所耳闻却未深入了解，所以我就来查漏补缺了。以下内容主要基于Duane Rich在《How does<br>Bayesian optimization work?》  [4]  的回答。</p>
+<p>调优的目的是要找到一组最优的超参组合，能使目标函数f达到全局最小值。</p>
+<p>举个例子，若学习率设置过大，模型可能会在代价函数的全局最优点附近不断来回震荡，甚至跳出全局最优点，而设置过小，又可能会陷入局部最优，因此调学习率这一参数，是为了让模型能收敛到代价函数的全局最小值。<br>可是在机器学习中， **目标函数 ** 常是被称作 <strong>expensive blackbox function</strong> ，计算开销大且不一定为凸函数。<br>为此，贝叶斯优化出现了，它特别适合针对expensive blackbox function找到全局最优。</p>
+<p>假设我们的真实的目标函数  长下图这样：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://mmbiz.qpic.cn/mmbiz_png/CcRHkXzUruV0YVWsHkLT7aBon0ibOBibXu8coSW76TzDtcgx8WjUvu2mwfvGu8FnNwpZx3L7jwEQJt9xXVGcu6dQ/640?wx_fmt=png"></p>
+<p>图2: 目标函数f(x)[4]</p>
+<p>注意: 目标函数  的  是指超参数，我们希望找到最优的超参  去得到最小的  。为什么用虚线表示  呢？因为它是黑箱函数(blackbox<br>function)。</p>
+<p>现在，我们怎么找到  全局最小值点呢？  我们能不能先在  上随机采样10个点，然后取它们的最小值呢？</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://mmbiz.qpic.cn/mmbiz_png/CcRHkXzUruV0YVWsHkLT7aBon0ibOBibXu1AIUemiaQzjqGFGAu0NqRjTBonHyveIxfMUVMz9QAU5Anl1GWpWbCoA/640?wx_fmt=png"></p>
+<p>图3: 随机采样10个点的目标函数f(x)[4]</p>
+<p>图3里确实有个点挺靠近全局最优点的，那是不是在它附近再采样几个点，不断重复就行了？没那么简单，万一起始采样点在局部最小值附近，那这种方法会很容易陷入局部最优。关于“如何找到下一个合适的点”这个问题，我们先放一放，因为我们漏掉一个重点：每次尝试一种超参值<br>，计算  的代价是昂贵的，为了减轻开销，贝叶斯优化采用了  <strong>代理模型(surrogate model)</strong><br>，代理模型可以被看作是一个简单模型去拟合原本复杂且不好理解的模型，简单来说，就是  计算太昂贵了，我们就用代理模型去代替它。</p>
+<p>贝叶斯优化使用了 <strong>高斯过程(gasussian processes, GP)</strong><br>去构建代理模型，高斯过程的细节这里暂时不讲，有兴趣的小伙伴可以自行查阅资料了解。  基于给定的输入和输出，GP会推断出一个模型(这里为代理模型)。<br>假设我们从昂贵的  采样了4个点，然后我们把这4个点交给GP，它会返回一个代理模型，如下图所示：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://mmbiz.qpic.cn/mmbiz_png/CcRHkXzUruV0YVWsHkLT7aBon0ibOBibXus9mzEciaWFj3GXfAR5ysXRmc6gZenmicpaPxu7dkr6e7CPoVyun86TSg/640?wx_fmt=png"></p>
+<p>图4: 目标函数f(x)和代理模型[4]</p>
+<p>** 绿色实线就是GP猜的代理模型，绿色条带是输出分布的标准差(即为Uncertainty)  **<br>。我们有了代理模型，后续我们去找下一个合适的超参值，就能带入到计算开销相对较小的代理模型中，评估给定超参值的情况。</p>
+<p>现在，我们来思考回之前提到的问题:” <strong>如何找到下一个合适的点?</strong><br>“，这个问题本质是在问:“哪里有全局最小的点？”，为了解决这个问题，我们要关注两个地方:</p>
+<p>(1)  <strong>已开发区域</strong> : 在绿色实线上最低的超参点。  因为很可能它附近存在全局最优点。</p>
+<p>(2) <strong>未探索区域</strong> :<br>绿色实线上还未被探索的区域。比如图4，相比于0.15-0.25区间，0.65-0.75区间更具有探索价值(即该区间Uncertainty更大)。探索该区域有利于减少我们猜测的方差。</p>
+<p>为了实现以上 <strong>探索和开发的平衡(exploration-exploitation trade-off)</strong> ，贝叶斯优化使用了<br><strong>采集函数(acquisition function)</strong> ，它能平衡好全局最小值的探索和开发。采集函数有很多选择，其中最常见的是<br><strong>expectated of improvement(EI)</strong> [5]  ，我们先看一个utility function:  </p>
+<p>是目前观察到的最小值，  是超参值，我们希望上述utility function输出越大越好(即找到的  能获得比当前最小值还小)，基于<br>，EI采集函数如下所示:</p>
+<p>具有最高的EI的超参值  会被选择。  EI有两部分：</p>
+<p>(1) <strong>减少均值函数</strong> ，提高EI。</p>
+<p>(2) <strong>增加方差</strong> ，提高EI。</p>
+<p>所以EI的提高是建立在均值和方差的trade-off，也是exploration和exploitation的trade-off。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://mmbiz.qpic.cn/mmbiz_png/CcRHkXzUruV0YVWsHkLT7aBon0ibOBibXurjRib4YgZGkXlpnKibzRwObYAadGZnQuecExMwYyyCh0glCUAJoAViaNg/640?wx_fmt=png"></p>
+<p>图5: 采集函数A(x)</p>
+<p>图5我们可以看到，  时EI最大，所以我们下一个超参值  应该选1。</p>
+<p>讲到这里，我们来看下完整的贝叶斯优化步骤是怎样的：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://mmbiz.qpic.cn/mmbiz_png/CcRHkXzUruV0YVWsHkLT7aBon0ibOBibXuwTeXP4V8r0VTWPFrOGTEBb0k2d3OXBU6icrzoyOn1yTIEdhhIHpafQA/640?wx_fmt=png"></p>
+<p>图6: 贝叶斯优化-SMBO</p>
+<p>SMBO是简洁版的贝叶斯优化，伪代码如图6所示，具体如下：  </p>
+<p>(1) 准备输入: expensive blackbox function  ，超参搜索空间  ，采样数据集  (超参组合  ，对应  输出值)，采集函数<br>和用数据集  拟合的代理模型M。</p>
+<p>(2) 基于  和  ，采样得到数据集  。</p>
+<p>(3) 循环选  次参数：</p>
+<ol>
+<li><p>用当前数据集  拟合代理模型  ，实现模型更新。 </p>
+</li>
+<li><p>选择使采集函数  最大的超参组合  。 </p>
+</li>
+<li><p>将  带入  中，得到输出值  。(注意这里  的计算开销大) </p>
+</li>
+<li><p>将新的  加入到现有数据集  中。</p>
+</li>
+</ol>
+<p>目前，Hyperopt  [6]  开源代码库已实现基于 <strong>TPE(Tree-structured Parzen Estimator<br>Approach)</strong> 的贝叶斯优化，图6我们能看到GP构建的概率模型是  ，而TPE是  和  ，关于TPE和GP的对比讨论，建议阅读论文  [7]<br>。TPE样例代码如下：</p>
+<hr>
+<p>​<br>    from sklearn import svm, datasetsfrom sklearn.model_selection import cross_val_scorefrom hyperopt import hp, fmin, tpe, space_evalimport pandas as pd<br>    # 导入数据iris &#x3D; datasets.load_iris()<br>    # step1: 定义目标函数def objective(params):      # 初始化模型并交叉验证      svc &#x3D; svm.SVC(**params)      cv_scores &#x3D; cross_val_score(svc, iris.data, iris.target, cv&#x3D;5)      # 返回loss &#x3D; 1 - accuracy (loss必须被最小化)      loss &#x3D; 1 - cv_scores.mean()      return loss<br>    # step2: 定义超参搜索空间space &#x3D; {‘kernel’:hp.choice(‘kernel’, [‘linear’, ‘rbf’]),         ‘C’:hp.uniform(‘C’, 1, 10)}<br>    # step3: 在给定超参搜索空间下，最小化目标函数best &#x3D; fmin(objective, space, algo&#x3D;tpe.suggest, max_evals&#x3D;100)返回: best_loss: 0.013333333333333308(即accuracy为0.9866666666666667)<br>    # step4: 打印结果print(best)返回:{‘C’: 6.136181888987526, ‘kernel’: 1}(PS:kernel为0-based index,这里1指rbf)</p>
+<p><strong>四、Hyperband</strong></p>
+<p>除了格子搜索、随机搜索和贝叶斯优化，还有其它自动调参方式。例如 <strong>Hyperband optimization</strong> [8]<br>，Hyperband本质上是随机搜索的一种变种，它使用早停策略和Sccessive<br>Halving算法去分配资源，结果是Hyperband能评估更多的超参组合，同时在给定的资源预算下，比贝叶斯方法收敛更快，下图展示了Hyperband的早停和资源分配:</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://mmbiz.qpic.cn/mmbiz_png/CcRHkXzUruV0YVWsHkLT7aBon0ibOBibXu6NPPS129hV7tBGbBLmeVo80XicDJvJNSqEKJO68KRfgP54bBkZZquHQ/640?wx_fmt=png"></p>
+<p>图7: Hyperband的超参选择和评估</p>
+<p>在Hyperband之后，还出现了BOHB，它混合了贝叶斯优化和Hyperband。Hyperband和BOHB的开源代码可参考HpBandSter库<br>[9]  ，这里不展开细讲。</p>
+<p><strong>五、总结</strong></p>
+<p>上面我们用Iris鸢尾花数据集试了不同的超参自动调优方法，发现贝叶斯优化和随机搜索都比格子搜索好。从一些论文反映，贝叶斯优化是更香的，但是贝叶斯优化好像在实践中用的不是那么多，网上也有很多分享者，像Nagesh<br>Singh Chauhan，说的那样：</p>
+<blockquote>
+<p>As a general rule of thumb, any time you want to optimize tuning<br>hyperparameters, think Grid Search and Randomized Search! [10]</p>
+<p>Hyperparameter Optimization for Machine Learning Models - Nagesh Singh<br>Chauhan</p>
+</blockquote>
+<p>为什么呢？我想原因是贝叶斯的开销太大了，前面有提到，在每次循环选超参值的时候，贝叶斯优化都需要将  带入昂贵的目标函数<br>中，去得到输出值y，当目标函数特别复杂时，这种情况的评估开销是很大的，更何况随着搜索空间和搜索次数的变大，计算会越发昂贵。在知乎《为什么基于贝叶斯优化的自动调参没有大范围使用？》<br>[11]  中，很多知乎主也给出了很认真的回复，建议有兴趣的朋友移步阅读。</p>
+<p>写这篇文章的过程中，我主要学到了2点，一是随机搜索在某些时候会比格子搜索好，二是了解贝叶斯优化的机理。<br>这里，谈谈我比赛和个人实践中的体会，我很少会花过多时间在超参的调优上，因为它带来的收益是有限的，很多时候比起压榨模型来说，思考和挖掘数据特征能带来更多的收益，所以我想这也是为什么上面说：<br>在任何想要调优超参时，先用格子搜索或随机搜索吧。  总之，希望这篇文章对大家有帮助，我们下期再见~</p>
+<p><strong>参考资料</strong></p>
+<p>[1]  sklearn.model_selection.GridSearchCV, 官方文档: <a target="_blank" rel="noopener" href="https://scikit-/">https://scikit-</a><br>learn.org&#x2F;stable&#x2F;modules&#x2F;generated&#x2F;sklearn.model_selection.GridSearchCV.html#sklearn.model_selection.GridSearchCV  </p>
+<p>[2] Bergstra, J., &amp; Bengio, Y. (2012). Random search for hyper-parameter<br>optimization. Journal of machine learning research, 13(2).</p>
+<p>[3] sklearn.model_selection.RandomizedSearchCV, 官方文档: <a target="_blank" rel="noopener" href="https://scikit-/">https://scikit-</a><br>learn.org&#x2F;stable&#x2F;modules&#x2F;generated&#x2F;sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV</p>
+<p>[4] Quora: How does Bayesian optimization work? - Duane Rich, 回答:<br><a target="_blank" rel="noopener" href="https://www.quora.com/How-does-Bayesian-optimization-work">https://www.quora.com/How-does-Bayesian-optimization-work</a></p>
+<p>[5] Bayesian Optimization (2018). - Cse.wustl.edu. 课程Note:<br><a target="_blank" rel="noopener" href="https://www.cse.wustl.edu/~garnett/cse515t/spring_2015/files/lecture_notes/12.pdf">https://www.cse.wustl.edu/~garnett/cse515t/spring_2015/files/lecture_notes/12.pdf</a></p>
+<p>[6] Hyperopt: Distributed Hyperparameter Optimization, 代码:<br><a target="_blank" rel="noopener" href="https://github.com/hyperopt/hyperopt#getting-started">https://github.com/hyperopt/hyperopt#getting-started</a></p>
+<p>[7] Bergstra, J., Bardenet, R., Bengio, Y., &amp; Kégl, B. (2011, December).<br>Algorithms for hyper-parameter optimization. In 25th annual conference on<br>neural information processing systems (NIPS 2011) (Vol. 24). Neural<br>Information Processing Systems Foundation.</p>
+<p>[8] Li, L., Jamieson, K., DeSalvo, G., Rostamizadeh, A., &amp; Talwalkar, A.<br>(2017). Hyperband: A novel bandit-based approach to hyperparameter<br>optimization. The Journal of Machine Learning Research, 18(1), 6765-6816.</p>
+<p>[9] HpBandSter开源代码库, 代码: <a target="_blank" rel="noopener" href="https://github.com/automl/HpBandSte">https://github.com/automl/HpBandSte</a></p>
+<p>[10] Hyperparameter Optimization for Machine Learning Models - Nagesh Singh<br>Chauhan, 文章: [<a target="_blank" rel="noopener" href="https://www.kdnuggets.com/2020/05/hyperparameter-optimization-">https://www.kdnuggets.com/2020/05/hyperparameter-optimization-</a><br>machine-learning-models.html</p>
+<p>[11] 为什么基于贝叶斯优化的自动调参没有大范围使用？- 知乎, 问答: <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/33711002">https://www.zhihu.com/question/33711002</a></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://mmbiz.qpic.cn/mmbiz_png/vI9nYe94fsGxu3P5YibTO899okS0X9WaLmQCtia4U8Eu1xWCz9t8Qtq9PH6T1bTcxibiaCIkGzAxpeRkRFYqibVmwSw/640?wx_fmt=png"><br>干货学习，  ** 点  ** ** 赞  ** ** 三连  ** ↓</p>
+<p>预览时标签不可点</p>
+<p>微信扫一扫<br>关注该公众号</p>
+<hr>
+<hr>
+<p>×  分析</p>
+<p>  收藏</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/106.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E8%87%AA%E5%8A%A8%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/106.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E8%87%AA%E5%8A%A8%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/MLTutorials/">MLTutorials</a><a class="post-meta__tags" href="/blog/tags/%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/">模型优化</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/103.AI%E7%AE%97%E6%B3%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%BF%85%E5%A4%87%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%9C%80%E4%BC%98%E5%8C%96%E4%B8%8A/" title="AI算法工程师必备的深度学习最优化上"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">AI算法工程师必备的深度学习最优化上</div></div><div class="info-2"><div class="info-item-1"> AI | 算法工程师必备的深度学习–最优化（上） https://mp.weixin.qq.com/s/DuB0Fvj7ubbg4QudpH8fAw  原创  运筹OR帷幄   运筹OR帷幄   ** ** ** ↑↑↑↑↑  ** ** 点击上方  ** ** 蓝色字  ** ** 关注我们！  **      『运筹OR帷幄』原创 ** 作者：华校专  ** 作者信息： 华校专，曾任阿里巴巴资深算法工程师、智易科技首席算法研究员，现任腾讯高级研究员，《Python 大战机器学习》的作者。 编者按： 算法工程师必备系列更新啦！继上次推出了算法工程师必备的数学基础后，小编继续整理了必要...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/101.%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/" title="优化算法"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">优化算法</div></div><div class="info-2"><div class="info-item-1">TODOGradient Descent + Momentum加上 Momentum 以后，每一次我们在移动我们的参数的时候，我们不是只往 Gradient Descen 的反方向来移动参数，我们是 Gradient 的反方向，加上前一步移动的方向，两者加起来的结果，去调整参数。 确定一个初始的参数，然后我们假设前一步的参数的 Update 量为 0 $$m^0 &#x3D; 0$$ 接下来在 $\theta^0$ 的地方，计算 Gradient 的方向$g^0$ 然后接下来你要决定下一步要怎么走，它是 Gradient 的方向加上前一步的方向，不过因为前一步正好是 0，现在是刚初始的时...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/109.%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/" title="梯度下降"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">梯度下降</div></div><div class="info-2"><div class="info-item-1">梯度下降解决下面的最优化问题：$$\theta^∗&#x3D; \underset{ \theta }{\operatorname{arg\ min&#125;&#125;  L(\theta) \tag1$$  $L$ :lossfunction（损失函数） $\theta$ :parameters（参数）  这里的parameters是复数，即 $\theta$ 指代一系列参数，比如 $w$ 和 $b$ 。 我们要找一组参数 $\theta$ ，让损失函数越小越好，这个问题可以用梯度下降法解决： 假设 $\theta$ 有里面有两个参数 $\theta_1, \theta_2$随机选...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/02.%E6%89%B9%E9%87%8F%E5%92%8C%E5%8A%A8%E9%87%8F/" title="批量和动量"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">批量和动量</div></div><div class="info-2"><div class="info-item-1">批量大小对梯度下降法的影响实际上在计算梯度的时候，并不是对所有数据的损失 $L$ 计算梯度，而是把所有的数据分成一个一个的批量（batch），如图 3.7 所示。每个批量的大小是 $B$ ，即带有 $B$ 笔数据。每次在更新参数的时候，会去取出 $B$ 笔数据用来计算出损失和梯度更新参数。遍历所有批量的过程称为一个回合（epoch）。事实上，在把数据分为批量的时候，我们还会进行随机打乱（shuffle）。随机打乱有很多不同的做法，一个常见的做法是在每一个回合开始之前重新划分批量，也就是说，每个回合的批量的数据都不一样。   假设现在我们有 20 笔训练数据，先看下两个最极端的情况，如图 ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/110.%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD/" title="反向传播"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">反向传播</div></div><div class="info-2"><div class="info-item-1">背景梯度下降  给到 $\theta$ (weight and bias) 先选择一个初始的 $\theta^0$，计算 $\theta^0$ 的损失函数（Loss Function）设一个参数的偏微分 计算完这个向量（vector）偏微分，然后就可以去更新 $\theta$  百万级别的参数（millions of parameters） 反向传播（Backpropagation）是一个比较有效率的算法，让你计算梯度（Gradient） 的向量（Vector）时，可以有效率的计算出来  链式法则  连锁影响(可以看出x会影响y，y会影响z) BP主要用到了chain rule  反向传...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/101.%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/" title="优化算法"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">优化算法</div></div><div class="info-2"><div class="info-item-1">TODOGradient Descent + Momentum加上 Momentum 以后，每一次我们在移动我们的参数的时候，我们不是只往 Gradient Descen 的反方向来移动参数，我们是 Gradient 的反方向，加上前一步移动的方向，两者加起来的结果，去调整参数。 确定一个初始的参数，然后我们假设前一步的参数的 Update 量为 0 $$m^0 &#x3D; 0$$ 接下来在 $\theta^0$ 的地方，计算 Gradient 的方向$g^0$ 然后接下来你要决定下一步要怎么走，它是 Gradient 的方向加上前一步的方向，不过因为前一步正好是 0，现在是刚初始的时...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/102.%E5%90%84%E7%A7%8DOptimizer%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95%E5%9B%9E%E9%A1%BE%E5%92%8C%E6%80%BB%E7%BB%93/" title="各种Optimizer梯度下降优化算法回顾和总结"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">各种Optimizer梯度下降优化算法回顾和总结</div></div><div class="info-2"><div class="info-item-1">论文阅读笔记：各种Optimizer梯度下降优化算法回顾和总结 不管是使用PyTorch还是TensorFlow，用多了Optimizer优化器封装好的函数，对其内部使用的优化算法却没有仔细研究过，也很难对其优点和缺点进行实用的解释。所以打算以这一篇论文为主线并结合多篇优秀博文，回顾和总结目前主流的优化算法，对于没有深入了解过的算法，正好借这个机会学习一下。 写在前面当前使用的许多优化算法，是对梯度下降法的衍生和优化。在微积分中，对多元函数的参数求 $\theta$ 偏导数，把求得的各个参数的导数以向量的形式写出来就是梯度。梯度就是函数变化最快的地方。梯度下降是迭代法的一种，在求解机器学...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/05.%E4%BC%98%E5%8C%96%E5%99%A8/" title="优化器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">优化器</div></div><div class="info-2"><div class="info-item-1">一个框架回顾优化算法深度学习优化算法经历了 SGD -&gt; SGDM -&gt; NAG -&gt;AdaGrad -&gt; AdaDelta -&gt; Adam -&gt; Nadam 这样的发展历程。 首先定义：待优化参数： $w$ ，目标函数： $f(w)$ ，初始学习率 $\alpha$。 而后，开始进行迭代优化。在每个epoch $t$ ：  计算目标函数关于当前参数的梯度： $g_t&#x3D;\nabla f(w_t)$ 根据历史梯度计算一阶动量和二阶动量：$m_t &#x3D; \phi(g_1, g_2, \cdots, g_t); V_t &#x3D; \ps...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E8%87%AA%E5%8A%A8%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">机器学习调参自动优化方法</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

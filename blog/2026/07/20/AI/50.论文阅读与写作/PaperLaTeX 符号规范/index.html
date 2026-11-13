@@ -1,0 +1,1598 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>PaperLaTeX 符号规范（增量学习文献复核与编译兼容版） | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版） 版本：v2.2（2026-07-20）适用范围：CIL、FSCIL、CIL&#x2F;PR_DLEPEM、FSCIL&#x2F;KBS_TALON本版结合目标仓库的实际 LaTeX 模板及已发表 CIL&#x2F;FSCIL 论文复核；本版取消对额外粗体宏包的依赖，并按“向量&#x2F;矩阵&#x2F;张量—固定函数&#x2F;算子&#x2F;模块—集合">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版） 版本：v2.2（2026-07-20）适用范围：CIL、FSCIL、CIL&#x2F;PR_DLEPEM、FSCIL&#x2F;KBS_TALON本版结合目标仓库的实际 LaTeX 模板及已发表 CIL&#x2F;FSCIL 论文复核；本版取消对额外粗体宏包的依赖，并按“向量&#x2F;矩阵&#x2F;张量—固定函数&#x2F;算子&#x2F;模块—集合">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg">
+<meta property="article:published_time" content="2026-07-20T01:36:18.000Z">
+<meta property="article:modified_time" content="2026-07-21T04:05:40.427Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）",
+  "url": "https://hongwei-zhao.github.io/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg",
+  "datePublished": "2026-07-20T01:36:18.000Z",
+  "dateModified": "2026-07-21T04:05:40.427Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-21T04:05:40.427Z" title="更新于 2026-07-21 12:05:40">2026-07-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/">论文阅读与写作</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="PaperLaTeX-符号规范（增量学习文献复核与编译兼容版）"><a href="#PaperLaTeX-符号规范（增量学习文献复核与编译兼容版）" class="headerlink" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"></a>PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</h1><blockquote>
+<p>版本：v2.2（2026-07-20）<br>适用范围：CIL、FSCIL、<code>CIL/PR_DLEPEM</code>、<code>FSCIL/KBS_TALON</code><br>本版结合目标仓库的实际 LaTeX 模板及已发表 CIL&#x2F;FSCIL 论文复核；本版取消对额外粗体宏包的依赖，并按“向量&#x2F;矩阵&#x2F;张量—固定函数&#x2F;算子&#x2F;模块—集合—标量”四原则重新整理。</p>
+</blockquote>
+<h2 id="0-编译兼容裁决"><a href="#0-编译兼容裁决" class="headerlink" title="0. 编译兼容裁决"></a>0. 编译兼容裁决</h2><h3 id="0-1-仓库与论文源文件的处理方式"><a href="#0-1-仓库与论文源文件的处理方式" class="headerlink" title="0.1 仓库与论文源文件的处理方式"></a>0.1 仓库与论文源文件的处理方式</h3><table>
+<thead>
+<tr>
+<th>检查对象</th>
+<th>实际处理</th>
+<th>本规范的裁决</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>CIL/PR_DLEPEM/DLEPEM.tex</code></td>
+<td>主文件加载 <code>amsmath</code>、<code>amssymb</code>，Latin 向量与矩阵使用 <code>\mathbf</code>，不依赖额外粗体宏包。</td>
+<td>与现有稿件保持一致。</td>
+</tr>
+<tr>
+<td><code>FSCIL/KBS_TALON/KBS_TALON_main.tex</code></td>
+<td>主文件同样加载 <code>amsmath</code>、<code>amssymb</code>&#x2F;<code>amsfonts</code>，Latin 向量与矩阵使用 <code>\mathbf</code>。</td>
+<td>与现有稿件保持一致。</td>
+</tr>
+<tr>
+<td>Da-Wei Zhou 的 FACT、EASE 等 arXiv 源文件</td>
+<td>不同论文及同一论文中可见旧式 <code>&amp;#123;&amp;#123;\bf ...&amp;#125;&amp;#125;</code>、<code>\mathbf</code>、普通大写矩阵和额外粗体命令并存；不存在跨论文统一的唯一实现。</td>
+<td>只参考其对象命名与索引设计，不照搬某个局部字体命令。</td>
+</tr>
+</tbody></table>
+<p>**最终选择：**PaperLaTeX 中，Latin 向量、矩阵和张量统一使用 <code>\mathbf{}</code>；需要加粗的希腊符号使用 <code>\boldsymbol{}</code>。两者均由现有目标稿件已加载的标准数学宏包支持，不再增加专用粗体宏包。</p>
+<p>该选择是<strong>模板兼容性优先的项目约定</strong>。在传统数学字体中，<code>\mathbf</code> 通常呈现为粗正体，而非严格粗斜体；这不影响对象类型的数学含义。若某一未来模板明确要求 Unicode 数学粗斜体，可仅修改语义宏的底层实现，不在正文中散落引擎专属命令。</p>
+<h3 id="0-2-规范级别与使用原则"><a href="#0-2-规范级别与使用原则" class="headerlink" title="0.2 规范级别与使用原则"></a>0.2 规范级别与使用原则</h3><table>
+<thead>
+<tr>
+<th>级别</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>A：必须</strong></td>
+<td>涉及数学正确性、对象类型、索引闭合、一符一义或实验定义；违反后可能导致公式错误或不可复现。</td>
+<td>标量标签不得无故加粗；求和项必须随求和索引变化；累计测试准确率必须说明测试集合。</td>
+</tr>
+<tr>
+<td><strong>B：项目默认</strong></td>
+<td>PaperLaTeX 的统一写作风格；不是所有已发表论文都采用，但新稿应默认遵守。</td>
+<td>Latin 向量&#x2F;矩阵用 <code>\mathbf</code>，希腊向量用 <code>\boldsymbol</code>；模块对象用 <code>\mathrm</code>；项目内部采用 0-based session 编号。</td>
+</tr>
+<tr>
+<td><strong>C：论文局部选择</strong></td>
+<td>文献中存在多种等价惯例，可因模板、篇幅或实现选择其一；一旦选择必须全文一致。</td>
+<td>LoRA 使用 $\mathbf{A},\mathbf{B}$ 或 $\mathbf{U},\mathbf{V}$；拼接写 <code>\concat</code> 或 $[\mathbf{a};\mathbf{b}]$。</td>
+</tr>
+</tbody></table>
+<p>**总原则：**先判断对象是标量、向量、矩阵、集合、分布、模块还是算子，再决定字体；数学含义优先于视觉统一。历史论文中的写法可作为兼容参考，不自动成为新稿的硬规范。</p>
+<hr>
+<h2 id="1-字体、大小写与上下标"><a href="#1-字体、大小写与上下标" class="headerlink" title="1. 字体、大小写与上下标"></a>1. 字体、大小写与上下标</h2><h3 id="1-1-四项统一原则"><a href="#1-1-四项统一原则" class="headerlink" title="1.1 四项统一原则"></a>1.1 四项统一原则</h3><table>
+<thead>
+<tr>
+<th align="right">序号</th>
+<th>对象类型</th>
+<th>统一原则</th>
+<th>推荐 LaTeX</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">1</td>
+<td>向量、矩阵、张量</td>
+<td>使用黑体正体，以对象的粗体形式区别于标量。</td>
+<td><code>\mathbf{}</code></td>
+<td>$\mathbf{x}$、$\mathbf{W}$、$\mathbf{H}$</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td>固定函数名、算子名、模块名</td>
+<td>使用正体，但不机械地全部使用 <code>\text{}</code>。标准函数使用内置命令，自定义算子使用 <code>\operatorname</code> 或 <code>\DeclareMathOperator</code>，模块名使用 <code>\mathrm{}</code>。</td>
+<td><code>\log</code>、<code>\operatorname{softmax}</code>、<code>\mathrm{T}_t</code></td>
+<td>$\log x$、$\softmax(\mathbf{z})$、$\mathrm{T}_t$</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td>集合、数据集、空间及集合型库</td>
+<td>使用花体。</td>
+<td><code>\mathcal{}</code></td>
+<td>$\mathcal{D}<em>t$、$\mathcal{Y}</em>{\le t}$、$\mathcal{P}_t$</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td>标量、索引、普通数字和抽象单字母函数</td>
+<td>使用默认数学字体；标量和索引为数学斜体，数字保持默认。</td>
+<td>直接输入</td>
+<td>$t$、$r$、$\alpha$、$y_{t,i}$、$f_\theta$、$3$</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-必要例外"><a href="#1-2-必要例外" class="headerlink" title="1.2 必要例外"></a>1.2 必要例外</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>例外规则</th>
+<th>推荐写法</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>希腊字母向量或矩阵</td>
+<td>不使用 <code>\mathbf</code>，改用 <code>\boldsymbol</code>。</td>
+<td>$\boldsymbol{\mu}$、$\boldsymbol{\Sigma}$</td>
+<td><code>\mathbf</code> 不能可靠加粗希腊字母。</td>
+</tr>
+<tr>
+<td>抽象单字母函数</td>
+<td>继续使用默认数学斜体，不改为 <code>\text{}</code> 或 <code>\mathrm{}</code>。</td>
+<td>$f_\theta(\mathbf{x})$、$\phi_\theta(\mathbf{x})$</td>
+<td>$f$、$g$、$\phi$ 是可变化的函数对象，不是固定函数名。</td>
+</tr>
+<tr>
+<td>标准数学函数</td>
+<td>使用 LaTeX 内置正体命令。</td>
+<td><code>\log</code>、<code>\exp</code>、<code>\min</code>、<code>\max</code></td>
+<td>内置命令具有正确字体和数学间距。</td>
+</tr>
+<tr>
+<td>自定义多字母算子</td>
+<td>使用 <code>\operatorname</code> 或 <code>\DeclareMathOperator</code>，不直接使用 <code>\text{}</code>。</td>
+<td>$\softmax$、$\argmax$、$\cosim$</td>
+<td>可自动处理正体、间距和上下标位置。</td>
+</tr>
+<tr>
+<td>网络模块</td>
+<td>作为固定模块名使用 <code>\mathrm{}</code>；其参数仍使用普通希腊字母。</td>
+<td>$\mathrm{E}_t$、$\mathrm{T}_t$、$\mathrm{S}_t$，参数为 $\theta_t$</td>
+<td>区分模块对象、参数和矩阵。</td>
+</tr>
+<tr>
+<td>损失函数</td>
+<td>主符号沿用机器学习论文惯例使用花体 $\mathcal{L}$。</td>
+<td>$\mathcal{L}_{\mathrm{CE&#125;&#125;$</td>
+<td>损失不是集合，但花体 $\mathcal{L}$ 是稳定的领域惯例。</td>
+</tr>
+<tr>
+<td>数域、概率与期望</td>
+<td>使用黑板粗体，不归入集合花体规则。</td>
+<td>$\mathbb{R}$、$\mathbb{P}$、$\mathbb{E}$</td>
+<td>这些对象有约定俗成的专用字体。</td>
+</tr>
+<tr>
+<td>描述性上下标</td>
+<td>使用正体。</td>
+<td>$\mathbf{W}<em>{\mathrm{cls&#125;&#125;$、$\mathcal{A}</em>{\mathrm{base&#125;&#125;$</td>
+<td><code>cls</code>、<code>base</code>、<code>KD</code> 等是文本标签，不是相乘的变量。</td>
+</tr>
+<tr>
+<td>one-hot 或概率标签</td>
+<td>标签为向量时才加粗；类别编号仍为标量。</td>
+<td>$y_{t,i}$ 与 $\mathbf{y}_{t,i}$</td>
+<td>字体由对象类型决定。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>实施说明：</strong>“函数用正体”指固定函数名、算子名和模块名应呈正体，不等于所有函数都使用 <code>\text{}</code>。在数学环境中，优先使用内置算子、<code>\operatorname</code>、<code>\DeclareMathOperator</code> 或 <code>\mathrm</code>；<code>\text</code> 主要用于插入自然语言说明。</p>
+</blockquote>
+<h3 id="1-3-详细字体、大小写与上下标表"><a href="#1-3-详细字体、大小写与上下标表" class="headerlink" title="1.3 详细字体、大小写与上下标表"></a>1.3 详细字体、大小写与上下标表</h3><table>
+<thead>
+<tr>
+<th>对象类别</th>
+<th align="right">项目统一示例</th>
+<th>LaTeX</th>
+<th align="center">级别</th>
+<th>复核结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标量、索引、超参数</td>
+<td align="right">$t,r,\lambda,\tau$</td>
+<td><code>t,r,\lambda,\tau</code></td>
+<td align="center">A</td>
+<td>数学斜体。</td>
+</tr>
+<tr>
+<td>离散类别标签</td>
+<td align="right">$y_{t,i}$</td>
+<td><code>y_{t,i}</code></td>
+<td align="center">A</td>
+<td>若标签是类别编号，必须是标量；仅 one-hot、软标签或概率向量写 $\mathbf{y}_{t,i}$。</td>
+</tr>
+<tr>
+<td>Latin 向量</td>
+<td align="right">$\mathbf{x},\mathbf{h},\mathbf{p},\mathbf{z}$</td>
+<td><code>\mathbf{x}</code></td>
+<td align="center">B</td>
+<td>兼容性优先的粗体小写 Latin 字母；希腊向量使用 <code>\boldsymbol</code>。</td>
+</tr>
+<tr>
+<td>Latin 矩阵</td>
+<td align="right">$\mathbf{W},\mathbf{A},\mathbf{B}$</td>
+<td><code>\mathbf{W}</code></td>
+<td align="center">B</td>
+<td>兼容性优先的粗体大写 Latin 字母。</td>
+</tr>
+<tr>
+<td>希腊向量&#x2F;矩阵符号</td>
+<td align="right">$\boldsymbol{\pi},\boldsymbol{\theta}$</td>
+<td><code>\boldsymbol{\pi}</code></td>
+<td align="center">B</td>
+<td><code>\mathbf</code> 不能可靠加粗希腊字母，因此使用 <code>amsmath</code> 提供的 <code>\boldsymbol</code>。</td>
+</tr>
+<tr>
+<td>集合、数据集、空间</td>
+<td align="right">$\mathcal D,\mathcal X,\mathcal Y$</td>
+<td><code>\mathcal{D}</code></td>
+<td align="center">B</td>
+<td>集合不得与向量&#x2F;矩阵使用同一字体。</td>
+</tr>
+<tr>
+<td>数域</td>
+<td align="right">$\mathbb R,\mathbb N$</td>
+<td><code>\mathbb{R}</code></td>
+<td align="center">A</td>
+<td>不得写成 $\mathbf R$。</td>
+</tr>
+<tr>
+<td>网络或可调用模块</td>
+<td align="right">$\mathrm E_t,\mathrm R_t,\mathrm T_t,\mathrm S_t$</td>
+<td><code>\mathrm{E}_t</code></td>
+<td align="center">B</td>
+<td>这是项目的类型化约定，不是增量学习领域的统一标准。也可用 $e_{\theta_t}$、$r_{\rho_t}$ 表示参数化函数。</td>
+</tr>
+<tr>
+<td>参数向量&#x2F;参数集合</td>
+<td align="right">$\theta_t,\rho_t,\Theta$</td>
+<td><code>\theta_t,\rho_t,\Theta</code></td>
+<td align="center">A</td>
+<td>模块对象和模块参数不得复用同一符号。$\Theta$ 可表示参数空间或参数集合。</td>
+</tr>
+<tr>
+<td>一般函数</td>
+<td align="right">$f_{\theta_t},\phi_{\theta_t}$</td>
+<td><code>f_{\theta_t}</code></td>
+<td align="center">A</td>
+<td>不写 <code>\text{f}</code>。</td>
+</tr>
+<tr>
+<td>标准函数与算子</td>
+<td align="right">$\log,\exp,\min$</td>
+<td><code>\log,\exp,\min</code></td>
+<td align="center">A</td>
+<td>使用 LaTeX 内置命令。</td>
+</tr>
+<tr>
+<td>自定义算子</td>
+<td align="right">$\softmax,\argmax,\Attn$</td>
+<td><code>\DeclareMathOperator</code></td>
+<td align="center">B</td>
+<td>正体并具有正确数学间距。</td>
+</tr>
+<tr>
+<td>损失</td>
+<td align="right">$\mathcal L_{\mathrm{CE&#125;&#125;$</td>
+<td><code>\mathcal{L}_{\mathrm{CE&amp;#125;&amp;#125;</code></td>
+<td align="center">B</td>
+<td>类型缩写使用正体。</td>
+</tr>
+<tr>
+<td>概率与期望</td>
+<td align="right">$\mathbb P,\mathbb E$</td>
+<td><code>\mathbb{P},\mathbb{E}</code></td>
+<td align="center">B</td>
+<td>普通 $P$ 在数学上也可用，但本项目已将 $p&#x2F;P$ 用于原型，故概率统一用黑板粗体。</td>
+</tr>
+<tr>
+<td>示性函数</td>
+<td align="right">$\mathbb I(\cdot)$</td>
+<td><code>\mathbb{I}</code></td>
+<td align="center">C</td>
+<td>$\mathbf 1$、$\mathbb 1$ 等也常见；本项目暂用 $\mathbb I$，首次出现必须定义。</td>
+</tr>
+<tr>
+<td>描述性上下标</td>
+<td align="right">$\mathbf{W}<em>{\mathrm{cls&#125;&#125;,\tau</em>{\mathrm{KD&#125;&#125;$</td>
+<td><code>_{\mathrm{cls&amp;#125;&amp;#125;</code></td>
+<td align="center">B</td>
+<td>单词、角色或缩写使用正体。</td>
+</tr>
+<tr>
+<td>可变索引</td>
+<td align="right">$\mathbf{x}<em>{t,i},\mathbf{p}</em>{s,c}$</td>
+<td><code>_{t,i}</code></td>
+<td align="center">A</td>
+<td>可变索引使用数学斜体。</td>
+</tr>
+<tr>
+<td>转置</td>
+<td align="right">$\mathbf{W}^{\top}$</td>
+<td><code>^\top</code></td>
+<td align="center">B</td>
+<td>不使用含义不明的斜体 $T$。</td>
+</tr>
+<tr>
+<td>范数</td>
+<td align="right">$\lVert\mathbf{x}\rVert_2$</td>
+<td><code>\lVert\mathbf{x}\rVert_2</code></td>
+<td align="center">B</td>
+<td>与集合基数 $\lvert\mathcal D\rvert$ 区分。</td>
+</tr>
+<tr>
+<td>条件概率</td>
+<td align="right">$\mathbb P(A\mid B)$</td>
+<td><code>\mid</code></td>
+<td align="center">A</td>
+<td>不用普通 &#96;</td>
+</tr>
+<tr>
+<td>KL 方向</td>
+<td align="right">$D_{\mathrm{KL&#125;&#125;(q\parallel p)$</td>
+<td><code>\parallel</code></td>
+<td align="center">A</td>
+<td>KL 非对称，参数顺序必须与 teacher&#x2F;student 方向一致。</td>
+</tr>
+<tr>
+<td>拼接</td>
+<td align="right">$\concat(\mathbf{a},\mathbf{b})$</td>
+<td><code>\concat</code></td>
+<td align="center">C</td>
+<td>$[\mathbf{a};\mathbf{b}]$ 也可接受，但必须声明分号表示沿特征维拼接。</td>
+</tr>
+<tr>
+<td>单位</td>
+<td align="right">$27.0,\mathrm s$</td>
+<td><code>27.0\,\mathrm{s}</code></td>
+<td align="center">B</td>
+<td>数字与单位留窄空格，单位正体。</td>
+</tr>
+<tr>
+<td>公式标点</td>
+<td align="right"><code>...,</code> &#x2F; <code>....</code></td>
+<td>公式末尾标点</td>
+<td align="center">B</td>
+<td>编号公式是句子的一部分。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>排版裁决：</strong><code>\mathbf</code>、<code>\boldsymbol</code> 与 <code>\mathrm</code> 是本项目的编译兼容约定，而不是判定外部论文“对&#x2F;错”的依据。真正的 A 级要求是同一符号的对象类型和语义保持稳定。</p>
+</blockquote>
+<hr>
+<h2 id="2-CIL-FSCIL-基本问题定义"><a href="#2-CIL-FSCIL-基本问题定义" class="headerlink" title="2. CIL&#x2F;FSCIL 基本问题定义"></a>2. CIL&#x2F;FSCIL 基本问题定义</h2><h3 id="2-1-Session-编号"><a href="#2-1-Session-编号" class="headerlink" title="2.1 Session 编号"></a>2.1 Session 编号</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>项目默认</th>
+<th>文献兼容说明</th>
+<th align="center">级别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>session 总数</td>
+<td>$T$</td>
+<td>$T$ 始终表示总数，不兼作最后一个索引。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>session 索引</td>
+<td>$t\in{0,\ldots,T-1}$</td>
+<td>项目内部采用 0-based。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>base session</td>
+<td>$t&#x3D;0$</td>
+<td>FSCIL 论文经常把 base 记为 session 0，再把增量 session 写成 $1,\ldots,S$；此时总 session 数是 $S+1$。引用外部公式时必须显式换算。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>最后 session</td>
+<td>$t&#x3D;T-1$</td>
+<td>不用含义不明的 $L$ 代替索引。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>已见 session</td>
+<td>${0,\ldots,t}$</td>
+<td>若论文采用 1-based，可整体平移，但不得在同一稿件混用。</td>
+<td align="center">A</td>
+</tr>
+</tbody></table>
+<h3 id="2-2-数据、类别与分布"><a href="#2-2-数据、类别与分布" class="headerlink" title="2.2 数据、类别与分布"></a>2.2 数据、类别与分布</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th align="right">统一符号</th>
+<th>定义或说明</th>
+<th align="center">级别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第 $t$ 个训练集</td>
+<td align="right">$\mathcal D_t^{\mathrm{tr&#125;&#125;$</td>
+<td>${(\mathbf{x}<em>{t,i}^{\mathrm{tr&#125;&#125;,y</em>{t,i}^{\mathrm{tr&#125;&#125;)}_{i&#x3D;1}^{n_t^{\mathrm{tr&#125;&#125;}$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>第 $t$ 个测试集</td>
+<td align="right">$\mathcal D_t^{\mathrm{te&#125;&#125;$</td>
+<td>评价指标必须基于测试集而非训练集。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>当前训练样本数</td>
+<td align="right">$n_t^{\mathrm{tr&#125;&#125;$</td>
+<td>$\lvert\mathcal D_t^{\mathrm{tr&#125;&#125;\rvert$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>类内训练样本数</td>
+<td align="right">$n_{t,c}^{\mathrm{tr&#125;&#125;$</td>
+<td>$\sum_i\mathbb I(y_{t,i}^{\mathrm{tr&#125;&#125;&#x3D;c)$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>全局输入空间</td>
+<td align="right">$\mathcal X$</td>
+<td>标准 CIL 中通常共享输入空间；任务差异更适合用数据分布表示。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>第 $t$ 个数据分布</td>
+<td align="right">$\mathbb P_t$</td>
+<td>$(\mathbf{x},y)\sim\mathbb P_t$。仅在确实存在不同输入域时再定义 $\mathcal X_t$。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>当前类别集合</td>
+<td align="right">$\mathcal Y_t$</td>
+<td>第 $t$ 个 session 新引入的类别。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>累计类别集合</td>
+<td align="right">$\mathcal Y_{\le t}$</td>
+<td>$\bigcup_{s&#x3D;0}^{t}\mathcal Y_s$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>类别数</td>
+<td align="right">$C_t$</td>
+<td>$\lvert\mathcal Y_t\rvert$。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>FSCIL 的 way&#x2F;shot</td>
+<td align="right">$N,K$</td>
+<td>$N$-way $K$-shot；不得再用 $N$ 表示类内样本数。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>exemplar&#x2F;replay buffer</td>
+<td align="right">$\mathcal B_t$</td>
+<td>若方法无回放，写 $\mathcal B_t&#x3D;\emptyset$ 或直接声明 exemplar-free。</td>
+<td align="center">B</td>
+</tr>
+</tbody></table>
+<p>典型 CIL&#x2F;FSCIL 假设为</p>
+<p>$$<br>\mathcal Y_t\cap\mathcal Y_s&#x3D;\emptyset,\qquad t\ne s.<br>$$</p>
+<p>该假设只适用于标准 class-incremental 设置；若研究 blurry CIL、domain-incremental 或类别重现，必须重新定义，不能沿用“不相交”结论。</p>
+<h3 id="2-3-模型与训练目标"><a href="#2-3-模型与训练目标" class="headerlink" title="2.3 模型与训练目标"></a>2.3 模型与训练目标</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th align="right">统一符号</th>
+<th>定义</th>
+<th align="center">级别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第 $t$ 阶段模型</td>
+<td align="right">$f_{\theta_t}$</td>
+<td>学完 session $t$ 后的分类模型。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>第 $t$ 阶段特征提取器</td>
+<td align="right">$\phi_{\theta_t}$</td>
+<td>$\phi_{\theta_t}:\mathcal X\to\mathbb R^d$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>冻结 PTM</td>
+<td align="right">$\phi_{\mathrm{PTM&#125;&#125;$</td>
+<td>不再用 $\phi_0$，避免与 base session 的模型混淆。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>分类器权重</td>
+<td align="right">$\mathbf{W}_{\mathrm{cls},t}$</td>
+<td>$\mathbb R^{d\times\lvert\mathcal Y_{\le t}\rvert}$，列顺序必须与类别索引映射一致。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>特征向量</td>
+<td align="right">$\mathbf{h}_t(\mathbf{x})$</td>
+<td>$\phi_{\theta_t}(\mathbf{x})$。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>logits</td>
+<td align="right">$\mathbf{z}_t(\mathbf{x})$</td>
+<td>$\mathbf{W}_{\mathrm{cls},t}^{\top}\mathbf{h}_t(\mathbf{x})$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>预测</td>
+<td align="right">$\hat y_t(\mathbf{x})$</td>
+<td>$\argmax_{c\in\mathcal Y_{\le t&#125;&#125;[\mathbf{z}_t(\mathbf{x})]_c$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>当前任务经验风险</td>
+<td align="right">$\widehat{\mathcal R}_t(\theta_t)$</td>
+<td>当前可访问训练数据上的优化目标，不等同于“对所有已见任务的真实风险”。</td>
+<td align="center">A</td>
+</tr>
+</tbody></table>
+<p>推荐定义：</p>
+<p>$$<br>\widehat{\mathcal R}<em>t(\theta_t)<br>&#x3D;\frac{1}{n_t^{\mathrm{tr&#125;&#125;}<br>\sum</em>{i&#x3D;1}^{n_t^{\mathrm{tr&#125;&#125;}<br>\mathcal L!\left(f_{\theta_t}(\mathbf{x}<em>{t,i}^{\mathrm{tr&#125;&#125;),y</em>{t,i}^{\mathrm{tr&#125;&#125;\right).<br>$$</p>
+<blockquote>
+<p>**重要修订：**原文档把“当前训练集损失”写成 CIL 的完整经验风险，容易混淆训练可访问数据与累计评价目标。本版统一称为“当前任务经验风险”。</p>
+</blockquote>
+<hr>
+<h2 id="3-Transformer-与-LoRA-公共符号"><a href="#3-Transformer-与-LoRA-公共符号" class="headerlink" title="3. Transformer 与 LoRA 公共符号"></a>3. Transformer 与 LoRA 公共符号</h2><h3 id="3-1-LoRA-的两种等价方向约定"><a href="#3-1-LoRA-的两种等价方向约定" class="headerlink" title="3.1 LoRA 的两种等价方向约定"></a>3.1 LoRA 的两种等价方向约定</h3><p>原始 LoRA 文献采用列向量约定，推荐新稿优先使用：</p>
+<p>$$<br>\mathbf{W}<em>0\in\mathbb R^{d</em>{\mathrm{out&#125;&#125;\times d_{\mathrm{in&#125;&#125;},\qquad<br>\Delta\mathbf{W}<em>t<br>&#x3D;\frac{\alpha</em>{\mathrm{LoRA&#125;&#125;}{r}\mathbf{B}_t\mathbf{A}_t,<br>$$</p>
+<p>$$<br>\mathbf{A}<em>t\in\mathbb R^{r\times d</em>{\mathrm{in&#125;&#125;},\qquad<br>\mathbf{B}<em>t\in\mathbb R^{d</em>{\mathrm{out&#125;&#125;\times r},\qquad<br>\mathbf{h}&#x3D;\left(\mathbf{W}_0+\Delta\mathbf{W}_t\right)\mathbf{x}.<br>$$</p>
+<p>现有 DLEPEM&#x2F;TALON 稿件采用行向量和 $\mathbf{U},\mathbf{V}$ 也可以：</p>
+<p>$$<br>\mathbf{H}’&#x3D;\mathbf{H}\left(\mathbf{W}<em>0+\frac{\alpha</em>{\mathrm{LoRA&#125;&#125;}{r}\mathbf{U}_t\mathbf{V}_t\right),<br>$$</p>
+<p>$$<br>\mathbf{U}<em>t\in\mathbb R^{d</em>{\mathrm{in&#125;&#125;\times r},\qquad<br>\mathbf{V}<em>t\in\mathbb R^{r\times d</em>{\mathrm{out&#125;&#125;}.<br>$$</p>
+<p>两者的映射是 $\mathbf{U}_t&#x3D;\mathbf{A}_t^{\top}$、$\mathbf{V}_t&#x3D;\mathbf{B}_t^{\top}$。二者均正确，但同一公式链中不得混用。</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>统一裁决</th>
+<th align="center">级别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>低秩矩阵名称</td>
+<td>新稿优先 $\mathbf{A}_t,\mathbf{B}_t$，以贴近原始 LoRA 并避免 $\mathbf{V}_t$ 与 Attention Value 冲突；历史稿可保留 $\mathbf{U}_t,\mathbf{V}_t$。</td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td>scaling</td>
+<td>必须说明实际使用的是 $\alpha_{\mathrm{LoRA&#125;&#125;&#x2F;r$、其他缩放还是 1。不得为形式完整而添加实现中不存在的 scaling。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>初始化</td>
+<td>说明哪一个因子为零初始化、哪一个为随机&#x2F;Kaiming 初始化；矩阵名称必须与方向约定匹配。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>任务索引</td>
+<td>任务专属 LoRA 写 $\Delta\mathbf{W}_t$ 或 $\mathbf{A}_t,\mathbf{B}_t$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>层索引</td>
+<td>若需区分 Transformer block，增加 $\ell$：$\mathbf{A}_{t,\ell}$，不要用未定义的隐式层索引。</td>
+<td align="center">B</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-Attention"><a href="#3-2-Attention" class="headerlink" title="3.2 Attention"></a>3.2 Attention</h3><p>$$<br>\Attn(\mathbf{Q},\mathbf{K},\mathbf{V})<br>&#x3D;\softmax!\left(\frac{\mathbf{Q}\mathbf{K}^{\top&#125;&#125;{\sqrt{d_{\mathrm k&#125;&#125;}\right)\mathbf{V}.<br>$$</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th align="right">统一符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Query&#x2F;Key&#x2F;Value 矩阵</td>
+<td align="right">$\mathbf{Q},\mathbf{K},\mathbf{V}$</td>
+<td>token 序列级表示。</td>
+</tr>
+<tr>
+<td>投影权重</td>
+<td align="right">$\mathbf{W}<em>{\mathrm Q},\mathbf{W}</em>{\mathrm K},\mathbf{W}_{\mathrm V}$</td>
+<td>Q&#x2F;K&#x2F;V 是角色标签，项目默认用正体大写下标。</td>
+</tr>
+<tr>
+<td>单 token 表示</td>
+<td align="right">$\mathbf{q},\mathbf{k},\mathbf{v}$</td>
+<td>小写向量。DLEPEM 的检索 key 同样用 $\mathbf{k}$，须靠上下文或语义上标区分。</td>
+</tr>
+<tr>
+<td>缩放维数</td>
+<td align="right">$d_{\mathrm k}$</td>
+<td>不笼统写 $d$，除非已声明 $d&#x3D;d_{\mathrm k}$。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="4-CIL-PR-DLEPEM-符号复核"><a href="#4-CIL-PR-DLEPEM-符号复核" class="headerlink" title="4. CIL/PR_DLEPEM 符号复核"></a>4. <code>CIL/PR_DLEPEM</code> 符号复核</h2><h3 id="4-1-模块、参数与任务身份"><a href="#4-1-模块、参数与任务身份" class="headerlink" title="4.1 模块、参数与任务身份"></a>4.1 模块、参数与任务身份</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th align="right">统一符号</th>
+<th>含义</th>
+<th align="center">级别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第 $t$ 个 LoRA-Expert</td>
+<td align="right">$\mathrm E_t$</td>
+<td>任务专属可调用模块。其参数记为 $\theta_t^{\mathrm E}$。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>Expert 集合</td>
+<td align="right">$\mathcal E_{\le t}$</td>
+<td>${\mathrm E_0,\ldots,\mathrm E_t}$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>动态 router encoder</td>
+<td align="right">$\mathrm R_t$</td>
+<td>持续更新的路由特征模块；参数记为 $\rho_t$。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>任务身份随机变量</td>
+<td align="right">$\kappa$</td>
+<td>$\kappa&#x3D;s$ 表示样本属于第 $s$ 个任务。不要再用 $z$，因为 $\mathbf{z}$ 已保留给 logits。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>Expert 身份随机变量</td>
+<td align="right">$m$</td>
+<td>当正文使用 MII 时定义；若一任务对应一个 Expert，应同时给出映射 $m&#x3D;\mu(\kappa)$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>Task-Identity Inference</td>
+<td align="right">TII</td>
+<td>$\mathbb P(\kappa&#x3D;s\mid\mathbf{x})$。这是已发表分解文献中的通用术语。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>Module-Identity Inference</td>
+<td align="right">MII</td>
+<td>$\mathbb P(m&#x3D;j\mid\mathbf{x})$。DLEPEM 可将其保留为方法特定术语，但必须定义模块变量 $m$ 及任务到模块的映射；一任务一 Expert 时，MII 与 TII 数值等价但概念层级不同。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>Within-Task Prediction</td>
+<td align="right">WTP</td>
+<td>$\mathbb P(y&#x3D;c\mid\kappa&#x3D;s,\mathbf{x})$。</td>
+<td align="center">B</td>
+</tr>
+</tbody></table>
+<p>以下先按文献通用的任务身份变量 $\kappa$ 表达；若正文坚持使用 MII，可用映射 $m&#x3D;\mu(\kappa)$ 将同一分解改写到模块身份上。在类别集合两两不相交且类别 $c\in\mathcal Y_s$ 时，正确分解为</p>
+<p>$$<br>\mathbb P(y&#x3D;c\mid\mathbf{x})<br>&#x3D;\mathbb P(y&#x3D;c,\kappa&#x3D;s\mid\mathbf{x})<br>&#x3D;\mathbb P(y&#x3D;c\mid\kappa&#x3D;s,\mathbf{x}),<br> \mathbb P(\kappa&#x3D;s\mid\mathbf{x}).<br>$$</p>
+<p>更一般地，</p>
+<p>$$<br>\mathbb P(y&#x3D;c\mid\mathbf{x})<br>&#x3D;\sum_{s&#x3D;0}^{t}<br>\mathbb P(y&#x3D;c\mid\kappa&#x3D;s,\mathbf{x})<br>\mathbb P(\kappa&#x3D;s\mid\mathbf{x}),<br>$$</p>
+<p>并约定当 $c\notin\mathcal Y_s$ 时相应条件概率为 0。</p>
+<blockquote>
+<p>**必须修订：**原稿以“$\mathbf{x}$ 属于某输入空间”为任务身份事件，并把联合概率作为最终分类概率，类型不够清楚。任务身份应直接用随机变量 $\kappa$ 表示。</p>
+</blockquote>
+<h3 id="4-2-原型、查询与检索"><a href="#4-2-原型、查询与检索" class="headerlink" title="4.2 原型、查询与检索"></a>4.2 原型、查询与检索</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th align="right">统一符号</th>
+<th>定义</th>
+<th align="center">级别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Expert 原型</td>
+<td align="right">$\mathbf{p}_{s,c}^{\mathrm E}$</td>
+<td>由 $\mathrm E_s$ 提取的第 $s$ 个任务、第 $c$ 类原型。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>Frozen-PTM 原型</td>
+<td align="right">$\mathbf{p}_{s,c}^{\mathrm{PTM&#125;&#125;$</td>
+<td>由 $\phi_{\mathrm{PTM&#125;&#125;$ 提取。比上标 F 更自解释。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>Router 原型</td>
+<td align="right">$\mathbf{p}_{s,c}^{\mathrm R}$</td>
+<td>由训练到第 $s$ 阶段的 router 表示提取。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>Ensemble 原型&#x2F;key</td>
+<td align="right">$\mathbf{p}_{s,c}^{\mathrm{ens&#125;&#125;$</td>
+<td>$\concat(\mathbf{p}<em>{s,c}^{\mathrm{PTM&#125;&#125;,\mathbf{p}</em>{s,c}^{\mathrm R})$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>测试查询</td>
+<td align="right">$\mathbf{q}_t(\mathbf{x})$</td>
+<td>$\concat(\phi_{\mathrm{PTM&#125;&#125;(\mathbf{x}),\phi(\mathbf{x};\mathrm R_t))$。它是实例特征，不是 prototype。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>key bank</td>
+<td align="right">$\mathcal K_{\le t}$</td>
+<td>${(\mathbf{k}<em>{s,c},s,c):0\le s\le t,c\in\mathcal Y_s}$，其中 $\mathbf{k}</em>{s,c}&#x3D;\mathbf{p}_{s,c}^{\mathrm{ens&#125;&#125;$。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>最近 key 的索引</td>
+<td align="right">$(\hat s,\hat c)$</td>
+<td>标量索引对，不是向量。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>所选 Expert</td>
+<td align="right">$\hat e_t(\mathbf{x})$</td>
+<td>一任务一 Expert 时直接令 $\hat e_t(\mathbf{x})&#x3D;\hat s$。</td>
+<td align="center">A</td>
+</tr>
+</tbody></table>
+<p>不再推荐把 key bank 写成 $\mathcal M_t$：经典 continual-learning 文献常用 $\mathcal M_t$ 表示 episodic&#x2F;replay memory，容易与“无样本回放”的声明冲突。</p>
+<p>推荐公式：</p>
+<p>$$<br>\mathbf{p}<em>{s,c}^{\mathrm E}<br>&#x3D;\frac{1}{n</em>{s,c}^{\mathrm{tr&#125;&#125;}<br>\sum_{i&#x3D;1}^{n_s^{\mathrm{tr&#125;&#125;}<br>\mathbb I(y_{s,i}^{\mathrm{tr&#125;&#125;&#x3D;c)<br>,\phi(\mathbf{x}_{s,i}^{\mathrm{tr&#125;&#125;;\mathrm E_s),<br>$$</p>
+<p>$$<br>\mathbf{p}<em>{s,c}^{\mathrm{PTM&#125;&#125;<br>&#x3D;\frac{1}{n</em>{s,c}^{\mathrm{tr&#125;&#125;}<br>\sum_{i&#x3D;1}^{n_s^{\mathrm{tr&#125;&#125;}<br>\mathbb I(y_{s,i}^{\mathrm{tr&#125;&#125;&#x3D;c)<br>,\phi_{\mathrm{PTM&#125;&#125;(\mathbf{x}_{s,i}^{\mathrm{tr&#125;&#125;),<br>$$</p>
+<p>$$<br>\mathbf{p}<em>{s,c}^{\mathrm R}<br>&#x3D;\frac{1}{n</em>{s,c}^{\mathrm{tr&#125;&#125;}<br>\sum_{i&#x3D;1}^{n_s^{\mathrm{tr&#125;&#125;}<br>\mathbb I(y_{s,i}^{\mathrm{tr&#125;&#125;&#x3D;c)<br>,\phi(\mathbf{x}_{s,i}^{\mathrm{tr&#125;&#125;;\mathrm R_s),<br>$$</p>
+<p>$$<br>\mathbf{p}<em>{s,c}^{\mathrm{ens&#125;&#125;<br>&#x3D;\concat!\left(<br>\mathbf{p}</em>{s,c}^{\mathrm{PTM&#125;&#125;,<br>\mathbf{p}_{s,c}^{\mathrm R}<br>\right),<br>$$</p>
+<p>$$<br>\mathbf{q}<em>t(\mathbf{x})<br>&#x3D;\concat!\left(<br>\phi</em>{\mathrm{PTM&#125;&#125;(\mathbf{x}),<br>\phi(\mathbf{x};\mathrm R_t)<br>\right),<br>$$</p>
+<p>$$<br>(\hat s,\hat c)<br>&#x3D;\argmax_{\substack{0\le s\le t\c\in\mathcal Y_s&#125;&#125;<br>\operatorname{sim}_{\cos}!\left(<br>\mathbf{q}<em>t(\mathbf{x}),\mathbf{p}</em>{s,c}^{\mathrm{ens&#125;&#125;<br>\right).<br>$$</p>
+<p>若推理确实是 TII 后接 WTP，可写：</p>
+<p>$$<br>\hat y_t(\mathbf{x})<br>&#x3D;\argmax_{c\in\mathcal Y_{\hat s&#125;&#125;<br>\operatorname{sim}<em>{\cos}!\left(<br>\phi(\mathbf{x};\mathrm E</em>{\hat s}),<br>\mathbf{p}_{\hat s,c}^{\mathrm E}<br>\right).<br>$$</p>
+<p>若代码实际使用单头分类器并在所有已见类别上预测，则搜索域应改为 $\mathcal Y_{\le t}$，且正文不应把该项称为严格的 WTP。</p>
+<h3 id="4-3-Router-损失"><a href="#4-3-Router-损失" class="headerlink" title="4.3 Router 损失"></a>4.3 Router 损失</h3><p>DLEPEM 的已发表版本已经将早期稿件中不完整的“$p\log q$”写法明确为 <strong>KL 散度</strong>，并显式引入温度。为避免与 TALON 的蒸馏温度混淆，本项目将该温度记为 $\tau_{\mathrm{rt&#125;&#125;$，将原文的平衡系数 $\alpha$ 迁移为 $\lambda_{\mathrm{rt&#125;&#125;$。</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th align="right">统一符号</th>
+<th>复核结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Plasticity Feature Distillation</td>
+<td align="right">$\mathcal L_{\mathrm{PFD&#125;&#125;$</td>
+<td>将 Expert 类原型经 feature-wise softmax 得到的分布作为 teacher，将当前 router 特征分布作为 student。</td>
+</tr>
+<tr>
+<td>Stability Feature Distillation</td>
+<td align="right">$\mathcal L_{\mathrm{SFD&#125;&#125;$</td>
+<td>previous router 为 teacher，current router 为 student；旧 router 应冻结或 stop-gradient。</td>
+</tr>
+<tr>
+<td>Router 温度</td>
+<td align="right">$\tau_{\mathrm{rt&#125;&#125;$</td>
+<td>只用于 DLEPEM router feature distillation，不与 TALON 的 $\tau_{\mathrm{KD&#125;&#125;$ 或 $\tau_{\mathrm{sem&#125;&#125;$ 复用。</td>
+</tr>
+<tr>
+<td>Router 平衡系数</td>
+<td align="right">$\lambda_{\mathrm{rt&#125;&#125;$</td>
+<td>已发表论文中记作 $\alpha$；本项目改名是为了避免跨论文与 TALON 的 Teacher 权重 $\alpha_{t,k}$ 冲突。</td>
+</tr>
+<tr>
+<td>Router 总损失</td>
+<td align="right">$\mathcal L_{\mathrm{router&#125;&#125;$</td>
+<td>第一个 session 只有 PFD；后续 session 使用 $\lambda_{\mathrm{rt&#125;&#125;\mathcal L_{\mathrm{PFD&#125;&#125;+(1-\lambda_{\mathrm{rt&#125;&#125;)\mathcal L_{\mathrm{SFD&#125;&#125;$。</td>
+</tr>
+</tbody></table>
+<p>先定义</p>
+<p>$$<br>\boldsymbol{\pi}<em>{t,i}^{\mathrm E}<br>&#x3D;\softmax!\left(<br>\mathbf{p}</em>{t,y_{t,i}^{\mathrm{tr&#125;&#125;}^{\mathrm E}&#x2F;\tau_{\mathrm{rt&#125;&#125;<br>\right),<br>$$</p>
+<p>$$<br>\boldsymbol{\pi}<em>{t,i}^{\mathrm R}<br>&#x3D;\softmax!\left(<br>\phi(\mathbf{x}</em>{t,i}^{\mathrm{tr&#125;&#125;;\mathrm R_t)&#x2F;\tau_{\mathrm{rt&#125;&#125;<br>\right).<br>$$</p>
+<p>则已发表版本对应的类型化写法为</p>
+<p>$$<br>\mathcal L_{\mathrm{PFD&#125;&#125;<br>&#x3D;\frac{1}{n_t^{\mathrm{tr&#125;&#125;}<br>\sum_{i&#x3D;1}^{n_t^{\mathrm{tr&#125;&#125;}<br>D_{\mathrm{KL&#125;&#125;!\left(<br>\boldsymbol{\pi}<em>{t,i}^{\mathrm E}<br>\parallel<br>\boldsymbol{\pi}</em>{t,i}^{\mathrm R}<br>\right),<br>$$</p>
+<p>$$<br>\mathcal L_{\mathrm{SFD&#125;&#125;<br>&#x3D;\frac{1}{n_t^{\mathrm{tr&#125;&#125;}<br>\sum_{i&#x3D;1}^{n_t^{\mathrm{tr&#125;&#125;}<br>D_{\mathrm{KL&#125;&#125;!\left(<br>\softmax!\left(<br>\stopgrad[\phi(\mathbf{x}<em>{t,i}^{\mathrm{tr&#125;&#125;;\mathrm R</em>{t-1})]&#x2F;\tau_{\mathrm{rt&#125;&#125;<br>\right)<br>\parallel<br>\boldsymbol{\pi}_{t,i}^{\mathrm R}<br>\right),<br>\qquad t\ge 1,<br>$$</p>
+<p>$$<br>\mathcal L_{\mathrm{router&#125;&#125;<br>&#x3D;\begin{cases}<br>\mathcal L_{\mathrm{PFD&#125;&#125;, &amp; t&#x3D;0,\<br>\lambda_{\mathrm{rt&#125;&#125;\mathcal L_{\mathrm{PFD&#125;&#125;<br>+(1-\lambda_{\mathrm{rt&#125;&#125;)\mathcal L_{\mathrm{SFD&#125;&#125;, &amp; t\ge 1.<br>\end{cases}<br>$$</p>
+<p>这里的 softmax 沿<strong>特征维</strong>计算，把 feature vector 转换为离散分布。该做法在数学上已经闭合，但它不是普通的“特征距离”；正文必须明确这一解释。若仓库代码仍对应早期稿件而不是已发表版本，应以代码和已发表论文的差异为单独修订项，不能继续沿用不完整的 $p\log q$ 表达式。</p>
+<hr>
+<h2 id="5-FSCIL-KBS-TALON-符号复核"><a href="#5-FSCIL-KBS-TALON-符号复核" class="headerlink" title="5. FSCIL/KBS_TALON 符号复核"></a>5. <code>FSCIL/KBS_TALON</code> 符号复核</h2><h3 id="5-1-Teacher、Student、特征与-logits"><a href="#5-1-Teacher、Student、特征与-logits" class="headerlink" title="5.1 Teacher、Student、特征与 logits"></a>5.1 Teacher、Student、特征与 logits</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th align="right">统一符号</th>
+<th>定义</th>
+<th align="center">级别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第 $k$ 个 LoRA-Teacher</td>
+<td align="right">$\mathrm T_k$</td>
+<td>模块对象；参数为 $\theta_k^{\mathrm T}$。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>Teacher 集合</td>
+<td align="right">$\mathcal T_{\le t}$</td>
+<td>${\mathrm T_0,\ldots,\mathrm T_t}$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>第 $t$ 阶段 LoRA-Student</td>
+<td align="right">$\mathrm S_t$</td>
+<td>模块对象；参数为 $\theta_t^{\mathrm S}$。</td>
+<td align="center">B</td>
+</tr>
+<tr>
+<td>Teacher 特征</td>
+<td align="right">$\mathbf{h}_k^{\mathrm T}(\mathbf{x})$</td>
+<td>$\phi(\mathbf{x};\mathrm T_k)$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>Student 特征</td>
+<td align="right">$\mathbf{h}_t^{\mathrm S}(\mathbf{x})$</td>
+<td>$\phi(\mathbf{x};\mathrm S_t)$。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>Teacher logits</td>
+<td align="right">$\mathbf{z}_k^{\mathrm T}(\mathbf{x})$</td>
+<td>不再用 $T_k$，避免与模块同名。</td>
+<td align="center">A</td>
+</tr>
+<tr>
+<td>Student logits</td>
+<td align="right">$\mathbf{z}_t^{\mathrm S}(\mathbf{x})$</td>
+<td>不再用 $S_t$，避免与模块同名。</td>
+<td align="center">A</td>
+</tr>
+</tbody></table>
+<p>$$<br>\mathbf{z}<em>k^{\mathrm T}(\mathbf{x})<br>&#x3D;\mathbf{W}</em>{\mathrm{cls},t}^{\top}\mathbf{h}_k^{\mathrm T}(\mathbf{x}),<br>\qquad<br>\mathbf{z}<em>t^{\mathrm S}(\mathbf{x})<br>&#x3D;\mathbf{W}</em>{\mathrm{cls},t}^{\top}\mathbf{h}_t^{\mathrm S}(\mathbf{x}).<br>$$</p>
+<p>**必须说明：**所有参与加权的 Teacher logits 必须具有相同类别顺序和相同维度 $\lvert\mathcal Y_{\le t}\rvert$。若某 Teacher 仅输出局部类别，必须定义 padding、mask 或类别对齐映射后才能相加。</p>
+<h3 id="5-2-Ensemble-logits-与蒸馏"><a href="#5-2-Ensemble-logits-与蒸馏" class="headerlink" title="5.2 Ensemble logits 与蒸馏"></a>5.2 Ensemble logits 与蒸馏</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th align="right">统一符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第 $k$ 个 Teacher 权重</td>
+<td align="right">$\alpha_{t,k}$</td>
+<td>针对当前 session $t$ 计算。</td>
+</tr>
+<tr>
+<td>Ensemble logits</td>
+<td align="right">$\bar{\mathbf{z&#125;&#125;_t^{\mathrm T}$</td>
+<td>在 softmax <strong>之前</strong>进行加权。</td>
+</tr>
+<tr>
+<td>Teacher 分布</td>
+<td align="right">$\mathbf{q}_t^{\mathrm T}$</td>
+<td>对 ensemble logits 归一化。</td>
+</tr>
+<tr>
+<td>Student 分布</td>
+<td align="right">$\mathbf{q}_t^{\mathrm S}$</td>
+<td>对 Student logits 归一化。</td>
+</tr>
+<tr>
+<td>Soft distillation</td>
+<td align="right">$\mathcal L_{\mathrm{SD&#125;&#125;$</td>
+<td>KL 方向为 teacher $\parallel$ student。</td>
+</tr>
+<tr>
+<td>Hard-label loss</td>
+<td align="right">$\mathcal L_{\mathrm{HD&#125;&#125;$</td>
+<td>真值交叉熵。</td>
+</tr>
+<tr>
+<td>EKT 总损失</td>
+<td align="right">$\mathcal L_{\mathrm{EKT&#125;&#125;$</td>
+<td>以代码中的实际权重为准。</td>
+</tr>
+</tbody></table>
+<p>$$<br>\bar{\mathbf{z&#125;&#125;<em>t^{\mathrm T}(\mathbf{x})<br>&#x3D;\sum</em>{k&#x3D;0}^{t}\alpha_{t,k}\mathbf{z}<em>k^{\mathrm T}(\mathbf{x}),<br>\qquad<br>\sum</em>{k&#x3D;0}^{t}\alpha_{t,k}&#x3D;1,<br>$$</p>
+<p>$$<br>\mathbf{q}_t^{\mathrm T}(\mathbf{x})<br>&#x3D;\softmax!\left(\bar{\mathbf{z&#125;&#125;<em>t^{\mathrm T}(\mathbf{x})&#x2F;\tau</em>{\mathrm{KD&#125;&#125;\right),<br>\qquad<br>\mathbf{q}_t^{\mathrm S}(\mathbf{x})<br>&#x3D;\softmax!\left(\mathbf{z}<em>t^{\mathrm S}(\mathbf{x})&#x2F;\tau</em>{\mathrm{KD&#125;&#125;\right),<br>$$</p>
+<p>$$<br>\mathcal L_{\mathrm{SD&#125;&#125;<br>&#x3D;\mathbb E_{(\mathbf{x},y)\sim\mathcal D_t^{\mathrm{tr&#125;&#125;}<br>\left[<br>D_{\mathrm{KL&#125;&#125;!\left(<br>\mathbf{q}_t^{\mathrm T}(\mathbf{x})<br>\parallel<br>\mathbf{q}_t^{\mathrm S}(\mathbf{x})<br>\right)<br>\right],<br>$$</p>
+<p>$$<br>\mathcal L_{\mathrm{HD&#125;&#125;<br>&#x3D;\mathbb E_{(\mathbf{x},y)\sim\mathcal D_t^{\mathrm{tr&#125;&#125;}<br>\left[<br>\mathcal L_{\mathrm{CE&#125;&#125;!\left(<br>\mathbf{z}_t^{\mathrm S}(\mathbf{x}),y<br>\right)<br>\right].<br>$$</p>
+<p>当前稿件若实现为等权相加，应保持</p>
+<p>$$<br>\mathcal L_{\mathrm{EKT&#125;&#125;<br>&#x3D;\mathcal L_{\mathrm{SD&#125;&#125;+\mathcal L_{\mathrm{HD&#125;&#125;.<br>$$</p>
+<p>不要为形式完整而虚构 $\lambda_{\mathrm{SD&#125;&#125;,\lambda_{\mathrm{HD&#125;&#125;$。正文中的 “adaptive weighting” 应明确仅指 Teacher 权重 $\alpha_{t,k}$。若代码使用温度 $\tau_{\mathrm{KD&#125;&#125;\ne1$，还应核对是否乘以 $\tau_{\mathrm{KD&#125;&#125;^2$；若代码无温度，删除该符号并直接使用 softmax。</p>
+<blockquote>
+<p><strong>区别必须保留：</strong>“logit 加权后再 softmax”与“先 softmax 再对概率加权”并不等价，正文和代码只能选择其中一个。</p>
+</blockquote>
+<h3 id="5-3-Teacher-space-原型与语义权重"><a href="#5-3-Teacher-space-原型与语义权重" class="headerlink" title="5.3 Teacher-space 原型与语义权重"></a>5.3 Teacher-space 原型与语义权重</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th align="right">统一符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Teacher-space 原型</td>
+<td align="right">$\mathbf{p}_{s,c}^{(k)}$</td>
+<td>任务 $s$ 的类别 $c$，在 Teacher $k$ 的特征空间中提取。</td>
+</tr>
+<tr>
+<td>原始语义分数</td>
+<td align="right">$s_{t,k}^{\mathrm{sum&#125;&#125;$</td>
+<td>当前实现中的成对 cosine 求和。</td>
+</tr>
+<tr>
+<td>类别数归一化分数</td>
+<td align="right">$s_{t,k}^{\mathrm{mean&#125;&#125;$</td>
+<td>对成对相似度取均值；仅作为算法改进建议。</td>
+</tr>
+<tr>
+<td>语义温度</td>
+<td align="right">$\tau_{\mathrm{sem&#125;&#125;$</td>
+<td>与 KD 温度分开。</td>
+</tr>
+</tbody></table>
+<p>$$<br>\mathbf{p}<em>{s,c}^{(k)}<br>&#x3D;\frac{1}{n</em>{s,c}^{\mathrm{tr&#125;&#125;}<br>\sum_{i&#x3D;1}^{n_s^{\mathrm{tr&#125;&#125;}<br>\mathbb I(y_{s,i}^{\mathrm{tr&#125;&#125;&#x3D;c)<br>,\mathbf{h}<em>k^{\mathrm T}(\mathbf{x}</em>{s,i}^{\mathrm{tr&#125;&#125;),<br>$$</p>
+<p>$$<br>s_{t,k}^{\mathrm{sum&#125;&#125;<br>&#x3D;\sum_{c\in\mathcal Y_k}<br>\sum_{c’\in\mathcal Y_t}<br>\operatorname{sim}<em>{\cos}!\left(<br>\mathbf{p}</em>{k,c}^{(k)},<br>\mathbf{p}_{t,c’}^{(k)}<br>\right),<br>$$</p>
+<p>$$<br>\alpha_{t,k}<br>&#x3D;\frac{\exp(s_{t,k}^{\mathrm{sum&#125;&#125;&#x2F;\tau_{\mathrm{sem&#125;&#125;)}<br>{\sum_{m&#x3D;0}^{t}\exp(s_{t,m}^{\mathrm{sum&#125;&#125;&#x2F;\tau_{\mathrm{sem&#125;&#125;)}.<br>$$</p>
+<p>**准确性评估：**上述“求和”在数学上成立，但其尺度随 $\lvert\mathcal Y_k\rvert\lvert\mathcal Y_t\rvert$ 增长。base session 和增量 session 类别数不同时，不同 Teacher 的分数未必可直接比较。更具基数不变性的候选是</p>
+<p>$$<br>s_{t,k}^{\mathrm{mean&#125;&#125;<br>&#x3D;\frac{s_{t,k}^{\mathrm{sum&#125;&#125;}<br>{\lvert\mathcal Y_k\rvert\lvert\mathcal Y_t\rvert}.<br>$$</p>
+<p>这属于<strong>算法修改而非纯符号修订</strong>；若采用，必须重新实验，不得只改论文公式。</p>
+<h3 id="5-4-Student-原型与跨阶段兼容性"><a href="#5-4-Student-原型与跨阶段兼容性" class="headerlink" title="5.4 Student 原型与跨阶段兼容性"></a>5.4 Student 原型与跨阶段兼容性</h3><p>当前新类原型应记录其生成阶段：</p>
+<p>$$<br>\mathbf{p}<em>{s,c}^{\mathrm S,s}<br>&#x3D;\frac{1}{n</em>{s,c}^{\mathrm{tr&#125;&#125;}<br>\sum_{i&#x3D;1}^{n_s^{\mathrm{tr&#125;&#125;}<br>\mathbb I(y_{s,i}^{\mathrm{tr&#125;&#125;&#x3D;c)<br>,\mathbf{h}<em>s^{\mathrm S}(\mathbf{x}</em>{s,i}^{\mathrm{tr&#125;&#125;),<br>\qquad c\in\mathcal Y_s.<br>$$</p>
+<p>第 $t$ 阶段的部署原型库写为</p>
+<p>$$<br>\mathcal P_t^{\mathrm S}<br>&#x3D;\left{<br>(\mathbf{p}_{s,c}^{\mathrm S,s},c):<br>0\le s\le t,\ c\in\mathcal Y_s<br>\right}.<br>$$</p>
+<p>推理为</p>
+<p>$$<br>\hat y_t(\mathbf{x})<br>&#x3D;\argmax_{(\mathbf{p},c)\in\mathcal P_t^{\mathrm S&#125;&#125;<br>\operatorname{sim}_{\cos}!\left(<br>\mathbf{p},\mathbf{h}_t^{\mathrm S}(\mathbf{x})<br>\right).<br>$$</p>
+<blockquote>
+<p><strong>必须修订表述：<strong>旧类原型 $\mathbf{p}_{s,c}^{\mathrm S,s}$ 是用历史 Student $\mathrm S_s$ 生成的，并不自动等于“当前 $\mathrm S_t$ 特征空间中的原型”。若旧样本不保存且原型不重算，方法依赖的是</strong>跨 Student 阶段的表示兼容性</strong>。正文应明确这一假设，不能笼统声称所有历史原型均已位于当前 Student 空间。</p>
+</blockquote>
+<hr>
+<h2 id="6-评价指标"><a href="#6-评价指标" class="headerlink" title="6. 评价指标"></a>6. 评价指标</h2><h3 id="6-1-先区分-micro-accuracy-与-task-macro-accuracy"><a href="#6-1-先区分-micro-accuracy-与-task-macro-accuracy" class="headerlink" title="6.1 先区分 micro accuracy 与 task-macro accuracy"></a>6.1 先区分 micro accuracy 与 task-macro accuracy</h3><p>定义任务级测试准确率矩阵：</p>
+<p>$$<br>R_{t,s}<br>&#x3D;\frac{1}{n_s^{\mathrm{te&#125;&#125;}<br>\sum_{i&#x3D;1}^{n_s^{\mathrm{te&#125;&#125;}<br>\mathbb I!\left(<br>\hat y_t(\mathbf{x}<em>{s,i}^{\mathrm{te&#125;&#125;)<br>&#x3D;y</em>{s,i}^{\mathrm{te&#125;&#125;<br>\right),<br>\qquad s\le t.<br>$$</p>
+<p>标准 CIL&#x2F;FSCIL 表格通常报告“学完 session $t$ 后，对全部已见类别累计测试集的 Top-1 accuracy”：</p>
+<p>$$<br>\mathcal A_t^{\mathrm{micro&#125;&#125;<br>&#x3D;\frac{<br>\sum_{s&#x3D;0}^{t}<br>\sum_{i&#x3D;1}^{n_s^{\mathrm{te&#125;&#125;}<br>\mathbb I(\hat y_t(\mathbf{x}<em>{s,i}^{\mathrm{te&#125;&#125;)&#x3D;y</em>{s,i}^{\mathrm{te&#125;&#125;)<br>}{<br>\sum_{s&#x3D;0}^{t}n_s^{\mathrm{te&#125;&#125;<br>}.<br>$$</p>
+<p>任务等权宏平均为</p>
+<p>$$<br>\mathcal A_t^{\mathrm{macro&#125;&#125;<br>&#x3D;\frac{1}{t+1}\sum_{s&#x3D;0}^{t}R_{t,s}.<br>$$</p>
+<p>二者只有在各任务测试样本数相等或采取特定加权时才相同。原文档把后者直接称作“阶段总体准确率”，应改为明确的 <code>macro</code> 指标；主结果表优先使用与代码一致的累计测试准确率。</p>
+<h3 id="6-2-主指标"><a href="#6-2-主指标" class="headerlink" title="6.2 主指标"></a>6.2 主指标</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">统一符号</th>
+<th>定义与注意事项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第 $t$ 阶段累计准确率</td>
+<td align="right">$\mathcal A_t$</td>
+<td>默认指 $\mathcal A_t^{\mathrm{micro&#125;&#125;$；若使用 macro，必须加上标。</td>
+</tr>
+<tr>
+<td>平均增量准确率</td>
+<td align="right">$\overline{\mathcal A}$</td>
+<td>$\frac1T\sum_{t&#x3D;0}^{T-1}\mathcal A_t$。若排除 base session，必须在公式和表注中同时说明。</td>
+</tr>
+<tr>
+<td>Base accuracy</td>
+<td align="right">$\mathcal A_{\mathrm{base&#125;&#125;$</td>
+<td>$\mathcal A_0$。</td>
+</tr>
+<tr>
+<td>Last accuracy</td>
+<td align="right">$\mathcal A_{\mathrm{last&#125;&#125;$</td>
+<td>$\mathcal A_{T-1}$。</td>
+</tr>
+<tr>
+<td>Performance Drop</td>
+<td align="right">$\mathrm{PD}$</td>
+<td>$\mathcal A_{\mathrm{base&#125;&#125;-\mathcal A_{\mathrm{last&#125;&#125;$，单位为 percentage points。它混合了任务难度、类别扩张和遗忘，不应单独称为“纯遗忘量”。</td>
+</tr>
+<tr>
+<td>Backward Transfer</td>
+<td align="right">$\mathrm{BWT}$</td>
+<td>衡量后续学习对旧任务最终表现的影响。</td>
+</tr>
+<tr>
+<td>Forward Transfer</td>
+<td align="right">$\mathrm{FWT}$</td>
+<td>只有在学习任务 $s$ 之前能够合法评价该任务时才有定义。</td>
+</tr>
+</tbody></table>
+<p>$$<br>\overline{\mathcal A}<br>&#x3D;\frac{1}{T}\sum_{t&#x3D;0}^{T-1}\mathcal A_t,<br>\qquad<br>\mathrm{PD}<br>&#x3D;\mathcal A_0-\mathcal A_{T-1}.<br>$$</p>
+<p>采用 GEM 风格的评价矩阵时：</p>
+<p>$$<br>\mathrm{BWT}<br>&#x3D;\frac{1}{T-1}<br>\sum_{s&#x3D;0}^{T-2}<br>\left(R_{T-1,s}-R_{s,s}\right),<br>$$</p>
+<p>$$<br>\mathrm{FWT}<br>&#x3D;\frac{1}{T-1}<br>\sum_{s&#x3D;1}^{T-1}<br>\left(R_{s-1,s}-b_s\right),<br>$$</p>
+<p>其中 $b_s$ 必须明确是 chance level、随机初始化模型、冻结 PTM，还是其他基线。</p>
+<blockquote>
+<p>**FWT 警告：**经典 FWT 强调在未来任务尚未学习时的评价。若先利用未来任务的 support set 构造 prototype，再进行测试，这不再是严格 zero-shot FWT，必须改名或明确协议。</p>
+</blockquote>
+<p>可选的 task-wise forgetting：</p>
+<p>$$<br>\mathrm F<br>&#x3D;\frac{1}{T-1}<br>\sum_{s&#x3D;0}^{T-2}<br>\left[<br>\max_{\ell\in{s,\ldots,T-1&amp;#125;&#125;R_{\ell,s}<br>-R_{T-1,s}<br>\right].<br>$$</p>
+<hr>
+<h2 id="7-推荐宏与最小宏包"><a href="#7-推荐宏与最小宏包" class="headerlink" title="7. 推荐宏与最小宏包"></a>7. 推荐宏与最小宏包</h2><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs latex"><span class="hljs-comment">% ---------- Math packages ----------</span><br><span class="hljs-keyword">\usepackage</span>&#123;amsmath,amssymb&#125;<br><span class="hljs-keyword">\usepackage</span>&#123;mathtools&#125;<br><br><span class="hljs-comment">% ---------- Semantic fonts ----------</span><br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\vect</span>&#125;[1]&#123;<span class="hljs-keyword">\mathbf</span>&#123;<span class="hljs-params">#1</span><span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;          <span class="hljs-comment">% Latin vector</span><br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\mat</span>&#125;[1]&#123;<span class="hljs-keyword">\mathbf</span>&#123;<span class="hljs-params">#1</span><span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;           <span class="hljs-comment">% Latin matrix</span><br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\greekvect</span>&#125;[1]&#123;<span class="hljs-keyword">\boldsymbol</span>&#123;<span class="hljs-params">#1</span><span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25; <span class="hljs-comment">% Greek vector/matrix symbol</span><br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\setc</span>&#125;[1]&#123;<span class="hljs-keyword">\mathcal</span>&#123;<span class="hljs-params">#1</span><span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\module</span>&#125;[1]&#123;<span class="hljs-keyword">\mathrm</span>&#123;<span class="hljs-params">#1</span><span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\loss</span>&#125;[1]&#123;<span class="hljs-keyword">\mathcal</span>&#123;L&#125;<span class="hljs-built_in">_</span>&#123;<span class="hljs-keyword">\mathrm</span>&#123;<span class="hljs-params">#1</span><span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;&#125;<br><br><span class="hljs-comment">% ---------- Sets and measures ----------</span><br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\Rset</span>&#125;&#123;<span class="hljs-keyword">\mathbb</span>&#123;R<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\Prob</span>&#125;&#123;<span class="hljs-keyword">\mathbb</span>&#123;P<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\Expect</span>&#125;&#123;<span class="hljs-keyword">\mathbb</span>&#123;E<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\Ind</span>&#125;&#123;<span class="hljs-keyword">\mathbb</span>&#123;I<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br><br><span class="hljs-comment">% ---------- Operators ----------</span><br><span class="hljs-keyword">\DeclareMathOperator</span>*&#123;<span class="hljs-keyword">\argmax</span>&#125;&#123;arg<span class="hljs-keyword">\,</span>max&#125;<br><span class="hljs-keyword">\DeclareMathOperator</span>*&#123;<span class="hljs-keyword">\argmin</span>&#125;&#123;arg<span class="hljs-keyword">\,</span>min&#125;<br><span class="hljs-keyword">\DeclareMathOperator</span>&#123;<span class="hljs-keyword">\softmax</span>&#125;&#123;softmax&#125;<br><span class="hljs-keyword">\DeclareMathOperator</span>&#123;<span class="hljs-keyword">\Attn</span>&#125;&#123;Attn&#125;<br><span class="hljs-keyword">\DeclareMathOperator</span>&#123;<span class="hljs-keyword">\concat</span>&#125;&#123;concat&#125;<br><span class="hljs-keyword">\DeclareMathOperator</span>&#123;<span class="hljs-keyword">\stopgrad</span>&#125;&#123;sg&#125;<br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\simcos</span>&#125;&#123;<span class="hljs-keyword">\operatorname</span>&#123;sim&#125;<span class="hljs-built_in">_</span>&#123;<span class="hljs-keyword">\cos</span><span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br><br><span class="hljs-comment">% ---------- Delimiters ----------</span><br><span class="hljs-keyword">\DeclarePairedDelimiter</span>&#123;<span class="hljs-keyword">\norm</span>&#125;&#123;<span class="hljs-keyword">\lVert</span>&#125;&#123;<span class="hljs-keyword">\rVert</span>&#125;<br><span class="hljs-keyword">\DeclarePairedDelimiter</span>&#123;<span class="hljs-keyword">\abs</span>&#125;&#123;<span class="hljs-keyword">\lvert</span>&#125;&#123;<span class="hljs-keyword">\rvert</span>&#125;<br><br><span class="hljs-comment">% ---------- Frequently used modules ----------</span><br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\Emod</span>&#125;&#123;<span class="hljs-keyword">\mathrm</span>&#123;E<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\Rmod</span>&#125;&#123;<span class="hljs-keyword">\mathrm</span>&#123;R<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\Tmod</span>&#125;&#123;<span class="hljs-keyword">\mathrm</span>&#123;T<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br><span class="hljs-keyword">\newcommand</span>&#123;<span class="hljs-keyword">\Smod</span>&#125;&#123;<span class="hljs-keyword">\mathrm</span>&#123;S<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<span class="hljs-built_in">&amp;</span><span class="hljs-params">#1</span>25;<br></code></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>规则</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>语义宏优先</td>
+<td>Latin 符号优先 <code>\vect{x}</code>&#x2F;<code>\mat{W}</code>；希腊粗体符号用 <code>\greekvect{\pi}</code>；模块用 <code>\module{T}</code>。</td>
+</tr>
+<tr>
+<td>不覆盖内置命令</td>
+<td>不重定义 <code>\P</code>、<code>\S</code>、<code>\H</code> 等 LaTeX 命令。</td>
+</tr>
+<tr>
+<td>Unicode 数学模板</td>
+<td>若未来模板使用 <code>unicode-math</code> 且明确要求严格粗斜体，可将 <code>\vect</code>&#x2F;<code>\mat</code> 的底层实现改为 <code>\symbfit</code>；正文接口不变。</td>
+</tr>
+<tr>
+<td>算子命名</td>
+<td><code>\operatorname{sim}_{\cos}</code> 比把余弦相似度仅写成 <code>cos</code> 更清楚，避免与三角函数 $\cos$ 混淆。</td>
+</tr>
+<tr>
+<td>范数大小</td>
+<td><code>\norm*{...}</code> 自动伸缩；普通短向量使用 <code>\norm{...}</code> 即可。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="7-1-旧稿迁移规则"><a href="#7-1-旧稿迁移规则" class="headerlink" title="7.1 旧稿迁移规则"></a>7.1 旧稿迁移规则</h2><table>
+<thead>
+<tr>
+<th>旧写法类型</th>
+<th>新写法</th>
+<th align="center">是否可机械替换</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Latin 向量&#x2F;矩阵，如旧粗体宏包中的 $x,W,p,z$</td>
+<td><code>\mathbf{x}</code>、<code>\mathbf{W}</code>、<code>\mathbf{p}</code>、<code>\mathbf{z}</code></td>
+<td align="center">是，但应检查模块&#x2F;集合等类型。</td>
+</tr>
+<tr>
+<td>希腊向量或概率向量，如 $\pi,\theta$</td>
+<td><code>\boldsymbol{\pi}</code>、<code>\boldsymbol{\theta}</code></td>
+<td align="center">需按符号类型替换。</td>
+</tr>
+<tr>
+<td>模块对象</td>
+<td><code>\mathrm{E}_t</code>、<code>\mathrm{T}_t</code>、<code>\mathrm{S}_t</code></td>
+<td align="center">不得替换成矩阵字体。</td>
+</tr>
+<tr>
+<td>集合、数据集、类别空间</td>
+<td><code>\mathcal{D}</code>、<code>\mathcal{Y}</code></td>
+<td align="center">不得替换成矩阵字体。</td>
+</tr>
+<tr>
+<td>实数域、概率和期望</td>
+<td><code>\mathbb{R}</code>、<code>\mathbb{P}</code>、<code>\mathbb{E}</code></td>
+<td align="center">不得替换成矩阵字体。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>**禁止无条件全局替换为 <code>\mathbf</code>：**Latin 向量和矩阵可以迁移到 <code>\mathbf</code>，但希腊符号必须转为 <code>\boldsymbol</code>，模块、集合、数域、概率和标量标签仍按各自对象类型处理。</p>
+</blockquote>
+<hr>
+<h2 id="8-复核后的问题分级"><a href="#8-复核后的问题分级" class="headerlink" title="8. 复核后的问题分级"></a>8. 复核后的问题分级</h2><h3 id="8-1-必须修正"><a href="#8-1-必须修正" class="headerlink" title="8.1 必须修正"></a>8.1 必须修正</h3><table>
+<thead>
+<tr>
+<th align="right">编号</th>
+<th>当前问题</th>
+<th>修订</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">1</td>
+<td>$\mathbf R$ 表示实数域</td>
+<td>改为 $\mathbb R$。</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td>标量类别标签写成 $\mathbf y$</td>
+<td>改为 $y$；只有向量标签写 $\mathbf{y}$。</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td>$T$ 同时表示任务总数和最后索引</td>
+<td>项目统一 $t&#x3D;0,\ldots,T-1$；外部公式显式换算。</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td>训练集和测试集都写 $\mathcal D_t$</td>
+<td>改为 $\mathcal D_t^{\mathrm{tr&#125;&#125;$、$\mathcal D_t^{\mathrm{te&#125;&#125;$。</td>
+</tr>
+<tr>
+<td align="right">5</td>
+<td>当前训练损失被称为完整 CIL 风险</td>
+<td>改称 $\widehat{\mathcal R}_t$，并单独定义累计评价。</td>
+</tr>
+<tr>
+<td align="right">6</td>
+<td>阶段准确率直接写任务平均</td>
+<td>区分 $\mathcal A_t^{\mathrm{micro&#125;&#125;$ 与 $\mathcal A_t^{\mathrm{macro&#125;&#125;$。</td>
+</tr>
+<tr>
+<td align="right">7</td>
+<td>DLEPEM 用输入空间归属表示任务身份</td>
+<td>改为任务随机变量 $\kappa$ 及 TII&#x2F;WTP 分解。</td>
+</tr>
+<tr>
+<td align="right">8</td>
+<td>最近 key、key 向量和 Expert ID 混为一谈</td>
+<td>分别使用 $\mathbf{k}_{s,c}$、$(\hat s,\hat c)$、$\hat e_t$。</td>
+</tr>
+<tr>
+<td align="right">9</td>
+<td>DLEPEM 早期稿件的 $p\log q$ 公式不完整</td>
+<td>按已发表版本改为完整的 feature-wise softmax + KL，并补齐方向、温度与 session 分段。</td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td>TALON 的 $T_k&#x2F;S_t$ 同时表示模块和 logits</td>
+<td>模块用 $\mathrm T_k&#x2F;\mathrm S_t$，logits 用 $\mathbf{z}_k^{\mathrm T}&#x2F;\mathbf{z}_t^{\mathrm S}$。</td>
+</tr>
+<tr>
+<td align="right">11</td>
+<td>TALON 未明确是 logit mixture 还是 probability mixture</td>
+<td>公式和代码保持同一顺序；两者不等价。</td>
+</tr>
+<tr>
+<td align="right">12</td>
+<td>TALON 历史 Student 原型缺少生成阶段</td>
+<td>改为 $\mathbf{p}_{s,c}^{\mathrm S,s}$，明确跨阶段表示兼容假设。</td>
+</tr>
+<tr>
+<td align="right">13</td>
+<td>FWT 基线和未来任务可用信息不明确</td>
+<td>定义 $b_s$、输出空间、是否使用 support set；不满足 zero-shot 时不得沿用经典 FWT 名称。</td>
+</tr>
+<tr>
+<td align="right">14</td>
+<td>LoRA 矩阵方向与 scaling 未同时说明</td>
+<td>明确列&#x2F;行向量约定及 $\alpha_{\mathrm{LoRA&#125;&#125;&#x2F;r$ 或实际缩放。</td>
+</tr>
+</tbody></table>
+<h3 id="8-2-需要对照代码后裁决"><a href="#8-2-需要对照代码后裁决" class="headerlink" title="8.2 需要对照代码后裁决"></a>8.2 需要对照代码后裁决</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>必须核对的实现事实</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DLEPEM 发布版一致性</td>
+<td>核对仓库实现是否已同步为 feature-wise softmax + KL、温度 $\tau_{\mathrm{rt&#125;&#125;$、首 session 仅 PFD、后续采用 $\lambda_{\mathrm{rt&#125;&#125;$ 与 $1-\lambda_{\mathrm{rt&#125;&#125;$。</td>
+</tr>
+<tr>
+<td>TALON KD 温度</td>
+<td>是否存在温度；是否使用 $\tau^2$ 缩放。</td>
+</tr>
+<tr>
+<td>TALON EKT 权重</td>
+<td>是否确实为 $1+1$，还是代码中有隐藏系数。</td>
+</tr>
+<tr>
+<td>TALON logits 对齐</td>
+<td>各 Teacher 输出维度、类别顺序和 mask 方式。</td>
+</tr>
+<tr>
+<td>TALON semantic score</td>
+<td>代码使用求和还是均值；不要只改论文不改实验。</td>
+</tr>
+<tr>
+<td>TALON prototype bank</td>
+<td>历史原型是否重算、映射、更新或永久冻结。</td>
+</tr>
+</tbody></table>
+<h3 id="8-3-项目风格，不再标为外部论文的“错误”"><a href="#8-3-项目风格，不再标为外部论文的“错误”" class="headerlink" title="8.3 项目风格，不再标为外部论文的“错误”"></a>8.3 项目风格，不再标为外部论文的“错误”</h3><table>
+<thead>
+<tr>
+<th>风格选择</th>
+<th>本项目默认</th>
+<th>兼容写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Latin 向量&#x2F;矩阵</td>
+<td><code>\mathbf</code></td>
+<td>与目标主稿一致；不需要额外粗体宏包。</td>
+</tr>
+<tr>
+<td>模块</td>
+<td><code>\mathrm</code></td>
+<td>$e_{\theta}$、$T_t$ 等也可，只要不与矩阵&#x2F;logits 冲突。</td>
+</tr>
+<tr>
+<td>session 编号</td>
+<td>0-based</td>
+<td>1-based 或 base-0 + incremental-1… 亦可；全文一致。</td>
+</tr>
+<tr>
+<td>拼接</td>
+<td><code>\concat</code></td>
+<td>$[\mathbf{a};\mathbf{b}]$，首次定义分号为特征维拼接即可。</td>
+</tr>
+<tr>
+<td>指示函数</td>
+<td>$\mathbb I$</td>
+<td>$\mathbf 1$、$\mathbb 1$。</td>
+</tr>
+<tr>
+<td>相似度</td>
+<td>$\operatorname{sim}_{\cos}$</td>
+<td><code>cosine</code>&#x2F;<code>cos</code> 算子均可，但不与三角函数混淆。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="9-投稿前检查清单"><a href="#9-投稿前检查清单" class="headerlink" title="9. 投稿前检查清单"></a>9. 投稿前检查清单</h2><table>
+<thead>
+<tr>
+<th>检查项</th>
+<th>通过标准</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据拆分</td>
+<td>训练集、测试集、support&#x2F;query set 均有不同符号。</td>
+</tr>
+<tr>
+<td>session 计数</td>
+<td>表格中的 session 数与 $T$、索引范围完全一致。</td>
+</tr>
+<tr>
+<td>典型 CIL 假设</td>
+<td>类别不交、exemplar-free、task identity 是否可用均有明示。</td>
+</tr>
+<tr>
+<td>对象类型</td>
+<td>标量、向量、矩阵、集合、模块、参数、概率不混用字体或符号。</td>
+</tr>
+<tr>
+<td>输出空间</td>
+<td>每个 logits&#x2F;概率向量的类别顺序和维度明确。</td>
+</tr>
+<tr>
+<td>原型</td>
+<td>每个原型都有任务、类别、特征空间或生成阶段信息。</td>
+</tr>
+<tr>
+<td>求和索引</td>
+<td>每个被求和项随对应索引变化。</td>
+</tr>
+<tr>
+<td>路由</td>
+<td>query、key、key index、task&#x2F;Expert ID 和最终类别预测类型分离。</td>
+</tr>
+<tr>
+<td>KD</td>
+<td>teacher&#x2F;student 方向、logit&#x2F;probability、温度、reduction 和权重与代码一致。</td>
+</tr>
+<tr>
+<td>LoRA</td>
+<td>矩阵方向、秩、缩放、初始化和注入位置与实现一致。</td>
+</tr>
+<tr>
+<td>准确率</td>
+<td>micro&#x2F;macro、是否含 base、测试集规模加权方式明确。</td>
+</tr>
+<tr>
+<td>PD&#x2F;FWT&#x2F;BWT</td>
+<td>单位、基线和信息可用性协议可复现。</td>
+</tr>
+<tr>
+<td>主文与补充材料</td>
+<td>同一符号在公式、算法、图注、表头和 supplementary 中一致。</td>
+</tr>
+<tr>
+<td>宏</td>
+<td>集中定义，不覆盖 LaTeX 内置命令。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="10-文献依据与使用方式"><a href="#10-文献依据与使用方式" class="headerlink" title="10. 文献依据与使用方式"></a>10. 文献依据与使用方式</h2><p>下列资料用于确定“领域中的常见定义”和“需要兼容的写法”；它们不是要求逐字复制的唯一模板。</p>
+<p>**字体证据说明：**Da-Wei Zhou 的代表论文源文件并未形成跨论文统一的字体命令。例如，FACT 的输入常写成旧式 <code>&amp;#123;&amp;#123;\bf x&amp;#125;&amp;#125;</code>，分类器矩阵常写普通 $W$，原型&#x2F;分类器列则使用另一种加粗实现；EASE 也延续了论文局部定义。由此只能得出“对象必须定义清楚且全文一致”，不能推出必须依赖某个额外宏包。PaperLaTeX 因而采用与两个目标主稿一致、且可直接编译的 <code>\mathbf</code>&#x2F;<code>\boldsymbol</code> 组合。</p>
+<ol>
+<li><p>Da-Wei Zhou et al., <strong>Class-Incremental Learning: A Survey</strong>, IEEE TPAMI, 2024.  </p>
+<ul>
+<li>用于：标准 CIL 任务定义、累计类别评价、原型分类、semantic drift、平均增量准确率。</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2302.03648">https://arxiv.org/abs/2302.03648</a></li>
+</ul>
+</li>
+<li><p>Da-Wei Zhou et al., <strong>Expandable Subspace Ensemble for Pre-Trained Model-Based Class-Incremental Learning</strong>, CVPR 2024.  </p>
+<ul>
+<li>用于：任务专属子空间、双索引 prototype、不同特征空间中的 prototype 兼容问题。</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2403.12030">https://arxiv.org/abs/2403.12030</a></li>
+</ul>
+</li>
+<li><p>Da-Wei Zhou et al., <strong>Revisiting Class-Incremental Learning with Pre-Trained Models: Generalizability and Adaptivity are All You Need</strong>.  </p>
+<ul>
+<li>用于：冻结 PTM 特征与适配特征的拼接、prototype classifier。</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2303.07338">https://arxiv.org/abs/2303.07338</a></li>
+</ul>
+</li>
+<li><p>Da-Wei Zhou et al., <strong>Forward Compatible Few-Shot Class-Incremental Learning</strong>, CVPR 2022.  </p>
+<ul>
+<li>用于：FSCIL 的 base session 0、逐 session accuracy 与 PD 的常见呈现。</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2203.06953">https://arxiv.org/abs/2203.06953</a></li>
+</ul>
+</li>
+<li><p>Liyuan Wang et al., <strong>Hierarchical Decomposition of Prompt-Based Continual Learning: Rethinking Obscured Sub-optimality</strong>, NeurIPS 2023.  </p>
+<ul>
+<li>用于：Task-Identity Inference、Within-Task Prediction 与类别预测的概率分解。</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2310.07234">https://arxiv.org/abs/2310.07234</a></li>
+</ul>
+</li>
+<li><p>David Lopez-Paz and Marc’Aurelio Ranzato, <strong>Gradient Episodic Memory for Continual Learning</strong>, NeurIPS 2017.  </p>
+<ul>
+<li>用于：评价矩阵 $R$、BWT、FWT，以及 $\mathcal M_t$ 作为 episodic memory 的经典用法。</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.08840">https://arxiv.org/abs/1706.08840</a></li>
+</ul>
+</li>
+<li><p>Edward J. Hu et al., <strong>LoRA: Low-Rank Adaptation of Large Language Models</strong>, ICLR 2022.  </p>
+<ul>
+<li>用于：$\Delta\mathbf{W}&#x3D;\mathbf{B}\mathbf{A}$、矩阵方向、初始化与 $\alpha&#x2F;r$ scaling。</li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2106.09685">https://arxiv.org/abs/2106.09685</a></li>
+</ul>
+</li>
+<li><p><code>xialeiliu/Awesome-Incremental-Learning</code> 作为论文索引，用于扩展抽查范围，不作为单一公式定义的权威来源。  </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/xialeiliu/Awesome-Incremental-Learning">https://github.com/xialeiliu/Awesome-Incremental-Learning</a></li>
+</ul>
+</li>
+<li><p>Da-Wei Zhou 的 LAMDA 主页用于定位其 CIL&#x2F;FSCIL 代表论文及正式发表信息。  </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.lamda.nju.edu.cn/zhoudw/">https://www.lamda.nju.edu.cn/zhoudw/</a></li>
+</ul>
+</li>
+<li><p>Hongwei Zhao et al., <strong>Dynamic LoRA-Experts and Prototype-Ensemble Matching for Class-Incremental Learning</strong>, Applied Sciences, 2026.  </p>
+<ul>
+<li>用于：保留 DLEPEM 中 MII 作为方法特定术语，并核对已发表版本中的 KL 型 PFD&#x2F;SFD、首 session 分段损失、Expert、router 与 prototype matching 定义。</li>
+<li><a target="_blank" rel="noopener" href="https://doi.org/10.3390/app16126153">https://doi.org/10.3390/app16126153</a></li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="11-最终裁决规则"><a href="#11-最终裁决规则" class="headerlink" title="11. 最终裁决规则"></a>11. 最终裁决规则</h2><table>
+<thead>
+<tr>
+<th>冲突情形</th>
+<th>裁决</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文献常见写法与项目字体不同</td>
+<td>数学语义保持不变，新稿迁移到项目语义宏；不把外部字体差异列为数学错误。</td>
+</tr>
+<tr>
+<td>额外粗体宏包与模板冲突</td>
+<td>Latin 向量&#x2F;矩阵使用 <code>\mathbf</code>，希腊粗体符号使用 <code>\boldsymbol</code>；不为字体命令牺牲可编译性。</td>
+</tr>
+<tr>
+<td>论文公式与代码不一致</td>
+<td>以可复现实行为准，先核对代码，再改公式或实验；不得仅“美化”公式。</td>
+</tr>
+<tr>
+<td>不同文献的 session 编号不同</td>
+<td>保留本项目 0-based，引用时显式转换并检查总数。</td>
+</tr>
+<tr>
+<td>相同字母承担多种核心含义</td>
+<td>优先保留更基础、更通用的含义；另一概念改用描述性上下标或新字母。</td>
+</tr>
+<tr>
+<td>原型来自不同模型&#x2F;阶段&#x2F;子空间</td>
+<td>必须在索引或上标中编码生成空间，不能只写一个无上下文的 $\mathbf{p}_c$。</td>
+</tr>
+<tr>
+<td>指标名相同但协议不同</td>
+<td>公式、评价数据和基线优先；必要时改名，不仅沿用缩写。</td>
+</tr>
+<tr>
+<td>算法改进与符号修订混在一起</td>
+<td>纯符号修订可直接迁移；会改变数值结果的修改必须标注并重新实验。</td>
+</tr>
+</tbody></table>
+<p>**维护要求：**新增方法、损失、原型空间或指标时，先在本文件登记对象类型、索引、维度和计算阶段，再写入论文。任何改变既有数学含义的更新都应提升版本号，并在提交说明中列出需同步修改的主文、补充材料和代码位置。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/">https://hongwei-zhao.github.io/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2026/07/20/Others/05.IDE/03.Codex/" title="Codex"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Codex</div></div><div class="info-2"><div class="info-item-1">CodexCodex 做研究经验 我用 Codex 做研究后，总结出 6 条有用经验！  我现在最推荐的 Codex 工作流是： 读上下文 → 写计划 → 确认范围 → 小步实现 → 跑验证 → 总结结果 → /new 如何有效使用，最近用 Codex 做了一些研究导向的代码工作，包括论文复现、读高质量 repo、整理实验逻辑、改课程项目里的功能。 我现在更愿意把它当成一个项目协作者。下面是总结出的一些使用经验： 第一条：别一上来就让它写代码尤其是论文复现、课程项目、陌生 repo 这种场景，第一步应该是让它读项目。 可以直接这样说： 123456先不要修改代码。请先阅读这个项目，告诉我...</div></div></div></a><a class="pagination-related" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">GPT绘图</div></div><div class="info-2"><div class="info-item-1">GPT绘图 https://github.com/wuyoscar/GPT-Image2-Skill    能不能基于这个风格，将   的代码画成这种形式？计算机领域顶级会议风格，我只需要你保留主要模块，在绘图之前，请你思考，这个方法可以分为几个部分，有几个板块，每个子部分的元素可以有什么，整个方法的数据流应该如何展现流动？部分与部分之间的关联应该是什么样的？你先写prompt，再基于这个prompt生成图片（可编辑，字用英文），确保和code对应，使用gpt image v2 from openai official account 给我png。 Nano-Banana绘图再也不担心论...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/03.%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/01.DataLoader%20%E4%B8%8E%20DataSet/" title="DataLoader 与 DataSet"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">DataLoader 与 DataSet</div></div><div class="info-2"><div class="info-item-1">DataLoader 与 DataSet PyTorch 数据读入是通过 Dataset+DataLoader 的方式完成的，Dataset 定义好数据的格式和数据变换形式，DataLoader 用 iterative 的方式不断读入批次数据。  torch.utils.data PyTorch 的五大模块：数据、模型、损失函数、优化器和迭代训练。 数据模块又可以细分为 4 个部分：  数据收集：样本和标签。 数据划分：训练集、验证集和测试集 数据读取：对应于 PyTorch 的 DataLoader。其中 DataLoader 包括 Sampler 和 DataSet。Sampler ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/41.%E5%B0%8F%E6%A0%B7%E6%9C%AC%E7%B1%BB%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0FSCIL/06.ASP/" title="ASP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">ASP</div></div><div class="info-2"><div class="info-item-1">0. 摘要少样本类增量学习（Few-Shot Class-Incremental Learning，FSCIL）模型旨在在保留旧类知识的同时，利用稀缺样本逐步学习新类别。现有的 FSCIL 方法通常对整个骨干网络进行微调，导致过拟合，从而阻碍新类的学习潜力。另一方面，近年来的基于提示（prompt）的 CIL 方法在每个任务中利用充足的数据训练提示，从而缓解遗忘问题。 在本工作中，我们提出了一种新颖的框架，称为“注意力感知自适应提示（Attention-aware Self-adaptive Prompt，ASP）”。ASP 通过从注意力机制角度减少特定信息，鼓励任务无关提示捕捉共享知识...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/44.LTCIL/01.APART/" title="APART"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">APART</div></div><div class="info-2"><div class="info-item-1">Adaptive Adapter Routing for Long-Tailed Class-Incremental Learning0. 摘要在我们的不断变化的世界中，新数据呈现出长尾分布，例如不同类别的新图像数量不同。这就需要在不遗忘的情况下持续对不平衡数据进行模型学习，解决长尾类别增量学习（LTCIL）的挑战。现有方法通常依赖于用以前数据重新训练线性分类器，这在现实世界设置中是不切实际的。在本文中，我们利用预训练模型的强大表示能力，引入了自适应适配器路由（Apart）作为 LTCIL 的无样本解决方案。为了对抗遗忘，我们训练插入的适配器，冻结预训练的权重以进行更深入的适应，并在顺序...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/09.timm/02.timm%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" title="timm使用教程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">timm使用教程</div></div><div class="info-2"><div class="info-item-1"> 视觉神经网络模型优秀开源工作：timm 库使用方法和代码解读  使用教程开始使用 timm安装库 (Python3, PyTorch version 1.4+)： 1pip install timm  加载你需要的预训练模型权重： 1234import timmm = timm.create_model(&#x27;mobilenetv3_large_100&#x27;, pretrained=True)m.eval()  加载所有的预训练模型列表 (pprint 是美化打印的标准库)： 12345678910111213141516import timmfrom pprint imp...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/17.%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/11.%E9%A2%86%E5%9F%9F%E8%87%AA%E9%80%82%E5%BA%94%E5%92%8C%E9%A2%86%E5%9F%9F%E6%B3%9B%E5%8C%96/" title="领域自适应和领域泛化"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">领域自适应和领域泛化</div></div><div class="info-2"><div class="info-item-1"> Domain Generalization | 域适应、域泛化、OOD、开放集问题定义  在实际场景中，训练集和测试集往往存在分布差异，导致模型不work。领域自适应是解决这类问题的一种方法，但是它需要测试数据的一些先验知识。但是很多时候，在测试数据到来前我们往往对它们是一无所知的，因此近年来很多人开始考虑一种更有实际意义的研究场景，也就是领域泛化。 下面我们先就来梳理一下领域自适应（Domain Adaptation, DA），领域泛化（Domain Generalization, DG），分布外泛化（Out-of-Distribution Generalization, OODG）...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/01.%E8%AF%AD%E6%B3%95%E5%9F%BA%E7%A1%80/01.%E5%88%9D%E8%AF%86Python/" title="初识Python"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">初识Python</div></div><div class="info-2"><div class="info-item-1">Python的历史 1989年圣诞节：Guido von Rossum开始写Python语言的编译器。 1991年2月：第一个Python编译器（同时也是解释器）诞生，它是用C语言实现的（后面），可以调用C语言的库函数。在最早的版本中，Python已经提供了对“类”，“函数”，“异常处理”等构造块的支持，还有对列表、字典等核心数据类型，同时支持以模块为基础来构造应用程序。 1994年1月：Python 1.0正式发布。 2000年10月16日：Python 2.0发布，增加了完整的垃圾回收，提供了对Unicode的支持。与此同时，Python的整个开发过程更加透明，社区对开发进度的影响逐...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PaperLaTeX-%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83%EF%BC%88%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E6%96%87%E7%8C%AE%E5%A4%8D%E6%A0%B8%E4%B8%8E%E7%BC%96%E8%AF%91%E5%85%BC%E5%AE%B9%E7%89%88%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E7%BC%96%E8%AF%91%E5%85%BC%E5%AE%B9%E8%A3%81%E5%86%B3"><span class="toc-number">1.1.</span> <span class="toc-text">0. 编译兼容裁决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0-1-%E4%BB%93%E5%BA%93%E4%B8%8E%E8%AE%BA%E6%96%87%E6%BA%90%E6%96%87%E4%BB%B6%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.1.</span> <span class="toc-text">0.1 仓库与论文源文件的处理方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0-2-%E8%A7%84%E8%8C%83%E7%BA%A7%E5%88%AB%E4%B8%8E%E4%BD%BF%E7%94%A8%E5%8E%9F%E5%88%99"><span class="toc-number">1.1.2.</span> <span class="toc-text">0.2 规范级别与使用原则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AD%97%E4%BD%93%E3%80%81%E5%A4%A7%E5%B0%8F%E5%86%99%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%A0%87"><span class="toc-number">1.2.</span> <span class="toc-text">1. 字体、大小写与上下标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%9B%9B%E9%A1%B9%E7%BB%9F%E4%B8%80%E5%8E%9F%E5%88%99"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.1 四项统一原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%BF%85%E8%A6%81%E4%BE%8B%E5%A4%96"><span class="toc-number">1.2.2.</span> <span class="toc-text">1.2 必要例外</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E8%AF%A6%E7%BB%86%E5%AD%97%E4%BD%93%E3%80%81%E5%A4%A7%E5%B0%8F%E5%86%99%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%A0%87%E8%A1%A8"><span class="toc-number">1.2.3.</span> <span class="toc-text">1.3 详细字体、大小写与上下标表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-CIL-FSCIL-%E5%9F%BA%E6%9C%AC%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">1.3.</span> <span class="toc-text">2. CIL&#x2F;FSCIL 基本问题定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Session-%E7%BC%96%E5%8F%B7"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.1 Session 编号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%95%B0%E6%8D%AE%E3%80%81%E7%B1%BB%E5%88%AB%E4%B8%8E%E5%88%86%E5%B8%83"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.2 数据、类别与分布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E6%A8%A1%E5%9E%8B%E4%B8%8E%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87"><span class="toc-number">1.3.3.</span> <span class="toc-text">2.3 模型与训练目标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Transformer-%E4%B8%8E-LoRA-%E5%85%AC%E5%85%B1%E7%AC%A6%E5%8F%B7"><span class="toc-number">1.4.</span> <span class="toc-text">3. Transformer 与 LoRA 公共符号</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-LoRA-%E7%9A%84%E4%B8%A4%E7%A7%8D%E7%AD%89%E4%BB%B7%E6%96%B9%E5%90%91%E7%BA%A6%E5%AE%9A"><span class="toc-number">1.4.1.</span> <span class="toc-text">3.1 LoRA 的两种等价方向约定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Attention"><span class="toc-number">1.4.2.</span> <span class="toc-text">3.2 Attention</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-CIL-PR-DLEPEM-%E7%AC%A6%E5%8F%B7%E5%A4%8D%E6%A0%B8"><span class="toc-number">1.5.</span> <span class="toc-text">4. CIL&#x2F;PR_DLEPEM 符号复核</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E6%A8%A1%E5%9D%97%E3%80%81%E5%8F%82%E6%95%B0%E4%B8%8E%E4%BB%BB%E5%8A%A1%E8%BA%AB%E4%BB%BD"><span class="toc-number">1.5.1.</span> <span class="toc-text">4.1 模块、参数与任务身份</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%8E%9F%E5%9E%8B%E3%80%81%E6%9F%A5%E8%AF%A2%E4%B8%8E%E6%A3%80%E7%B4%A2"><span class="toc-number">1.5.2.</span> <span class="toc-text">4.2 原型、查询与检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-Router-%E6%8D%9F%E5%A4%B1"><span class="toc-number">1.5.3.</span> <span class="toc-text">4.3 Router 损失</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-FSCIL-KBS-TALON-%E7%AC%A6%E5%8F%B7%E5%A4%8D%E6%A0%B8"><span class="toc-number">1.6.</span> <span class="toc-text">5. FSCIL&#x2F;KBS_TALON 符号复核</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-Teacher%E3%80%81Student%E3%80%81%E7%89%B9%E5%BE%81%E4%B8%8E-logits"><span class="toc-number">1.6.1.</span> <span class="toc-text">5.1 Teacher、Student、特征与 logits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-Ensemble-logits-%E4%B8%8E%E8%92%B8%E9%A6%8F"><span class="toc-number">1.6.2.</span> <span class="toc-text">5.2 Ensemble logits 与蒸馏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-Teacher-space-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E8%AF%AD%E4%B9%89%E6%9D%83%E9%87%8D"><span class="toc-number">1.6.3.</span> <span class="toc-text">5.3 Teacher-space 原型与语义权重</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-Student-%E5%8E%9F%E5%9E%8B%E4%B8%8E%E8%B7%A8%E9%98%B6%E6%AE%B5%E5%85%BC%E5%AE%B9%E6%80%A7"><span class="toc-number">1.6.4.</span> <span class="toc-text">5.4 Student 原型与跨阶段兼容性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87"><span class="toc-number">1.7.</span> <span class="toc-text">6. 评价指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E5%85%88%E5%8C%BA%E5%88%86-micro-accuracy-%E4%B8%8E-task-macro-accuracy"><span class="toc-number">1.7.1.</span> <span class="toc-text">6.1 先区分 micro accuracy 与 task-macro accuracy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E4%B8%BB%E6%8C%87%E6%A0%87"><span class="toc-number">1.7.2.</span> <span class="toc-text">6.2 主指标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E6%8E%A8%E8%8D%90%E5%AE%8F%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%AE%8F%E5%8C%85"><span class="toc-number">1.8.</span> <span class="toc-text">7. 推荐宏与最小宏包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-1-%E6%97%A7%E7%A8%BF%E8%BF%81%E7%A7%BB%E8%A7%84%E5%88%99"><span class="toc-number">1.9.</span> <span class="toc-text">7.1 旧稿迁移规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%A4%8D%E6%A0%B8%E5%90%8E%E7%9A%84%E9%97%AE%E9%A2%98%E5%88%86%E7%BA%A7"><span class="toc-number">1.10.</span> <span class="toc-text">8. 复核后的问题分级</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E5%BF%85%E9%A1%BB%E4%BF%AE%E6%AD%A3"><span class="toc-number">1.10.1.</span> <span class="toc-text">8.1 必须修正</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E9%9C%80%E8%A6%81%E5%AF%B9%E7%85%A7%E4%BB%A3%E7%A0%81%E5%90%8E%E8%A3%81%E5%86%B3"><span class="toc-number">1.10.2.</span> <span class="toc-text">8.2 需要对照代码后裁决</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-%E9%A1%B9%E7%9B%AE%E9%A3%8E%E6%A0%BC%EF%BC%8C%E4%B8%8D%E5%86%8D%E6%A0%87%E4%B8%BA%E5%A4%96%E9%83%A8%E8%AE%BA%E6%96%87%E7%9A%84%E2%80%9C%E9%94%99%E8%AF%AF%E2%80%9D"><span class="toc-number">1.10.3.</span> <span class="toc-text">8.3 项目风格，不再标为外部论文的“错误”</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E6%8A%95%E7%A8%BF%E5%89%8D%E6%A3%80%E6%9F%A5%E6%B8%85%E5%8D%95"><span class="toc-number">1.11.</span> <span class="toc-text">9. 投稿前检查清单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E6%96%87%E7%8C%AE%E4%BE%9D%E6%8D%AE%E4%B8%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.12.</span> <span class="toc-text">10. 文献依据与使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E6%9C%80%E7%BB%88%E8%A3%81%E5%86%B3%E8%A7%84%E5%88%99"><span class="toc-number">1.13.</span> <span class="toc-text">11. 最终裁决规则</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

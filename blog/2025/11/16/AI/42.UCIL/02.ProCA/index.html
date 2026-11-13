@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ProCA | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ChatGPT全文翻译 :arrow_down:0. 摘要本文研究了一个新颖、实际但具有挑战性的问题，称为类别增量无监督领域自适应（Class-Incremental Unsupervised Domain Adaptation, CI-UDA），其中有标签的源域包含所有类别，但目标域中的类别会逐步增加。这个问题的难点在于两个方面：首先，源域和目标域的标签集在每个时间步骤上都不一致，这使得准确的领">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ProCA">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/42.UCIL/02.ProCA/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="ChatGPT全文翻译 :arrow_down:0. 摘要本文研究了一个新颖、实际但具有挑战性的问题，称为类别增量无监督领域自适应（Class-Incremental Unsupervised Domain Adaptation, CI-UDA），其中有标签的源域包含所有类别，但目标域中的类别会逐步增加。这个问题的难点在于两个方面：首先，源域和目标域的标签集在每个时间步骤上都不一致，这使得准确的领">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.347Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="UCIL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ProCA",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/42.UCIL/02.ProCA/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.347Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/42.UCIL/02.ProCA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ProCA',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">ProCA</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ProCA</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.347Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/UCIL/">UCIL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="ChatGPT全文翻译-arrow-down"><a href="#ChatGPT全文翻译-arrow-down" class="headerlink" title="ChatGPT全文翻译 :arrow_down:"></a>ChatGPT全文翻译 :arrow_down:</h2><h2 id="0-摘要"><a href="#0-摘要" class="headerlink" title="0. 摘要"></a>0. 摘要</h2><p>本文研究了一个新颖、实际但具有挑战性的问题，称为<strong>类别增量无监督领域自适应（Class-Incremental Unsupervised Domain Adaptation, CI-UDA）</strong>，其中有标签的源域包含所有类别，但目标域中的类别会逐步增加。这个问题的难点在于两个方面：首先，源域和目标域的标签集在每个时间步骤上都不一致，这使得准确的领域对齐变得困难。其次，先前的目标类别在当前步骤中不可用，导致前期知识的遗忘。为了解决这个问题，我们提出了一种新颖的**基于原型引导的持续适应（Prototype-guided Continual Adaptation, ProCA）**方法，该方法包括两个策略：1）标签原型识别：通过检测目标样本的累计预测概率来识别共享类别的目标标签原型。2）基于原型的对齐与重播：在识别出的标签原型基础上，对齐两个领域并强制模型保留先前的知识。通过这两个策略，ProCA 能够有效地将源模型适应到一个类别增量的无标签目标域。大量实验表明，ProCA 在解决 CI-UDA 方面具有有效性和优越性。源代码可在 <a target="_blank" rel="noopener" href="https://github.com/Hongbin98/ProCA.git">此处</a> 获取。</p>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p>无监督领域自适应（Unsupervised Domain Adaptation, UDA）旨在通过知识转移利用一个有标签的源域来提高在无标签目标域上的性能。UDA 的关键挑战是源域和目标域之间的分布偏移。为了应对这一问题，现有的 UDA 方法要么通过领域不变特征学习来进行领域对齐，要么通过图像转换来实现。</p>
+<p>然而，大多数现有的 UDA 方法假设所有目标数据都可以提前获得。然而，在实践中，目标数据往往以流的形式随不同类别逐步到来。例如，一个实际的场景是将素描图像的知识转移到现实世界中的动物识别，如图 1 所示，其中大量带标签的素描图像可以提前收集，但无标签的现实世界图像则逐步增量提供。在这种情况下，等待所有动物图像可用可能既不经济也不高效。因此，模型需要先适应来自陆地动物的目标图像，然后再适应来自海洋动物的图像。在此过程中，当适应海洋动物时，先前的陆地动物样本将不可用以节省数据存储成本。在这种情况下，现有的 UDA 方法假设所有目标类别均可提前获得，因此往往会失败。为了解决这个问题，我们探索了一个新的、实用的任务，称为类别增量无监督领域自适应（CI-UDA），其中有标签的源样本始终可用，但无标签的目标样本逐步增量且一次只能提供部分目标类别。</p>
+<p>CI-UDA 有两个特点：1）当前时间步骤的目标类别以前从未见过，并且只占源标签空间的一部分；2）先前看到的类别的目标样本在后续适应中将不可用。因此，除了 UDA 中常见的领域偏移挑战外，CI-UDA 还提出了两个新挑战。首先是如何在每个时间步骤中检测源域和目标域之间的共享类别。由于每个时间步骤只提供部分目标数据，目标域的标签空间与源标签空间不一致，这使得领域对齐变得困难。其次是如何在学习新的目标类别时缓解旧类别知识的灾难性遗忘。</p>
+<p>在 CI-UDA 中，关键是要在没有先前目标样本的情况下不断进行领域自适应。为了应对知识遗忘，最近的一项工作表明，存储先前类别的图像原型有助于保留知识。此外，特征原型还可用于领域对齐。换句话说，标签原型为同时处理所有挑战提供了机会。然而，现有方法的简单组合对 CI-UDA 并不可行，因为获取图像原型需要数据标签，而 CI-UDA 中的目标域完全无标签。此外，特征原型无法更新特征提取器，因此简单地检测它们无法克服 CI-UDA 中特征提取器的知识遗忘问题。</p>
+<p>为了更好地处理 CI-UDA，我们开发了一种新的**基于原型引导的持续适应（ProCA）**方法。具体来说，ProCA 提出了两个解决策略：1）标签原型识别策略：通过检测源域和目标域之间的共享类别来识别目标标签原型。鉴于源域和目标域在不同时间步骤具有不同的标签空间，识别标签原型具有挑战性。因此，检测共享类别至关重要，但由于缺乏目标标签，这一过程十分困难。为克服这一问题，我们深入研究了共享类别和源私有类别之间的区别，经验性地观察到共享类别的累计概率通常高于源私有类别。基于这一发现，我们利用目标样本的累计概率来检测共享类别，并利用检测到的共享类别来识别目标标签原型。2）基于原型的对齐与重播策略：基于识别出的标签原型，我们通过将每个目标标签原型对齐到同类的源中心进行领域自适应，并通过强制模型保留从先前类别中学习到的知识来克服灾难性遗忘。</p>
+<p>在三个基准数据集（Office-31-CI、Office-Home-CI 和 ImageNet-Caltech-CI）上的大量实验表明，ProCA 能够处理 CI-UDA。此外，我们经验性地表明，ProCA 还可以用于改进现有的部分 UDA 方法，以应对 CI-UDA，验证了我们方法的适用性。</p>
+<h2 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2. 相关工作"></a>2. 相关工作</h2><h3 id="2-1-无监督领域自适应"><a href="#2-1-无监督领域自适应" class="headerlink" title="2.1 无监督领域自适应"></a>2.1 无监督领域自适应</h3><p>封闭集无监督领域自适应（Closed-set UDA）。UDA 的目标是通过基于一个有标签的相关源域来提高在无标签目标域上的模型性能。在这个领域中，最常见的任务是封闭集 UDA，它假设源域和目标域共享相同的类别集。现有的 UDA 方法在通过匹配分布的高阶矩、通过对抗学习学习领域不变特征或通过生成对抗模型进行图像转换来减轻领域偏移方面取得了很大进展。最近，OP-GAN 将 UDA 与自监督学习相结合，涉及一个自监督模块，以强制图像内容的一致性。</p>
+<p>部分领域自适应（PDA）。与封闭集 UDA 相比，PDA 假设目标标签集是源标签集的子集，而不是限制在相同的标签集内。一般来说，PDA 旨在将从大规模有标签的源域训练的深度模型转移到小规模的无标签目标域。为了处理标签空间不一致问题，大多数现有方法为源样本分配类别级或实例级的可传递性权重。为了减少源私有类别引起的负迁移，BA3US 通过扩展目标域进行平衡的对抗对齐，而 DPDAN 通过将源域分布分解为两个部分来将源域的正部分与目标域对齐。</p>
+<p>持续领域自适应（CDA）。不同于上述任务，CDA 假设多个无标签目标域逐步到来，并寻求逐步将模型适应每个新的目标域而不遗忘先前的知识。为此，Dlow 通过生成连续的中间状态来桥接源域和多个目标域，而 VDFR 提出通过重播变分领域不可知特征来应对领域偏移和任务转移。最近，GRCL 通过正则化损失梯度来学习判别特征并保留先前知识。</p>
+<p>总的来说，由于两方面的原因，上述方法在 CI-UDA 中不适用。一方面，封闭集 UDA 和 PDA 方法依赖于假设所有目标数据提前可用。换句话说，这些方法没有考虑保留先前知识。另一方面，CDA 假设每个目标域的标签集与源标签集相同，忽略了领域共享类别的检测。因此，它们难以处理 CI-UDA 这一具有挑战性的任务。</p>
+<h3 id="2-2-类别增量领域自适应"><a href="#2-2-类别增量领域自适应" class="headerlink" title="2.2 类别增量领域自适应"></a>2.2 类别增量领域自适应</h3><p>类别增量领域自适应与类别增量学习（CIL）相关，CIL 通过从数据流中连续学习模型，其中类别逐渐增加，每次只提供新类别。CIL 要求模型能够分类到目前为止观察到的所有类别样本。为了克服灾难性遗忘问题，现有的 CIL 方法通过存储或生成先前类别的数据，或通过保留先前类别的相关模型权重来保留旧类别的知识。</p>
+<p>最近，研究人员将 CIL 扩展到领域自适应并研究了一个新的任务，称为类别增量领域自适应。具体来说，该任务旨在减轻领域之间的偏移并逐步学习目标域中的私有类别。为此，CIDA 在源自由领域自适应场景下，利用部分标注的目标私有样本生成类特定</p>
+<p>原型并学习目标特定潜在空间以获取中心点，CBSC 利用监督对比学习进行新类别的适应和领域不变特征提取。</p>
+<p>上述类别增量领域自适应与 CI-UDA 在两个方面有所不同：1）目标：类别增量领域自适应旨在逐步学习目标私有类别，而 CI-UDA 旨在处理无私有类别的类别增量目标域中的领域自适应问题。2）目标标签：类别增量领域自适应需要先验标注的目标样本，而 CI-UDA 假设目标域完全无标签。因此，直接应用现有方法解决 CI-UDA 是不可行的。相反，ProCA 通过识别目标标签原型进行无监督领域对齐和知识重播，从而提供了第一个可行的 CI-UDA 解决方案。</p>
+<h2 id="3-问题定义"><a href="#3-问题定义" class="headerlink" title="3. 问题定义"></a>3. 问题定义</h2><p>标注。设 $D_s&#x3D;{(x_j^s, y_j^s) | y_j^s \in C_s}<em>{j&#x3D;1}^{n_s}$ 表示源域，其中 $n_s$ 是源数据对的数量 $(x^s, y^s)$ 且 $C_s$ 表示源标签集，其类别数量为 $|C_s| &#x3D; K$。此外，我们将无标签的目标域表示为 $D_t&#x3D;{x_i}</em>{i&#x3D;1}^{n_t}$，其中 $n_t$ 是目标样本的数量。 $C_t$ 表示目标标签集。</p>
+<p>类别增量无监督领域自适应。无监督领域自适应（UDA）旨在将知识从一个有标签的源域 $D_s$ 转移到一个无标签的目标域 $D_t$ 上。解决 UDA 的关键是进行领域对齐以减轻领域偏移。现有的 UDA 方法通常假设所有目标样本都可以提前获取，并且其标签空间与源域相同（即 $C_t &#x3D; C_s$）。然而，在实际应用中，目标样本往往以流的形式到来，同时，目标类别的数量可能会逐步增加。为了解决这个问题，我们探索了一个更为实际的任务，即<strong>类别增量无监督领域自适应（CI-UDA）</strong>，其中有标签的源样本始终可用，但无标签的目标样本逐步增量，且一次只能提供部分目标类别。这里，我们重复使用 $D_t$ 表示当前时间的无标签目标域。需要注意的是，每个时间步骤的目标数据的标签集是源域标签集的子集，即 $C_t \subset C_s$。</p>
+<p>除了所有 UDA 方法解决的领域偏移问题外，CI-UDA 还提出了两个新挑战：1）如何识别两个域之间在每个时间步骤中的共享类别；2）如何在学习新的目标类别时缓解旧类别知识的遗忘。由于这些挑战的整合，现有的 UDA 方法无法处理 CI-UDA。因此，如何处理这一实际但困难的任务仍是一个未解决的问题。</p>
+<h2 id="4-基于原型引导的持续适应"><a href="#4-基于原型引导的持续适应" class="headerlink" title="4. 基于原型引导的持续适应"></a>4. 基于原型引导的持续适应</h2><p>先前的研究表明，标签原型在分别处理 UDA 或类别增量学习任务中有效。尽管这些方法无法直接用于处理 CI-UDA，但它们启发我们探索一种统一的基于原型的方法来同时处理 CI-UDA 中的所有挑战。然而，这一想法在实践中探索并不容易。由于源域和目标域在不同时间步骤具有不同的标签空间，识别目标标签原型变得困难。为了解决这些挑战，我们提出了一种新颖的基于原型引导的持续适应（ProCA）方法。</p>
+<p><strong>方法概述</strong>。我们在图 2 中总结了 ProCA 的整体训练方案。ProCA 包括两个解决策略，即 1）标签原型识别和 2）基于原型的对齐与重播。下面我们简要介绍这两个策略。</p>
+<p>首先，我们开发了一种标签原型识别策略，在源域和目标域标签空间不一致的情况下，在每个时间步骤识别目标标签原型。为此，我们首先提出了一种共享类别检测方法，以区分领域共享类别和源私有类别。基于检测到的共享标签集和通过聚类生成的目标伪标签，我们为每个共享类别识别目标标签原型并构建一个自适应记忆库 P 来记录它们。</p>
+<p>其次，基于识别出的标签原型，我们提出了一种基于原型的对齐与重播策略，通过训练特征提取器 G 学习领域不变特征，通过监督对比损失 $L_{\text{con&#125;&#125;$ 进行原型对齐，同时通过采用知识蒸馏损失 $L_{\text{dis&#125;&#125;$ 来强制模型保留从先前类别中学习到的知识。此外，基于伪标注的目标数据和有标签的源数据，我们通过标准的交叉熵损失 $L_{\text{ce&#125;&#125;$ 训练整个模型 ${G, C}$。</p>
+<p>总体而言，ProCA 的训练目标如下：</p>
+<p>$$<br>    \min_{{\theta_g, \theta_c&amp;#125;&#125; L_{\text{ce&#125;&#125;(\theta_g, \theta_c) + \lambda L_{\text{con&#125;&#125;(\theta_g) + \eta L_{\text{dis&#125;&#125;(\theta_g, \theta_c),<br>$$</p>
+<p>其中 $\theta_g$ 和 $\theta_c$ 分别表示特征提取器 $G$ 和分类器 $C$ 的参数。此外，$\lambda$ 和 $\eta$ 是权衡参数。</p>
+<h3 id="4-1-标签原型识别"><a href="#4-1-标签原型识别" class="headerlink" title="4.1 标签原型识别"></a>4.1 标签原型识别</h3><p>我们提出的 ProCA 中的关键步骤是识别目标标签原型，这在 CI-UDA 设置中是非平凡的。为此，我们提出了一种标签原型识别策略，该策略由四个组成部分构成：1）共享类别检测；2）为目标数据生成伪标签；3）构建原型记忆库；4）更新原型记忆库。</p>
+<p><strong>共享类别检测</strong>。当新的无标签目标样本到达时，由于目标样本没有标签，检测源域和目标域之间的共享类别变得困难。为了解决这个问题，我们深入研究了预训练源模型在预测共享类别和源私有类别时的差异。如图 3 所示，我们发现目标样本关于共享类别的累计预测概率通常高于源私有类别的累计预测概率。根据这一发现，我们提出通过目标样本的累计概率来检测共享类别。具体来说，如图 4 所示，我们利用源预训练模型 $M$ 来推断每个时间步骤中的所有目标样本，并通过以下公式获得每个类别 k 的累计概率：</p>
+<p>$$<br>    u_k &#x3D; \sum_{i&#x3D;1}^{n_t} C_k(G(x_i)),<br>$$</p>
+<p>其中 $C_k(\cdot)$ 表示 softmax 输出预测中的第 k 个元素，$n_t$ 表示当前时间的目标样本数量。为了增强泛化能力，我们将累计概率 $u_k$ 归一化为 [0, 1]：</p>
+<p>$$<br>    u_k &#x3D; \frac{u_k - \min(u)}{\max(u) - \min(u)},<br>$$</p>
+<p>其中 $u &#x3D; [u_0, u_1, \dots, u_K]$ 是所有 K 个类别的概率向量。基于累计概率 $u_k$ 和预定义的阈值 $\alpha$，对类别 $k$ 的判断如下：如果 $u_k \geq \alpha$，则类别 $k$ 为共享类别；否则，类别 $k$ 为源私有类别。</p>
+<p><strong>为目标数据生成伪标签</strong>。基于识别出的共享类别，接下来我们通过自监督伪标签策略为无标签目标样本生成伪标签。具体来说，令 $q_i &#x3D; G(x_i)$ 为提取的特征，$\hat{y}_i^k &#x3D; C_k(q_i)$ 为分类器关于类别 k 的预测概率，我们首先通过以下公式为共享标签集中的每个类别 k 获取初始中心点：</p>
+<p>$$<br>    c_k &#x3D; \frac{\sum_{i&#x3D;1}^{n_t} \hat{y}<em>i^k q_i}{\sum</em>{i&#x3D;1}^{n_t} \hat{y}_i^k},<br>$$</p>
+<p>这种初始化能够很好地描述不同类别的分布。基于这些中心点，第 i 个目标数据的伪标签通过最近中心点方法获得：</p>
+<p>$$<br>    \bar{y}_i &#x3D; \arg\max_k \phi(q_i, c_k),<br>$$</p>
+<p>其中 $\phi(\cdot, \cdot)$ 表示余弦相似度，伪标签 $\bar{y}_i$ 为标量。在生成伪标签的过程中，我们通过以下公式更新每个类别的中心点，并根据公式（4）再更新一次伪标签：</p>
+<p>$$<br>    c_k &#x3D; \frac{\sum_{i&#x3D;1}^{n_t} I(\bar{y}<em>i &#x3D; k) q_i}{\sum</em>{i&#x3D;1}^{n_t} I(\bar{y}_i &#x3D; k)},<br>$$</p>
+<p>其中 $I(\cdot)$ 是指示函数。请注意</p>
+<p>，我们只计算共享类别的类别中心点。</p>
+<p><strong>原型记忆库的构建</strong>。基于检测到的共享标签集和生成的目标伪标签，接下来我们为每个共享类别识别目标标签原型。具体来说，我们维护一个记忆库 $P &#x3D; {(p_i, h_i, \bar{y}<em>i)}</em>{i&#x3D;1}^N$ 来记录所有检测到的共享类别的原型，其中 $p_i$、$h_i$、$\bar{y}<em>i$ 和 N 分别表示图像原型、预测的软标签、预测的硬伪标签和原型数量。此外，我们将所有看到的目标标签集记为 $C</em>{\text{at&#125;&#125;$，并在记忆库中为每个类别保存 M 个图像原型，即 $N &#x3D; |C_{\text{at&#125;&#125;| M$。在训练过程中，当出现一个新的伪标注目标类别时，我们通过添加相应的目标原型来扩展记忆库。正式地，对于第 k 个类别，我们将伪标注目标域表示为 $D_k^t &#x3D; {x_i^k}_{i&#x3D;1}^{n_k}$，并通过以下公式获取其特征中心点：</p>
+<p>$$<br>    f_k^t &#x3D; \frac{1}{n_k} \sum_{i&#x3D;1}^{n_k} G(x_i^k)。<br>$$</p>
+<p>受 iCaRL 的启发，我们通过基于目标特征中心点的最近邻方法选择第 k 个类别的图像原型：</p>
+<p>$$<br>    p_m^k &#x3D; \arg\min_{x^k \in D_k^t} \left| f_k^t - \frac{1}{m} \left[ G(x^k) + \sum_{i&#x3D;1}^{m-1} G(p_i^k) \right] \right|_2,<br>$$</p>
+<p>其中 m 是迭代索引范围从 1 到 M。请注意，我们迭代公式（5）M 次以获取 M 个原型。</p>
+<p><strong>原型记忆库的更新</strong>。在共享类别检测过程中，可能存在错误的共享类别，干扰目标数据的伪标签生成。在这种情况下，这些类别的图像原型需要更新。为此，我们设计了一种基于累计概率 $u_k$ 的更新策略。具体来说，对于记忆库中存在的目标类别 k，当出现更高的 $u_k$ 时，我们会更新其原型。例如，在图 3 中，当时间步骤 2 中第 16 类的累计概率高于时间步骤 1 时，第 16 类的图像原型将通过公式（5）更新。</p>
+<h3 id="4-2-基于原型的对齐与重播"><a href="#4-2-基于原型的对齐与重播" class="headerlink" title="4.2 基于原型的对齐与重播"></a>4.2 基于原型的对齐与重播</h3><p>基于目标标签原型，我们开发了一种新的基于原型的对齐与重播策略，以解决领域偏移和灾难性遗忘问题。</p>
+<p><strong>基于原型的领域对齐</strong>。基于目标标签原型，我们能够进行类别级对齐以显式减轻领域偏移。为此，我们提出通过训练特征提取器 G 学习领域不变特征，并通过监督对比损失 $L_{\text{con&#125;&#125;$ 进行原型对齐。具体来说，对于第 k 个类别，我们首先通过以下公式获得源特征中心点：</p>
+<p>$$<br>    f_k^s &#x3D; \frac{\sum_{j&#x3D;1}^{n_s} I(y_j^s &#x3D; k) G(x_j^s)}{\sum_{j&#x3D;1}^{n_s} I(y_j^s &#x3D; k)}。<br>$$</p>
+<p>然后，对于任何作为锚点的图像原型 $p_i$，我们通过对比损失进行原型对齐：</p>
+<p>$$<br>    L_{\text{con&#125;&#125; &#x3D; - \log \frac{\exp(v_i^\top f_{y_i}^s &#x2F; \tau)}{\exp(v_i^\top f_{y_i}^s &#x2F; \tau) + \sum_{j&#x3D;1, j \neq y_i}^{K-1} \exp(v_i^\top f_j^s &#x2F; \tau)},<br>$$</p>
+<p>其中 $v_i &#x3D; G(p_i)$ 表示提取的图像原型特征，$y_i$ 为其伪标签，$\tau$ 表示温度因子。此损失使特征提取器 G 能够学习领域不变特征，有助于减轻领域差异。</p>
+<p><strong>基于原型的知识重播</strong>。由于先前类别的目标样本不可用，模型在 CI-UDA 期间会遭受灾难性遗忘。为克服这一问题，我们基于识别出的带有软标签的原型，采用知识蒸馏来强制模型保留从先前类别中获得的知识：</p>
+<p>$$<br>    L_{\text{dis&#125;&#125; &#x3D; - \frac{1}{N} \sum_{i&#x3D;1}^{N} h_i^\top \log C(G(p_i))，<br>$$</p>
+<p>其中 N 表示原型的数量。</p>
+<p>最后，我们在算法 1 中总结了 ProCA 的伪代码，而原型识别方案的伪代码放在附录 B 中。</p>
+<h2 id="5-实验"><a href="#5-实验" class="headerlink" title="5. 实验"></a>5. 实验</h2><h3 id="5-1-实验设置"><a href="#5-1-实验设置" class="headerlink" title="5.1 实验设置"></a>5.1 实验设置</h3><p>为了验证所提方法的有效性，我们在以下实验设置的基础上进行了实证研究。</p>
+<p><strong>数据集</strong>。我们基于基准 UDA 数据集构建了三个数据集变体，以模拟类别增量场景，即 Office-31、Office-Home 和 ImageNet-Caltech。1）Office-31-CI 由三个不同的领域组成，即 Amazon (A)、Webcam (W) 和 DSLR (D)。三个领域共享 31 个类别。我们将每个领域分为三个不相交的子集，每个子集包含按字母顺序排列的 10 个类别。2）Office-Home-CI 包含四个不同的领域，即艺术图片 (Ar)、剪贴画 (Cl)、产品图片 (Pr) 和现实世界图片 (Rw)，每个领域有 65 个类别。对于每个领域，我们构建了六个不相交的子集，每个子集包含随机顺序的 10 个类别。3）ImageNet-Caltech-CI 包括 ImageNet-1K 和 Caltech-256。基于共享的 84 个类别，我们形成了两个任务：ImageNet (1000) → Caltech (84) 和 Caltech (256) → ImageNet (84)。对于目标域，我们构建了八个不相交的子集，每个子集包含 10 个类别。有关数据构建的更多详细信息，请参见附录 C。</p>
+<p><strong>实现细节</strong>。我们在 PyTorch 中实现了我们的方法，并报告了三次不同运行的均值 ± 标准差结果。ResNet-50，在 ImageNet 上预训练的模型，作为网络骨干。在 ProCA 中，我们使用学习率为 0.001 的 SGD 优化器训练模型。此外，训练周期为 10 个 Office-31-CI、30 个 Office-Home-CI 和 15 个 ImageNet-Caltech-CI。对于超参数，我们将 $\lambda$、$\eta$、$\alpha$ 和 M 分别设置为 0.1、1、0.15 和 10。更多 ProCA 的训练细节在附录 D 中。</p>
+<p><strong>比较方法</strong>。我们将 ProCA 与四类基线进行了比较：（1）仅源数据：ResNet-50；（2）无监督领域自适应：DANN；（3）部分领域自适应：PADA、ETN、BA3US；（4）类别增量领域自适应：CIDA。</p>
+<p><strong>评价协议</strong>。为了全面评估所提出的方法，我们报告了三种类型的准确性度量。1）最终准确性：CI-UDA 的最终时间步骤中的分类准确性。2）步骤级准确性：每个时间步骤的准确性，以评估连续学习的能力。3）最终 S-1 准确性：最终时间步骤中的步骤 1 类的平均准确性，以评估处理灾难性遗忘的能力。</p>
+<h3 id="5-2-与现有方法的比较"><a href="#5-2-与现有方法的比较" class="headerlink" title="5.2 与现有方法的比较"></a>5.2 与现有方法的比较</h3><p>我们首先在最终准确性方面将我们的 ProCA 与现有方法进行了比较。结果如表 1 和表 2 所示，给出了以下观察结果。1）ProCA 在平均最终准确性方面远远超出所有比较方法。具体来说，ProCA 在所有迁移任务（例如 Office-Home-CI 上的 Ar→Cl）上表现最佳或相当，这证明了我们方法的有效性。2）与 PDA 方法（即 PADA、ETN 和 BA3US）相比，我们方法的优越性能表明，保留从先前类别中学习到的知识对处理 CI-UDA 非常重要。3）由于 CIDA 还设计了一个正则化项以防止灾难性遗忘，因此在 CI-UDA 中表现优于 PDA 方法。然而，CIDA 忽略了 CI-UDA 中的源私有类别，这可能导致负迁移，因此无法很好地处理 CI-UDA。4）领域自适应方法甚至表现不如 ResNet-50，这表明仅进行对齐可能会使模型偏向于当前步骤的目标类别，导致遗忘先前类别的知识。</p>
+<p>我们还在表 3 中报告了所有方法的步骤级准确性。如果只考虑时间步骤 1，CI-UDA 退化为一个标准的 PDA 问题。在这种情况下，现有的 P</p>
+<p>DA 方法（即 PADA、ETN 和 BA3US）表现良好。然而，在新的时间步骤学习新的目标样本时，这些方法的性能严重下降，而我们的 ProCA 则保持了相对稳定且令人满意的性能。为了探究原因，我们展示了这些步骤 1 类别在时间步骤 1 与每个后续时间步骤之间的准确性下降百分比。如图 5 所示，当学习新的目标类别时，由于缺少先前类别的目标样本，最先进的 PDA 方法会遗忘先前的知识，导致步骤 1 类别的严重准确性下降。相反，ProCA 有效地处理了灾难性遗忘，并在步骤级准确性方面显示了令人满意的结果。由于篇幅限制，我们将三数据集中每个子任务在步骤级准确性和最终 S-1 准确性方面的更多详细结果放在了附录 H 中。</p>
+<h3 id="5-3-用于增强部分领域自适应的应用"><a href="#5-3-用于增强部分领域自适应的应用" class="headerlink" title="5.3 用于增强部分领域自适应的应用"></a>5.3 用于增强部分领域自适应的应用</h3><p>在本节中，我们探讨了 ProCA 是否可以用于增强现有的 PDA 方法，这些方法在 CI-UDA 中无法克服先前类别的灾难性遗忘。为此，我们将 ProCA 应用于改进经典的 PDA 方法（即 PADA 和 BA3US），通过将它们与我们的标签原型识别策略结合。正如表 4 所示，结合 ProCA 显著提高了 PDA 方法的性能，证明了我们的方法在处理 CI-UDA 方面提升现有 PDA 方法的适用性。通过附录 E 中将 ProCA 应用于改进 ETN 的结果也支持了这一观察。</p>
+<h3 id="5-4-消融研究"><a href="#5-4-消融研究" class="headerlink" title="5.4 消融研究"></a>5.4 消融研究</h3><p>为了检查 ProCA 中损失函数的有效性，我们展示了由不同损失函数优化的模型的定量结果。正如表 5 所示，引入 $L_{\text{dis&#125;&#125;$ 或 $L_{\text{con&#125;&#125;$ 可增强模型性能，相比之下仅通过 $L_{\text{ce&#125;&#125;$ 优化模型。另一方面，这一结果验证了基于原型的知识重播能够减轻灾难性遗忘，从而提升最终 S-1 准确性。另一方面，它还验证了基于原型的领域对齐能够减轻领域偏移，从而提升最终准确性。当结合所有损失（即 $L_{\text{ce&#125;&#125;$、$L_{\text{dis&#125;&#125;$、$L_{\text{con&#125;&#125;$）时，我们获得了最佳性能。</p>
+<p>此外，我们还研究了超参数的影响。附录 F 中的结果表明 ProCA 对 $\lambda$ 和 $\eta$ 不敏感，通常可以通过设置 $\lambda &#x3D; 0.1$ 和 $\eta &#x3D; 1$ 来获得最佳性能。此外，我们建议将 $\alpha$ 设置为 0.15，因为高阈值有助于过滤掉领域共享类别。此外，我们还研究了附录 F 中原型数量和增量类别数量的影响，并评估了附录 G 中共享类别检测策略的有效性。</p>
+<h2 id="6-结论"><a href="#6-结论" class="headerlink" title="6. 结论"></a>6. 结论</h2><p>在本文中，我们探讨了一个实用的迁移学习任务，即类别增量无监督领域自适应。为了解决这一具有挑战性的任务，我们提出了一种新颖的**基于原型引导的持续适应（ProCA）**方法，该方法提出了两个解决策略：1）标签原型识别：我们通过一种新的共享类别检测策略识别目标标签原型。2）基于原型的对齐与重播：基于识别出的标签原型，我们通过基于原型引导的对比对齐和知识重播分别解决领域差异和灾难性遗忘问题。在三个基准数据集（Office-31-CI、Office-Home-CI 和 ImageNet-Caltech-CI）上的大量实验表明，ProCA 在处理类别增量无监督领域自适应方面具有有效性。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/42.UCIL/02.ProCA/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/42.UCIL/02.ProCA/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/UCIL/">UCIL</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/42.UCIL/04.Exploiting%20Fine-Grained%20Prototype%20Distribution%20for%20Boosting%20Unsupervised%20Class%20Incremental%20Learning/" title="Exploiting Fine-Grained Prototype Distribution for Boosting Unsupervised Class Incremental Learning"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Exploiting Fine-Grained Prototype Distribution for Boosting Unsupervised Class Incremental Learning</div></div><div class="info-2"><div class="info-item-1">Kimi全文翻译 :arrow_down:0. 摘要开放世界场景的动态特性吸引了越来越多的关注于类别增量学习（Class Incremental Learning, CIL）。然而，现有的CIL方法通常假设在整个训练过程中都有完整的真实标签可用，这在实际应用中很少见。因此，本文探索了一个更具挑战性的问题——无监督类别增量学习（Unsupervised Class Incremental Learning, UCIL）。解决这个问题的关键在于有效捕获全面的特征表示，并发现未知的新类别。为了实现这一点，我们首先通过利用细粒度原型对类分布知识进行建模。随后，引入了一种粒度对齐技术来增强无监督类...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/41.%E5%B0%8F%E6%A0%B7%E6%9C%AC%E7%B1%BB%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0FSCIL/06.ASP/" title="ASP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">ASP</div></div><div class="info-2"><div class="info-item-1">0. 摘要少样本类增量学习（Few-Shot Class-Incremental Learning，FSCIL）模型旨在在保留旧类知识的同时，利用稀缺样本逐步学习新类别。现有的 FSCIL 方法通常对整个骨干网络进行微调，导致过拟合，从而阻碍新类的学习潜力。另一方面，近年来的基于提示（prompt）的 CIL 方法在每个任务中利用充足的数据训练提示，从而缓解遗忘问题。 在本工作中，我们提出了一种新颖的框架，称为“注意力感知自适应提示（Attention-aware Self-adaptive Prompt，ASP）”。ASP 通过从注意力机制角度减少特定信息，鼓励任务无关提示捕捉共享知识...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/42.UCIL/00.Survey/00.%E6%97%A0%E7%9B%91%E7%9D%A3%E7%B1%BB%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0/" title="无监督类增量学习"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">无监督类增量学习</div></div><div class="info-2"><div class="info-item-1">半监督增量学习首先，让我们先学习下半监督式的增量学习，其旨在通过利用未标记的数据来减少对标签的依赖。常规的做法是先利用一小部分带有标签的数据集训练出一个深度学习模型，然后利用该模型对未标记的数据打上标签。通常，我们将这种用非人工标注的标签信息称之为——伪标签(pseudo labels)。 因此，根据未标记数据的类型，我们可以简单的划分为三种类型：  Within-data，即属于同一份数据集内的没有打标签的那部分数据； Auxiliary-data，即辅助数据，例如大家从网络上爬下来的数据； Test-data，即最简单的测试集数据  其中，Within-data 需要模型从头开始训练...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/42.UCIL/01.iLAP/" title="iLAP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">iLAP</div></div><div class="info-2"><div class="info-item-1">ChatGPT全文翻译 :arrow_down:0. 摘要尽管许多关于持续学习的工作在减轻灾难性遗忘方面显示出令人鼓舞的结果，但这些方法依赖于有监督的训练。为了在无标签的增量学习环境中成功学习，模型必须区分已学习的类别和新类别，以正确地包含样本进行训练。我们引入了一种利用网络混淆的新增检测方法，该方法通过将新数据训练为新类别来工作。我们发现，在此检测方法中引入类别不平衡显著提高了性能。我们的方法在一组图像分类基准数据集（包括 MNIST、SVHN、CIFAR-10、CIFAR-100 和 CRIB）上的有效性得到了验证。 1. 引言在人工智能领域，开发能够持续学习的系统仍然是一个主要障碍...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/42.UCIL/03.POCON/" title="POCON"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">POCON</div></div><div class="info-2"><div class="info-item-1">ChatGPT总结 :arrow_down:1. 问题阐述该论文主要解决的核心问题是如何在无监督的持续学习（Continual Unsupervised Learning, CURL）场景中优化表示学习，以有效应对随着任务数量增加而带来的灾难性遗忘问题。传统的无监督表示学习已经在许多任务中取得了显著进展，然而，当这种学习需要在非独立同分布（non-IID）的数据流中持续进行时，模型往往会面临显著的性能下降。这种问题的重要性在于，无监督学习因其无需标签的优势，可以潜在地处理大量的数据，但在实际应用中，数据流可能是连续且逐渐变化的，这就导致了灾难性遗忘问题。论文具体表述了在面对多任务数据流时...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/42.UCIL/04.Exploiting%20Fine-Grained%20Prototype%20Distribution%20for%20Boosting%20Unsupervised%20Class%20Incremental%20Learning/" title="Exploiting Fine-Grained Prototype Distribution for Boosting Unsupervised Class Incremental Learning"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Exploiting Fine-Grained Prototype Distribution for Boosting Unsupervised Class Incremental Learning</div></div><div class="info-2"><div class="info-item-1">Kimi全文翻译 :arrow_down:0. 摘要开放世界场景的动态特性吸引了越来越多的关注于类别增量学习（Class Incremental Learning, CIL）。然而，现有的CIL方法通常假设在整个训练过程中都有完整的真实标签可用，这在实际应用中很少见。因此，本文探索了一个更具挑战性的问题——无监督类别增量学习（Unsupervised Class Incremental Learning, UCIL）。解决这个问题的关键在于有效捕获全面的特征表示，并发现未知的新类别。为了实现这一点，我们首先通过利用细粒度原型对类分布知识进行建模。随后，引入了一种粒度对齐技术来增强无监督类...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/06.MoSLoRA/" title="MoSLoRA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">MoSLoRA</div></div><div class="info-2"><div class="info-item-1">Kimi全文翻译 :arrow_down:0. 摘要在本文中，我们介绍了一种受子空间启发的低秩适应（LoRA）方法，该方法计算效率高，易于实现，并且可以轻松应用于大型语言、多模态和扩散模型。最初，我们将 LoRA 的权重等价地分解为两个子空间，并发现简单地混合它们可以增强性能。为了研究这种现象，我们通过细粒度的子空间视角重新审视它，表明这种修改等同于使用固定混合器融合子空间。为了更加灵活，我们与原始 LoRA 权重一起学习混合器，并称之为子空间混合 LoRA（MoSLoRA）。MoSLoRA 在不同模态的任务上一致性地优于 LoRA，包括常识推理、视觉指令调整和主题驱动的文本到图像生成，...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/06.%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/03.DDP/" title="DDP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">DDP</div></div><div class="info-2"><div class="info-item-1">Distributed Data Parallel，DDP使用  不过通过 DP 进行分布式多卡训练的方式容易造成负载不均衡，有可能第一块 GPU 显存占用更多，因为输出默认都会被 gather 到第一块 GPU 上。为此 Pytorch 也提供了torch.nn.parallel.DistributedDataParallel（DDP）方法来解决这个问题。 针对每个 GPU，启动一个进程，然后这些进程在最开始的时候会保持一致（模型的初始化参数也一致，每个进程拥有自己的优化器），同时在更新模型的时候，梯度传播也是完全一致的，这样就可以保证任何一个 GPU 上面的模型参数就是完全一致的，所...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ChatGPT%E5%85%A8%E6%96%87%E7%BF%BB%E8%AF%91-arrow-down"><span class="toc-number">1.</span> <span class="toc-text">ChatGPT全文翻译 :arrow_down:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E6%91%98%E8%A6%81"><span class="toc-number">2.</span> <span class="toc-text">0. 摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-number">3.</span> <span class="toc-text">1. 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text">2. 相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%97%A0%E7%9B%91%E7%9D%A3%E9%A2%86%E5%9F%9F%E8%87%AA%E9%80%82%E5%BA%94"><span class="toc-number">4.1.</span> <span class="toc-text">2.1 无监督领域自适应</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E7%B1%BB%E5%88%AB%E5%A2%9E%E9%87%8F%E9%A2%86%E5%9F%9F%E8%87%AA%E9%80%82%E5%BA%94"><span class="toc-number">4.2.</span> <span class="toc-text">2.2 类别增量领域自适应</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">5.</span> <span class="toc-text">3. 问题定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%9F%BA%E4%BA%8E%E5%8E%9F%E5%9E%8B%E5%BC%95%E5%AF%BC%E7%9A%84%E6%8C%81%E7%BB%AD%E9%80%82%E5%BA%94"><span class="toc-number">6.</span> <span class="toc-text">4. 基于原型引导的持续适应</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E6%A0%87%E7%AD%BE%E5%8E%9F%E5%9E%8B%E8%AF%86%E5%88%AB"><span class="toc-number">6.1.</span> <span class="toc-text">4.1 标签原型识别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%9F%BA%E4%BA%8E%E5%8E%9F%E5%9E%8B%E7%9A%84%E5%AF%B9%E9%BD%90%E4%B8%8E%E9%87%8D%E6%92%AD"><span class="toc-number">6.2.</span> <span class="toc-text">4.2 基于原型的对齐与重播</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%AE%9E%E9%AA%8C"><span class="toc-number">7.</span> <span class="toc-text">5. 实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">7.1.</span> <span class="toc-text">5.1 实验设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%8E%E7%8E%B0%E6%9C%89%E6%96%B9%E6%B3%95%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">7.2.</span> <span class="toc-text">5.2 与现有方法的比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E7%94%A8%E4%BA%8E%E5%A2%9E%E5%BC%BA%E9%83%A8%E5%88%86%E9%A2%86%E5%9F%9F%E8%87%AA%E9%80%82%E5%BA%94%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">7.3.</span> <span class="toc-text">5.3 用于增强部分领域自适应的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6"><span class="toc-number">7.4.</span> <span class="toc-text">5.4 消融研究</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E7%BB%93%E8%AE%BA"><span class="toc-number">8.</span> <span class="toc-text">6. 结论</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

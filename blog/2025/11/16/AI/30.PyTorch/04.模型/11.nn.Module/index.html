@@ -1,0 +1,310 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>nn.Module | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="state_dict 在PyTorch中，state_dict是一个字典对象，用于存储模型或优化器的参数。这个字典将每一层或优化器的参数映射到对应的张量。state_dict的主要作用在于方便模型的保存和加载，以便在训练过程中恢复模型的状态或在其他任务中重用模型。   对于模型（如torch.nn.Module的实例），state_dict包含模型的可学习参数（如权重和偏置）。只有包含可学习参数的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nn.Module">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/11.nn.Module/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="state_dict 在PyTorch中，state_dict是一个字典对象，用于存储模型或优化器的参数。这个字典将每一层或优化器的参数映射到对应的张量。state_dict的主要作用在于方便模型的保存和加载，以便在训练过程中恢复模型的状态或在其他任务中重用模型。   对于模型（如torch.nn.Module的实例），state_dict包含模型的可学习参数（如权重和偏置）。只有包含可学习参数的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.352Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="PyTorch">
+<meta property="article:tag" content="模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "nn.Module",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/11.nn.Module/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.352Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/11.nn.Module/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'nn.Module',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">nn.Module</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">nn.Module</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.352Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PyTorch/">PyTorch</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PyTorch/%E6%A8%A1%E5%9E%8B/">模型</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="state-dict"><a href="#state-dict" class="headerlink" title="state_dict"></a>state_dict</h2><blockquote>
+<p>在PyTorch中，<code>state_dict</code>是一个字典对象，用于存储模型或优化器的参数。这个字典将每一层或优化器的参数映射到对应的张量。<code>state_dict</code>的主要作用在于方便模型的保存和加载，以便在训练过程中恢复模型的状态或在其他任务中重用模型。</p>
+</blockquote>
+<ul>
+<li><p>对于模型（如<code>torch.nn.Module</code>的实例），<code>state_dict</code>包含模型的可学习参数（如权重和偏置）。只有包含可学习参数的层（如卷积层、线性层等）和已注册的缓冲区（如Batch Normalization层的运行均值和方差）才会在<code>state_dict</code>中有对应的条目。这些参数是在模型训练过程中被优化器更新的。</p>
+</li>
+<li><p>对于优化器（如<code>torch.optim</code>的实例），<code>state_dict</code>包含优化器的状态信息以及使用的超参数（如学习率、动量等）。这些状态信息用于在训练过程中更新模型的参数。</p>
+</li>
+</ul>
+<p>通过调用<code>torch.save(model.state_dict(), PATH)</code>可以将模型的<code>state_dict</code>保存到磁盘上，其中<code>PATH</code>是保存的路径。同样地，通过<code>model.load_state_dict(torch.load(PATH))</code>可以加载之前保存的<code>state_dict</code>到模型中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#encoding:utf-8</span><br> <br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><span class="hljs-keyword">import</span> torch.optim <span class="hljs-keyword">as</span> optim<br><span class="hljs-keyword">import</span> torchvision<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> mp<br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br> <br><span class="hljs-comment">#define model</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TheModelClass</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(TheModelClass,<span class="hljs-variable language_">self</span>).__init__()<br>        <span class="hljs-variable language_">self</span>.conv1=nn.Conv2d(<span class="hljs-number">3</span>,<span class="hljs-number">6</span>,<span class="hljs-number">5</span>)<br>        <span class="hljs-variable language_">self</span>.pool=nn.MaxPool2d(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>)<br>        <span class="hljs-variable language_">self</span>.conv2=nn.Conv2d(<span class="hljs-number">6</span>,<span class="hljs-number">16</span>,<span class="hljs-number">5</span>)<br>        <span class="hljs-variable language_">self</span>.fc1=nn.Linear(<span class="hljs-number">16</span>*<span class="hljs-number">5</span>*<span class="hljs-number">5</span>,<span class="hljs-number">120</span>)<br>        <span class="hljs-variable language_">self</span>.fc2=nn.Linear(<span class="hljs-number">120</span>,<span class="hljs-number">84</span>)<br>        <span class="hljs-variable language_">self</span>.fc3=nn.Linear(<span class="hljs-number">84</span>,<span class="hljs-number">10</span>)<br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self,x</span>):<br>        x=<span class="hljs-variable language_">self</span>.pool(F.relu(<span class="hljs-variable language_">self</span>.conv1(x)))<br>        x=<span class="hljs-variable language_">self</span>.pool(F.relu(<span class="hljs-variable language_">self</span>.conv2(x)))<br>        x=x.view(-<span class="hljs-number">1</span>,<span class="hljs-number">16</span>*<span class="hljs-number">5</span>*<span class="hljs-number">5</span>)<br>        x=F.relu(<span class="hljs-variable language_">self</span>.fc1(x))<br>        x=F.relu(<span class="hljs-variable language_">self</span>.fc2(x))<br>        x=<span class="hljs-variable language_">self</span>.fc3(x)<br>        <span class="hljs-keyword">return</span> x<br> <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-comment"># Initialize model</span><br>    model = TheModelClass()<br> <br>    <span class="hljs-comment">#Initialize optimizer</span><br>    optimizer=optim.SGD(model.parameters(),lr=<span class="hljs-number">0.001</span>,momentum=<span class="hljs-number">0.9</span>)<br> <br>    <span class="hljs-comment">#print model&#x27;s state_dict</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Model.state_dict:&#x27;</span>)<br>    <span class="hljs-keyword">for</span> param_tensor <span class="hljs-keyword">in</span> model.state_dict():<br>        <span class="hljs-comment">#打印 key value字典</span><br>        <span class="hljs-built_in">print</span>(param_tensor,<span class="hljs-string">&#x27;\t&#x27;</span>,model.state_dict()[param_tensor].size())<br> <br>    <span class="hljs-comment">#print optimizer&#x27;s state_dict</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Optimizer,s state_dict:&#x27;</span>)<br>    <span class="hljs-keyword">for</span> var_name <span class="hljs-keyword">in</span> optimizer.state_dict():<br>        <span class="hljs-built_in">print</span>(var_name,<span class="hljs-string">&#x27;\t&#x27;</span>,optimizer.state_dict()[var_name])<br> <br> <br> <br><span class="hljs-keyword">if</span> __name__==<span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    main()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python">Model.state_dict:<br>conv1.weight    torch.Size([<span class="hljs-number">6</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5</span>])<br>conv1.bias    torch.Size([<span class="hljs-number">6</span>])<br>conv2.weight    torch.Size([<span class="hljs-number">16</span>, <span class="hljs-number">6</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5</span>])<br>conv2.bias    torch.Size([<span class="hljs-number">16</span>])<br>fc1.weight    torch.Size([<span class="hljs-number">120</span>, <span class="hljs-number">400</span>])<br>fc1.bias    torch.Size([<span class="hljs-number">120</span>])<br>fc2.weight    torch.Size([<span class="hljs-number">84</span>, <span class="hljs-number">120</span>])<br>fc2.bias    torch.Size([<span class="hljs-number">84</span>])<br>fc3.weight    torch.Size([<span class="hljs-number">10</span>, <span class="hljs-number">84</span>])<br>fc3.bias    torch.Size([<span class="hljs-number">10</span>])<br>Optimizer`s state_dict:<br>state    &#123;&#125;<br>param_groups    [&#123;<span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.001</span>, <span class="hljs-string">&#x27;momentum&#x27;</span>: <span class="hljs-number">0.9</span>, <span class="hljs-string">&#x27;dampening&#x27;</span>: <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;weight_decay&#x27;</span>: <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;nesterov&#x27;</span>: <span class="hljs-literal">False</span>, <span class="hljs-string">&#x27;maximize&#x27;</span>: <span class="hljs-literal">False</span>, <span class="hljs-string">&#x27;foreach&#x27;</span>: <span class="hljs-literal">None</span>, <span class="hljs-string">&#x27;differentiable&#x27;</span>: <span class="hljs-literal">False</span>, <span class="hljs-string">&#x27;params&#x27;</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>]&#125;]<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="load-state-dict"><a href="#load-state-dict" class="headerlink" title="load_state_dict"></a>load_state_dict</h2><blockquote>
+<p><code>load_state_dict</code> 是 PyTorch 中 <code>torch.nn.Module</code> 类的一个方法，用于加载模型的状态字典（state dictionary）。状态字典是一个包含模型所有参数的字典，通常通过调用 <code>state_dict()</code> 方法获得。</p>
+</blockquote>
+<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><p><code>load_state_dict</code> 的主要参数是一个字典，该字典包含了要加载的参数。通常，这个字典是通过 <code>torch.load()</code> 从一个文件（通常是 <code>.pth</code> 或 <code>.pt</code> 文件）中加载的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">state_dict = torch.load(<span class="hljs-string">&#x27;path_to_model.pth&#x27;</span>)<br>model.load_state_dict(state_dict)<br></code></pre></td></tr></table></figure>
+
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li><strong>模型结构匹配</strong>：在调用 <code>load_state_dict</code> 之前，确保你已经定义了与保存状态字典时完全相同的模型结构。如果模型结构不匹配，你将无法加载状态字典，因为 PyTorch 无法将参数映射到正确的位置。</li>
+<li><strong>设备</strong>：加载的状态字典中的参数默认在 CPU 上。如果你想在 GPU 上使用这些参数，你需要先将模型移动到 GPU 上，然后再加载状态字典。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">model = model.to(<span class="hljs-string">&#x27;cuda&#x27;</span>)<br>model.load_state_dict(torch.load(<span class="hljs-string">&#x27;path_to_model.pth&#x27;</span>))<br></code></pre></td></tr></table></figure>
+
+<p>或者，你也可以在加载状态字典后移动模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">model.load_state_dict(torch.load(<span class="hljs-string">&#x27;path_to_model.pth&#x27;</span>, map_location=torch.device(<span class="hljs-string">&#x27;cuda&#x27;</span>)))<br>model = model.to(<span class="hljs-string">&#x27;cuda&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>优化器状态</strong>：除了模型参数外，你可能还想加载优化器的状态。这可以通过类似的方式完成，但请注意，优化器的状态字典应该单独加载。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">optimizer_state_dict = torch.load(<span class="hljs-string">&#x27;path_to_optimizer.pth&#x27;</span>)<br>optimizer.load_state_dict(optimizer_state_dict)<br></code></pre></td></tr></table></figure>
+
+<h2 id="model-train"><a href="#model-train" class="headerlink" title="model.train()"></a>model.train()</h2><blockquote>
+<p>model.train()和model.eval()的区别主要在于Batch Normalization和Dropout两层。</p>
+</blockquote>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202306281723463.png" style="zoom: 50%;" /></div>
+
+<p>当调用 <code>model.train()</code> 时，模型将处于训练模式，这通常意味着：</p>
+<ol>
+<li><p><strong>Dropout</strong>：如果模型中包含 Dropout 层，那么在训练模式下，Dropout 层会在前向传播时随机地将一部分神经元的输出设置为零。这有助于防止模型过拟合。在评估模式下，Dropout 层不会进行任何操作，所有神经元的输出都会被保留。</p>
+</li>
+<li><p><strong>BatchNorm</strong>：Batch Normalization（BatchNorm）层在训练和评估模式下的行为也有所不同。在训练模式下，BatchNorm 会计算每个批次的均值和方差，并使用这些统计量来标准化输入。同时，它还会更新其内部运行均值和方差的估计值。在评估模式下，BatchNorm 会使用这些运行均值和方差来进行标准化，而不是每个批次的统计量。</p>
+</li>
+<li><p><strong>其他层</strong>：有些自定义的层或模块也可能在训练和评估模式下有不同的行为。这取决于这些层或模块的实现。</p>
+</li>
+</ol>
+<h3 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h3><p>在训练循环的开始，你通常会调用 <code>model.train()</code> 来确保模型处于正确的模式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">model = MyModel()  <span class="hljs-comment"># 假设 MyModel 是你的模型类</span><br>model.train()  <span class="hljs-comment"># 将模型设置为训练模式</span><br><br>optimizer = torch.optim.SGD(model.parameters(), lr=<span class="hljs-number">0.01</span>)<br><br><span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_epochs):<br>    <span class="hljs-keyword">for</span> inputs, targets <span class="hljs-keyword">in</span> dataloader:<br>        optimizer.zero_grad()  <span class="hljs-comment"># 清零梯度</span><br>        outputs = model(inputs)  <span class="hljs-comment"># 前向传播</span><br>        loss = criterion(outputs, targets)  <span class="hljs-comment"># 计算损失</span><br>        loss.backward()  <span class="hljs-comment"># 反向传播</span><br>        optimizer.step()  <span class="hljs-comment"># 更新权重</span><br></code></pre></td></tr></table></figure>
+
+<p>在评估或测试模型时，你应该使用 <code>model.eval()</code> 来确保模型不会应用 Dropout 或使用批次的统计量进行 BatchNorm：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">model.<span class="hljs-built_in">eval</span>()  <span class="hljs-comment"># 将模型设置为评估模式</span><br><br><span class="hljs-keyword">with</span> torch.no_grad():  <span class="hljs-comment"># 不计算梯度，节省内存和计算资源</span><br>    <span class="hljs-keyword">for</span> inputs, targets <span class="hljs-keyword">in</span> test_dataloader:<br>        outputs = model(inputs)  <span class="hljs-comment"># 前向传播</span><br>        <span class="hljs-comment"># ... 计算性能指标等 ...</span><br></code></pre></td></tr></table></figure>
+
+<p>请注意，在评估模式下，使用 <code>with torch.no_grad():</code> 块是一个好习惯，因为它可以防止计算不必要的梯度，从而节省计算资源和内存。</p>
+<h2 id="model-eval"><a href="#model-eval" class="headerlink" title="model.eval()"></a>model.eval()</h2><div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202306281721920.png" style="zoom: 50%;" /></div>
+
+<p><code>model.eval()</code> 是 PyTorch 框架中一个非常关键的方法，用于将模型设置为评估模式（evaluation mode）。在模型训练完成后，我们通常会对模型进行评估或测试以检查其性能。这时候，调用 <code>model.eval()</code> 是非常必要的，因为它会影响模型中的某些层（如 Dropout 和 Batch Normalization）的行为。</p>
+<h3 id="主要作用"><a href="#主要作用" class="headerlink" title="主要作用"></a>主要作用</h3><ol>
+<li><p><strong>Dropout</strong>：在训练模式下，Dropout 层会随机丢弃一部分神经元的输出，这有助于防止模型过拟合。但在评估模式下，<code>model.eval()</code> 会关闭 Dropout 层的功能，确保所有神经元都参与前向传播，从而得到更稳定、更准确的输出。</p>
+</li>
+<li><p><strong>Batch Normalization</strong>：BatchNorm 层在训练和评估模式下的行为也不同。在训练模式下，BatchNorm 会使用当前批次的均值和方差来标准化输入。而在评估模式下，<code>model.eval()</code> 会指示 BatchNorm 使用训练过程中积累的运行均值（running mean）和运行方差（running variance）来进行标准化。这样做的好处是，模型在评估时对每个输入的标准化方式是一致的，不受批次大小的影响。</p>
+</li>
+</ol>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>在 PyTorch 中，使用 <code>model.eval()</code> 很简单。你只需在模型评估或测试之前调用它即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">model = MyModel()  <span class="hljs-comment"># 假设 MyModel 是你的模型类</span><br>model.load_state_dict(torch.load(<span class="hljs-string">&#x27;path_to_model.pth&#x27;</span>))  <span class="hljs-comment"># 加载预训练模型参数</span><br><br>model.<span class="hljs-built_in">eval</span>()  <span class="hljs-comment"># 将模型设置为评估模式</span><br><br><span class="hljs-keyword">with</span> torch.no_grad():  <span class="hljs-comment"># 不计算梯度，节省内存和计算资源</span><br>    <span class="hljs-keyword">for</span> inputs, targets <span class="hljs-keyword">in</span> test_dataloader:<br>        outputs = model(inputs)  <span class="hljs-comment"># 进行前向传播</span><br>        <span class="hljs-comment"># ... 计算性能指标等 ...</span><br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，我们首先加载了预训练的模型参数，然后调用 <code>model.eval()</code> 将模型设置为评估模式。注意，我们还使用了 <code>with torch.no_grad():</code> 块来确保在评估过程中不计算梯度，这有助于节省内存和计算资源。</p>
+<h3 id="注意事项-1"><a href="#注意事项-1" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li><p><strong>确保在正确的位置调用</strong>：确保在评估或测试开始前调用 <code>model.eval()</code>，并在训练开始前调用 <code>model.train()</code>。不要在训练循环内部多次调用 <code>model.eval()</code>，除非你有特定的需求。</p>
+</li>
+<li><p><strong>梯度计算</strong>：调用 <code>model.eval()</code> 后，模型中的所有可学习参数的 <code>requires_grad</code> 属性将被设置为 <code>False</code>，这意味着在评估模式下不会计算梯度。这有助于加速推理过程。</p>
+</li>
+<li><p><strong>BatchNorm 和 Dropout 的固定</strong>：如前所述，<code>model.eval()</code> 会固定 BatchNorm 层和关闭 Dropout 层，确保在评估时模型的行为是一致的。</p>
+</li>
+</ol>
+<h2 id="model-eval-和torch-no-grad-的区别"><a href="#model-eval-和torch-no-grad-的区别" class="headerlink" title="model.eval()和torch.no_grad()的区别"></a>model.eval()和torch.no_grad()的区别</h2><p>在PyTorch中进行validation&#x2F;test时，会使用<code>model.eval()</code>切换到测试模式，在该模式下：</p>
+<ol>
+<li><p>主要用于通知dropout层和BN层在training和validation&#x2F;test模式间切换：</p>
+<ul>
+<li>在train模式下，dropout网络层会按照设定的参数p，设置保留激活单元的概率（保留概率&#x3D;p)。BN层会继续计算数据的mean和var等参数并更新。</li>
+<li>在eval模式下，dropout层会让所有的激活单元都通过，而BN层会停止计算和更新mean和var，直接使用在训练阶段已经学出的mean和var值。</li>
+</ul>
+</li>
+<li><p>eval模式不会影响各层的gradient计算行为，即gradient计算和存储与training模式一样，只是不进行反向传播（back probagation)。</p>
+</li>
+</ol>
+<p>而<code>with torch.no_grad()</code>则主要是用于停止autograd模块的工作，以起到加速和节省显存的作用。它的作用是将该with语句包裹起来的部分停止梯度的更新，从而节省了GPU算力和显存，但是并不会影响dropout和BN层的行为。</p>
+<p>如果不在意显存大小和计算时间的话，仅仅使用<code>model.eval()</code>已足够得到正确的validation&#x2F;test的结果；而<code>with torch.no_grad()</code>则是更进一步加速和节省gpu空间（因为不用计算和存储梯度），从而可以更快计算，也可以跑更大的batch来测试。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38410428/article/details/101102075">PyTorch：model.train()和model.eval()用法和区别，以及model.eval()和torch.no_grad()的区别</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/11.nn.Module/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/11.nn.Module/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/PyTorch/">PyTorch</a><a class="post-meta__tags" href="/blog/tags/%E6%A8%A1%E5%9E%8B/">模型</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/02.Tensors/06.tensor%E7%BB%B4%E5%BA%A6%E8%BD%AC%E6%8D%A2/" title="tensor维度转换"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">tensor维度转换</div></div><div class="info-2"><div class="info-item-1">view() 转换维度 torch.view 是 PyTorch 中用于重新塑形张量（tensor）的函数，它返回一个新的张量，这个张量与原始张量具有相同的数据但不同的形状。它不会改变张量中的数据，只是改变数据的视图方式。  Tensor.view(*shape) → Tensor  shape (torch.Size or int…): 期望的新张量的形状。可以是一个 torch.Size 对象，也可以是一个整数序列。这个形状描述了新张量的各个维度的大小。  torch.view 的使用有一些重要的注意事项：  元素总数必须保持不变：重新塑形后的张量必须包含与原始张量相同数量的元素。换...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/101.%E6%A8%A1%E5%9E%8B%E7%A4%BA%E4%BE%8B/" title="模型示例"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">模型示例</div></div><div class="info-2"><div class="info-item-1">一个神经网络的典型训练过程如下：  定义包含一些可学习参数(或者叫权重）的神经网络 在输入数据集上迭代 通过网络处理输入 计算 loss (输出和正确答案的距离） 将梯度反向传播给网络的参数 更新网络的权重，一般使用一个简单的规则：weight = weight - learning_rate * gradient  LeNet  1234567891011121314151617181920212223242526272829303132333435363738import torchimport torch.nn as nnimport torch.nn.functional as ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/101.%E6%A8%A1%E5%9E%8B%E7%A4%BA%E4%BE%8B/" title="模型示例"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">模型示例</div></div><div class="info-2"><div class="info-item-1">一个神经网络的典型训练过程如下：  定义包含一些可学习参数(或者叫权重）的神经网络 在输入数据集上迭代 通过网络处理输入 计算 loss (输出和正确答案的距离） 将梯度反向传播给网络的参数 更新网络的权重，一般使用一个简单的规则：weight = weight - learning_rate * gradient  LeNet  1234567891011121314151617181920212223242526272829303132333435363738import torchimport torch.nn as nnimport torch.nn.functional as ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/01.%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA/" title="模型构建"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">模型构建</div></div><div class="info-2"><div class="info-item-1">模型构建网络模型的内容如下，包括模型创建和权值初始化，这些内容都在nn.Module中有实现。   创建模型有 2 个要素**：构建子模块和拼接子模块**。如 LeNet 里包含很多卷积层、池化层、全连接层，当我们构建好所有的子模块之后，按照一定的顺序拼接起来。   以 lenet.py的 LeNet 为例，继承nn.Module，必须实现__init__()方法和forward()方法。其中__init__()方法里创建子模块，在forward()方法里拼接子模块。 1234567891011121314151617181920class LeNet(nn.Module):    # ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/03.%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0/" title="模型参数"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">模型参数</div></div><div class="info-2"><div class="info-item-1">nn.Parameter在 PyTorch 中，nn.Parameter是torch.nn.module.Parameter类的一个实例，它用于自动跟踪模型参数在训练过程中的变化。nn.Parameter是torch.Tensor的一个子类，但与普通的Tensor不同，nn.Parameter会被添加到模型的parameters()迭代器中，这样 PyTorch 的优化器就能找到并更新它们。 语法  CLASS torch.nn.parameter.Parameter(data&#x3D;None, requires_grad&#x3D;True) [SOURCE]  nn.Parame...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/04.%E6%9D%83%E5%80%BC%E5%88%9D%E5%A7%8B%E5%8C%96/" title="权值初始化"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">权值初始化</div></div><div class="info-2"><div class="info-item-1">梯度消失与梯度爆炸考虑一个 3 层的全连接网络。 $H{1}&#x3D;X \times W{1}，H{2}&#x3D;H{1} \times W{2}，Out&#x3D;H{2} \times W_{3}$  $$\begin{aligned} \Delta \mathrm{W}{2} &amp;&#x3D;\frac{\partial \mathrm{Loss&#125;&#125;{\partial \mathrm{W}{2&#125;&#125;&#x3D;\frac{\partial \mathrm{Loss&#125;&#125;{\partial \mathrm{out&#...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/07.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/" title="模型优化"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">模型优化</div></div><div class="info-2"><div class="info-item-1">torch.optim.SGDtorch.optim.SGD 是 PyTorch 中用于实现随机梯度下降（Stochastic Gradient Descent, SGD）优化算法的类。SGD 是一种常用的优化方法，广泛用于训练深度学习模型。 1. 基本语法1torch.optim.SGD(params, lr=&lt;required parameter&gt;, momentum=0, dampening=0, weight_decay=0, nesterov=False)   params：要优化的模型参数，通常传递 model.parameters()。 lr：学习率（learn...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/05.%E6%A8%A1%E5%9E%8B%E4%BF%9D%E5%AD%98%E4%B8%8E%E5%8A%A0%E8%BD%BD/" title="模型保存与加载"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">模型保存与加载</div></div><div class="info-2"><div class="info-item-1">模型存储内容一个PyTorch模型主要包含两个部分：模型结构和权重。其中模型是继承nn.Module的类，权重的数据结构是一个字典（key是层名，value是权重向量）。存储也由此分为两种形式：存储整个模型（包括结构和权重），和只存储模型权重。 12345678from torchvision import modelsmodel = models.resnet152(pretrained=True)save_dir = &#x27;./resnet152.pth&#x27;# 保存整个模型torch.save(model, save_dir)# 保存模型权重torch.save(mod...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#state-dict"><span class="toc-number">1.</span> <span class="toc-text">state_dict</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#load-state-dict"><span class="toc-number">2.</span> <span class="toc-text">load_state_dict</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E"><span class="toc-number">2.1.</span> <span class="toc-text">参数说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">2.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#model-train"><span class="toc-number">3.</span> <span class="toc-text">model.train()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.1.</span> <span class="toc-text">使用示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#model-eval"><span class="toc-number">4.</span> <span class="toc-text">model.eval()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E4%BD%9C%E7%94%A8"><span class="toc-number">4.1.</span> <span class="toc-text">主要作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-1"><span class="toc-number">4.3.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#model-eval-%E5%92%8Ctorch-no-grad-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">5.</span> <span class="toc-text">model.eval()和torch.no_grad()的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">6.</span> <span class="toc-text">Reference</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

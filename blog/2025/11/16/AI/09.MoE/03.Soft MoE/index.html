@@ -1,0 +1,363 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Soft MoE | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="From Sparse to Soft Mixtures of Experts From Sparse to Soft Mixtures of Experts  摘要Soft MoE 提出了一种新的可微稀疏混合专家模型，稀疏混合专家 (Sparse Mixture of Experts, MoE) 是一种在保证模型训练和推理的成本不显著增加的情况下，大幅度提升模型容量的方法。 MoE 方法已经有很">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Soft MoE">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/09.MoE/03.Soft%20MoE/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="From Sparse to Soft Mixtures of Experts From Sparse to Soft Mixtures of Experts  摘要Soft MoE 提出了一种新的可微稀疏混合专家模型，稀疏混合专家 (Sparse Mixture of Experts, MoE) 是一种在保证模型训练和推理的成本不显著增加的情况下，大幅度提升模型容量的方法。 MoE 方法已经有很">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.353Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="MoE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Soft MoE",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/09.MoE/03.Soft%20MoE/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.353Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/09.MoE/03.Soft%20MoE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Soft MoE',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">Soft MoE</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Soft MoE</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.353Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/MoE/">MoE</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="From-Sparse-to-Soft-Mixtures-of-Experts"><a href="#From-Sparse-to-Soft-Mixtures-of-Experts" class="headerlink" title="From Sparse to Soft Mixtures of Experts"></a>From Sparse to Soft Mixtures of Experts</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2308.00951.pdf">From Sparse to Soft Mixtures of Experts</a></p>
+</blockquote>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>Soft MoE 提出了一种新的<strong>可微稀疏混合专家模型</strong>，稀疏混合专家 (Sparse Mixture of Experts, MoE) 是一种在保证模型训练和推理的成本不显著增加的情况下，大幅度提升模型容量的方法。</p>
+<p>MoE 方法已经有很长的一段历史了，是一种扩大模型容量的经典高效的做法，但是它的缺点是：</p>
+<ol>
+<li>训练不稳定</li>
+<li>Token Dropping 的问题</li>
+<li>较难扩展 Expert 的数量</li>
+<li>低效率的微调</li>
+</ol>
+<p>造成以上问题的一个原因是 MoE 的端到端训练困难，因此，本文提出了一种可微的稀疏混合专家 Transformer 模型 (fully-differentiable sparse Transformer) Soft MoE 来解决端到端训练困难的问题，同时也能够保持 MoE 方法的优势，即以较低的推理成本更大的模型容量。Soft MoE 的特点是给每个专家输入不同 token 的权重混合。</p>
+<p>视觉实验结果证明，Soft MoE 大大优于标准 ViT 和流行的 MoE 方法，比如 128 个 Expert，16 个 MoE 层的 Soft MoE-Huge&#x2F;14 模型参数比 ViT-Huge&#x2F;14 多 40 倍，但推理时间成本仅增长 2%，同时性能要好得多。</p>
+<h2 id="背景：把离散优化问题变为可微的优化问题"><a href="#背景：把离散优化问题变为可微的优化问题" class="headerlink" title="背景：把离散优化问题变为可微的优化问题"></a>背景：把离散优化问题变为可微的优化问题</h2><p>稀疏混合专家 (Sparse Mixture of Experts, MoE) 是一种在保证模型训练和推理的成本不显著增加的情况下，大幅度提升模型容量的方法。在视觉，语言和多模态任务中都取得了成功，代表像视觉的 V-MoE，文本的 Switch Transformer和多模态的 LIMoE。</p>
+<p>如下图1左所示，稀疏 MoE Transformer 的核心是一个离散优化问题，即：模型需要决定每个输入 token 应该输入哪些 Expert 里面，这些 Expert 一般是 MLP 模块。输入 token 和 Expert 之间的匹配 (token-to-expert match) 是 MoE 中要考虑的很重要的问题之一，之前也有各种各样的方法尝试解决此问题，比如基于线性规划的，比如基于 RL 算法的，比如基于固定规则的，比如基于最优传输理论的，和基于贪婪匹配的。总之，解决好稀疏 MoE 的这个离散优化问题的确是件不容易的事情。稀疏 MoE 的缺点有：</p>
+<ol>
+<li>训练不稳定</li>
+<li>Token Dropping 的问题</li>
+<li>较难扩展 Expert 的数量</li>
+<li>低效率的微调</li>
+</ol>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241105091345.png" style="zoom: 60%;" /></div>
+
+<p>如图1右所示，Soft MoE 把稀疏 MoE Transformer 的这个离散优化问题变成了可微的优化问题。Soft MoE 觉得不必一定要 “hard” 地找到输入 token 和 Expert 之间的一一匹配，而是可以 “Soft” 地混合输入 token 并且分给每一个 Expert。Soft MoE 给每个 Expert 分配的不是某几个输入 token，而是所有输入 token 的加权平均值 (权重取决于 token 和 Expert)，然后由这个对应的 Expert 去处理这个加权平均值。</p>
+<p><strong>1.2 变为可微的优化问题之后，解决了之前稀疏 MoE 的什么问题？</strong></p>
+<p><strong>问题1</strong>：精心设计的 Expert-to-token 的路由机制通常并不比随机固定路由好。</p>
+<p>Soft MoE 可以避免这个问题，因为每个路由的参数都是基于每个输入 token 直接更新的。</p>
+<p><strong>问题2</strong>：训练不稳定 (LIMoE<a href="#ref_3">#ref_3</a>这个工作观察到在训练期间，可能有大部分 token 改变路由，给训练带来一定挑战) 导致很多稀疏 MoE 方法的 Expert 都不可以设置得很多。</p>
+<p>Soft MoE 可以避免这个问题，扩展到数千个 Expert。</p>
+<p><strong>1.3 Soft MoE 算法描述</strong></p>
+<p><strong>参数配置</strong>：</p>
+<p>设 $\mathbf{X} \in \mathbb{R}^{m \times d}$ 为输入特征，其中 $m$ 为序列长度， $d$ 为特征维度。每个 MoE 层都使用 $n$ 个 Expert： ${f_i: \mathbb{R}^d \rightarrow \mathbb{R}^d }_{1:n}$ ，所有 Expert 都使用不同的参数应用相同的函数，通常是一个 MLP。</p>
+<p>每个 Expert 处理 $p$ 个 slots，每个 slot 包含 $d$ 维的参数，所以这部分参数可以表示为 $\mathbf{\Phi} \in \mathbb{R}^{d \times (n \cdot p)}$ 。</p>
+<p><strong>中间计算</strong>：</p>
+<p>输入特征 $\mathbf{X}$ 首先计算分配权重 (Dispatch Weights) $\mathbf{D}$ ，再根据权重重新混合输入特征，得到专家模型的输入 slots $\tilde{\mathbf{X&#125;&#125; \in \mathbb{R}^{(n \cdot p) \times d}$ ：</p>
+<p>$$\begin{equation} \begin{gathered} \mathbf{D}<em>{ij} &#x3D; \frac{\exp((\mathbf{X} \mathbf{\Phi})</em>{ij})}{\sum_{i’&#x3D;1}^m \exp((\mathbf{X} \mathbf{\Phi})_{i’j})}\ \tilde{\mathbf{X&#125;&#125; &#x3D; \mathbf{D}^\top \mathbf{X}. \end{gathered} \end{equation} \tag{1}$$<br>其中的分配权重 (Dispatch Weights) $\mathbf{D}\in \mathbb{R}^{m\times (n \cdot p)}$ 就是对 $\mathbf{X} \mathbf{\Phi}$ 的逐列取 Softmax。</p>
+<p>然后，在每个 slot 上应用相应的专家函数得到每个 Expert 的输出 slot $\tilde{\mathbf{Y&#125;&#125; \in \mathbb{R}^{(n \cdot p) \times d}$ ：</p>
+<p>$$\begin{equation} \tilde{\mathbf{Y&#125;&#125;<em>i &#x3D; f</em>{\left\lfloor{i &#x2F; p}\right\rfloor}(\tilde{\mathbf{X&#125;&#125;_i). \end{equation} \tag{2}$$  </p>
+<p><strong>输出过程</strong>：</p>
+<p>最后，输出 token 为所有 $n \cdot p$ 个输出 slot $\mathbf{Y}$ 的凸组合，其权重计算如下： $$\begin{equation} \begin{gathered} \mathbf{C}<em>{ij} &#x3D; \frac{\exp((\mathbf{X} \mathbf{\Phi})</em>{ij})}{\sum_{j’&#x3D;1}^{n \cdot p} \exp((\mathbf{X} \mathbf{\Phi})_{ij’})} \ \mathbf{Y} &#x3D; \mathbf{C}\tilde{\mathbf{Y&#125;&#125;. \end{gathered} \end{equation} \tag{3}$$<br>其中的组合权重 (Combine Weights) $\mathbf{C}\in \mathbb{R}^{m\times (n \cdot p)}$ 就是对 $\mathbf{X} \mathbf{\Phi}$ 的逐行取 Softmax，这部分参数可以表示为 $\mathbf{\Phi} \in \mathbb{R}^{d \times (n \cdot p)}$ 。</p>
+<p>整个过程如下图2所示。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202411042052161.jpg">  </p>
+<p>图2：Soft MoE 算法流程图</p>
+<p>遵循稀疏 MoE 的常用设计思想，作者用 Soft MoE 块替换了 Transformer 的一部分 MoE 块。slot 的总数是 Soft MoE 的关键超参数，因为时间复杂度取决于 slot 的数量，而不是 Expert 的数量。比如，可以设置等于输入序列长度的 slot 数以匹配等效密集 Transformer 的 FLOP。</p>
+<p>Soft MoE 的 JAX 代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">soft_moe_layer</span>(<span class="hljs-params">X, Phi, experts</span>):<br>    <span class="hljs-comment"># Compute the dispatch and combine weights.</span><br>    logits = jnp.einsum(<span class="hljs-string">&#x27;md,dnp-&gt;mnp&#x27;</span>, X, Phi)<br>    D = jax.nn.softmax(logits, axis=(<span class="hljs-number">0</span>,))<br>    C = jax.nn.softmax(logits, axis=(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>))<br>    <span class="hljs-comment"># The input slots are a weighted average of all the input tokens,</span><br>    <span class="hljs-comment"># given by the dispatch weights.</span><br>    Xs = jnp.einsum(<span class="hljs-string">&#x27;md,mnp-&gt;npd&#x27;</span>, X, D)<br>    <span class="hljs-comment"># Apply the corresponding expert function to each input slot.</span><br>    Ys = jnp.stack([<br>    f_i(Xs[i, :, :]) <span class="hljs-keyword">for</span> i, f_i <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(experts)],<br>    axis=<span class="hljs-number">0</span>)<br>    <span class="hljs-comment"># The output tokens are a weighted average of all the output slots,</span><br>    <span class="hljs-comment"># given by the combine weights.</span><br>    Y = jnp.einsum(<span class="hljs-string">&#x27;npd,mnp-&gt;md&#x27;</span>, Ys, C)<br>    <span class="hljs-keyword">return</span> Y<br></code></pre></td></tr></table></figure>
+
+<p>全部代码：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/google-research/vmoe">https://github.com/google-research/vmoe</a>  </p>
+<p><strong>1.4 Soft MoE 的一些关键性质</strong></p>
+<p><strong>1) 完全可微</strong>：</p>
+<p>Sparse MoE 算法的通病是 token 和 Expert 之间存在的分配问题，有时精心设计的 Expert-to-token 的路由机制通常并不比随机固定路由好。输入 token 和 Expert 之间的匹配 (token-to-expert match) 是 MoE 中要考虑的很重要的问题之一，之前也有各种各样的方法尝试解决此问题，比如基于线性规划的<a href="#ref_4">#ref_4</a>，比如基于 RL 算法的<a href="#ref_5">#ref_5</a>，比如基于固定规则的<a href="#ref_6">#ref_6</a>，比如基于最优传输理论的<a href="#ref_7">#ref_7</a>，和基于贪婪匹配的<a href="#ref_8">#ref_8</a><a href="#ref_9">#ref_9</a>。所有这些方法本质上都是离散，不可微的。</p>
+<p>Soft MoE 可以避免这个问题，因为每个路由的参数都是基于每个输入 token 直接更新的。</p>
+<p><strong>2) 可以避免掉 Token Dropping 和 Expert Unbalance 的问题</strong></p>
+<p>MoE 算法里面每个 Expert 都会处理一些 token，很自然地就会带来 Token Dropping (有的 token 不会分配给任何一个 Expert) 和 Expert Unbalance (一些 Expert 会比另一些 Expert 分配到更多 token) 的问题。</p>
+<p>Soft MoE 可以避免这个问题，因为每个 slot 的输入都是所有 token 的加权平均值。</p>
+<p><strong>3) 运算速度快</strong></p>
+<p>Soft MoE 的主要优点是完全避免了之前算法中的 token 排序或 top-k 操作，因为这些操作的速度慢，而且不太适合硬件加速器。因此，Soft MoE 明显快于大多数 Sparse MoE 算法。</p>
+<p><strong>4) Soft MoE 算法是密集的 MoE 算法还是稀疏的 MoE 算法？</strong></p>
+<p>要回答这个问题我们需要首先搞明白为什么 Sparse MoE 算法是稀疏的。Sparse MoE 是稀疏的这件事的根本原因是每个 Expert 的输入特征仅仅是一部分的 token，而 Soft MoE 的输入是所有输入 token 的加权平均值，因此不能算作是稀疏的。</p>
+<p>Soft MoE 也不能算作是 Dense MoE 算法，因为每个 Expert 仅仅会处理输入 token 的子集。</p>
+<p><strong>5) Soft MoE 算法需要归一化</strong></p>
+<p>Transformers 中，MoE 层通常用于替换每个编码器块中的 FFN 层，因此如果去遵循大部分 Transformer 架构的 Pre-Normalization 方法，就需要使用归一化，这里 Soft MoE 针对 $\mathbf{X}$ 的操作是：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">l2_normalize</span><span class="hljs-params">(X, axis=<span class="hljs-number">1</span>)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>权重 $\mathbf{\Phi}$ 的做法是：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-attribute">scale</span> * <span class="hljs-built_in">l2_normalize</span>(Phi, axis=<span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure>
+
+<p>其中，scale 是可学习的参数，l2_normalize 的定义是：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">def l2_normalize(x, axis, <span class="hljs-attribute">eps</span>=1e-6):<br>    norm = jnp.sqrt(jnp.square(x).sum(<span class="hljs-attribute">axis</span>=axis, <span class="hljs-attribute">keepdims</span>=<span class="hljs-literal">True</span>))<br>    return x * jnp.reciprocal(norm + eps)<br></code></pre></td></tr></table></figure>
+
+<p><strong>6) Soft MoE 算法和注意力机制 (Multi-Head Self-Attention) 的区别和联系？</strong></p>
+<p>首先相同点是二者都用了 Softmax 操作，Self-Attention 的 $h$ 个 head 貌似和 Expert 有点像，但是仔细分析是不一样的。</p>
+<p>不同点是如果 $m$ 是序列长度，每个输入 token 的维度是 $d$ ，则：</p>
+<p>Self-Attention 里面的 $h$ 个 Head 中的每一个都处理大小为 $d&#x2F;h$ 的 $m$ 个向量。对每个向量施加不同的权重，然后将来自每个 Head 的结果 $d&#x2F;h$ 维向量 Concat 成一个 $d$ 维度的向量。</p>
+<p>Soft MoE 的专家是非线性的，每个专家输出都是一个 $d$ 维度的向量，没有 Concat 操作。</p>
+<p><strong>1.5 Soft MoE 算法的局限性</strong></p>
+<ul>
+<li><strong>自回归解码 (Auto-regressive decoding)</strong>：</li>
+</ul>
+<p>因为 Soft MoE 算法要在运行过程中合并所有的输入 token，因此很难实现自回归。因为自回归必须在训练期间保留过去的 token 和未来 token 之间的因果关系 (Causality)。</p>
+<p>Self-Attention 解决这个问题的手段是依赖于注意力的掩码 (Mask) 机制。如果想在 Soft MoE 中实现这一点就需要特别小心 token 之间的依赖和相关关系。总之研究 Soft MoE 算法的自回归解码是个很有价值的方向。</p>
+<ul>
+<li><strong>内存消耗</strong></li>
+</ul>
+<p>Soft MoE 倾向于利用大量 Expert，而其成本和 Dense Backbone 类似，使得模型的内存需求可能变大。</p>
+<p><strong>1.6 图像分类实验结果</strong></p>
+<p><strong>训练数据集</strong></p>
+<p><strong>预训练数据集</strong>：JFT-4B：一个私有数据集，其最新版本包含超过 4B 张图像，涵盖超过 29k 个类。预训练的过程中评价指标是 JFT-4B 上的上游验证精度 Precision-at-1 和 ImageNet 10-shot 精度 (冻结模型权重，并用一个新的权重来计算的，该数据集仅在包含来自 ImageNet-1K 的每个类包含 10 张图像的数据集上进行训练)。</p>
+<p><strong>微调数据集</strong>：ImageNet-1K 训练集。</p>
+<p><strong>验证集</strong>：ImageNet-1K 验证集。</p>
+<p><strong>模型尺寸</strong>：</p>
+<p>ViT-S&#x2F;8, ViT-S&#x2F;16, ViT-S&#x2F;32, ViT-B&#x2F;16, ViT-B&#x2F;32, ViT-L&#x2F;16, ViT-L&#x2F;32, ViT-H&#x2F;14。</p>
+<p><strong>方法</strong>：</p>
+<p>Token Choice, Expert Choice 和本文的 Soft MoE。</p>
+<p><strong>训练策略</strong>：</p>
+<p>300k steps, Batch Size 4096</p>
+<p><strong>Pareto Model 实验结果</strong>：</p>
+<p>如下图3所示是四种方法 Soft MoE, Experts Choice, Tokens Choice, Dense 在预训练过程中的 JFT-4B Precision-at-1 的结果和 ImageNet 10-shot 的精度的训练成本&#x2F;性能帕累托边界。Soft MoE 算法在这两个指标上都优于之前的方法。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202411042052162.jpg">  </p>
+<p>图3：四种方法在预训练过程中的 JFT-4B Precision-at-1 的结果和 ImageNet 10-shot 的精度的训练成本&#x2F;性能帕累托边界</p>
+<p><strong>更长的训练结果</strong>：</p>
+<p>本文还测试在更长的训练 step 下模型的性能如何，把从 Small 到 Huge 的模型训练了 4K steps，用 128 个 Expert 的 Soft MoE 替换 ViT S&#x2F;16、B&#x2F;16、L&#x2F;16 和 H&#x2F;14 中的最后一半 Block 中的 FFN，每个 Expert 使用一个 slot。</p>
+<p>由于模型并行性所需的额外数据传输，Large Soft MoE 模型产生的 wall-clock time overhead 很小。所有变体都训练了 4M 步，除了 H&#x2F;14，出于成本原因训练了 2M 步，实验结果如下图4和5所示。</p>
+<p>如下图4所示是 Soft MoE 和 ViT 的 JFT-4B 精度、ImageNet 10-shot 精度和 ImageNet 微调精度与 ExaFLOPS 的训练成本。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202411042052163.jpg">  </p>
+<p>图4：不同模型更长的训练 step 下的 JFT-4B 精度</p>
+<p>如下图5所示是所有结果。对于给定的计算预算，Soft MoE 模型大大优于 Vision Transformer 模型。比如 Soft MoE-S&#x2F;16 在 JFT-4B 和 ImageNet 10-shot 上的表现优于 ViT-B&#x2F;16，它还提高了完整 ImageNet 数据的微调分数，即使它的训练 (和推理) 成本要小得多。同样，Soft MoE-B&#x2F;16 在上游任务 JFT-4B 和 ImageNet 10 shot 的表现优于 ViT-L&#x2F;16，微调后仅落后 0.5，同时速度快 3 倍，所需的 FLOP 减少了近 4 倍。最后，Soft MoE-L&#x2F;16 模型优于 Dense H&#x2F;14 模型，同时在推理速度又快 3 倍左右。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202411042052164.jpg">  </p>
+<p>图5：不同模型更长的训练 step 下的实验结果</p>
+<p>根据前面的实验结果，较小的 Soft MoE 的性能可以匹配较大的视觉 Transformer，作者因此继续训练小模型 Backbone，希望以非常低的训练成本获得更高质量的模型。</p>
+<p>作者观察到对于 Soft MoE 方法而言，较长的 cooldown (学习率线性减小到零的时期) 可以很好地适用于 Soft MoE，因此将 cooldown 从 50k steps 增加到 500k steps。</p>
+<p>实验结果如下图6和7所示。Soft MoE-B&#x2F;16 训练了 1k TPUv3 Days，优于在相似时间预算上训练的 ViT-H&#x2F;14，而 Soft MoE-B 模型的 FLOPs 要低 10 倍，wall-clock time 低 5.7 倍。即使将 ViT-H&#x2F;14 的训练代价加倍，Soft MoE-B 模型的性能也可以与之相匹配。Soft MoE-L&#x2F;16 模型的在推断上比 ViT H&#x2F;14 快近 2 倍的同时性能大大优于所有模型。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202411042052165.jpg">  </p>
+<p>图6：不同训练代价和尺寸的 Soft MoE 模型和 ViT 的 JFT-4B Precision-at-1 性能和 ImageNet 10-shot 性能</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202411042052166.jpg">  </p>
+<p>图7：Soft MoE 模型和 ViT 的实验结果</p>
+<p><strong>视觉-文本对比学习实验结果</strong></p>
+<p>作者还验证了 Soft MoE 得到的模型在其他任务的性能。具体而言作者探索了一种流行的范式，即图像语言对比学习，这里遵循的是 LiT<a href="#ref_10">#ref_10</a> 方法，其中图像塔在图像分类任务上进行了预训练，然后在在图像-文本对数据集上训练文本编码器时冻结。</p>
+<p>视觉编码器作者重用了在 JFT 上训练的模型，对比学习在 WebLI 上训练，这是一个专有数据集，由 10B 图像和从互联网上抓取的 ALT 文本组成。图像编码器被冻结，而文本编码器从头开始训练。实验结果如下图8所示，Soft MoE -L&#x2F;16 在 Imagenet 和 Cifar-100 零样本上的性能分别比 ViT-L&#x2F;16 高出 1% 和 2% 以上。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202411042052167.jpg">  </p>
+<p>图8：对比学习实验结果</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/650894166?theme=white">MoE 系列超详细解读 (一)：Soft MoE：一种完全可微的稀疏 Transformer</a></p>
+</li>
+<li><p><a href="#ref_1_0">#ref_1_0</a>Scaling Vision with Sparse Mixture of Experts</p>
+</li>
+<li><p><a href="#ref_2_0">#ref_2_0</a>Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity</p>
+</li>
+<li><p>^<a href="#ref_3_0">#ref_3_0</a><a href="#ref_3_1">#ref_3_1</a>Multimodal Contrastive Learning with LIMoE: the Language-Image Mixture of Experts</p>
+</li>
+<li><p>^<a href="#ref_4_0">#ref_4_0</a><a href="#ref_4_1">#ref_4_1</a>BASE Layers: Simplifying Training of Large, Sparse Models</p>
+</li>
+<li><p>^<a href="#ref_5_0">#ref_5_0</a><a href="#ref_5_1">#ref_5_1</a>Conditional Computation in Neural Networks for faster models</p>
+</li>
+<li><p>^<a href="#ref_6_0">#ref_6_0</a><a href="#ref_6_1">#ref_6_1</a>Hash Layers For Large Sparse Models</p>
+</li>
+<li><p>^<a href="#ref_7_0">#ref_7_0</a><a href="#ref_7_1">#ref_7_1</a>Sparsity-constrained optimal transport</p>
+</li>
+<li><p>^<a href="#ref_8_0">#ref_8_0</a><a href="#ref_8_1">#ref_8_1</a>Mixture-of-Experts with Expert Choice Routing</p>
+</li>
+<li><p><a href="#ref_9_0">#ref_9_0</a>Unified scaling laws for routed language models</p>
+</li>
+<li><p><a href="#ref_10_0">#ref_10_0</a>LiT: Zero-Shot Transfer with Locked-image Text Tuning</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/09.MoE/03.Soft%20MoE/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/09.MoE/03.Soft%20MoE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/MoE/">MoE</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/08.PTM/02.PFM/" title="PFM"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">PFM</div></div><div class="info-2"><div class="info-item-1">Kimi全文翻译 :arrow_down:0. 摘要预训练基础模型（Pretrained Foundation Models, PFMs）被视为不同数据模态的各种下游任务的基础。PFM（例如，BERT、ChatGPT 和 GPT-4）是在大规模数据上训练的，为广泛的下游应用提供了合理的参数初始化。与早期使用卷积和循环模块提取特征的方法不同，BERT 学习了 Transformer 的双向编码器表示，这些是在大型数据集上作为上下文语言模型训练的。同样，生成预训练Transformer（Generative Pretrained Transformer, GPT）方法采用 Transform...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/05.VisionTransformer/102.Sparse-Tuning/" title="Sparse-Tuning"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Sparse-Tuning</div></div><div class="info-2"><div class="info-item-1">0. 摘要参数效率微调（PEFT）已成为适应预训练ViT模型到下游应用的流行解决方案。虽然当前的 PEFT 方法实现了参数效率，但它们忽视了在微调和推理期间的计算和 GPU 内存效率，未能满足实际需求。在本文中，我们提出了 Sparse-Tuning，这是一种新颖的 PEFT 方法，它考虑了图像和视频中的信息冗余，以提高上述效率。通过稀疏保留语义相关令牌并合并无关令牌，Sparse-Tuning 最小化了每个层处理的令牌数量，从而导致计算和内存开销的二次减少。为了使我们的令牌稀疏化策略与微调目的适当对齐，我们进一步设计了密集适配器，建立从浅层到深层的密集连接。这些密集适配器集成了多级局部...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/09.MoE/01.MoE/" title="MoE"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">MoE</div></div><div class="info-2"><div class="info-item-1">随着 Mixtral 8x7B (announcement, model card) 的推出，一种称为混合专家模型 (Mixed Expert Models，简称 MoEs) 的 Transformer 模型在开源人工智能社区引起了广泛关注。 简短总结混合专家模型 (MoEs):  与稠密模型相比， 预训练速度更快 与具有相同参数数量的模型相比，具有更快的 推理速度 需要 大量显存，因为所有专家系统都需要加载到内存中 在 微调方面存在诸多挑战，但 近期的研究 表明，对混合专家模型进行 指令调优具有很大的潜力。  什么是混合专家模型？模型规模是提升模型性能的关键因素之一。在有限的计算资源预...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/09.MoE/04.V-MoE/" title="V-MoE"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">V-MoE</div></div><div class="info-2"><div class="info-item-1">Scaling Vision with Sparse Mixture of Experts Code | NeurIPS 2021  摘要稀疏门控混合专家网络 (MoESparsely-gated Mixture of Experts networks，MoE)) 这种方法已经在自然语言处理领域中表现出了出色的可扩展性。但是在计算机视觉中，几乎所有性能网络都是 “密集 (Dense) 的”，也就是说，每个输入都由所有的参数来处理。 本文就提出了视觉领域经典的稀疏门控混合专家网络 Vision MoE (V-MoE)，它是 Vision Transformer 的稀疏版本，V-MoE 是一...</div></div></div></a><a class="pagination-related no-desc" href="/blog/2025/11/16/AI/09.MoE/08.Switch%20Transformers/" title="Switch Transformers"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Switch Transformers</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/09.MoE/101.%E9%9B%B6%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAMOE/" title="零实现一个MOE"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">零实现一个MOE</div></div><div class="info-2"><div class="info-item-1">从零实现一个MOE（专家混合模型） 什么是混合模型（MOE）MOE主要由两个关键点组成： 一是将传统Transformer中的FFN（前馈网络层）替换为多个稀疏的专家层（Sparse MoE layers）。每个专家本身是一个独立的神经网络，实际应用中，这些专家通常是前馈网络 (FFN)，但也可以是更复杂的网络结构。 二是门控网络或路由：此部分用来决定输入的token分发给哪一个专家。 可能有对FFN（前馈网络层）不太熟悉的小伙伴可以看一下下面的代码及图例，很简单就是一个我们平时常见的结构。 1234567891011121314class FeedForward(nn.Module):...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/09.MoE/05.ST-MoE/" title="ST-MoE"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">ST-MoE</div></div><div class="info-2"><div class="info-item-1">ST-MoE: Designing Stableand Transferable Sparse Expert Models ST-MoE: Designing Stableand Transferable Sparse Expert Models  摘要ST-MoE 的目的是设计稳定可迁移的稀疏专家模型，做了这么几个工作：  对影响 MoE 模型训练质量-稳定性 trade-off 的一些稳定性技术做了大规模的研究。  引入一种 router z-loss，解决训练不稳定的问题，同时轻微提升模型质量。  Sparse 和 Dense 模型的微调分析，重点是超参数的分析。本文表明：不好的超...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/09.MoE/06.MoE%20%E7%9F%A5%E8%AF%86%E8%92%B8%E9%A6%8F/" title="MoE 知识蒸馏"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">MoE 知识蒸馏</div></div><div class="info-2"><div class="info-item-1">One Student Knows All Experts Know: From Sparse to Dense One Student Knows All Experts Know: From Sparse to Dense  太长不看版人类教育系统由多个 Expert 来训练一位 Student。专家混合 (Mixture-of-experts, MoE) 是一种强大的稀疏架构，包括多个 Expert 模型。但是，MoE 的架构容易过拟合，难以部署，对业界其实并不友好。 这个工作受到人类教育的启发，作者提出了一种新的任务**：知识整合** (Knowledge Integration...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#From-Sparse-to-Soft-Mixtures-of-Experts"><span class="toc-number">1.</span> <span class="toc-text">From Sparse to Soft Mixtures of Experts</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">2.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%EF%BC%9A%E6%8A%8A%E7%A6%BB%E6%95%A3%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98%E5%8F%98%E4%B8%BA%E5%8F%AF%E5%BE%AE%E7%9A%84%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">背景：把离散优化问题变为可微的优化问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>大模型应用优化路径 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="提示工程、RAG和微调 - 哪个才是大模型应用优化的最佳路径？在上一篇文章 【GitHub Copilot产品经理和微软MVP告诉你：企业是否需要训练自己的代码大模型？- 微软MVP全球峰会纪行】中，我以GitHub Copilot作为案例，和大家分析了企业进行私有化模型训练的6个基本要素。但这其实是一个未完成的话题。 企业内部存在大量的私域数据是客观事实，从代码生成角度来看，私有的框架、公用代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大模型应用优化路径">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/02.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E4%BC%98%E5%8C%96%E8%B7%AF%E5%BE%84/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="提示工程、RAG和微调 - 哪个才是大模型应用优化的最佳路径？在上一篇文章 【GitHub Copilot产品经理和微软MVP告诉你：企业是否需要训练自己的代码大模型？- 微软MVP全球峰会纪行】中，我以GitHub Copilot作为案例，和大家分析了企业进行私有化模型训练的6个基本要素。但这其实是一个未完成的话题。 企业内部存在大量的私域数据是客观事实，从代码生成角度来看，私有的框架、公用代码">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T07:24:33.558Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="微调篇">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "大模型应用优化路径",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/02.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E4%BC%98%E5%8C%96%E8%B7%AF%E5%BE%84/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T07:24:33.558Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/02.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E4%BC%98%E5%8C%96%E8%B7%AF%E5%BE%84/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '大模型应用优化路径',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">大模型应用优化路径</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">大模型应用优化路径</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T07:24:33.558Z" title="更新于 2026-03-01 15:24:33">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B/">大模型</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B/%E5%BE%AE%E8%B0%83%E7%AF%87/">微调篇</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="提示工程、RAG和微调-哪个才是大模型应用优化的最佳路径？"><a href="#提示工程、RAG和微调-哪个才是大模型应用优化的最佳路径？" class="headerlink" title="提示工程、RAG和微调 - 哪个才是大模型应用优化的最佳路径？"></a><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/muOs95RFVQlr-WuTJ8tT3w">提示工程、RAG和微调 - 哪个才是大模型应用优化的最佳路径？</a></h1><p>在上一篇文章 【<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzU3NjY5NDgyNw==&mid=2247483713&idx=1&sn=2ed793c0d62154a96811ab74674a430f&chksm=fd0ebe05ca793713d1e2c3caae08b107eea35f2d040d77f7a77020b930cf0727427e61f1717c&scene=21#wechat_redirect">GitHub Copilot产品经理和微软MVP告诉你：企业是否需要训练自己的代码大模型？- 微软MVP全球峰会纪行</a>】中，我以GitHub Copilot作为案例，和大家分析了企业进行私有化模型训练的6个基本要素。但这其实是一个未完成的话题。</p>
+<p>企业内部存在大量的私域数据是客观事实，从代码生成角度来看，私有的框架、公用代码组件、内部编码规范、内部接口定义和说明以及内部业务逻辑这些内容客观存在；即便不适合采用私有化训练的方式，我们也必须找到解决这些问题的有效方式。</p>
+<p>在本篇中，我将延续这个话题和大家聊一聊几个大家在大模型领域经常听到的技术**：提示词工程、RAG（检索增强式生成）和模型微调，分析一下这3个技术之间到底是怎样的一种关系。<strong>更重要的是，对于企业技术管理者来说，如何构建一种机制，让企业内部具备应对大模型应用这种全新应用类型的持续改进机制。本篇的内容仍然是基于我和前文提到的三位重要人物的对话，包括：微软全球副总裁</strong>Julia Liuson 潘正磊，**GitHub Copilot的产品经理 <strong>Ryan J. Salva</strong>，GitHub Next 团队的负责人 <strong>Idan Gazit</strong> ；我也参考了OpenAI DevDay上的一些视频和其他一些技术资料，都列在本文的结尾，供大家翻阅；除了这些参考，本文的大部分内容也是基于我和我的团队在AISE和SmartCode开发过程中的经验整理而成。希望对大家有所帮助。</p>
+<p>在企业中引入AI能力是当前所有企业管理者都在考虑的问题，但并不是所有人都意识到，AI能力不是独立的，它需要融入到企业现有的管理和工程场景中，用全新的方式重构这些场景，最终演化出我们从未见过的新场景。</p>
+<blockquote>
+<p>延续上一篇中有关电和电器的比喻，大模型是电，企业应用就是各种电器。</p>
+</blockquote>
+<p>因此，大模型应用不会是独立的系统，而是为现有的系统注入新的能力，它的影响面会从一些当前显而易见的场景逐渐蔓延到那些我们现在还想不到的部分。这个过程需要企业内几乎所有人都参与其中。对于企业管理者而言，如何构建一套AI时代下适合企业IT系统演进的全新策略和路线图，才是真正的关键问题。</p>
+<h2 id="大模型应用工程能力建设（SE4AI）"><a href="#大模型应用工程能力建设（SE4AI）" class="headerlink" title="大模型应用工程能力建设（SE4AI）"></a>大模型应用工程能力建设（SE4AI）</h2><p>回到大模型应用系统制定问题。即便企业不符合上文中提到的 <a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzU3NjY5NDgyNw==&mid=2247483713&idx=1&sn=2ed793c0d62154a96811ab74674a430f&chksm=fd0ebe05ca793713d1e2c3caae08b107eea35f2d040d77f7a77020b930cf0727427e61f1717c&scene=21#wechat_redirect">6个私有训练的基本要求</a>，让模型能够适应企业的私有代码仍然是我们需要解决的问题。</p>
+<p>企业需要的是定制化大模型应用方案，而模型训练只是其中一条路径而已，我们需要对所有可行的技术路线有充分认知，才能找到更加高效、可扩展、经济可行的最适合企业的方案。</p>
+<p>下图我们整理的 <strong>大模型应用的工程能力建设</strong> 整体思路：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241214214838.png" style="zoom: 80%;" /></div>
+
+<p>构建大模型应用是一个典型的迭代过程，这个构建过程需要从应用场景出发，先搞清楚我们要做什么，然后再去优化大模型应用系统的性能、质量和用户体验。企业引入大模型更是如此，不能只把电缆接到家里，没有电器设备，电没有任何价值。当前市场最大的问题是，真正能够落地的大模型应用太少，因为“电压”不稳定（大模型的输出不稳定），“发电厂太少”（GPT国内用不了，开源模型和国内商用模型在内部部署又缺少算力），所以很多应用场景还处于探索阶段。</p>
+<p>*<em>在众多应用中，<strong><strong>AI</strong></strong>智能编码是少数已经被证明的可落地的应用场景</em>*，GitHub Copilot实际上就是全球第一款真正具备百万级付费用户量的大模型应用，它本身就已经证明了AI智能编码确实可以大幅提高开发者的工作效率，解决实际问题。以下数据来自2022年的开发者调研 </p>
+<p>与市场上其他类型的大模型应用不同，GitHub Copilot 在 ChatGPT 出现之前就已经正式投入使用，到现在为止已经迭代了近3年的时间，微软和GitHub在这个过程中积累大量的实践经验。<strong>在这次和GitHub产品总监Ryan J. Salva沟通之后，对GitHub Copilot 是如何同时应用提示词工程、RAG和模型微调三种方法持续改进代码生成效果的过程有了深入了解，以下是对这三种方法的优缺点以及如何综合利用三种方法的一些总结。</strong></p>
+<h2 id="两个优化维度"><a href="#两个优化维度" class="headerlink" title="两个优化维度"></a>两个优化维度</h2><p>如果你使用过任何大模型应用，就会发现这类应用有两个特点**：1) 不确定性**，与传统应用不同，模型的输出是不确定的，即使给它完全一样的输入，它也会给出不尽相同的答复。这种特性对于日常应用业务OK，但是如果要在企业内用来处理具体业务问题，就必须提高这个稳定性。<strong>2) 静态性</strong>，模型一旦训练好，就无法再补充数据，因此模型不会了解你自己组织内部的年假规定，代码规范。如何让大模型掌握这些数据是另外一个需要解决的问题。</p>
+<p>针对这两个问题，参考本文开头的路线图，我们可以看到对于大模型应用的场景优化，有2个关键的优化维度。基于这两个维度的综合优化过程，最终可以推动我们持续改进大模型应用的性能，质量和用户体验。</p>
+<ul>
+<li><p><strong>行为优化</strong>：这个维度主要关注模型的行为，是教会模型去按照我们希望方式做事，包括：输出内容的格式、语气、偏好；甚至生成固定格式的请求以便调用其他服务。这个维度主要解决模型输出形式上的稳定性。</p>
+</li>
+<li><p><strong>上下文优化</strong>：这个纬度主要关注私域数据，是让模型知道它所不知道的事情，包括：模型训练中从未见过的数据，比如内部代码、文档、规范、策略等。这个维度主要解决模型输出内容上的相关性。</p>
+</li>
+</ul>
+<h2 id="三个优化方法"><a href="#三个优化方法" class="headerlink" title="三个优化方法"></a>三个优化方法</h2><p>提示词工程，RAG和模型微调三种方法，可以分别解决输出形式上的稳定性和内容上的相关性问题，但是不同的方法对这两个问题也有不同的侧重点。以下分别解释说明。</p>
+<h3 id="方法1-提示工程（Prompt-Engineering）"><a href="#方法1-提示工程（Prompt-Engineering）" class="headerlink" title="方法1 - 提示工程（Prompt Engineering）"></a>方法1 - 提示工程（Prompt Engineering）</h3><p>这是最经济可行，也是见效最快的方式；在生成式AI（GenAI）这个领域中大家经常听说的 **零样本&#x2F;多样本学习（Zero-short&#x2F;Few-short learning）<strong>或者 上</strong>下文引导学习（in-context learnning）**其实都是提示词工程中的一些具体方法和技巧。</p>
+<p>在实际应用中，应该首先考虑使用提示工程的方式优化大模型应用，这是成本最低，见效最快的方式。**提示词工程可以同时为模型补充上下文（上下文优化）和优化模型的行为（行为优化）。**因此提示词工程可以同时在以上2个维度上帮助我们提升模型的性能、质量和用户体验，让我们可以更快达到目标。对任何应用场景，我们都不建议在还没有尝试提示工程的前提下就开始引入RAG或者微调。</p>
+<p>在AISE和SmartCode系统的研发过程中，我们已经形成**一个标准化的优化流程，那就是：先定义好一个应用场景，然后首先进行提示词的调试，只有当提示词工程无法达到预期效果时才会引入RAG和微调。**另外，因为大模型的应用场景众多，用户会不停提出各种类型的场景需求，最佳的解决方案是将提示工程的能力直接赋予用户。简单来说，提供用户可自助创建的提示词模板的功能模块，并允许用户自己在内部进行分享这些模板，最后对模板的使用情况进行监控，将那些有共性的模板提升为系统级甚至内置的模板。很多时候，用户经过摸索可以很快构建出高效的提示词解决自己的问题。而作为应用系统来说，我们需要提供的是这种能力，而不是将各种提示词都封装起来不让用户去碰。提示词模板本身就是一种和大模型沟通的工具，用户在问题驱动下构建出的模板非常简单高效。</p>
+<p>当然，提示词模板也可能变得非常复杂，当你发现自己构建的模板越来越长，越来越复杂，但是仍然无法满足要求。这就是引入RAG或者微调的信号。</p>
+<h3 id="方法2-检索增强式内容生成（RAG-Retrieval-Augmented-Generation）"><a href="#方法2-检索增强式内容生成（RAG-Retrieval-Augmented-Generation）" class="headerlink" title="方法2 - 检索增强式内容生成（RAG - Retrieval Augmented Generation）"></a>方法2 - 检索增强式内容生成（RAG - Retrieval Augmented Generation）</h3><p>**RAG并不是某种系统&#x2F;工具&#x2F;产品，RAG是一种为模型补充知识的方法。**首先，任何的大模型一旦训练完成就变成了一个静态的文件，它只存储了在训练过程中提供给它的知识（数据）。因此，当你问ChatGPT自己公司内部有关年假的相关规定，它必定无法准确回答，而且还会给出误导性的答案。</p>
+<p>为了解决这个问题，最简单的方式就是先告诉大模型这些规定，然后再让它回答。这种方式就是提示词工程中的<strong>多样本学习（few-short learning）</strong>。同时，<strong>大模型是没有记忆的，你提出的每一个问题其实对他来说都是全新的问题。<strong>你可能会觉得ChatGPT是有记忆的，这是因为 <strong>ChatGPT 本身就是一个大模型应用（它背后的模型是<strong><strong>GPT</strong></strong>系列模型，包括</strong></strong>：GPT 3.5**</strong>， GPT4， DALL-E等）**OpenAI本身在ChatGPT这个应用层上开发了大量的功能让用户可以更友好的和这些模型进行交互。因此，ChatGPT会帮助用户存储对话历史，并在你发送新的问题的时候将历史记录插入对话消息中，这样模型才知道你之前跟他说过的内容。在我们使用ChatGPT的过程中，它后面的大模型其实并不知道在和谁进行对话，而是机械快速的处理着一次次完全互不相干的请求。回到模型记忆的问题，ChatGPT的这种做法问题也很明显，当历史消息太多时，消息长度会超出模型能够处理的窗口大小，从而引发上下文丢失的问题，当你持续和ChatGPT对话时，会发现他会逐渐遗忘之前的信息，就是这个原因。</p>
+<p>当我们需要为模型提供更多上下文的时候，就需要用到RAG技术。RAG是在给模型发送消息之前首先进行内容检索，从其他数据源把相关的数据先提取出来，然后插入到当前对话消息中给到模型，这样就解决了既要让模型知晓大量它不知道的知识，又避免消息窗口不够的局限。</p>
+<p>你可能会问，你这里没有提到数据嵌入（embedding）和向量数据库，也能叫做RAG吗？实际上，只要通过检索的方式为模型补充了上下文数据，就是一种RAG的实现。数据嵌入和向量数据库只是提供了一种基于语义搜索的数据检索方式，虽然这种方式和当前的生成式AI技术有很紧密的联系，但这并不是RAG技术的必要组成部分。</p>
+<h3 id="方法3-微调-Fine-tuning）"><a href="#方法3-微调-Fine-tuning）" class="headerlink" title="方法3 - 微调 (Fine-tuning）"></a>方法3 - 微调 (Fine-tuning）</h3><p>现在业界有各种不同的说法，比如：迁移训练（Transfer training），再训练（re-training），微调（fine-tuning）。甚至很多人会将数据嵌入（embedding）也称为训练，这其实是一种误导。**微调之所以称为微调，就是因为微调不是从零开始，是基于一个预训练好的基础模型通过继续训练来调整模型行为的方式来完成的。**这个过程所使用的数据量远远小于预训练模型所需要的数据量（基本在基础训练量的1%左右 [5]），只需要能够可以在一定程度上改变模型的行为就够了。**微调的作用主要是对模型的行为进行调整，虽然也可以通过这个过程为模型补充数据，但是并不能保证模型就一定会按照你补充的数据回答问题，因为模型并不是一个确定性系统。**这种调整需要构建在模型本身已经具备的能力上，这个过程和我们所说的熟能生巧和举一反三的过程很像。</p>
+<p>我们以小学生要学习二元一次方程的解法为例，要学习二元一次方程那么首先需要学会基本的数字，大小的概念和基本的运算能力。这个获得基础能力的过程有点像预训练基础模型，当小朋友做了足够多的基础运算题目以后，会对基础运算产生认知能力。有了这个基础认知能力，再通过一些例子帮助小朋友建立对未知数的认知，同时配合一些练习来使用未知数和整数、小数、分数这些基础数字混合以后进行运算，这样小朋友就会产生对二元一次方程的认知能力。后面这个过程其实就是微调过程。我们在学习数学的过程中会发现，自己在后来掌握更加复杂的运算方式所需要的练习数量会逐步减少。但是无论怎样，即使你的数学基础再好，要掌握一种新的运算都是需要一定练习量的。</p>
+<p>机器学习技术作为生成式AI的基础，其实就是建立在模仿人类认知的基础上构建的。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241214215022.png" style="zoom: 80%;" /></div>
+
+<p>对模型进行微调最重要的是数据的准备和处理，你需要对于自己的微调目标有清晰的认知，微调工程师需要充分理解每一条数据应该有怎样的结果，因为所有的训练数据都是为了让模型去模仿，以便可以在生成下一个token的时候增强你所希望生成内容的概率。从这个角度看，仅仅具备数据科学背景的工程师是不足以完成特定领域模型微调的，这个团队必须同时具备数据科学背景和微调相关的领域知识才能有效完成微调操作，比如：在 AI辅助智能编码领域，就需要数据科学工程师和软件工程&#x2F;DevOps工程师配合。</p>
+<h2 id="如何选择提示工程，RAG或者微调"><a href="#如何选择提示工程，RAG或者微调" class="headerlink" title="如何选择提示工程，RAG或者微调"></a>如何选择提示工程，RAG或者微调</h2><p>这3个方法不是非此即彼的关系，而是相互配合的关系。对于任何问题，我们都建议将提示工程的方式作为起点，当经过一段时间的优化以后，如果发现提示词已经变得非常复杂，甚至模板内容都已经快要占满整个模型输入窗口，但是仍然无法获得稳定的模型输出，那么就应该考虑采用微调或者RAG来解决问题了。</p>
+<p>判断后续路线的标准其实也不复杂，我们只需要关注提示工程产出的提示词模板的一些特性就可以做出明确的判断</p>
+<ul>
+<li><p>如果在模板中大部分的内容是模型不知道的知识，这些知识的内容又来自其他的数据源，知识内容不停变动，以至于你不得不创建多个不同模板来实现不同场景，那么应该开始引入RAG进行下一步的优化。</p>
+</li>
+<li><p>如果模板中的内容大部分是各种格式的示例，你的目的也是希望模型能够模仿这些示例来输出内容，但是即便这些示例已经占满了模板，模型输出仍然不够稳定，那么应该开始引入微调进行下一步的优化。</p>
+</li>
+</ul>
+<p>提示工程可以同时解决知识和行为的问题，但是会受限于模型数据窗口大小；RAG能解决知识补充问题但是不擅长改变模型行为，微调可以改变模型行为但是不适合为模型补充知识。</p>
+<p>复杂的提示词还会消耗大量token，造成模型响应速度降低（如果使用按token收费的模型服务，还会造成成本增加），采用微调方式可以将特定任务固化在模型中，后续调用的速度会大幅提升，也更加节省token。不过，微调过程会一次性产生大额成本投入，更适合那些高频的固定任务。在 <strong>AI辅助智能编码</strong> 领域，我们一般会针对代码解释，代码纠错，单元测试生成这些场景进行模型微调以实现更优化的性能，输出稳定性和更友好的输出格式。</p>
+<p>在具体应用场景的实践中，应该根据特定场景的需要组合使用3种方法，具体是否要走到RAG，微调或者RAG+微调哪个阶段才能达到目标，要根据应用验证的结果而定。对于日常使用来说，用户感觉好用往往就可以作为完整结果了。但对于企业应用的工程化方法，我们需要有可评估的量化标准才行。</p>
+<h2 id="大模型应用验证（测试）"><a href="#大模型应用验证（测试）" class="headerlink" title="大模型应用验证（测试）"></a>大模型应用验证（测试）</h2><p>大模型应用效果的验证和传统软件的评估效果不同，因为大模型本身的通用性和非确定性，造成即便是一个特定场景，我们无法穷举所有的输入可能性；对于同样的输入，我们也无法确定模型的标准化输出。类似这样的通用性和不确定的特点决定了传统的测试方法对大模型应用是无法直接使用的，我们必须探索一种适合大模型应用的验证&#x2F;测试方式。  </p>
+<blockquote>
+<p>以下图这个场景为例，我们给模型输入了完全一样的提示词：“如何计算等边三角形的面积，请使用Python代码生成一个计算方法”。但是模型给出的输出却不完全一致，如果我们仔细阅读模型的输出，会发现虽然输出的格式，内容有所区别，但是关键部分和核心内容的含义却是一致的。注意：这个测试使用的是同一个模型。</p>
+</blockquote>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://mmbiz.qpic.cn/sz_mmbiz_png/ibWgicrljcI9NBMibQc8JhRfCJPBfWWvQiaPkaZZicOT35Hd6nADv18dIvtaH4d6AiabFwn5rdGVrAgdPO44AWGrMDkw/640?wx_fmt=png&from=appmsg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="图片"></p>
+<p>简单来说：</p>
+<ul>
+<li><p>传统应用是确定性的：同样的输入一定有同样的输出</p>
+</li>
+<li><p>大模型应用是不确定性的：同样的输入不一定有同样的输出，不同的输入也可以有同样的输出，输出的内容虽然不相等但是含义一致。</p>
+</li>
+</ul>
+<p>充分认识到大模型应用与传统应用的不同，我们才能有针对性的对传统测试、验收方式进行重构，以便适应大模型应用本身的特点。传统软件工程中的自动化测试，CI&#x2F;CD流水线，单元测试等实践对大模型应用仍然有效。但是我们需要重构这些流程中所使用的工具和方法。比如：针对大模型应用的单元测试，我们仍然可以采用 define-exec-eval 的模式进行用例的设计，但是其中define和eval步骤的实现方式都需要进行重构：</p>
+<ul>
+<li><p>Define - 测试目标的定义往往需要我们尽量穷举所有的测试场景，这一点在传统软件工程上是可行的，因为系统本身是确定性；但是在大模型应用上穷举法就是不可行的，因为大模型应用所面对的场景和传统应用场景有非常大的不同。比如：大模型应用可以帮助我们分析软件需求，这样一个场景就是无法通过传统软件工程方法来穷举的，我们必须寻求其他办法；同样，在传统软件应用上，我们也不会提出这类的应用场景，因为依靠常识就知道这种场景是不可行的。</p>
+</li>
+<li><p>Eval - 在测试验证环节上，这个区别更加明显。因为大模型输出不确定性属性，同样的输入会产生每次都不一致的输出，这些输出虽然在形式&#x2F;用词&#x2F;格式上有所区别，他们之间的语义上又存在联系。传统测试基于等式的验证方式明显无法适应这样的输出特性。</p>
+</li>
+</ul>
+<p>大模型的应用验证是AI时代带来的全新的软件工程问题，业界普遍有3种实现路径**：基于统计学算法的验证方式，基于模型的验证方式和人工验证。**基于统计的验证方式使用一些算法来验证模型输出与预期结果的相似度，有代表性的方法包括：BLEU (BiLingual Evaluation Understudy) ，ROUGE (Recall-Oriented Understudy for Gisting Evaluation) ，METEOR (Metric for Evaluation of Translation with Explicit Ordering)，Levenshtein distance 等等。基于模型的验证方法采用大模型来验证大模型的输出，相比基于统计的验证方法提供更好的普适性，但是在系统构建，运行效率和成本上会带来很大挑战，有代表性的框架包括：RAGUS，DeepEval 等。人工验证就是让测试人员或者用户直接对模型输出进行反馈和打分，虽然这种方法效率更低，实际上却是现在最准确的评估方式，毕竟大模型应用的最终用户是人，人本身的智能足以应对模型输出的不确定性。</p>
+<p>另外，针对RAG和微调的两种路径，验证的方式和采用的指标也会有所不同，以下列出一些常见的验证指标，供大家参考：</p>
+<ul>
+<li><p>相关性</p>
+</li>
+<li><p>总结能力</p>
+</li>
+<li><p>偏见度</p>
+</li>
+<li><p>毒性</p>
+</li>
+<li><p>友好度</p>
+</li>
+<li><p>伤害性</p>
+</li>
+<li><p>遵从性</p>
+</li>
+<li><p>幻觉程度</p>
+</li>
+</ul>
+<p>大模型应用验证是 SE4AI 领域的一个比较有代表性的工程问题，在面向大模型应用的交付流水线中，其实还有很多其他的环节也需要采用同样的思路进行重构。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本文延续模型私有化训练的问题，对当前比较常见的大模型应用优化方式：提示工程，RAG和微调三种方法的优缺点进行了分析和比较。我们需要了解这三种方式并不是孤立互斥的，而是互相推动的，企业大模型应用最终的形态往往是这三种方法综合使用的结果。</p>
+<h1 id="RAG-微调，我们应该如何选择？"><a href="#RAG-微调，我们应该如何选择？" class="headerlink" title="RAG &amp; 微调，我们应该如何选择？"></a><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/2bgque4LCcyVOOuGxm7wPw">RAG &amp; 微调，我们应该如何选择？</a></h1><p><code>RAG</code> 全称是 Retrieval-Augmented Generation（检索增强生成），它将检索（或搜索）的能力集成到 LLM 的文本生成中。它结合了一个检索系统和一个 LLM，前者从大型语料库中获取与用户查询最相关的文档，后者使用这些被检索到的文档中的信息生成答案。本质上，RAG 帮助模型“查找”外部信息以改进其响应。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241215141525.png" style="zoom: 80%;" /></div>
+
+<p><code>微调（Finetuing）</code>：在较小的特定数据集上进一步训练预训练过的 LLM，以使其适应特定任务或提高其性能。通过微调，我们根据数据调整模型的权重，使其更适合我们应用程序的独特需求。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241215141758.png" style="zoom: 80%;" /></div>
+
+<p>下面我将从几个不同的角度来说明什么时候应该使用 RAG，什么时候应该使用微调。</p>
+<h2 id="是否需要访问外部数据源？"><a href="#是否需要访问外部数据源？" class="headerlink" title="是否需要访问外部数据源？"></a>是否需要访问外部数据源？</h2><p>现今所有的 LLM 的知识受到训练这些 LLM 时的数据集的制约，具体来说有两个主要方面的制约：</p>
+<ul>
+<li><p>时间：所有训练数据集的收集都有一个时间范围，这导致 LLM 无法获取最新的知识。</p>
+</li>
+<li><p>私有数据：很多企业和组织都有自己的私有数据，比如公司内部不公开的资料库，这些资料库中的知识也无法被外部公司或组织收集起来训练 LLM。</p>
+</li>
+</ul>
+<p>如果我们要构建一个需要访问外部数据源的 LLM 应用程序，那么我们就应该选择 RAG。</p>
+<p>根据 RAG 的定义，RAG 会通过在 LLM 生成响应之前从外部数据源中检索与当前用户查询最相关的信息来增强 LLM 的能力。这使得该技术非常适合需要查询数据库、文档或其他结构化&#x2F;非结构化数据存储库的应用程序。</p>
+<p>相比之下，虽然可以我们对 LLM 进行微调以学习一些外部知识，但这样做需要来自目标领域的大量带标签的问答对数据集。该数据集必须随着基础数据的变化而更新，这对于频繁变化的数据源来说是不切实际的。微调过程也没有明确地对查询外部知识所涉及的检索和推理步骤进行建模。</p>
+<p>总而言之，如果我们的应用程序需要利用外部数据源，那么使用 RAG 系统可能比尝试仅通过微调“融入”所需的知识更有效且可扩展。</p>
+<h2 id="是否需要修改模型的行为、写作风格或特定领域的知识"><a href="#是否需要修改模型的行为、写作风格或特定领域的知识" class="headerlink" title="是否需要修改模型的行为、写作风格或特定领域的知识"></a>是否需要修改模型的行为、写作风格或特定领域的知识</h2><p>微调的优势在于能够使 LLM 的行为适应特定领域的语气或术语。如果我们希望模型听起来更像医学专业人士，以诗意的风格写作，或者使用特定行业的术语，那么对特定领域的数据进行微调可以让我们实现这些定制化需求。这种影响模型行为的能力对于与特定风格或领域专业知识保持一致至关重要的应用程序至关重要。  </p>
+<p>RAG 虽然在整合外部知识方面功能强大，但主要侧重于信息检索，它本身并不根据检索到的信息来调整 LLM 的语言风格或领域特异性。它将从外部数据源提取相关内容，但可能不会展现微调模型可以提供的定制化响应风格。</p>
+<p>因此，如果我们的应用程序需要专门的写作风格或与特定领域的语言和惯例深度一致，那么微调提供了一种更直接的途径来实现这种一致性。它提供了与特定受众或专业领域真正产生共鸣所需的深度和定制性，确保生成的内容真实且信息灵通。</p>
+<h2 id="抑制幻觉有多重要"><a href="#抑制幻觉有多重要" class="headerlink" title="抑制幻觉有多重要"></a>抑制幻觉有多重要</h2><p>LLM 的缺点之一是容易产生幻觉——编造没有现实依据的事实或细节。在准确性和真实性至关重要的应用中，这可能会产生很大的问题。</p>
+<p>通过将模型基于特定领域的训练数据进行微调，可以在一定程度上帮助模型减少幻觉。然而，当面对不熟悉的输入时，模型仍然可能会做出响应。需要对新数据进行再训练，以不断减少模型输出虚假信息的可能性。</p>
+<p>相比之下，RAG 本质上不太容易产生幻觉，因为它们将每个响应都基于从指定数据源中检索到的信息。在 LLM 输出答案之前，检索器从外部知识源中识别相关事实。这个检索步骤充当事实检查机制，降低了模型的虚构能力。LLM 也被限制根据检索到的上下文信息合成响应。</p>
+<h2 id="有多少标记的训练数据可用"><a href="#有多少标记的训练数据可用" class="headerlink" title="有多少标记的训练数据可用"></a>有多少标记的训练数据可用</h2><p>微调 LLM 以适应特定任务或领域在很大程度上取决于可用标记数据的质量和数量。丰富的数据集可以帮助模型深入理解特定领域的细微差别、复杂性和独特模式，从而使其能够生成更准确且与上下文相关的响应。然而，如果我们使用有限的数据集，微调带来的改进可能微乎其微。在某些情况下，数据集不足甚至可能导致过拟合。  </p>
+<p>相反，RAG 独立于训练数据，因为它们利用外部知识源来检索相关信息。即使我们没有广泛的标记数据集，RAG 仍然可以通过访问和合并来自外部数据源的信息来有效执行。检索和生成的结合确保系统即使在特定领域的训练数据稀疏的情况下也能保持知情。</p>
+<p>从本质上讲，如果我们拥有大量的标记数据来捕获该领域的复杂性，那么微调可以提供更加定制和完善的模型行为。但在此类数据有限的情况下，RAG 系统提供了一个强大的替代方案，确保应用程序通过其检索功能保持数据知情和上下文感知。</p>
+<h2 id="数据的静态-动态程度如何"><a href="#数据的静态-动态程度如何" class="headerlink" title="数据的静态&#x2F;动态程度如何"></a>数据的静态&#x2F;动态程度如何</h2><p>在特定数据集上微调 LLM 意味着模型的知识成为训练时数据的静态快照。如果数据频繁更新、更改或扩展，模型很快就会过时。为了使 LLM 在这种动态环境中保持最新状态，我们必须经常重新训练它，这个过程既耗时又占用资源。此外，每次迭代都需要仔细监控，以确保更新后的模型在不同场景中仍然表现良好，并且没有产生新的偏差或理解差距。  </p>
+<p>相比之下，RAG 在动态数据环境中具有固有的优势。它们的检索机制不断查询外部来源，确保他们提取用于生成响应的信息是最新的。随着外部知识库或数据库的更新，RAG 无缝集成这些变化，保持其相关性，而不需要频繁地重新训练模型。</p>
+<p>总之，如果我们正在应对快速发展的数据环境，RAG 提供的敏捷性是传统微调难以比拟的。通过始终与最新数据保持连接，RAG 可确保生成的响应与信息的当前状态保持一致，使其成为动态数据场景的理想选择。</p>
+<h2 id="我们的-LLM-应用程序需要有多透明-可解释"><a href="#我们的-LLM-应用程序需要有多透明-可解释" class="headerlink" title="我们的 LLM 应用程序需要有多透明&#x2F;可解释"></a>我们的 LLM 应用程序需要有多透明&#x2F;可解释</h2><p>微调 LLM 虽然非常强大，但其运作就像一个黑盒子，使其响应背后的推理更加不透明。随着模型内化数据集中的信息，辨别每个响应背后的确切来源或推理变得具有挑战性。这可能会使开发人员或用户难以信任模型的输出，特别是在关键应用程序中，了解答案背后的“原因”至关重要。</p>
+<p>另一方面，RAG 提供了一定程度的透明度，这在单独的微调模型中通常是不存在的。鉴于 RAG 的两步性质（检索然后生成），用户可以查看该过程。检索组件允许检查哪些外部文档或数据点被选择为相关。这提供了切实的证据或参考线索，可以对其进行评估以了解响应的基础。在需要高度责任感或需要验证生成内容的准确性的应用程序中，追溯模型对特定数据源的答案的能力可能非常宝贵。</p>
+<p>从本质上讲，如果透明度和解释模型响应基础的能力是优先考虑的因素，那么 RAG 具有明显的优势。通过将响应生成分解为不同的阶段并允许深入了解其数据检索，RAG 可以增强用户对其输出的信任和理解。  </p>
+<h2 id="其他因素"><a href="#其他因素" class="headerlink" title="其他因素"></a>其他因素</h2><ul>
+<li>可扩展性</li>
+</ul>
+<p>随着企业或组织的发展和需求的变化，所讨论的方法的可扩展性如何？鉴于其模块化性质，RAG 可能会提供更直接的可扩展性，尤其是在知识库增长的情况下。另一方面，频繁微调模型以适应不断扩展的数据集可能需要大量计算资源。</p>
+<ul>
+<li>延迟和实时要求</li>
+</ul>
+<p>如果应用程序需要实时或接近实时的响应，与基于内化知识生成响应的微调 LLM 相比，RAG 涉及在生成响应之前检索数据，可能会引入更多延迟。</p>
+<ul>
+<li>维护与支持</li>
+</ul>
+<p>RAG 可能需要维护数据库和检索机制，而微调则需要一致的再训练工作，特别是在数据或需求发生变化的情况下。</p>
+<ul>
+<li>稳健性和可靠性</li>
+</ul>
+<p>每种方法对于不同类型的输入的鲁棒性如何？ 虽然 RAG 可以从外部知识源中获取知识，并且可以处理广泛的问题，但经过良好调整的模型可能会在某些领域提供更高的一致性。</p>
+<ul>
+<li>道德和隐私问题</li>
+</ul>
+<p>从外部数据库存储和检索可能会引起隐私问题，尤其是在数据敏感的情况下。另一方面，经过微调的模型虽然不查询实时数据库，但仍可能根据其训练数据产生输出，这可能有其自身的道德含义。</p>
+<ul>
+<li>与现有系统集成</li>
+</ul>
+<p> </p>
+<p>要考虑与现有系统（无论是数据库、云基础设施还是用户界面）的兼容性。</p>
+<ul>
+<li>用户体验</li>
+</ul>
+<p>考虑最终用户及其需求。如果他们需要详细的、有参考资料支持的答案，RAG 可能是更好的选择。如果他们重视速度和特定领域的专业知识，那么微调的模型可能更合适。</p>
+<ul>
+<li>成本</li>
+</ul>
+<p>微调可能会变得昂贵，尤其是对于非常大的模型。但在过去的几个月里，得益于 QLoRA 等参数高效技术，成本已显著下降。设置 RAG 可能是一项巨大的初始投资——涵盖集成、数据库访问，甚至可能是许可费用——但还需要考虑定期维护外部知识库。</p>
+<ul>
+<li>复杂度</li>
+</ul>
+<p>微调很快就会变得复杂。虽然许多提供商现在提供一键式微调，我们只需要提供训练数据，但跟踪模型版本并确保新模型仍然全面运行是一项挑战。另一方面，RAG 也可能很快变得复杂。有多个组件的设置，确保数据库保持最新，并确保各个部分（例如检索和生成）正确地组合在一起。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>正如我们所探讨的，在 RAG 和微调之间进行选择需要对 LLM 的独特需求和优先事项进行细致入微的评估。没有一种万能的解决方案 ，成功在于使优化方法与任务的具体要求保持一致。通过评估关键标准（外部数据的需求、调整模型行为、训练数据可用性、数据动态、结果透明度等），我们就可以用最佳前进路径做出明智的决策。在某些情况下，同时利用 RAG 和微调的混合方法可能是最佳选择。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241215151604.png" style="zoom: 80%;" /></div>
+
+<p>关键是避免假设一种方法普遍优越。与任何工具一样，它们的适用性取决于手头的工作。方法和目标不一致可能会阻碍进展，而正确的方法会加速进展。当我们评估提升 LLM 应用程序的选项时，它必须抵制过度简化，不要将 RAG 和微调视为可互换的，并选择使模型能够满足其与用例需求相一致的功能的工具。这些方法所带来的可能性令人震惊，但仅有可能性还不够——执行就是一切。</p>
+<h1 id="从-0-训练一个大模型需要多少钱？为什么大多数企业选择微调-RAG-这条路"><a href="#从-0-训练一个大模型需要多少钱？为什么大多数企业选择微调-RAG-这条路" class="headerlink" title="从 0 训练一个大模型需要多少钱？为什么大多数企业选择微调+RAG 这条路"></a><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/xVgu_5a_jYVNRuAAX3sC1A?poc_token=HNJnLGajzd-i-9AM98NFyBkxS5fPUMipSztraknX">从 0 训练一个大模型需要多少钱？为什么大多数企业选择微调+RAG 这条路</a></h1><h2 id="训练-LLaMA-2-70B-需要多少钱？"><a href="#训练-LLaMA-2-70B-需要多少钱？" class="headerlink" title="训练 LLaMA-2-70B 需要多少钱？"></a>训练 LLaMA-2-70B 需要多少钱？</h2><p><code>LLaMA-2 70B</code>是 Meta 于 2023 年 7 月 18 日发布的一款开源通用大模型，经过实际测评，大家普遍认为不如<code>ChatGPT-3.5</code>（参数量级 175b）。我们先看下关于<code>LLaMA-2-70B</code>训练的一些相关信息：</p>
+<ol>
+<li><p>训练后的<code>LLaMA-2-70B</code>，模型文件大概有 140GB，700 亿级参数。</p>
+</li>
+<li><p>训练时，需要抓取最少 10TB 的网络数据集。</p>
+</li>
+<li><p>需要 1 千万亿亿 FLOPS。如果 12 天可以训练完，需要 6000 块 A100 GPU. 想要一个月训练完，需要 2400 块 A100 GPU。如果你只有 1 块 A100，想要训练完，需要 200 年。</p>
+</li>
+<li><p>总体费用花销，需要最少 200w 美元。</p>
+</li>
+</ol>
+<p>所以根据上面 <code>LLaMA-2-70b</code> 的训练信息大概就可以看到，想要训练一款通用性质的大模型，对标 <code>ChatGPT-3.5</code> 的话，无论是数据的采集还是模型的训练，都是需要花费非常高的成本。而 <code>ChatGPT-3.5</code> 参数量级是 175b，是 <code>LLaMA-2-70b</code> 的两倍还多，ChatGPT-3.5 的训练成本最少我推测也的 500w 美元。而现在大家用的 ChatGPT-4 更不用说了，它是一个 MoE 性质的混合超级大模型，由各个子模型组成，每个子模型最起码都是千亿级别的参数量级。由于 Chat-GPT4 并未公布详细参数量级，但是据传达到了万亿级参数，所以训练成本推测最少也的 3000w 美元。</p>
+<h2 id="基于开源大模型进行微调-RAG-才是首选"><a href="#基于开源大模型进行微调-RAG-才是首选" class="headerlink" title="基于开源大模型进行微调+RAG 才是首选"></a>基于开源大模型进行微调+RAG 才是首选</h2><p>从 0 开始训练一个通用领域大模型，除了一些大厂玩的起，相信大多数企业不会选择这条路。而不同的企业往往需要的是一个符合其业务场景在某个垂直领域的大模型，所以基于一个开源的大模型，进行微调+RAG 或许才是更实际的一种选择，企业可以通过微调这些模型来适应自己的特定需求，使用 RAG 可以进一步提高模型的性能，通过从大型文档数据库中检索信息来增强生成的内容，这样可以使模型在没有直接训练数据的情况下也能够生成高质量的回答或内容。但即使是基于一个开源的大模型去微调，那也需要去慎重的选择，而选择标准，往往还是会落在算力上。下面几个影响因素，大家可以参考下：</p>
+<ol>
+<li>关于微调数据+RAG 知识库的准备，企业自身结合其业务场景准备数据即可。</li>
+<li>根据企业可以接受的算力选择大模型，这个才是根基。你总不能说你只有一张 A100 卡，直接上马斯克的 Grok-1（3140 亿参数的混合专家模型），你连推理都玩不起来，更别说基于它去微调了。所以算力是最重要的因素。</li>
+<li>同时你还需要考虑微调的策略，微调的策略也有很多种，基于所选的基本模型架构和业务需要，难易度和效果更是不同（如果没有足够的技术能力，不推荐选择 MoE 性质混合专家模型作为基础模型）。你可以选择最简单的 P-tuning 方式，或者稍微复杂一些的 PEFT 策略中的 LoRA，更或许是 OpenAI 的监督学习+RLHF 强化学习（奖励模型那套）的策略。</li>
+<li>不选择微调，直接外挂 RAG，这种成本最低。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/02.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E4%BC%98%E5%8C%96%E8%B7%AF%E5%BE%84/">https://hongwei-zhao.github.io/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/02.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E4%BC%98%E5%8C%96%E8%B7%AF%E5%BE%84/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/">大模型</a><a class="post-meta__tags" href="/blog/tags/%E5%BE%AE%E8%B0%83%E7%AF%87/">微调篇</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/01.%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E5%87%A0%E4%BD%95%E8%A7%A3%E9%87%8A/" title="方程组的几何解释"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">方程组的几何解释</div></div><div class="info-2"><div class="info-item-1">第一讲：方程组的几何解释我们从求解线性方程组来开始这门课，从一个普通的例子讲起：方程组有$2$个未知数，一共有$2$个方程，分别来看方程组的“行图像”和“列图像”。 有方程组$\begin{cases}2x&amp;-y&amp;&#x3D;0\-x&amp;+2y&amp;&#x3D;3\end{cases}$，写作矩阵形式有$\begin{bmatrix}2&amp;-1\-1&amp;2\end{bmatrix}\begin{bmatrix}x\y\end{bmatrix}&#x3D;\begin{bmatrix}0\3\end{bmatrix}$，通常我们把第一个矩阵称为系数矩阵...</div></div></div></a><a class="pagination-related  no-desc" href="/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/04.RAG/" title="RAG"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">RAG</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/01.LLM%E5%BE%AE%E8%B0%83/" title="LLM微调"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LLM微调</div></div><div class="info-2"><div class="info-item-1">大模型微调的三个节点：  节点 1 ChatGPT：由于 ChatGPT 惊人的效果，让大家意识到 AGI 的可能性，并重视起了大模型+开放指令微调+强化学习这种三阶段范式 节点 2 LLaMA：LLaMA 是 Meta 在今年 2 月份推出的基座模型，宣称 LLaMA-13B 在大多数基准测试中超过了 GPT-3 (175B)，而 LLaMA-65B 与最好的模型 Chinchilla70B 和 PaLM-540B 相比非常有竞争力。此外，该项目还开源了 7B、13B、30B 和 65B 版本。 节点 3 Stanford Alpaca：在 LLaMA 的基础上，用 Self-Inst...</div></div></div></a><a class="pagination-related no-desc" href="/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/05.Fine-tuning/" title="Fine-tuning"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Fine-tuning</div></div></div></a><a class="pagination-related no-desc" href="/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/04.RAG/" title="RAG"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">RAG</div></div></div></a><a class="pagination-related no-desc" href="/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/03.Prompt%20Engineering/" title="Prompt Engineering"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Prompt Engineering</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/07.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B9%8BAdaptation/" title="大模型之Adaptation"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">大模型之Adaptation</div></div><div class="info-2"><div class="info-item-1">第7章 大模型之Adaptation 使用语言模型（例如在上下文学习中）通过仅给出提示，我们已经能够执行一些任务。然而，提示方法并不适用于全部的下游任务，如自然语言推理（NLI）、问题回答（QA）、将网络表格转换为文本、解析电子健康记录（EHR）等。 下游任务与语言模型的训练数据（例如，Pile数据集）可能在格式和主题上有所不同，或者需要随时间更新新知识。因此，语言模型需要使用特定于任务的数据或领域知识来针对下游任务进行适配。 7.1 引言7.1.1 为什么需要Adaptation?在自动化和人工智能的时代，语言模型已成为一个迅速发展的领域。这些模型被训练为对各种各样的任务作出响应，但它...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/07.%E5%AE%9E%E6%88%98%E7%AF%87/101.Qwen2.5-7B-Instruct/04.WebDemo%E9%83%A8%E7%BD%B2/" title="WebDemo部署"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">WebDemo部署</div></div><div class="info-2"><div class="info-item-1">环境准备123456----------------ubuntu 22.04python 3.12cuda 12.1pytorch 2.3.0----------------   本文默认学习者已安装好以上 Pytorch(cuda) 环境，如未安装请自行安装。  pip 换源加速下载并安装依赖包 123456789# 升级 pippython -m pip install --upgrade pip# 更换 pypi 源加速库的安装pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simplepip in...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B%E3%80%81RAG%E5%92%8C%E5%BE%AE%E8%B0%83-%E5%93%AA%E4%B8%AA%E6%89%8D%E6%98%AF%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E4%BC%98%E5%8C%96%E7%9A%84%E6%9C%80%E4%BD%B3%E8%B7%AF%E5%BE%84%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">提示工程、RAG和微调 - 哪个才是大模型应用优化的最佳路径？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E5%B7%A5%E7%A8%8B%E8%83%BD%E5%8A%9B%E5%BB%BA%E8%AE%BE%EF%BC%88SE4AI%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">大模型应用工程能力建设（SE4AI）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AA%E4%BC%98%E5%8C%96%E7%BB%B4%E5%BA%A6"><span class="toc-number">1.2.</span> <span class="toc-text">两个优化维度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E4%B8%AA%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">三个优化方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%951-%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B%EF%BC%88Prompt-Engineering%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">方法1 - 提示工程（Prompt Engineering）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%952-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E5%BC%8F%E5%86%85%E5%AE%B9%E7%94%9F%E6%88%90%EF%BC%88RAG-Retrieval-Augmented-Generation%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">方法2 - 检索增强式内容生成（RAG - Retrieval Augmented Generation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%953-%E5%BE%AE%E8%B0%83-Fine-tuning%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">方法3 - 微调 (Fine-tuning）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B%EF%BC%8CRAG%E6%88%96%E8%80%85%E5%BE%AE%E8%B0%83"><span class="toc-number">1.4.</span> <span class="toc-text">如何选择提示工程，RAG或者微调</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E9%AA%8C%E8%AF%81%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">大模型应用验证（测试）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RAG-%E5%BE%AE%E8%B0%83%EF%BC%8C%E6%88%91%E4%BB%AC%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">RAG &amp; 微调，我们应该如何选择？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E8%AE%BF%E9%97%AE%E5%A4%96%E9%83%A8%E6%95%B0%E6%8D%AE%E6%BA%90%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">是否需要访问外部数据源？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E4%BF%AE%E6%94%B9%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%A1%8C%E4%B8%BA%E3%80%81%E5%86%99%E4%BD%9C%E9%A3%8E%E6%A0%BC%E6%88%96%E7%89%B9%E5%AE%9A%E9%A2%86%E5%9F%9F%E7%9A%84%E7%9F%A5%E8%AF%86"><span class="toc-number">2.2.</span> <span class="toc-text">是否需要修改模型的行为、写作风格或特定领域的知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%91%E5%88%B6%E5%B9%BB%E8%A7%89%E6%9C%89%E5%A4%9A%E9%87%8D%E8%A6%81"><span class="toc-number">2.3.</span> <span class="toc-text">抑制幻觉有多重要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E5%A4%9A%E5%B0%91%E6%A0%87%E8%AE%B0%E7%9A%84%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E5%8F%AF%E7%94%A8"><span class="toc-number">2.4.</span> <span class="toc-text">有多少标记的训练数据可用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E9%9D%99%E6%80%81-%E5%8A%A8%E6%80%81%E7%A8%8B%E5%BA%A6%E5%A6%82%E4%BD%95"><span class="toc-number">2.5.</span> <span class="toc-text">数据的静态&#x2F;动态程度如何</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E4%BB%AC%E7%9A%84-LLM-%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%9C%80%E8%A6%81%E6%9C%89%E5%A4%9A%E9%80%8F%E6%98%8E-%E5%8F%AF%E8%A7%A3%E9%87%8A"><span class="toc-number">2.6.</span> <span class="toc-text">我们的 LLM 应用程序需要有多透明&#x2F;可解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%9B%A0%E7%B4%A0"><span class="toc-number">2.7.</span> <span class="toc-text">其他因素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">2.8.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8E-0-%E8%AE%AD%E7%BB%83%E4%B8%80%E4%B8%AA%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%A4%9A%E6%95%B0%E4%BC%81%E4%B8%9A%E9%80%89%E6%8B%A9%E5%BE%AE%E8%B0%83-RAG-%E8%BF%99%E6%9D%A1%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">从 0 训练一个大模型需要多少钱？为什么大多数企业选择微调+RAG 这条路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83-LLaMA-2-70B-%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F"><span class="toc-number">3.1.</span> <span class="toc-text">训练 LLaMA-2-70B 需要多少钱？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%BC%80%E6%BA%90%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%BF%9B%E8%A1%8C%E5%BE%AE%E8%B0%83-RAG-%E6%89%8D%E6%98%AF%E9%A6%96%E9%80%89"><span class="toc-number">3.2.</span> <span class="toc-text">基于开源大模型进行微调+RAG 才是首选</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

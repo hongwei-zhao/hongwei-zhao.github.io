@@ -1,0 +1,424 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>用户管理 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="关键词：groupadd, groupdel, groupmod, useradd, userdel, usermod, passwd, su, sudo  1. Linux 用户管理要点 创建用户组 - 使用 groupadd 删除用户组 - 使用 groupdel 修改用户组信息 - 使用 groupmod 创建用户 - 使用 useradd 删除用户 - 使用 userdel 修改用户信息">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用户管理">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/06.%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="关键词：groupadd, groupdel, groupmod, useradd, userdel, usermod, passwd, su, sudo  1. Linux 用户管理要点 创建用户组 - 使用 groupadd 删除用户组 - 使用 groupdel 修改用户组信息 - 使用 groupmod 创建用户 - 使用 useradd 删除用户 - 使用 userdel 修改用户信息">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:41:22.182Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "用户管理",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/06.%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:41:22.182Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/06.%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '用户管理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">用户管理</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">用户管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:41:22.182Z" title="更新于 2026-03-01 16:41:22">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E7%BC%96%E7%A8%8B/">编程</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E7%BC%96%E7%A8%8B/linux/">linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>关键词：<code>groupadd</code>, <code>groupdel</code>, <code>groupmod</code>, <code>useradd</code>, <code>userdel</code>, <code>usermod</code>, <code>passwd</code>, <code>su</code>, <code>sudo</code></p>
+</blockquote>
+<h2 id="1-Linux-用户管理要点"><a href="#1-Linux-用户管理要点" class="headerlink" title="1. Linux 用户管理要点"></a>1. Linux 用户管理要点</h2><ul>
+<li>创建用户组 - 使用 <a href="#groupadd">groupadd</a></li>
+<li>删除用户组 - 使用 <a href="#groupdel">groupdel</a></li>
+<li>修改用户组信息 - 使用 <a href="#groupmod">groupmod</a></li>
+<li>创建用户 - 使用 <a href="#useradd">useradd</a></li>
+<li>删除用户 - 使用 <a href="#userdel">userdel</a></li>
+<li>修改用户信息 - 使用 <a href="#usermod">usermod</a></li>
+<li>设置用户认证信息 - 使用 <a href="#passwd">passwd</a></li>
+<li>切换用户 - 使用 <a href="#su">su</a></li>
+<li>当前用户想执行没有权限执行的命令时，使用其他用户身份去执行 - 使用 <a href="#sudo">sudo</a></li>
+</ul>
+<hr>
+<h2 id="2-命令常见用法"><a href="#2-命令常见用法" class="headerlink" title="2. 命令常见用法"></a>2. 命令常见用法</h2><h3 id="2-1-groupadd"><a href="#2-1-groupadd" class="headerlink" title="2.1. groupadd"></a>2.1. groupadd</h3><blockquote>
+<p>groupadd 命令用于创建一个新的用户组，新用户组的信息将被添加到系统文件中。</p>
+</blockquote>
+<p><strong>常用选项</strong>：  </p>
+<ul>
+<li><code>-g GID</code>：指定组 ID（默认自动分配）。  </li>
+<li><code>-r</code>：创建系统组（ID 范围通常为 0-999）。  </li>
+<li><code>-f</code>：强制创建（组已存在时忽略错误）。</li>
+</ul>
+<p><strong>示例</strong>：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">groupadd -g 1000 developers  <span class="hljs-comment"># 创建组 ID 为 1000 的组 &quot;developers&quot;</span><br>groupadd -r systemgroup      <span class="hljs-comment"># 创建系统组</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-2-groupdel"><a href="#2-2-groupdel" class="headerlink" title="2.2. groupdel"></a>2.2. groupdel</h3><blockquote>
+<p>groupdel 命令用于删除指定的用户组，本命令要修改的系统文件包括 <code>/ect/group</code> 和 <code>/ect/gshadow</code>。若该群组中仍包括某些用户，则必须先删除这些用户后，方能删除群组。</p>
+</blockquote>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ groupadd damon  <span class="hljs-comment"># 创建damon用户组</span><br>$ groupdel damon  <span class="hljs-comment"># 删除这个用户组</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-3-groupmod"><a href="#2-3-groupmod" class="headerlink" title="2.3. groupmod"></a>2.3. groupmod</h3><p><strong>用途</strong>：修改组属性（如组名或 GID）。<br><strong>语法</strong>：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">groupmod [选项] 组名<br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong>：  </p>
+<ul>
+<li><code>-g GID</code>：修改组 ID。  </li>
+<li><code>-n 新组名</code>：重命名组。</li>
+</ul>
+<p><strong>示例</strong>：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">groupmod -g 1001 developers  <span class="hljs-comment"># 修改组 ID 为 1001</span><br>groupmod -n devs developers  <span class="hljs-comment"># 将组名从 &quot;developers&quot; 改为 &quot;devs&quot;</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-4-useradd"><a href="#2-4-useradd" class="headerlink" title="2.4. useradd"></a>2.4. useradd</h3><blockquote>
+<p>useradd 命令用于 Linux 中创建的新的系统用户。useradd 可用来建立用户帐号。帐号建好之后，再用 passwd 设定帐号的密码．而可用 userdel 删除帐号。使用 useradd 指令所建立的帐号，实际上是保存在 <code>/etc/passwd</code> 文本文件中。</p>
+</blockquote>
+<p><strong>语法</strong>：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">useradd [选项] 用户名<br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong>：  </p>
+<ul>
+<li><code>-u UID</code>：指定用户 ID。  </li>
+<li><code>-g 组名</code>：指定主组（需已存在）。  </li>
+<li><code>-G 附加组</code>：指定附加组（逗号分隔）。  </li>
+<li><code>-d 目录</code>：设置家目录（默认<code>/home/用户名</code>）。  </li>
+<li><code>-s shell</code>：指定登录 Shell（如<code>/bin/bash</code>）。  </li>
+<li><code>-m</code>：自动创建家目录（<code>-k</code> 可指定模板目录）。  </li>
+<li><code>-r</code>：创建系统用户（无家目录）。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 新建用户加入组</span><br>$ useradd –g sales jack –G company,employees    <span class="hljs-comment"># -g：加入主要组、-G：加入次要组</span><br><br><span class="hljs-comment"># 建立一个新用户账户，并设置 ID</span><br>$ useradd caojh -u 544<br><br>useradd -u 1001 -g developers -G docker,web -m -s /bin/bash alice<br><span class="hljs-comment"># 创建用户 alice，UID=1001，主组为 developers，附加组为 docker 和 web，自动创建家目录</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-5-userdel"><a href="#2-5-userdel" class="headerlink" title="2.5. userdel"></a>2.5. userdel</h3><blockquote>
+<p>userdel 命令用于删除给定的用户，以及与用户相关的文件。若不加选项，则仅删除用户帐号，而不删除相关文件。</p>
+</blockquote>
+<p><strong>语法</strong>：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">userdel [选项] 用户名<br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong>：  </p>
+<ul>
+<li><code>-r</code>：同时删除家目录和邮件池。</li>
+</ul>
+<p>示例：</p>
+<p>userdel 命令很简单，比如我们现在有个用户 linuxde，其 home 目录位于<code>/var</code>目录中，现在我们来删除这个用户：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ userdel linuxde       <span class="hljs-comment"># 删除用户linuxde，但不删除其家目录及文件；</span><br>$ userdel -r linuxde    <span class="hljs-comment"># 删除用户linuxde，其 home 目录及文件一并删除；</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-usermod"><a href="#2-6-usermod" class="headerlink" title="2.6. usermod"></a>2.6. usermod</h3><blockquote>
+<p>usermod 命令用于修改用户的基本信息。usermod 命令不允许你改变正在线上的使用者帐号名称。当 usermod 命令用来改变 user id，必须确认这名 user 没在电脑上执行任何程序。你需手动更改使用者的 crontab 档。也需手动更改使用者的 at 工作档。采用 NIS server 须在 server 上更动相关的 NIS 设定。</p>
+</blockquote>
+<p><strong>语法</strong>：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">usermod [选项] 用户名<br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong>：  </p>
+<ul>
+<li><code>-l 新用户名</code>：修改用户名。  </li>
+<li><code>-g 组名</code>：修改主组。  </li>
+<li><code>-G 附加组</code>：覆盖原有附加组（用<code>-aG</code>追加附加组）。  </li>
+<li><code>-L</code>：锁定用户（禁用登录）。  </li>
+<li><code>-U</code>：解锁用户。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将 newuser2 添加到组 staff 中</span><br>$ usermod -G staff newuser2<br><br><span class="hljs-comment"># 修改 newuser 的用户名为 newuser1</span><br>$ usermod -l newuser1 newuser<br><br><span class="hljs-comment"># 锁定账号 newuser1</span><br>$ usermod -L newuser1<br><br><span class="hljs-comment"># 解除对 newuser1 的锁定</span><br>$ usermod -U newuser1<br><br>usermod -l alice_new alice      <span class="hljs-comment"># 将用户名从 alice 改为 alice_new</span><br>usermod -aG <span class="hljs-built_in">sudo</span> alice         <span class="hljs-comment"># 将 alice 追加到 sudo 组</span><br>usermod -L alice               <span class="hljs-comment"># 锁定 alice 账户</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-7-passwd"><a href="#2-7-passwd" class="headerlink" title="2.7. passwd"></a>2.7. passwd</h3><blockquote>
+<p>passwd 命令用于设置用户的认证信息，包括用户密码、密码过期时间等。系统管理者则能用它管理系统用户的密码。只有管理者可以指定用户名称，一般用户只能变更自己的密码。</p>
+</blockquote>
+<p><strong>语法</strong>：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">passwd [选项] [用户名]<br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong>：  </p>
+<ul>
+<li><code>-l</code>：锁定用户密码。  </li>
+<li><code>-u</code>：解锁用户密码。  </li>
+<li><code>-e</code>：强制用户下次登录修改密码。  </li>
+<li><code>-d</code>：删除密码（危险！允许无密码登录）。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 如果是普通用户执行 passwd 只能修改自己的密码。</span><br><span class="hljs-comment"># 如果新建用户后，要为新用户创建密码，则用 passwd 用户名，注意要以 root 用户的权限来创建。</span><br>$ passwd linuxde    <span class="hljs-comment"># 更改或创建linuxde用户的密码；</span><br>Changing password <span class="hljs-keyword">for</span> user linuxde.<br>New UNIX password:          <span class="hljs-comment"># 请输入新密码；</span><br>Retype new UNIX password:   <span class="hljs-comment"># 再输入一次；</span><br>passwd: all authentication tokens updated successfully. <span class="hljs-comment"># 成功；</span><br><br><span class="hljs-comment"># 普通用户如果想更改自己的密码，直接运行 passwd 即可，比如当前操作的用户是 linuxde。</span><br>$ passwd<br>Changing password <span class="hljs-keyword">for</span> user linuxde. <span class="hljs-comment"># 更改linuxde用户的密码；</span><br>(current) UNIX password:   <span class="hljs-comment"># 请输入当前密码；</span><br>New UNIX password:         <span class="hljs-comment"># 请输入新密码；</span><br>Retype new UNIX password:  <span class="hljs-comment"># 确认新密码；</span><br>passwd: all authentication tokens updated successfully. <span class="hljs-comment"># 更改成功；</span><br><br><span class="hljs-comment"># 比如我们让某个用户不能修改密码，可以用`-l`选项来锁定：</span><br>$ passwd -l linuxde    <span class="hljs-comment"># 锁定用户linuxde不能更改密码；</span><br>Locking password <span class="hljs-keyword">for</span> user linuxde.<br>passwd: Success           <span class="hljs-comment"># 锁定成功；</span><br><br>$ su linuxde   <span class="hljs-comment"># 通过su切换到linuxde用户；</span><br>$ passwd      <span class="hljs-comment"># linuxde来更改密码；</span><br>Changing password <span class="hljs-keyword">for</span> user linuxde.<br>Changing password <span class="hljs-keyword">for</span> linuxde<br>(current) UNIX password:          <span class="hljs-comment"># 输入linuxde的当前密码；</span><br>passwd: Authentication token manipulation error     <span class="hljs-comment"># 失败，不能更改密码；</span><br><br>$ passwd -d linuxde  <span class="hljs-comment"># 清除linuxde用户密码；</span><br>Removing password <span class="hljs-keyword">for</span> user linuxde.<br>passwd: Success                         <span class="hljs-comment"># 清除成功；</span><br><br>$ passwd -S linuxde    <span class="hljs-comment"># 查询linuxde用户密码状态；</span><br>Empty password.                         <span class="hljs-comment"># 空密码，也就是没有密码；</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-8-su"><a href="#2-8-su" class="headerlink" title="2.8. su"></a>2.8. su</h3><blockquote>
+<p>su 命令用于切换当前用户身份到其他用户身份，变更时须输入所要变更的用户帐号与密码。</p>
+</blockquote>
+<p><strong>语法</strong>：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">su [选项] [用户名]<br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong>：  </p>
+<ul>
+<li><code>-</code> 或 <code>-l</code>：模拟登录（加载目标用户的环境变量）。  </li>
+<li><code>-c 命令</code>：以目标用户执行单条命令后退出。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 变更帐号为 root 并在执行 ls 指令后退出变回原使用者：</span><br>$ su -c <span class="hljs-built_in">ls</span> root<br><br><span class="hljs-comment"># 变更帐号为 root 并传入`-f`选项给新执行的 shell：</span><br>$ su root -f<br><br><span class="hljs-comment"># 变更帐号为 test 并改变工作目录至 test 的家目录：</span><br>$ su -<span class="hljs-built_in">test</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-9-sudo"><a href="#2-9-sudo" class="headerlink" title="2.9. sudo"></a>2.9. sudo</h3><blockquote>
+<p>sudo 命令用来以其他身份来执行命令，预设的身份为 root。在 <code>/etc/sudoers</code> 中设置了可执行 sudo 指令的用户。若其未经授权的用户企图使用 sudo，则会发出警告的邮件给管理员。用户使用 sudo 时，必须先输入密码，之后有 5 分钟的有效期限，超过期限则必须重新输入密码。</p>
+</blockquote>
+<p><strong>语法</strong>：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> [选项] 命令<br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong>：  </p>
+<ul>
+<li><code>-u 用户名</code>：以指定用户身份执行（默认为 root）。  </li>
+<li><code>-i</code>：模拟目标用户的登录环境。  </li>
+<li><code>-l</code>：列出当前用户的 sudo 权限。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 指定用户执行命令</span><br>$ <span class="hljs-built_in">sudo</span> -u userb <span class="hljs-built_in">ls</span> -l<br><span class="hljs-comment"># 列出目前的权限</span><br>$ <span class="hljs-built_in">sudo</span> -l<br><span class="hljs-comment"># 显示sudo设置</span><br>$ <span class="hljs-built_in">sudo</span> -L<br><span class="hljs-built_in">sudo</span> apt update              <span class="hljs-comment"># 以 root 身份更新软件包</span><br><span class="hljs-built_in">sudo</span> -u alice <span class="hljs-built_in">touch</span> /tmp/test  <span class="hljs-comment"># 以 alice 身份创建文件</span><br><span class="hljs-built_in">sudo</span> -i                      <span class="hljs-comment"># 切换到 root 的登录环境</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-9-1-给普通用户授权-sudo"><a href="#2-9-1-给普通用户授权-sudo" class="headerlink" title="2.9.1. 给普通用户授权 sudo"></a>2.9.1. 给普通用户授权 sudo</h4><p>假设要给普通用户 mary 配置 sudo 权限：</p>
+<ol>
+<li><code>/etc/sudoers</code> 文件存放了 sudo 的相关用户，但是默认是没有写权限的，所以需要设为可写：<code>chmod u+w /etc/sudoers</code></li>
+<li>在该文件中添加 <code>mary ALL=(ALL) ALL</code> ，保存并退出，让 mary 具有 sudo 的所有权限</li>
+<li>再将 <code>/etc/sudoers</code> 的权限恢复到默认状态：<code>chmod u-w /etc/sudoers</code></li>
+</ol>
+<h4 id="2-9-2-免密码授权-sudo"><a href="#2-9-2-免密码授权-sudo" class="headerlink" title="2.9.2. 免密码授权 sudo"></a>2.9.2. 免密码授权 sudo</h4><p>与给普通用户授权 sudo 类似，区别仅在于第 2 步：<code>mary ALL=(ALL) NOPASSWD: ALL</code>。</p>
+<h3 id="关键配置文件"><a href="#关键配置文件" class="headerlink" title="关键配置文件"></a><strong>关键配置文件</strong></h3><ul>
+<li><strong>用户信息</strong>：<code>/etc/passwd</code>  </li>
+<li><strong>密码哈希</strong>：<code>/etc/shadow</code>  </li>
+<li><strong>组信息</strong>：<code>/etc/group</code>  </li>
+<li><strong>sudo 权限</strong>：<code>/etc/sudoers</code>（使用<code>visudo</code>编辑）</li>
+</ul>
+<hr>
+<p>以下为韩顺平老师讲解</p>
+<h2 id="创建删除设置用户"><a href="#创建删除设置用户" class="headerlink" title="创建删除设置用户"></a>创建删除设置用户</h2><ul>
+<li><p>Linux 系统是一个多用户多任务的操作系统，任何一个想要使用系统资源的用户，都必须首先向系统管理员 root 申请一个账号，然后再以这个账号的身份进入系统。</p>
+</li>
+<li><p>添加用户默认该用户的家目录在<code>/home/username</code>，username 是用户的名称，也可以指定目录，但没必要</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">useradd milan <span class="hljs-comment">#添加milan这个用户</span><br>passwd milan <span class="hljs-comment">#更改milan这个用户的密码</span><br>userdel milan <span class="hljs-comment">#删除用户milan，但是保留home家目录</span><br>userdel -r milan <span class="hljs-comment">#删除用户milan的所有信息，包括家目录</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>关于保留家目录的讨论</p>
+<ul>
+<li>建议保留</li>
+<li>除非不再需要该用户的任何贡献代码、记录</li>
+</ul>
+</li>
+<li><p><code>pwd</code>：该命令显示当前所在目录全程</p>
+</li>
+</ul>
+<h2 id="查询切换用户"><a href="#查询切换用户" class="headerlink" title="查询切换用户"></a>查询切换用户</h2><ul>
+<li><p>查询基本语法——<code>id 用户名</code>；当不存在改用户时，返回无此用户。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@iZbp1978lespq45h0qv20aZ home]# id jack<br>id: jack: no such user<br>[root@iZbp1978lespq45h0qv20aZ home]# id root<br>uid=0(root) gid=0(root) groups=0(root)<br>[root@iZbp1978lespq45h0qv20aZ home]# id milan<br>uid=1000(milan) gid=1000(milan) groups=1000(milan)<br>[root@iZbp1978lespq45h0qv20aZ home]#<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>切换基本语法——<code>su 用户名</code>；<code>exit</code>返回原用户；从权限高的用户切换到权限低的用户，不需要密码；反之需要。</p>
+</li>
+<li><p>查看当前登录用户语法——<code>whoami</code>或者<code>who am i</code>。值得注意的是<code>whoami</code>返回当前使用的用户，<code>who am i</code>返回第一次登录服务器的信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@iZbp1978lespq45h0qv20aZ home]# <span class="hljs-built_in">ls</span><br>milan<br>[root@iZbp1978lespq45h0qv20aZ home]# su milan<br>[milan@iZbp1978lespq45h0qv20aZ home]$ <span class="hljs-built_in">whoami</span><br>milan<br>[milan@iZbp1978lespq45h0qv20aZ home]$ <span class="hljs-built_in">exit</span><br><span class="hljs-built_in">exit</span><br>[root@iZbp1978lespq45h0qv20aZ home]# <span class="hljs-built_in">whoami</span><br>root<br>[root@iZbp1978lespq45h0qv20aZ home]# <span class="hljs-built_in">who</span> am i<br>root     pts/0        2022-02-20 16:45 (43.227.139.42)<br>[root@iZbp1978lespq45h0qv20aZ home]# su milan<br>[milan@iZbp1978lespq45h0qv20aZ home]$ <span class="hljs-built_in">who</span> am i<br>root     pts/0        2022-02-20 16:45 (43.227.139.42)<br>[milan@iZbp1978lespq45h0qv20aZ home]$ <span class="hljs-built_in">whoami</span><br>milan<br>[milan@iZbp1978lespq45h0qv20aZ home]$ <span class="hljs-built_in">exit</span><br><span class="hljs-built_in">exit</span><br>[root@iZbp1978lespq45h0qv20aZ home]#<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="用户组"><a href="#用户组" class="headerlink" title="用户组"></a>用户组</h2><h3 id="增加-删除组、创建特定组的用户"><a href="#增加-删除组、创建特定组的用户" class="headerlink" title="增加&#x2F;删除组、创建特定组的用户"></a>增加&#x2F;删除组、创建特定组的用户</h3><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/imageSnipaste_2022-02-20_17-24-00.png"></p>
+<ul>
+<li><p>移动用户到另外的组</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/imageSnipaste_2022-02-20_17-26-49.png"></p>
+</li>
+<li><p>示例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@iZbp1978lespq45h0qv20aZ home]# groupadd wudang<br>[root@iZbp1978lespq45h0qv20aZ home]# groupdel wudang<br>[root@iZbp1978lespq45h0qv20aZ home]# <span class="hljs-built_in">ls</span><br>milan<br>[root@iZbp1978lespq45h0qv20aZ home]# groupadd wudang<br>[root@iZbp1978lespq45h0qv20aZ home]# useradd -g wudang zwj<br>[root@iZbp1978lespq45h0qv20aZ home]# <span class="hljs-built_in">ls</span><br>milan  zwj<br>[root@iZbp1978lespq45h0qv20aZ home]# <span class="hljs-built_in">id</span> zwj<br>uid=1001(zwj) gid=1001(wudang) <span class="hljs-built_in">groups</span>=1001(wudang)<br>[root@iZbp1978lespq45h0qv20aZ home]# groupadd mojiao<br>[root@iZbp1978lespq45h0qv20aZ home]# usermod -g mojiao zwj<br>[root@iZbp1978lespq45h0qv20aZ home]# <span class="hljs-built_in">id</span> zwj<br>uid=1001(zwj) gid=1002(mojiao) <span class="hljs-built_in">groups</span>=1002(mojiao)<br>[root@iZbp1978lespq45h0qv20aZ home]#<br><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="用户和组的相关文件"><a href="#用户和组的相关文件" class="headerlink" title="用户和组的相关文件"></a>用户和组的相关文件</h3><ul>
+<li><code>cat /etc/group</code>：查看所有的组，一般大于 1000 是自定义；</li>
+<li><code>cat /etc/passwd</code>：查看所有的用户及其相关信息。</li>
+</ul>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/imageSnipaste_2022-02-20_17-30-23.png"></p>
+<ul>
+<li><p>登录 shell 的含义</p>
+<ul>
+<li><p>shell 是你（用户）和 Linux（或者更准确的说，是你和 Linux 内核）之间的接口程序。你在提示符下输入的每个命令都由 shell 先解释然后传给 Linux 内核。也称 shell 为外壳。</p>
+</li>
+<li><p>shell 是一个命令语言解释器（command-language interpreter）。拥有自己内建的 shell 命令集。此外，shell 也能被系统中其他有效的 Linux 实用程序和应用程序（utilities and application programs）所调用。</p>
+</li>
+<li><p>bash 是 shell 的一种，是大多数 Linux 发行版默认的 shell，除 bash shell 外还有 c shell 等其它类型的 shell。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/imageSnipaste_2022-02-20_17-35-13.png"></p>
+</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/06.%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/">https://hongwei-zhao.github.io/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/06.%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/linux/">linux</a><a class="post-meta__tags" href="/blog/tags/%E7%BC%96%E7%A8%8B/">编程</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/10.%E8%BD%AF%E4%BB%B6%E7%AE%A1%E7%90%86/" title="软件管理"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">软件管理</div></div><div class="info-2"><div class="info-item-1">Linux 软件管理 关键词：rpm, yum, apt-get  1. rpm rpm 命令是 RPM 软件包的管理工具。rpm 原本是 Red Hat Linux 发行版专门用来管理 Linux 各项套件的程序，由于它遵循 GPL 规则且功能强大方便，因而广受欢迎。逐渐受到其他发行版的采用。RPM 套件管理方式的出现，让 Linux 易于安装，升级，间接提升了 Linux 的适用度。 参考：http://man.linuxde.net/rpm  示例： （1）安装 rpm 包 1rpm -ivh xxx.rpm  （2）安装.src.rpm 软件包 这类软件包是包含了源代码的 rpm...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/07.%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" title="系统管理"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">系统管理</div></div><div class="info-2"><div class="info-item-1">Linux 系统管理 关键词：lsb_release, reboot, exit, shutdown, date, mount, umount, ps, kill, systemctl, service, crontab  1. Linux 系统管理要点 查看 Linux 系统发行版本 使用 lsb_release（此命令适用于所有的 Linux 发行版本） 使用 cat /etc/redhat-release（此方法只适合 Redhat 系的 Linux）   查看 CPU 信息 - 使用 cat /proc/cpuinfo 重新启动 Linux 操作系统 - 使用 reboot 退出...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/01.%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="常用命令"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">常用命令</div></div><div class="info-2"><div class="info-item-1">Linux命令 查看 Linux 命令帮助信息：help, whatis, info, which, whereis, man Linux 文件目录管理：cd, ls, pwd, mkdir, rmdir, tree, touch, ln, rename, stat, file, chmod, chown, locate, find, cp, mv, rm Linux 文件内容查看命令：cat, head, tail, more, less, sed, vi, grep Linux 文件压缩和解压：tar, gzip, zip, unzip Linux 用户管理：groupadd, gr...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/107.top/" title="top"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">top</div></div><div class="info-2"><div class="info-item-1">top显示或管理执行中的程序 补充说明top 命令 可以实时动态地查看系统的整体运行情况，是一个综合了多方信息监测系统性能和运行信息的实用工具。通过 top 命令所提供的互动式界面，用热键可以管理。 语法1top(选项)  选项12345678910-b：以批处理模式操作；-c：显示完整的治命令；-d：屏幕刷新间隔时间；-I：忽略失效过程；-s：保密模式；-S：累积模式；-i&lt;时间&gt;：设置间隔时间；-u&lt;用户名&gt;：指定用户名；-p&lt;进程号&gt;：指定进程；-n&lt;次数&gt;：循环显示的次数。  top 交互命令在 top 命令执行过程中可以使用的一些...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/108vmstat/" title="108vmstat"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">108vmstat</div></div><div class="info-2"><div class="info-item-1">vmstat显示虚拟内存状态 补充说明vmstat 命令 的含义为显示虚拟内存状态（“Viryual Memor Statics”），但是它可以报告关于进程、内存、I&#x2F;O 等系统整体运行状态。 语法1vmstat(选项)(参数)  选项12345678-a：显示活动内页；-f：显示启动后创建的进程总数；-m：显示slab信息；-n：头信息仅显示一次；-s：以表格方式显示事件计数器和内存状态；-d：报告磁盘状态；-p：显示指定的硬盘分区状态；-S：输出信息的单位。  参数 事件间隔：状态信息刷新的时间间隔； 次数：显示报告的次数。  实例12345678vmstat 3procs...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/102.free/" title="free"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">free</div></div><div class="info-2"><div class="info-item-1">free显示内存的使用情况 补充说明free 命令 可以显示当前系统未使用的和已使用的内存数目，还可以显示被内核使用的内存缓冲区。 语法1free(选项)  选项12345678-b # 以Byte为单位显示内存使用情况；-k # 以KB为单位显示内存使用情况；-m # 以MB为单位显示内存使用情况；-g # 以GB为单位显示内存使用情况。-o # 不显示缓冲区调节列；-s&lt;间隔秒数&gt; # 持续观察内存使用状况；-t # 显示内存总和列；-V # 显示版本信息。  实例12free -t    # 以总和的形式显示内存的使用信息free -s 10 # 周期性的查询内存使用信...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/106.scp/" title="scp"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">scp</div></div><div class="info-2"><div class="info-item-1">scp加密的方式在本地主机和远程主机之间复制文件 补充说明scp 命令 用于在 Linux 下进行远程拷贝文件的命令，和它类似的命令有 cp，不过 cp 只是在本机进行拷贝不能跨服务器，而且 scp 传输是加密的。可能会稍微影响一下速度。当你服务器硬盘变为只读 read only system 时，用 scp 可以帮你把文件移出来。另外，scp 还非常不占资源，不会提高多少系统负荷，在这一点上，rsync 就远远不及它了。虽然  rsync 比 scp 会快一点，但当小文件众多的情况下，rsync 会导致硬盘 I&#x2F;O 非常高，而 scp 基本不影响系统正常使用。 语法1scp(...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E7%BC%96%E7%A8%8B/01.Linux/105.iotop/" title="iotop"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">iotop</div></div><div class="info-2"><div class="info-item-1">iotop用来监视磁盘 I&#x2F;O 使用状况的工具 补充说明iotop 命令 是一个用来监视磁盘 I&#x2F;O 使用状况的 top 类工具。iotop 具有与 top 相似的 UI，其中包括 PID、用户、I&#x2F;O、进程等相关信息。Linux 下的 IO 统计工具如 iostat，nmon 等大多数是只能统计到 per 设备的读写情况，如果你想知道每个进程是如何使用 IO 的就比较麻烦，使用 iotop 命令可以很方便的查看。 iotop 使用 Python 语言编写而成，要求 Python2.5（及以上版本）和 Linux kernel2.6.20（及以上版本）。io...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Linux-%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86%E8%A6%81%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">1. Linux 用户管理要点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%91%BD%E4%BB%A4%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">2. 命令常见用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-groupadd"><span class="toc-number">2.1.</span> <span class="toc-text">2.1. groupadd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-groupdel"><span class="toc-number">2.2.</span> <span class="toc-text">2.2. groupdel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-groupmod"><span class="toc-number">2.3.</span> <span class="toc-text">2.3. groupmod</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-useradd"><span class="toc-number">2.4.</span> <span class="toc-text">2.4. useradd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-userdel"><span class="toc-number">2.5.</span> <span class="toc-text">2.5. userdel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-usermod"><span class="toc-number">2.6.</span> <span class="toc-text">2.6. usermod</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-passwd"><span class="toc-number">2.7.</span> <span class="toc-text">2.7. passwd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-8-su"><span class="toc-number">2.8.</span> <span class="toc-text">2.8. su</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-9-sudo"><span class="toc-number">2.9.</span> <span class="toc-text">2.9. sudo</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-9-1-%E7%BB%99%E6%99%AE%E9%80%9A%E7%94%A8%E6%88%B7%E6%8E%88%E6%9D%83-sudo"><span class="toc-number">2.9.1.</span> <span class="toc-text">2.9.1. 给普通用户授权 sudo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-9-2-%E5%85%8D%E5%AF%86%E7%A0%81%E6%8E%88%E6%9D%83-sudo"><span class="toc-number">2.9.2.</span> <span class="toc-text">2.9.2. 免密码授权 sudo</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">2.10.</span> <span class="toc-text">关键配置文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%88%A0%E9%99%A4%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7"><span class="toc-number">3.</span> <span class="toc-text">创建删除设置用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%88%87%E6%8D%A2%E7%94%A8%E6%88%B7"><span class="toc-number">4.</span> <span class="toc-text">查询切换用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%BB%84"><span class="toc-number">5.</span> <span class="toc-text">用户组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0-%E5%88%A0%E9%99%A4%E7%BB%84%E3%80%81%E5%88%9B%E5%BB%BA%E7%89%B9%E5%AE%9A%E7%BB%84%E7%9A%84%E7%94%A8%E6%88%B7"><span class="toc-number">5.1.</span> <span class="toc-text">增加&#x2F;删除组、创建特定组的用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6"><span class="toc-number">5.2.</span> <span class="toc-text">用户和组的相关文件</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

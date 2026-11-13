@@ -1,0 +1,404 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>线性代数知识点总结 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="线性代数行列式1.行列式按行（列）展开定理 (1) 设$A &#x3D; ( a_&#123;&#123;ij&#125;&#125; ){n \times n}$，则：$a{i1}A_{j1} +a_{i2}A_{j2} + \cdots + a_&#123;&#123;in&#125;&#125;A_&#123;&#123;jn&#125;&#125; &#x3D; \begin{cases}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线性代数知识点总结">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/00.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="线性代数行列式1.行列式按行（列）展开定理 (1) 设$A &#x3D; ( a_&#123;&#123;ij&#125;&#125; ){n \times n}$，则：$a{i1}A_{j1} +a_{i2}A_{j2} + \cdots + a_&#123;&#123;in&#125;&#125;A_&#123;&#123;jn&#125;&#125; &#x3D; \begin{cases}">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:38:26.724Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="线性代数">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "线性代数知识点总结",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/00.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:38:26.724Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/00.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '线性代数知识点总结',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">线性代数知识点总结</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">线性代数知识点总结</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:38:26.724Z" title="更新于 2026-03-01 16:38:26">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E6%95%B0%E5%AD%A6/">数学</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E6%95%B0%E5%AD%A6/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/">线性代数</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="线性代数"><a href="#线性代数" class="headerlink" title="线性代数"></a>线性代数</h1><h2 id="行列式"><a href="#行列式" class="headerlink" title="行列式"></a>行列式</h2><p><strong>1.行列式按行（列）展开定理</strong></p>
+<p>(1) 设$A &#x3D; ( a_&#123;&#123;ij&#125;&#125; )<em>{n \times n}$，则：$a</em>{i1}A_{j1} +a_{i2}A_{j2} + \cdots + a_&#123;&#123;in&#125;&#125;A_&#123;&#123;jn&#125;&#125; &#x3D; \begin{cases}|A|,i&#x3D;j\ 0,i \neq j\end{cases}$</p>
+<p>或$a_{1i}A_{1j} + a_{2i}A_{2j} + \cdots + a_&#123;&#123;ni&#125;&#125;A_&#123;&#123;nj&#125;&#125; &#x3D; \begin{cases}|A|,i&#x3D;j\ 0,i \neq j\end{cases}$即 $AA^{<em>} &#x3D; A^{</em>}A &#x3D; \left| A \right|E,$其中：$A^{*} &#x3D; \begin{pmatrix} A_{11} &amp; A_{12} &amp; \ldots &amp; A_{1n} \ A_{21} &amp; A_{22} &amp; \ldots &amp; A_{2n} \ \ldots &amp; \ldots &amp; \ldots &amp; \ldots \ A_{n1} &amp; A_{n2} &amp; \ldots &amp; A_&#123;&#123;nn&#125;&#125; \ \end{pmatrix} &#x3D; (A_&#123;&#123;ji&#125;&#125;) &#x3D; {(A_&#123;&#123;ij&#125;&#125;)}^{T}$</p>
+<p>$D_{n} &#x3D; \begin{vmatrix} 1 &amp; 1 &amp; \ldots &amp; 1 \ x_{1} &amp; x_{2} &amp; \ldots &amp; x_{n} \ \ldots &amp; \ldots &amp; \ldots &amp; \ldots \ x_{1}^{n - 1} &amp; x_{2}^{n - 1} &amp; \ldots &amp; x_{n}^{n - 1} \ \end{vmatrix} &#x3D; \prod_{1 \leq j &lt; i \leq n}^{},(x_{i} - x_{j})$</p>
+<p>(2) 设$A,B$为$n$阶方阵，则$\left| {AB} \right| &#x3D; \left| A \right|\left| B \right| &#x3D; \left| B \right|\left| A \right| &#x3D; \left| {BA} \right|$，但$\left| A \pm B \right| &#x3D; \left| A \right| \pm \left| B \right|$不一定成立。</p>
+<p>(3) $\left| {kA} \right| &#x3D; k^{n}\left| A \right|$,$A$为$n$阶方阵。</p>
+<p>(4) 设$A$为$n$阶方阵，$|A^{T}| &#x3D; |A|;|A^{- 1}| &#x3D; |A|^{- 1}$（若$A$可逆），$|A^{*}| &#x3D; |A|^{n - 1}$</p>
+<p>$n \geq 2$</p>
+<p>(5) $\left| \begin{matrix}  &amp; {A\quad O} \  &amp; {O\quad B} \ \end{matrix} \right| &#x3D; \left| \begin{matrix}  &amp; {A\quad C} \  &amp; {O\quad B} \ \end{matrix} \right| &#x3D; \left| \begin{matrix}  &amp; {A\quad O} \  &amp; {C\quad B} \ \end{matrix} \right| &#x3D;| A||B|$<br>，$A,B$为方阵，但$\left| \begin{matrix} {O} &amp; A_{m \times m} \  B_{n \times n} &amp; { O} \ \end{matrix} \right| &#x3D; ({- 1)}^&#123;&#123;mn&#125;&#125;|A||B|$ 。</p>
+<p>(6) 范德蒙行列式$D_{n} &#x3D; \begin{vmatrix} 1 &amp; 1 &amp; \ldots &amp; 1 \ x_{1} &amp; x_{2} &amp; \ldots &amp; x_{n} \ \ldots &amp; \ldots &amp; \ldots &amp; \ldots \ x_{1}^{n - 1} &amp; x_{2}^{n 1} &amp; \ldots &amp; x_{n}^{n - 1} \ \end{vmatrix} &#x3D;  \prod_{1 \leq j &lt; i \leq n}^{},(x_{i} - x_{j})$</p>
+<p>设$A$是$n$阶方阵，$\lambda_{i}(i &#x3D; 1,2\cdots,n)$是$A$的$n$个特征值，则<br>$|A| &#x3D; \prod_{i &#x3D; 1}^{n}\lambda_{i}$</p>
+<h2 id="矩阵"><a href="#矩阵" class="headerlink" title="矩阵"></a>矩阵</h2><p>矩阵：$m \times n$个数$a_&#123;&#123;ij&#125;&#125;$排成$m$行$n$列的表格$\begin{bmatrix}  a_{11}\quad a_{12}\quad\cdots\quad a_{1n} \ a_{21}\quad a_{22}\quad\cdots\quad a_{2n} \ \quad\cdots\cdots\cdots\cdots\cdots \  a_{m1}\quad a_{m2}\quad\cdots\quad a_&#123;&#123;mn&#125;&#125; \ \end{bmatrix}$ 称为矩阵，简记为$A$，或者$\left( a_&#123;&#123;ij&#125;&#125; \right)_{m \times n}$ 。若$m &#x3D; n$，则称$A$是$n$阶矩阵或$n$阶方阵。</p>
+<p><strong>矩阵的线性运算</strong></p>
+<p><strong>1.矩阵的加法</strong></p>
+<p>设$A &#x3D; (a_&#123;&#123;ij&#125;&#125;),B &#x3D; (b_&#123;&#123;ij&#125;&#125;)$是两个$m \times n$矩阵，则$m \times n$ 矩阵$C &#x3D; c_&#123;&#123;ij&#125;&#125;) &#x3D; a_&#123;&#123;ij&#125;&#125; + b_&#123;&#123;ij&#125;&#125;$称为矩阵$A$与$B$的和，记为$A + B &#x3D; C$ 。</p>
+<p><strong>2.矩阵的数乘</strong></p>
+<p>设$A &#x3D; (a_&#123;&#123;ij&#125;&#125;)$是$m \times n$矩阵，$k$是一个常数，则$m \times n$矩阵$(ka_&#123;&#123;ij&#125;&#125;)$称为数$k$与矩阵$A$的数乘，记为${kA}$。</p>
+<p><strong>3.矩阵的乘法</strong></p>
+<p>设$A &#x3D; (a_&#123;&#123;ij&#125;&#125;)$是$m \times n$矩阵，$B &#x3D; (b_&#123;&#123;ij&#125;&#125;)$是$n \times s$矩阵，那么$m \times s$矩阵$C &#x3D; (c_&#123;&#123;ij&#125;&#125;)$，其中$c_&#123;&#123;ij&#125;&#125; &#x3D; a_{i1}b_{1j} + a_{i2}b_{2j} + \cdots + a_&#123;&#123;in&#125;&#125;b_&#123;&#123;nj&#125;&#125; &#x3D; \sum_{k &#x3D;1}^{n}{a_&#123;&#123;ik&#125;&#125;b_&#123;&#123;kj&#125;&#125;}$称为${AB}$的乘积，记为$C &#x3D; AB$ 。</p>
+<p><strong>4.</strong> $\mathbf{A}^{\mathbf{T&#125;&#125;$<strong>、</strong>$\mathbf{A}^{\mathbf{-1&#125;&#125;$<strong>、</strong>$\mathbf{A}^{\mathbf{*&#125;&#125;$<strong>三者之间的关系</strong></p>
+<p>(1) ${(A^{T})}^{T} &#x3D; A,{(AB)}^{T} &#x3D; B^{T}A^{T},{(kA)}^{T} &#x3D; kA^{T},{(A \pm B)}^{T} &#x3D; A^{T} \pm B^{T}$</p>
+<p>(2) $\left( A^{- 1} \right)^{- 1} &#x3D; A,\left( {AB} \right)^{- 1} &#x3D; B^{- 1}A^{- 1},\left( {kA} \right)^{- 1} &#x3D; \frac{1}{k}A^{- 1},$</p>
+<p>但 ${(A \pm B)}^{- 1} &#x3D; A^{- 1} \pm B^{- 1}$不一定成立。</p>
+<p>(3) $\left( A^{<em>} \right)^{</em>} &#x3D; |A|^{n - 2}\ A\ \ (n \geq 3)$，$\left({AB} \right)^{<em>} &#x3D; B^{</em>}A^{<em>},$ $\left( {kA} \right)^{</em>} &#x3D; k^{n -1}A^{*}{\ \ }\left( n \geq 2 \right)$</p>
+<p>但$\left( A \pm B \right)^{<em>} &#x3D; A^{</em>} \pm B^{*}$不一定成立。</p>
+<p>(4) ${(A^{- 1})}^{T} &#x3D; {(A^{T})}^{- 1},\ \left( A^{- 1} \right)^{<em>} &#x3D;{(AA^{</em>})}^{- 1},{(A^{<em>})}^{T} &#x3D; \left( A^{T} \right)^{</em>}$</p>
+<p><strong>5.有关</strong>$\mathbf{A}^{\mathbf{*&#125;&#125;$<strong>的结论</strong></p>
+<p>(1) $AA^{<em>} &#x3D; A^{</em>}A &#x3D; |A|E$</p>
+<p>(2) $|A^{<em>}| &#x3D; |A|^{n - 1}\ (n \geq 2),\ \ \ \ {(kA)}^{</em>} &#x3D; k^{n -1}A^{<em>},&#123;&#123;\ \ }\left( A^{</em>} \right)}^{*} &#x3D; |A|^{n - 2}A(n \geq 3)$</p>
+<p>(3) 若$A$可逆，则$A^{<em>} &#x3D; |A|A^{- 1},{(A^{</em>})}^{*} &#x3D; \frac{1}{|A|}A$</p>
+<p>(4) 若$A$为$n$阶方阵，则：</p>
+<p>$r(A^*)&#x3D;\begin{cases}n,\quad r(A)&#x3D;n\ 1,\quad r(A)&#x3D;n-1\ 0,\quad r(A)&lt;n-1\end{cases}$</p>
+<p><strong>6.有关</strong>$\mathbf{A}^{\mathbf{- 1&#125;&#125;$<strong>的结论</strong></p>
+<p>$A$可逆$\Leftrightarrow AB &#x3D; E; \Leftrightarrow |A| \neq 0; \Leftrightarrow r(A) &#x3D; n;$</p>
+<p>$\Leftrightarrow A$可以表示为初等矩阵的乘积；$\Leftrightarrow A;\Leftrightarrow Ax &#x3D; 0$。</p>
+<p><strong>7.有关矩阵秩的结论</strong></p>
+<p>(1) 秩$r(A)$&#x3D;行秩&#x3D;列秩；</p>
+<p>(2) $r(A_{m \times n}) \leq \min(m,n);$</p>
+<p>(3) $A \neq 0 \Rightarrow r(A) \geq 1$；</p>
+<p>(4) $r(A \pm B) \leq r(A) + r(B);$</p>
+<p>(5) 初等变换不改变矩阵的秩</p>
+<p>(6) $r(A) + r(B) - n \leq r(AB) \leq \min(r(A),r(B)),$特别若$AB &#x3D; O$<br>则：$r(A) + r(B) \leq n$</p>
+<p>(7) 若$A^{- 1}$存在$\Rightarrow r(AB) &#x3D; r(B);$ 若$B^{- 1}$存在<br>$\Rightarrow r(AB) &#x3D; r(A);$</p>
+<p>若$r(A_{m \times n}) &#x3D; n \Rightarrow r(AB) &#x3D; r(B);$ 若$r(A_{m \times s}) &#x3D; n\Rightarrow r(AB) &#x3D; r\left( A \right)$。</p>
+<p>(8) $r(A_{m \times s}) &#x3D; n \Leftrightarrow Ax &#x3D; 0$只有零解</p>
+<p><strong>8.分块求逆公式</strong></p>
+<p>$\begin{pmatrix} A &amp; O \ O &amp; B \ \end{pmatrix}^{- 1} &#x3D; \begin{pmatrix} A^{-1} &amp; O \ O &amp; B^{- 1} \ \end{pmatrix}$； $\begin{pmatrix} A &amp; C \ O &amp; B \\end{pmatrix}^{- 1} &#x3D; \begin{pmatrix} A^{- 1}&amp; - A^{- 1}CB^{- 1} \ O &amp; B^{- 1} \ \end{pmatrix}$；</p>
+<p>$\begin{pmatrix} A &amp; O \ C &amp; B \ \end{pmatrix}^{- 1} &#x3D; \begin{pmatrix}  A^{- 1}&amp;{O} \   - B^{- 1}CA^{- 1} &amp; B^{- 1} \\end{pmatrix}$； $\begin{pmatrix} O &amp; A \ B &amp; O \ \end{pmatrix}^{- 1} &#x3D;\begin{pmatrix} O &amp; B^{- 1} \ A^{- 1} &amp; O \ \end{pmatrix}$</p>
+<p>这里$A$，$B$均为可逆方阵。</p>
+<h2 id="向量"><a href="#向量" class="headerlink" title="向量"></a>向量</h2><p><strong>1.有关向量组的线性表示</strong></p>
+<p>(1)$\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$线性相关$\Leftrightarrow$至少有一个向量可以用其余向量线性表示。</p>
+<p>(2)$\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$线性无关，$\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$，$\beta$线性相关$\Leftrightarrow \beta$可以由$\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$唯一线性表示。</p>
+<p>(3) $\beta$可以由$\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$线性表示<br>$\Leftrightarrow r(\alpha_{1},\alpha_{2},\cdots,\alpha_{s}) &#x3D;r(\alpha_{1},\alpha_{2},\cdots,\alpha_{s},\beta)$ 。</p>
+<p><strong>2.有关向量组的线性相关性</strong></p>
+<p>(1)部分相关，整体相关；整体无关，部分无关.</p>
+<p>(2) ① $n$个$n$维向量<br>$\alpha_{1},\alpha_{2}\cdots\alpha_{n}$线性无关$\Leftrightarrow \left|\left\lbrack \alpha_{1}\alpha_{2}\cdots\alpha_{n} \right\rbrack \right| \neq0$， $n$个$n$维向量$\alpha_{1},\alpha_{2}\cdots\alpha_{n}$线性相关<br>$\Leftrightarrow |\lbrack\alpha_{1},\alpha_{2},\cdots,\alpha_{n}\rbrack| &#x3D; 0$<br>。</p>
+<p>② $n + 1$个$n$维向量线性相关。</p>
+<p>③ 若$\alpha_{1},\alpha_{2}\cdots\alpha_{S}$线性无关，则添加分量后仍线性无关；或一组向量线性相关，去掉某些分量后仍线性相关。</p>
+<p><strong>3.有关向量组的线性表示</strong></p>
+<p>(1) $\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$线性相关$\Leftrightarrow$至少有一个向量可以用其余向量线性表示。</p>
+<p>(2) $\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$线性无关，$\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$，$\beta$线性相关$\Leftrightarrow\beta$ 可以由$\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$唯一线性表示。</p>
+<p>(3) $\beta$可以由$\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$线性表示<br>$\Leftrightarrow r(\alpha_{1},\alpha_{2},\cdots,\alpha_{s}) &#x3D;r(\alpha_{1},\alpha_{2},\cdots,\alpha_{s},\beta)$</p>
+<p><strong>4.向量组的秩与矩阵的秩之间的关系</strong></p>
+<p>设$r(A_{m \times n}) &#x3D;r$，则$A$的秩$r(A)$与$A$的行列向量组的线性相关性关系为：</p>
+<p>(1) 若$r(A_{m \times n}) &#x3D; r &#x3D; m$，则$A$的行向量组线性无关。</p>
+<p>(2) 若$r(A_{m \times n}) &#x3D; r &lt; m$，则$A$的行向量组线性相关。</p>
+<p>(3) 若$r(A_{m \times n}) &#x3D; r &#x3D; n$，则$A$的列向量组线性无关。</p>
+<p>(4) 若$r(A_{m \times n}) &#x3D; r &lt; n$，则$A$的列向量组线性相关。</p>
+<p><strong>5.</strong>$\mathbf{n}$<strong>维向量空间的基变换公式及过渡矩阵</strong></p>
+<p>若$\alpha_{1},\alpha_{2},\cdots,\alpha_{n}$与$\beta_{1},\beta_{2},\cdots,\beta_{n}$是向量空间$V$的两组基，则基变换公式为：</p>
+<p>$(\beta_{1},\beta_{2},\cdots,\beta_{n}) &#x3D; (\alpha_{1},\alpha_{2},\cdots,\alpha_{n})\begin{bmatrix}  c_{11}&amp; c_{12}&amp; \cdots &amp; c_{1n} \  c_{21}&amp; c_{22}&amp;\cdots &amp; c_{2n} \ \cdots &amp; \cdots &amp; \cdots &amp; \cdots \  c_{n1}&amp; c_{n2} &amp; \cdots &amp; c_&#123;&#123;nn&#125;&#125; \\end{bmatrix} &#x3D; (\alpha_{1},\alpha_{2},\cdots,\alpha_{n})C$</p>
+<p>其中$C$是可逆矩阵，称为由基$\alpha_{1},\alpha_{2},\cdots,\alpha_{n}$到基$\beta_{1},\beta_{2},\cdots,\beta_{n}$的过渡矩阵。</p>
+<p><strong>6.坐标变换公式</strong></p>
+<p>若向量$\gamma$在基$\alpha_{1},\alpha_{2},\cdots,\alpha_{n}$与基$\beta_{1},\beta_{2},\cdots,\beta_{n}$的坐标分别是<br>$X &#x3D; {(x_{1},x_{2},\cdots,x_{n})}^{T}$，</p>
+<p>$Y &#x3D; \left( y_{1},y_{2},\cdots,y_{n} \right)^{T}$ 即： $\gamma &#x3D;x_{1}\alpha_{1} + x_{2}\alpha_{2} + \cdots + x_{n}\alpha_{n} &#x3D; y_{1}\beta_{1} +y_{2}\beta_{2} + \cdots + y_{n}\beta_{n}$，则向量坐标变换公式为$X &#x3D; CY$ 或$Y &#x3D; C^{- 1}X$，其中$C$是从基$\alpha_{1},\alpha_{2},\cdots,\alpha_{n}$到基$\beta_{1},\beta_{2},\cdots,\beta_{n}$的过渡矩阵。</p>
+<p><strong>7.向量的内积</strong></p>
+<p>$(\alpha,\beta) &#x3D; a_{1}b_{1} + a_{2}b_{2} + \cdots + a_{n}b_{n} &#x3D; \alpha^{T}\beta &#x3D; \beta^{T}\alpha$</p>
+<p><strong>8.Schmidt正交化</strong></p>
+<p>若$\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$线性无关，则可构造$\beta_{1},\beta_{2},\cdots,\beta_{s}$使其两两正交，且$\beta_{i}$仅是$\alpha_{1},\alpha_{2},\cdots,\alpha_{i}$的线性组合$(i&#x3D; 1,2,\cdots,n)$，再把$\beta_{i}$单位化，记$\gamma_{i} &#x3D;\frac{\beta_{i&#125;&#125;{\left| \beta_{i}\right|}$，则$\gamma_{1},\gamma_{2},\cdots,\gamma_{i}$是规范正交向量组。其中<br>$\beta_{1} &#x3D; \alpha_{1}$， $\beta_{2} &#x3D; \alpha_{2} -\frac{(\alpha_{2},\beta_{1})}{(\beta_{1},\beta_{1})}\beta_{1}$ ， $\beta_{3} &#x3D;\alpha_{3} - \frac{(\alpha_{3},\beta_{1})}{(\beta_{1},\beta_{1})}\beta_{1} -\frac{(\alpha_{3},\beta_{2})}{(\beta_{2},\beta_{2})}\beta_{2}$ ，</p>
+<p>…………</p>
+<p>$\beta_{s} &#x3D; \alpha_{s} - \frac{(\alpha_{s},\beta_{1})}{(\beta_{1},\beta_{1})}\beta_{1} - \frac{(\alpha_{s},\beta_{2})}{(\beta_{2},\beta_{2})}\beta_{2} - \cdots - \frac{(\alpha_{s},\beta_{s - 1})}{(\beta_{s - 1},\beta_{s - 1})}\beta_{s - 1}$</p>
+<p><strong>9.正交基及规范正交基</strong></p>
+<p>向量空间一组基中的向量如果两两正交，就称为正交基；若正交基中每个向量都是单位向量，就称其为规范正交基。</p>
+<h2 id="线性方程组"><a href="#线性方程组" class="headerlink" title="线性方程组"></a>线性方程组</h2><p><strong>1．克莱姆法则</strong></p>
+<p>线性方程组$\begin{cases}  a_{11}x_{1} + a_{12}x_{2} + \cdots +a_{1n}x_{n} &#x3D; b_{1} \   a_{21}x_{1} + a_{22}x_{2} + \cdots + a_{2n}x_{n} &#x3D;b_{2} \   \quad\cdots\cdots\cdots\cdots\cdots\cdots\cdots\cdots\cdots \ a_{n1}x_{1} + a_{n2}x_{2} + \cdots + a_&#123;&#123;nn&#125;&#125;x_{n} &#x3D; b_{n} \ \end{cases}$，如果系数行列式$D &#x3D; \left| A \right| \neq 0$，则方程组有唯一解，$x_{1} &#x3D; \frac{D_{1&#125;&#125;{D},x_{2} &#x3D; \frac{D_{2&#125;&#125;{D},\cdots,x_{n} &#x3D;\frac{D_{n&#125;&#125;{D}$，其中$D_{j}$是把$D$中第$j$列元素换成方程组右端的常数列所得的行列式。</p>
+<p><strong>2.</strong> $n$阶矩阵$A$可逆$\Leftrightarrow Ax &#x3D; 0$只有零解。$\Leftrightarrow\forall b,Ax &#x3D; b$总有唯一解，一般地，$r(A_{m \times n}) &#x3D; n \Leftrightarrow Ax&#x3D; 0$只有零解。</p>
+<p><strong>3.非奇次线性方程组有解的充分必要条件，线性方程组解的性质和解的结构</strong></p>
+<p>(1) 设$A$为$m \times n$矩阵，若$r(A_{m \times n}) &#x3D; m$，则对$Ax &#x3D;b$而言必有$r(A) &#x3D; r(A \vdots b) &#x3D; m$，从而$Ax &#x3D; b$有解。</p>
+<p>(2) 设$x_{1},x_{2},\cdots x_{s}$为$Ax &#x3D; b$的解，则$k_{1}x_{1} + k_{2}x_{2}\cdots + k_{s}x_{s}$当$k_{1} + k_{2} + \cdots + k_{s} &#x3D; 1$时仍为$Ax &#x3D;b$的解；但当$k_{1} + k_{2} + \cdots + k_{s} &#x3D; 0$时，则为$Ax &#x3D;0$的解。特别$\frac{x_{1} + x_{2&#125;&#125;{2}$为$Ax &#x3D; b$的解；$2x_{3} - (x_{1} +x_{2})$为$Ax &#x3D; 0$的解。</p>
+<p>(3) 非齐次线性方程组${Ax} &#x3D; b$无解$\Leftrightarrow r(A) + 1 &#x3D;r(\overline{A}) \Leftrightarrow b$不能由$A$的列向量$\alpha_{1},\alpha_{2},\cdots,\alpha_{n}$线性表示。</p>
+<p><strong>4.奇次线性方程组的基础解系和通解，解空间，非奇次线性方程组的通解</strong></p>
+<p>(1) 齐次方程组${Ax} &#x3D; 0$恒有解(必有零解)。当有非零解时，由于解向量的任意线性组合仍是该齐次方程组的解向量，因此${Ax}&#x3D; 0$的全体解向量构成一个向量空间，称为该方程组的解空间，解空间的维数是$n - r(A)$，解空间的一组基称为齐次方程组的基础解系。</p>
+<p>(2) $\eta_{1},\eta_{2},\cdots,\eta_{t}$是${Ax} &#x3D; 0$的基础解系，即：</p>
+<ol>
+<li><p>$\eta_{1},\eta_{2},\cdots,\eta_{t}$是${Ax} &#x3D; 0$的解；</p>
+</li>
+<li><p>$\eta_{1},\eta_{2},\cdots,\eta_{t}$线性无关；</p>
+</li>
+<li><p>${Ax} &#x3D; 0$的任一解都可以由$\eta_{1},\eta_{2},\cdots,\eta_{t}$线性表出.<br>$k_{1}\eta_{1} + k_{2}\eta_{2} + \cdots + k_{t}\eta_{t}$是${Ax} &#x3D; 0$的通解，其中$k_{1},k_{2},\cdots,k_{t}$是任意常数。</p>
+</li>
+</ol>
+<h2 id="矩阵的特征值和特征向量"><a href="#矩阵的特征值和特征向量" class="headerlink" title="矩阵的特征值和特征向量"></a>矩阵的特征值和特征向量</h2><h3 id="特征值分解与特征向量"><a href="#特征值分解与特征向量" class="headerlink" title="特征值分解与特征向量"></a>特征值分解与特征向量</h3><ul>
+<li><p>特征值分解可以得到特征值(eigenvalues)与特征向量(eigenvectors)；</p>
+</li>
+<li><p>特征值表示的是这个特征到底有多重要，而特征向量表示这个特征是什么。  </p>
+<p>如果说一个向量$\vec{v}$是方阵$A$的特征向量，将一定可以表示成下面的形式：</p>
+</li>
+</ul>
+<p>$$<br>A\nu &#x3D; \lambda \nu<br>$$</p>
+<p>$\lambda$为特征向量$\vec{v}$对应的特征值。特征值分解是将一个矩阵分解为如下形式： </p>
+<p>$$<br>A&#x3D;Q\sum Q^{-1}<br>$$</p>
+<p>其中，$Q$是这个矩阵$A$的特征向量组成的矩阵，$\sum$是一个对角矩阵，每一个对角线元素就是一个特征值，里面的特征值是由大到小排列的，这些特征值所对应的特征向量就是描述这个矩阵变化方向（从主要的变化到次要的变化排列）。也就是说矩阵$A$的信息可以由其特征值和特征向量表示。</p>
+<h3 id="奇异值与特征值有什么关系"><a href="#奇异值与特征值有什么关系" class="headerlink" title="奇异值与特征值有什么关系"></a>奇异值与特征值有什么关系</h3><p>那么奇异值和特征值是怎么对应起来的呢？我们将一个矩阵$A$的转置乘以$A$，并对$A^TA$求特征值，则有下面的形式：</p>
+<p>$$<br>(A^TA)V &#x3D; \lambda V<br>$$</p>
+<p>这里$V$就是上面的右奇异向量，另外还有：</p>
+<p>$$<br>\sigma_i &#x3D; \sqrt{\lambda_i}, u_i&#x3D;\frac{1}{\sigma_i}AV<br>$$</p>
+<p>这里的$\sigma$就是奇异值，$u$就是上面说的左奇异向量。<br>​奇异值$\sigma$跟特征值类似，在矩阵$\sum$中也是从大到小排列，而且$\sigma$的减少特别的快，在很多情况下，前10%甚至1%的奇异值的和就占了全部的奇异值之和的99%以上了。也就是说，我们也可以用前$r$（$r$远小于$m、n$）个的奇异值来近似描述矩阵，即部分奇异值分解：<br>$$<br>A_{m\times n}\approx U_{m \times r}\sum_{r\times r}V_{r \times n}^T<br>$$</p>
+<p>右边的三个矩阵相乘的结果将会是一个接近于$A$的矩阵，在这儿，$r$越接近于$n$，则相乘的结果越接近于$A$。</p>
+<p><strong>1.矩阵的特征值和特征向量的概念及性质</strong></p>
+<p>(1) 设$\lambda$是$A$的一个特征值，则 ${kA},{aA} + {bE},A^{2},A^{m},f(A),A^{T},A^{- 1},A^{*}$有一个特征值分别为<br>${kλ},{aλ} + b,\lambda^{2},\lambda^{m},f(\lambda),\lambda,\lambda^{- 1},\frac{|A|}{\lambda},$且对应特征向量相同（$A^{T}$ 例外）。</p>
+<p>(2)若$\lambda_{1},\lambda_{2},\cdots,\lambda_{n}$为$A$的$n$个特征值，则$\sum_{i&#x3D; 1}^{n}\lambda_{i} &#x3D; \sum_{i &#x3D; 1}^{n}a_&#123;&#123;ii&#125;&#125;,\prod_{i &#x3D; 1}^{n}\lambda_{i}&#x3D; |A|$ ,从而$|A| \neq 0 \Leftrightarrow A$没有特征值。</p>
+<p>(3)设$\lambda_{1},\lambda_{2},\cdots,\lambda_{s}$为$A$的$s$个特征值，对应特征向量为$\alpha_{1},\alpha_{2},\cdots,\alpha_{s}$，</p>
+<p>若: $\alpha &#x3D; k_{1}\alpha_{1} + k_{2}\alpha_{2} + \cdots + k_{s}\alpha_{s}$ ,</p>
+<p>则: $A^{n}\alpha &#x3D; k_{1}A^{n}\alpha_{1} + k_{2}A^{n}\alpha_{2} + \cdots +k_{s}A^{n}\alpha_{s} &#x3D; k_{1}\lambda_{1}^{n}\alpha_{1} +k_{2}\lambda_{2}^{n}\alpha_{2} + \cdots k_{s}\lambda_{s}^{n}\alpha_{s}$ 。</p>
+<p><strong>2.相似变换、相似矩阵的概念及性质</strong></p>
+<p>(1) 若$A \sim B$，则</p>
+<ol>
+<li><p>$A^{T} \sim B^{T},A^{- 1} \sim B^{- 1},,A^{<em>} \sim B^{</em>}$</p>
+</li>
+<li><p>$|A| &#x3D; |B|,\sum_{i &#x3D; 1}^{n}A_&#123;&#123;ii&#125;&#125; &#x3D; \sum_{i &#x3D;1}^{n}b_&#123;&#123;ii&#125;&#125;,r(A) &#x3D; r(B)$</p>
+</li>
+<li><p>$|\lambda E - A| &#x3D; |\lambda E - B|$，对$\forall\lambda$成立</p>
+</li>
+</ol>
+<p><strong>3.矩阵可相似对角化的充分必要条件</strong></p>
+<p>(1)设$A$为$n$阶方阵，则$A$可对角化$\Leftrightarrow$对每个$k_{i}$重根特征值$\lambda_{i}$，有$n-r(\lambda_{i}E - A) &#x3D; k_{i}$</p>
+<p>(2) 设$A$可对角化，则由$P^{- 1}{AP} &#x3D; \Lambda,$有$A &#x3D; {PΛ}P^{-1}$，从而$A^{n} &#x3D; P\Lambda^{n}P^{- 1}$</p>
+<p>(3) 重要结论</p>
+<ol>
+<li><p>若$A \sim B,C \sim D$，则$\begin{bmatrix}  A &amp; O \ O &amp; C \\end{bmatrix} \sim \begin{bmatrix} B &amp; O \  O &amp; D \\end{bmatrix}$.</p>
+</li>
+<li><p>若$A \sim B$，则$f(A) \sim f(B),\left| f(A) \right| \sim \left| f(B)\right|$，其中$f(A)$为关于$n$阶方阵$A$的多项式。</p>
+</li>
+<li><p>若$A$为可对角化矩阵，则其非零特征值的个数(重根重复计算)＝秩($A$)</p>
+</li>
+</ol>
+<p><strong>4.实对称矩阵的特征值、特征向量及相似对角阵</strong></p>
+<p>(1)相似矩阵：设$A,B$为两个$n$阶方阵，如果存在一个可逆矩阵$P$，使得$B &#x3D;P^{- 1}{AP}$成立，则称矩阵$A$与$B$相似，记为$A \sim B$。</p>
+<p>(2)相似矩阵的性质：如果$A \sim B$则有：</p>
+<ol>
+<li><p>$A^{T} \sim B^{T}$</p>
+</li>
+<li><p>$A^{- 1} \sim B^{- 1}$ （若$A$，$B$均可逆）</p>
+</li>
+<li><p>$A^{k} \sim B^{k}$ （$k$为正整数）</p>
+</li>
+<li><p>$\left| {λE} - A \right| &#x3D; \left| {λE} - B \right|$，从而$A,B$<br>有相同的特征值</p>
+</li>
+<li><p>$\left| A \right| &#x3D; \left| B \right|$，从而$A,B$同时可逆或者不可逆</p>
+</li>
+<li><p>秩$\left( A \right) &#x3D;$秩$\left( B \right),\left| {λE} - A \right| &#x3D;\left| {λE} - B \right|$，$A,B$不一定相似</p>
+</li>
+</ol>
+<h2 id="二次型"><a href="#二次型" class="headerlink" title="二次型"></a>二次型</h2><p><strong>1.</strong>$\mathbf{n}$<strong>个变量</strong>$\mathbf{x}<em>{\mathbf{1&#125;&#125;\mathbf{,}\mathbf{x}</em>{\mathbf{2&#125;&#125;\mathbf{,\cdots,}\mathbf{x}_{\mathbf{n&#125;&#125;$<strong>的二次齐次函数</strong></p>
+<p>$f(x_{1},x_{2},\cdots,x_{n}) &#x3D; \sum_{i &#x3D; 1}^{n}{\sum_{j &#x3D;1}^{n}{a_&#123;&#123;ij&#125;&#125;x_{i}y_{j&#125;&#125;}$，其中$a_&#123;&#123;ij&#125;&#125; &#x3D; a_&#123;&#123;ji&#125;&#125;(i,j &#x3D;1,2,\cdots,n)$，称为$n$元二次型，简称二次型. 若令$x &#x3D; \ \begin{bmatrix}x_{1} \ x_{1} \  \vdots \ x_{n} \ \end{bmatrix},A &#x3D; \begin{bmatrix}  a_{11}&amp; a_{12}&amp; \cdots &amp; a_{1n} \  a_{21}&amp; a_{22}&amp; \cdots &amp; a_{2n} \ \cdots &amp;\cdots &amp;\cdots &amp;\cdots \  a_{n1}&amp; a_{n2} &amp; \cdots &amp; a_&#123;&#123;nn&#125;&#125; \\end{bmatrix}$,这二次型$f$可改写成矩阵向量形式$f &#x3D;x^{T}{Ax}$。其中$A$称为二次型矩阵，因为$a_&#123;&#123;ij&#125;&#125; &#x3D;a_&#123;&#123;ji&#125;&#125;(i,j &#x3D;1,2,\cdots,n)$，所以二次型矩阵均为对称矩阵，且二次型与对称矩阵一一对应，并把矩阵$A$的秩称为二次型的秩。</p>
+<p><strong>2.惯性定理，二次型的标准形和规范形</strong></p>
+<p>(1) 惯性定理</p>
+<p>对于任一二次型，不论选取怎样的合同变换使它化为仅含平方项的标准型，其正负惯性指数与所选变换无关，这就是所谓的惯性定理。</p>
+<p>(2) 标准形</p>
+<p>二次型$f &#x3D; \left( x_{1},x_{2},\cdots,x_{n} \right) &#x3D;x^{T}{Ax}$经过合同变换$x &#x3D; {Cy}$化为$f &#x3D; x^{T}{Ax} &#x3D;y^{T}C^{T}{AC}$</p>
+<p>$y &#x3D; \sum_{i &#x3D; 1}^{r}{d_{i}y_{i}^{2&#125;&#125;$称为 $f(r \leq n)$的标准形。在一般的数域内，二次型的标准形不是唯一的，与所作的合同变换有关，但系数不为零的平方项的个数由$r(A)$唯一确定。</p>
+<p>(3) 规范形</p>
+<p>任一实二次型$f$都可经过合同变换化为规范形$f &#x3D; z_{1}^{2} + z_{2}^{2} + \cdots z_{p}^{2} - z_{p + 1}^{2} - \cdots -z_{r}^{2}$，其中$r$为$A$的秩，$p$为正惯性指数，$r -p$为负惯性指数，且规范型唯一。</p>
+<p><strong>3.用正交变换和配方法化二次型为标准形，二次型及其矩阵的正定性</strong></p>
+<p>设$A$正定$\Rightarrow {kA}(k &gt; 0),A^{T},A^{- 1},A^{*}$正定；$|A| &gt;0$,$A$可逆；$a_&#123;&#123;ii&#125;&#125; &gt; 0$，且$|A_&#123;&#123;ii&#125;&#125;| &gt; 0$</p>
+<p>$A$，$B$正定$\Rightarrow A +B$正定，但${AB}$，${BA}$不一定正定</p>
+<p>$A$正定$\Leftrightarrow f(x) &#x3D; x^{T}{Ax} &gt; 0,\forall x \neq 0$</p>
+<p>$\Leftrightarrow A$的各阶顺序主子式全大于零</p>
+<p>$\Leftrightarrow A$的所有特征值大于零</p>
+<p>$\Leftrightarrow A$的正惯性指数为$n$</p>
+<p>$\Leftrightarrow$存在可逆阵$P$使$A &#x3D; P^{T}P$</p>
+<p>$\Leftrightarrow$存在正交矩阵$Q$，使$Q^{T}{AQ} &#x3D; Q^{- 1}{AQ} &#x3D;\begin{pmatrix} \lambda_{1} &amp; &amp; \ \begin{matrix}  &amp; \  &amp; \ \end{matrix} &amp;\ddots &amp; \  &amp; &amp; \lambda_{n} \ \end{pmatrix},$</p>
+<p>其中$\lambda_{i} &gt; 0,i &#x3D; 1,2,\cdots,n.$正定$\Rightarrow {kA}(k &gt;0),A^{T},A^{- 1},A^{*}$正定； $|A| &gt; 0,A$可逆；$a_&#123;&#123;ii&#125;&#125; &gt;0$，且$|A_&#123;&#123;ii&#125;&#125;| &gt; 0$ 。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1]Ian，Goodfellow，Yoshua，Bengio，Aaron…深度学习[M]，人民邮电出版，2017</p>
+<p>[2]周志华.机器学习[M].清华大学出版社，2016.</p>
+<p>[3]同济大学数学系.高等数学（第七版）[M]，高等教育出版社，2014.</p>
+<p>[4]盛骤，试式千，潘承毅等编. 概率论与数理统计（第4版）[M]，高等教育出版社，2008</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/00.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/">https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/00.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E6%95%B0%E5%AD%A6/">数学</a><a class="post-meta__tags" href="/blog/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/">线性代数</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/02.%E7%9F%A9%E9%98%B5%E6%B6%88%E5%85%83/" title="矩阵消元"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">矩阵消元</div></div><div class="info-2"><div class="info-item-1">第二讲：矩阵消元这个方法最早由高斯提出，我们以前解方程组的时候都会使用，现在来看如何使用矩阵实现消元法。 消元法有三元方程组$\begin{cases}x&amp;+2y&amp;+z&amp;&#x3D;2\3x&amp;+8y&amp;+z&amp;&#x3D;12\&amp;4y&amp;+z&amp;&#x3D;2\end{cases}$，对应的矩阵形式$Ax&#x3D;b$为$\begin{bmatrix}1&amp;2&amp;1\3&amp;8&amp;1\0&amp;4&amp;1\end{bmatrix}\begin{bmatrix}x\y\z\end{bmatrix}...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E5%A4%A7%E6%A8%A1%E5%9E%8B/04.%E5%BE%AE%E8%B0%83%E7%AF%87/07.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B9%8BAdaptation/" title="大模型之Adaptation"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">大模型之Adaptation</div></div><div class="info-2"><div class="info-item-1">第7章 大模型之Adaptation 使用语言模型（例如在上下文学习中）通过仅给出提示，我们已经能够执行一些任务。然而，提示方法并不适用于全部的下游任务，如自然语言推理（NLI）、问题回答（QA）、将网络表格转换为文本、解析电子健康记录（EHR）等。 下游任务与语言模型的训练数据（例如，Pile数据集）可能在格式和主题上有所不同，或者需要随时间更新新知识。因此，语言模型需要使用特定于任务的数据或领域知识来针对下游任务进行适配。 7.1 引言7.1.1 为什么需要Adaptation?在自动化和人工智能的时代，语言模型已成为一个迅速发展的领域。这些模型被训练为对各种各样的任务作出响应，但它...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/12.%E5%9B%BE%E5%92%8C%E7%BD%91%E7%BB%9C/" title="图和网络"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">图和网络</div></div><div class="info-2"><div class="info-item-1">图和网络123456789101112import networkx as nximport matplotlib.pyplot as plt%matplotlib inlinedg = nx.DiGraph()dg.add_edges_from([(1,2), (2,3), (1,3), (1,4), (3,4)])edge_labels = &#123;(1, 2): 1, (1, 3): 3, (1, 4): 4, (2, 3): 2, (3, 4): 5&#125;pos = nx.spring_layout(dg)nx.draw_networkx_edge_labels(dg,...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/32.%E5%9F%BA%E5%8F%98%E6%8D%A2%E5%92%8C%E5%9B%BE%E5%83%8F%E5%8E%8B%E7%BC%A9/" title="基变换和图像压缩"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">基变换和图像压缩</div></div><div class="info-2"><div class="info-item-1">图像压缩本讲我们介绍一种图片有损压缩的一种方法：JPEG。 假设我们有一张图片，长宽皆为$512$个像素，我们用$x_i$来表示第$i$个像素，如果是灰度照片，通常$x_i$可以在$[0,255]$上取值，也就是8 bits。对于这承载这张图片信息的向量$x$来说，有$x\in\mathbb{R}^n, n&#x3D;512^2$。而如果是彩色照片，通常需要三个量来表示一个像素，则向量长度也会变为现在的三倍。 如此大的数据不经过压缩很难广泛传播。教学录像采用的压缩方法就是JPEG（Joint Photographic Expert Group，联合图像专家组），该方法采用的就是基变换的方...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/27.%E5%A4%8D%E6%95%B0%E7%9F%A9%E9%98%B5%E5%92%8C%E5%BF%AB%E9%80%9F%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2/" title="复数矩阵和快速傅里叶变换"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">复数矩阵和快速傅里叶变换</div></div><div class="info-2"><div class="info-item-1">本讲主要介绍复数向量、复数矩阵的相关知识（包括如何做复数向量的点积运算、什么是复数对称矩阵等），以及傅里叶矩阵（最重要的复数矩阵）和快速傅里叶变换。 复数矩阵运算先介绍复数向量，我们不妨换一个字母符号来表示：$z&#x3D;\begin{bmatrix}z_1\z_2\\vdots\z_n\end{bmatrix}$，向量的每一个分量都是复数。此时$z$不再属于$\mathbb{R}^n$实向量空间，它现在处于$\mathbb{C}^n$复向量空间。 计算复向量的模对比实向量，我们计算模只需要计算$\left|v\right|&#x3D;\sqrt{v^Tv}$即可，而如果对复向量使用$...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/33.%E5%B7%A6%E5%8F%B3%E9%80%86%E5%92%8C%E4%BC%AA%E9%80%86/" title="左右逆和伪逆"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">左右逆和伪逆</div></div><div class="info-2"><div class="info-item-1">前面我们涉及到的逆（inverse）都是指左、右乘均成立的逆矩阵，即$A^{-1}A&#x3D;I&#x3D;AA^{-1}$。在这种情况下，$m\times n$矩阵$A$满足$m&#x3D;n&#x3D;rank(A)$，也就是满秩方阵。 左逆（left inserve）记得我们在最小二乘一讲（第十六讲）介绍过列满秩的情况，也就是列向量线性无关，但行向量通常不是线性无关的。常见的列满秩矩阵$A$满足$m&gt;n&#x3D;rank(A)$。 列满秩时，列向量线性无关，所以其零空间中只有零解，方程$Ax&#x3D;b$可能有一个唯一解（$b$在$A$的列空间中，此特解就是全部解，因为...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/06.%E5%88%97%E7%A9%BA%E9%97%B4%E5%92%8C%E9%9B%B6%E7%A9%BA%E9%97%B4/" title="列空间和零空间"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">列空间和零空间</div></div><div class="info-2"><div class="info-item-1">第六讲：列空间和零空间对向量子空间$S$和$T$，有$S \cap T$也是向量子空间。 对$m \times n$矩阵$A$，$n \times 1$矩阵$x$，$m \times 1$矩阵$b$，运算$Ax&#x3D;b$： $$\begin{bmatrix}a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1(n-1)} &amp; a_{1n} \a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2(n-1)} &amp; a_{2n} \\vdots &amp; \vdots &amp; \ddots &amp...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/02.%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/03.%E4%B9%98%E6%B3%95%E5%92%8C%E9%80%86%E7%9F%A9%E9%98%B5/" title="乘法和逆矩阵"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">乘法和逆矩阵</div></div><div class="info-2"><div class="info-item-1">乘法和逆矩阵上一讲大概介绍了矩阵乘法和逆矩阵，本讲就来做进一步说明。 矩阵乘法 行列内积：有$m\times n$矩阵$A$和$n\times p$矩阵$B$（$A$的总列数必须与$B$的总行数相等），两矩阵相乘有$AB&#x3D;C$，$C$是一个$m\times p$矩阵，对于$C$矩阵中的第$i$行第$j$列元素$c_{ij}$，有： $$c_{ij}&#x3D;row_i\cdot column_j&#x3D;\sum_{k&#x3D;i}^na_{ik}b_{kj}$$ 其中$a_{ik}$是$A$矩阵的第$i$行第$k$列元素，$b_{kj}$是$B$矩阵的第$k$行第$j$...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">线性代数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%8C%E5%88%97%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">行列式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A9%E9%98%B5"><span class="toc-number">1.2.</span> <span class="toc-text">矩阵</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91%E9%87%8F"><span class="toc-number">1.3.</span> <span class="toc-text">向量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84"><span class="toc-number">1.4.</span> <span class="toc-text">线性方程组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A9%E9%98%B5%E7%9A%84%E7%89%B9%E5%BE%81%E5%80%BC%E5%92%8C%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F"><span class="toc-number">1.5.</span> <span class="toc-text">矩阵的特征值和特征向量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%BE%81%E5%80%BC%E5%88%86%E8%A7%A3%E4%B8%8E%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F"><span class="toc-number">1.5.1.</span> <span class="toc-text">特征值分解与特征向量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%87%E5%BC%82%E5%80%BC%E4%B8%8E%E7%89%B9%E5%BE%81%E5%80%BC%E6%9C%89%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB"><span class="toc-number">1.5.2.</span> <span class="toc-text">奇异值与特征值有什么关系</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E6%AC%A1%E5%9E%8B"><span class="toc-number">1.6.</span> <span class="toc-text">二次型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">1.7.</span> <span class="toc-text">参考文献</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

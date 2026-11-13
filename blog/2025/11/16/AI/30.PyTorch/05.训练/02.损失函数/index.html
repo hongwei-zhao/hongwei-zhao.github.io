@@ -1,0 +1,454 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>损失函数 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="损失函数损失函数是衡量模型输出与真实标签之间的差异。我们还经常听到代价函数和目标函数，它们之间差异如下：  损失函数(Loss Function)是计算一个样本的模型输出与真实标签的差异 $Loss &#x3D;f\left(y^{\wedge}, y\right)$ 代价函数(Cost Function)是计算整个样本集的模型输出与真实标签的差异，是所有样本损失函数的平均值 $\cos t&amp;#x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="损失函数">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/05.%E8%AE%AD%E7%BB%83/02.%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="损失函数损失函数是衡量模型输出与真实标签之间的差异。我们还经常听到代价函数和目标函数，它们之间差异如下：  损失函数(Loss Function)是计算一个样本的模型输出与真实标签的差异 $Loss &#x3D;f\left(y^{\wedge}, y\right)$ 代价函数(Cost Function)是计算整个样本集的模型输出与真实标签的差异，是所有样本损失函数的平均值 $\cos t&amp;#x">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-04T00:56:03.059Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="PyTorch">
+<meta property="article:tag" content="训练">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "损失函数",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/05.%E8%AE%AD%E7%BB%83/02.%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-04T00:56:03.059Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/05.%E8%AE%AD%E7%BB%83/02.%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '损失函数',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">损失函数</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">损失函数</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-04T00:56:03.059Z" title="更新于 2026-03-04 08:56:03">2026-03-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PyTorch/">PyTorch</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PyTorch/%E8%AE%AD%E7%BB%83/">训练</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>损失函数是衡量模型输出与真实标签之间的差异。我们还经常听到代价函数和目标函数，它们之间差异如下：</p>
+<ul>
+<li>损失函数(Loss Function)是计算<strong>一个</strong>样本的模型输出与真实标签的差异 $Loss &#x3D;f\left(y^{\wedge}, y\right)$</li>
+<li>代价函数(Cost Function)是计算整个样本集的模型输出与真实标签的差异，是所有样本损失函数的平均值 $\cos t&#x3D;\frac{1}{N} \sum_{i}^{N} f\left(y{i}^{\wedge}, y_{i}\right)$</li>
+<li>目标函数(Objective Function)就是代价函数加上正则项</li>
+</ul>
+<p>在 PyTorch 中的损失函数也是继承于<code>nn.Module</code>，所以损失函数也可以看作网络层。</p>
+<h2 id="loss-backward"><a href="#loss-backward" class="headerlink" title="loss.backward()"></a>loss.backward()</h2><p><code>loss.backward()</code> 是 PyTorch 中一个非常重要的方法，用于自动微分（autograd）系统来反向传播误差（或损失）。</p>
+<h3 id="PyTorch-的-autograd-系统"><a href="#PyTorch-的-autograd-系统" class="headerlink" title="PyTorch 的 autograd 系统"></a>PyTorch 的 autograd 系统</h3><p>PyTorch 的 autograd 系统能够自动计算张量（tensor）上的所有操作的梯度。它采用计算图（computation graph）的方式来跟踪所有涉及的操作，从而可以轻松地计算梯度。</p>
+<p>当你定义一个计算图时，例如通过定义一系列的张量操作和函数，autograd 会跟踪这些操作。然后，当你调用 <code>loss.backward()</code> 时，autograd 会从损失（loss）开始，反向遍历计算图，计算每个参数的梯度。</p>
+<h3 id="使用-loss-backward"><a href="#使用-loss-backward" class="headerlink" title="使用 loss.backward()"></a>使用 <code>loss.backward()</code></h3><p>在训练神经网络时，我们通常有一个损失函数，它衡量模型预测与真实值之间的差异。我们的目标是优化模型的参数，以最小化这个损失。为了做到这一点，我们需要计算损失关于模型参数的梯度，并使用这些梯度来更新参数。</p>
+<p><code>loss.backward()</code> 就是用来计算这些梯度的。它会在计算图中反向传播误差，计算每个参数的梯度，并将这些梯度存储在参数的 <code>.grad</code> 属性中。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>下面是一个简单的示例，演示了如何在 PyTorch 中使用 <code>loss.backward()</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><br><span class="hljs-comment"># 定义一个简单的线性模型</span><br>model = nn.Linear(<span class="hljs-number">10</span>, <span class="hljs-number">1</span>)<br><br><span class="hljs-comment"># 定义损失函数</span><br>criterion = nn.MSELoss()<br><br><span class="hljs-comment"># 创建一些模拟数据</span><br>inputs = torch.randn(<span class="hljs-number">16</span>, <span class="hljs-number">10</span>)<br>targets = torch.randn(<span class="hljs-number">16</span>, <span class="hljs-number">1</span>)<br><br><span class="hljs-comment"># 前向传播</span><br>outputs = model(inputs)<br>loss = criterion(outputs, targets)<br><br><span class="hljs-comment"># 清除之前的梯度（如果存在的话）</span><br>model.zero_grad()<br><br><span class="hljs-comment"># 反向传播误差，计算梯度</span><br>loss.backward()<br><br><span class="hljs-comment"># 现在，model.parameters() 中的每个参数都有一个 .grad 属性，存储了它的梯度</span><br><span class="hljs-keyword">for</span> param <span class="hljs-keyword">in</span> model.parameters():<br>    <span class="hljs-built_in">print</span>(param.grad)<br></code></pre></td></tr></table></figure>
+
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li><strong>梯度累积</strong>：在某些情况下，你可能想要在多个小批量（mini-batches）上累积梯度，然后再更新参数。这可以通过多次调用 <code>loss.backward()</code>（而不是在每次调用之间调用 <code>model.zero_grad()</code>）来实现。然后，你可以使用优化器（如 <code>torch.optim.SGD</code>）来更新参数。</li>
+<li><strong>不需要梯度的操作</strong>：如果你不想跟踪某个操作的梯度，可以使用 <code>torch.no_grad()</code> 上下文管理器。这对于评估模型或生成不需要梯度的数据时很有用。</li>
+<li><strong>梯度清零</strong>：在每次新的迭代（或批次）开始时，通常需要清零模型的梯度，以避免梯度累积。这可以通过调用 <code>model.zero_grad()</code> 来实现。</li>
+</ol>
+<h2 id="二分类交叉熵损失函数"><a href="#二分类交叉熵损失函数" class="headerlink" title="二分类交叉熵损失函数"></a>二分类交叉熵损失函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.BCELoss(weight=<span class="hljs-literal">None</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>：计算二分类任务时的交叉熵（Cross Entropy）函数。在二分类中，label 是{0,1}。对于进入交叉熵函数的 input 为概率分布的形式。一般来说，input 为 sigmoid 激活层的输出，或者 softmax 的输出。</p>
+<p><strong>主要参数</strong>：</p>
+<p><code>weight</code>:每个类别的 loss 设置权值</p>
+<p><code>size_average</code>:数据为 bool，为 True 时，返回的 loss 为平均值；为 False 时，返回的各样本的 loss 之和。</p>
+<p><code>reduce</code>:数据类型为 bool，为 True 时，loss 的返回是标量。</p>
+<p>计算公式如下：<br>$<br>\ell(x, y)&#x3D;\left{\begin{array}{ll}<br>\operatorname{mean}(L), &amp; \text { if reduction }&#x3D;\text { ‘mean’ } \<br>\operatorname{sum}(L), &amp; \text { if reduction }&#x3D;\text { ‘sum’ }<br>\end{array}\right.<br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">m = nn.Sigmoid()<br>loss = nn.BCELoss()<br>target = torch.empty(<span class="hljs-number">3</span>).random_(<span class="hljs-number">2</span>)<br>output = loss(m(<span class="hljs-built_in">input</span>), target)<br>output.backward()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;BCELoss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">BCELoss</span>损失函数的计算结果为 tensor(<span class="hljs-number">0</span>.<span class="hljs-number">5732</span>, grad_fn=&lt;BinaryCrossEntropyBackward&gt;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="交叉熵损失函数"><a href="#交叉熵损失函数" class="headerlink" title="交叉熵损失函数"></a>交叉熵损失函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.CrossEntropyLoss(weight=<span class="hljs-literal">None</span>, size_average=<span class="hljs-literal">None</span>, ignore_index=-<span class="hljs-number">100</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>：计算交叉熵函数</p>
+<p><strong>主要参数</strong>：</p>
+<p><code>weight</code>:每个类别的 loss 设置权值。</p>
+<p><code>size_average</code>:数据为 bool，为 True 时，返回的 loss 为平均值；为 False 时，返回的各样本的 loss 之和。</p>
+<p><code>ignore_index</code>:忽略某个类的损失函数。</p>
+<p><code>reduce</code>:数据类型为 bool，为 True 时，loss 的返回是标量。</p>
+<p>计算公式如下：<br>$<br>\operatorname{loss}(x, \text { class })&#x3D;-\log \left(\frac{\exp (x[\text { class }])}{\sum_{j} \exp (x[j])}\right)&#x3D;-x[\text { class }]+\log \left(\sum_{j} \exp (x[j])\right)<br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">loss = nn.CrossEntropyLoss()<br><span class="hljs-built_in">input</span> = torch.randn(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>, requires_grad=<span class="hljs-literal">True</span>)<br>target = torch.empty(<span class="hljs-number">3</span>, dtype=torch.long).random_(<span class="hljs-number">5</span>)<br>output = loss(<span class="hljs-built_in">input</span>, target)<br>output.backward()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>tensor(2.0115, grad_fn=&lt;NllLossBackward&gt;)
+</code></pre>
+<h2 id="L1-损失函数"><a href="#L1-损失函数" class="headerlink" title="L1 损失函数"></a>L1 损失函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.L1Loss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 计算输出<code>y</code>和真实标签<code>target</code>之间的差值的绝对值。</p>
+<p>我们需要知道的是，<code>reduction</code>参数决定了计算模式。有三种计算模式可选：none：逐个元素计算。<br>sum：所有元素求和，返回标量。<br>mean：加权平均，返回标量。<br>如果选择<code>none</code>，那么返回的结果是和输入元素相同尺寸的。默认计算方式是求平均。</p>
+<p><strong>计算公式如下</strong>：<br>$<br>L_{n} &#x3D; |x_{n}-y_{n}|<br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">loss = nn.L1Loss()<br><span class="hljs-built_in">input</span> = torch.randn(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>, requires_grad=<span class="hljs-literal">True</span>)<br>target = torch.randn(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>)<br>output = loss(<span class="hljs-built_in">input</span>, target)<br>output.backward()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;L1损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>L1损失函数的计算结果为 tensor(1.5729, grad_fn=&lt;L1LossBackward&gt;)
+</code></pre>
+<h2 id="MSE-损失函数"><a href="#MSE-损失函数" class="headerlink" title="MSE 损失函数"></a>MSE 损失函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.MSELoss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 计算输出<code>y</code>和真实标签<code>target</code>之差的平方。</p>
+<p>和<code>L1Loss</code>一样，<code>MSELoss</code>损失函数中，<code>reduction</code>参数决定了计算模式。有三种计算模式可选：none：逐个元素计算。<br>sum：所有元素求和，返回标量。默认计算方式是求平均。</p>
+<p><strong>计算公式如下</strong>：</p>
+<p>$<br>l_{n}&#x3D;\left(x_{n}-y_{n}\right)^{2}<br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">loss = nn.MSELoss()<br><span class="hljs-built_in">input</span> = torch.randn(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>, requires_grad=<span class="hljs-literal">True</span>)<br>target = torch.randn(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>)<br>output = loss(<span class="hljs-built_in">input</span>, target)<br>output.backward()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;MSE损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>MSE损失函数的计算结果为 tensor(1.6968, grad_fn=&lt;MseLossBackward&gt;)
+</code></pre>
+<h2 id="平滑-L1-Smooth-L1-损失函数"><a href="#平滑-L1-Smooth-L1-损失函数" class="headerlink" title="平滑 L1 (Smooth L1)损失函数"></a>平滑 L1 (Smooth L1)损失函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.SmoothL1Loss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>, beta=<span class="hljs-number">1.0</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： L1 的平滑输出，其功能是减轻离群点带来的影响</p>
+<p><code>reduction</code>参数决定了计算模式。有三种计算模式可选：none：逐个元素计算。<br>sum：所有元素求和，返回标量。默认计算方式是求平均。</p>
+<p><strong>提醒</strong>： 之后的损失函数中，关于<code>reduction</code> 这个参数依旧会存在。所以，之后就不再单独说明。</p>
+<p><strong>计算公式如下</strong>：<br>$<br>\operatorname{loss}(x, y)&#x3D;\frac{1}{n} \sum_{i&#x3D;1}^{n} z_{i}<br>$<br>其中，<br>$<br>z_{i}&#x3D;\left{\begin{array}{ll}<br>0.5\left(x_{i}-y_{i}\right)^{2}, &amp; \text { if }\left|x_{i}-y_{i}\right|&lt;1 \<br>\left|x_{i}-y_{i}\right|-0.5, &amp; \text { otherwise }<br>\end{array}\right.<br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">loss = nn.SmoothL1Loss()<br><span class="hljs-built_in">input</span> = torch.randn(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>, requires_grad=<span class="hljs-literal">True</span>)<br>target = torch.randn(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>)<br>output = loss(<span class="hljs-built_in">input</span>, target)<br>output.backward()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;SmoothL1Loss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>SmoothL1Loss损失函数的计算结果为 tensor(0.7808, grad_fn=&lt;SmoothL1LossBackward&gt;)
+</code></pre>
+<p><strong>平滑 L1 与 L1 的对比</strong></p>
+<p>这里我们通过可视化两种损失函数曲线来对比平滑 L1 和 L1 两种损失函数的区别。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python">inputs = torch.linspace(-<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, steps=<span class="hljs-number">5000</span>)<br>target = torch.zeros_like(inputs)<br><br>loss_f_smooth = nn.SmoothL1Loss(reduction=<span class="hljs-string">&#x27;none&#x27;</span>)<br>loss_smooth = loss_f_smooth(inputs, target)<br>loss_f_l1 = nn.L1Loss(reduction=<span class="hljs-string">&#x27;none&#x27;</span>)<br>loss_l1 = loss_f_l1(inputs,target)<br><br>plt.plot(inputs.numpy(), loss_smooth.numpy(), label=<span class="hljs-string">&#x27;Smooth L1 Loss&#x27;</span>)<br>plt.plot(inputs.numpy(), loss_l1, label=<span class="hljs-string">&#x27;L1 loss&#x27;</span>)<br>plt.xlabel(<span class="hljs-string">&#x27;x_i - y_i&#x27;</span>)<br>plt.ylabel(<span class="hljs-string">&#x27;loss value&#x27;</span>)<br>plt.legend()<br>plt.grid()<br>plt.show()<br></code></pre></td></tr></table></figure>
+
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20240322184931.png" style="zoom: 60%;" /></div>
+
+<p>可以看出，对于<code>smoothL1</code>来说，在 0 这个尖端处，过渡更为平滑。</p>
+<h2 id="目标泊松分布的负对数似然损失"><a href="#目标泊松分布的负对数似然损失" class="headerlink" title="目标泊松分布的负对数似然损失"></a>目标泊松分布的负对数似然损失</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.PoissonNLLLoss(log_input=<span class="hljs-literal">True</span>, full=<span class="hljs-literal">False</span>, size_average=<span class="hljs-literal">None</span>, eps=<span class="hljs-number">1e-08</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 泊松分布的负对数似然损失函数</p>
+<p><strong>主要参数</strong>：</p>
+<p><code>log_input</code>：输入是否为对数形式，决定计算公式。</p>
+<p><code>full</code>：计算所有 loss，默认为 False。</p>
+<p><code>eps</code>：修正项，避免 input 为 0 时，log(input) 为 nan 的情况。</p>
+<p><strong>数学公式</strong>：</p>
+<ul>
+<li><p>当参数<code>log_input=True</code>：<br>$<br>\operatorname{loss}\left(x_{n}, y_{n}\right)&#x3D;e^{x_{n&#125;&#125;-x_{n} \cdot y_{n}<br>$</p>
+</li>
+<li><p>当参数<code>log_input=False</code>：</p>
+<p>$<br>\operatorname{loss}\left(x*{n}, y*{n}\right)&#x3D;x*{n}-y*{n} \cdot \log \left(x_{n}+\text { eps }\right)<br>$</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">loss = nn.PoissonNLLLoss()<br>log_input = torch.randn(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>, requires_grad=<span class="hljs-literal">True</span>)<br>target = torch.randn(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>)<br>output = loss(log_input, target)<br>output.backward()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;PoissonNLLLoss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">PoissonNLLLoss</span>损失函数的计算结果为 tensor(<span class="hljs-number">0</span>.<span class="hljs-number">7358</span>, grad_fn=&lt;MeanBackward0&gt;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="KL-散度"><a href="#KL-散度" class="headerlink" title="KL 散度"></a>KL 散度</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.KLDivLoss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>, log_target=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 计算 KL 散度，也就是计算相对熵。用于连续分布的距离度量，并且对离散采用的连续输出空间分布进行回归通常很有用。</p>
+<p><strong>主要参数:</strong></p>
+<p><code>reduction</code>：计算模式，可为 <code>none</code>&#x2F;<code>sum</code>&#x2F;<code>mean</code>&#x2F;<code>batchmean</code>。</p>
+<pre><code>none：逐个元素计算。
+
+sum：所有元素求和，返回标量。
+
+mean：加权平均，返回标量。
+
+batchmean：batchsize 维度求平均值。
+</code></pre>
+<p><strong>计算公式</strong>：</p>
+<p>$<br>\begin{aligned}<br>D_{\mathrm{KL&#125;&#125;(P, Q)&#x3D;\mathrm{E}<em>{X \sim P}\left[\log \frac{P(X)}{Q(X)}\right] &amp;&#x3D;\mathrm{E}</em>{X \sim P}[\log P(X)-\log Q(X)] \<br>&amp;&#x3D;\sum_{i&#x3D;1}^{n} P\left(x_{i}\right)\left(\log P\left(x_{i}\right)-\log Q\left(x_{i}\right)\right)<br>\end{aligned}<br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">inputs = torch.tensor([[<span class="hljs-number">0.5</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.2</span>], [<span class="hljs-number">0.2</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.5</span>]])<br>target = torch.tensor([[<span class="hljs-number">0.9</span>, <span class="hljs-number">0.05</span>, <span class="hljs-number">0.05</span>], [<span class="hljs-number">0.1</span>, <span class="hljs-number">0.7</span>, <span class="hljs-number">0.2</span>]], dtype=torch.<span class="hljs-built_in">float</span>)<br>loss = nn.KLDivLoss()<br>output = loss(inputs,target)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;KLDivLoss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>KLDivLoss损失函数的计算结果为 tensor(-0.3335)
+</code></pre>
+<h2 id="MarginRankingLoss"><a href="#MarginRankingLoss" class="headerlink" title="MarginRankingLoss"></a>MarginRankingLoss</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.MarginRankingLoss(margin=<span class="hljs-number">0.0</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 计算两个向量之间的相似度，用于排序任务。该方法用于计算两组数据之间的差异。</p>
+<p><strong>主要参数:</strong></p>
+<p><code>margin</code>：边界值，$x_{1}$ 与$x_{2}$ 之间的差异值。</p>
+<p><code>reduction</code>：计算模式，可为 none&#x2F;sum&#x2F;mean。</p>
+<p><strong>计算公式</strong>：</p>
+<p>$<br>\operatorname{loss}(x 1, x 2, y)&#x3D;\max (0,-y *(x 1-x 2)+\operatorname{margin})<br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python">loss = nn.MarginRankingLoss()<br>input1 = torch.randn(<span class="hljs-number">3</span>, requires_grad=<span class="hljs-literal">True</span>)<br>input2 = torch.randn(<span class="hljs-number">3</span>, requires_grad=<span class="hljs-literal">True</span>)<br>target = torch.randn(<span class="hljs-number">3</span>).sign()<br>output = loss(input1, input2, target)<br>output.backward()<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;MarginRankingLoss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>MarginRankingLoss损失函数的计算结果为 tensor(0.7740, grad_fn=&lt;MeanBackward0&gt;)
+</code></pre>
+<h2 id="多标签边界损失函数"><a href="#多标签边界损失函数" class="headerlink" title="多标签边界损失函数"></a>多标签边界损失函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.MultiLabelMarginLoss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 对于多标签分类问题计算损失函数。</p>
+<p><strong>主要参数:</strong></p>
+<p><code>reduction</code>：计算模式，可为 none&#x2F;sum&#x2F;mean。</p>
+<p><strong>计算公式</strong>：<br>$<br>\operatorname{loss}(x, y)&#x3D;\sum_{i j} \frac{\max (0,1-x[y[j]]-x[i])}{x \cdot \operatorname{size}(0)}<br>$</p>
+<p>$<br>\begin{array}{l}<br>\text { 其中, } i&#x3D;0, \ldots, x \cdot \operatorname{size}(0), j&#x3D;0, \ldots, y \cdot \operatorname{size}(0), \text { 对于所有的 } i \text { 和 } j \text {, 都有 } y[j] \geq 0 \text { 并且 }\<br>i \neq y[j]<br>\end{array}<br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">loss = nn.MultiLabelMarginLoss()<br>x = torch.FloatTensor([[<span class="hljs-number">0.9</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.4</span>, <span class="hljs-number">0.8</span>]])<br><span class="hljs-comment"># for target y, only consider labels 3 and 0, not after label -1</span><br>y = torch.LongTensor([[<span class="hljs-number">3</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]])<span class="hljs-comment"># 真实的分类是，第3类和第0类</span><br>output = loss(x, y)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;MultiLabelMarginLoss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>MultiLabelMarginLoss损失函数的计算结果为 tensor(0.4500)
+</code></pre>
+<h2 id="二分类损失函数"><a href="#二分类损失函数" class="headerlink" title="二分类损失函数"></a>二分类损失函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.SoftMarginLoss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)torch.nn.(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 计算二分类的 logistic 损失。</p>
+<p><strong>主要参数:</strong></p>
+<p><code>reduction</code>：计算模式，可为 none&#x2F;sum&#x2F;mean。</p>
+<p><strong>计算公式</strong>：</p>
+<p>$<br>\operatorname{loss}(x, y)&#x3D;\sum_{i} \frac{\log (1+\exp (-y[i] \cdot x[i]))}{x \cdot \operatorname{nelement}()}<br>$</p>
+<p>$<br><br>\text { 其中, } x . \text { nelement() 为输入 } x \text { 中的样本个数。注意这里 } y \text { 也有 } 1 \text { 和 }-1 \text { 两种模式。 }<br><br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">inputs = torch.tensor([[<span class="hljs-number">0.3</span>, <span class="hljs-number">0.7</span>], [<span class="hljs-number">0.5</span>, <span class="hljs-number">0.5</span>]])  <span class="hljs-comment"># 两个样本，两个神经元</span><br>target = torch.tensor([[-<span class="hljs-number">1</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>]], dtype=torch.<span class="hljs-built_in">float</span>)  <span class="hljs-comment"># 该 loss 为逐个神经元计算，需要为每个神经元单独设置标签</span><br><br>loss_f = nn.SoftMarginLoss()<br>output = loss_f(inputs, target)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;SoftMarginLoss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>SoftMarginLoss损失函数的计算结果为 tensor(0.6764)
+</code></pre>
+<h2 id="多分类的折页损失"><a href="#多分类的折页损失" class="headerlink" title="多分类的折页损失"></a>多分类的折页损失</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.MultiMarginLoss(p=<span class="hljs-number">1</span>, margin=<span class="hljs-number">1.0</span>, weight=<span class="hljs-literal">None</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 计算多分类的折页损失</p>
+<p><strong>主要参数:</strong></p>
+<p><code>reduction</code>：计算模式，可为 none&#x2F;sum&#x2F;mean。</p>
+<p><code>p：</code>可选 1 或 2。</p>
+<p><code>weight</code>：各类别的 loss 设置权值。</p>
+<p><code>margin</code>：边界值</p>
+<p><strong>计算公式</strong>：</p>
+<p>$<br>\operatorname{loss}(x, y)&#x3D;\frac{\sum_{i} \max (0, \operatorname{margin}-x[y]+x[i])^{p&#125;&#125;{x \cdot \operatorname{size}(0)}<br>$</p>
+<p>$<br>\begin{array}{l}<br>\text { 其中, } x \in{0, \ldots, x \cdot \operatorname{size}(0)-1}, y \in{0, \ldots, y \cdot \operatorname{size}(0)-1} \text {, 并且对于所有的 } i \text { 和 } j \text {, }\<br>\text { 都有 } 0 \leq y[j] \leq x \cdot \operatorname{size}(0)-1, \text { 以及 } i \neq y[j] \text { 。 }<br>\end{array}<br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">inputs = torch.tensor([[<span class="hljs-number">0.3</span>, <span class="hljs-number">0.7</span>], [<span class="hljs-number">0.5</span>, <span class="hljs-number">0.5</span>]])<br>target = torch.tensor([<span class="hljs-number">0</span>, <span class="hljs-number">1</span>], dtype=torch.long)<br><br>loss_f = nn.MultiMarginLoss()<br>output = loss_f(inputs, target)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;MultiMarginLoss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>MultiMarginLoss损失函数的计算结果为 tensor(0.6000)
+</code></pre>
+<h2 id="三元组损失"><a href="#三元组损失" class="headerlink" title="三元组损失"></a>三元组损失</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.TripletMarginLoss(margin=<span class="hljs-number">1.0</span>, p=<span class="hljs-number">2.0</span>, eps=<span class="hljs-number">1e-06</span>, swap=<span class="hljs-literal">False</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 计算三元组损失。</p>
+<p><strong>三元组:</strong> 这是一种数据的存储或者使用格式。&lt;实体 1，关系，实体 2&gt;。在项目中，也可以表示为&lt; <code>anchor</code>, <code>positive examples</code> , <code>negative examples</code>&gt;</p>
+<p>在这个损失函数中，我们希望去<code>anchor</code>的距离更接近<code>positive examples</code>，而远离<code>negative examples </code></p>
+<p><strong>主要参数:</strong></p>
+<p><code>reduction</code>：计算模式，可为 none&#x2F;sum&#x2F;mean。</p>
+<p><code>p：</code>可选 1 或 2。</p>
+<p><code>margin</code>：边界值</p>
+<p><strong>计算公式</strong>：</p>
+<p>$<br>L(a, p, n)&#x3D;\max \left{d\left(a_{i}, p_{i}\right)-d\left(a_{i}, n_{i}\right)+\operatorname{margin}, 0\right}<br>$</p>
+<p>$<br>\text { 其中, } d\left(x_{i}, y_{i}\right)&#x3D;\left|\mathbf{x}<em>{i}-\mathbf{y}</em>{i}\right|_{\text {・ &#125;&#125;<br>$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">triplet_loss = nn.TripletMarginLoss(margin=<span class="hljs-number">1.0</span>, p=<span class="hljs-number">2</span>)<br>anchor = torch.randn(<span class="hljs-number">100</span>, <span class="hljs-number">128</span>, requires_grad=<span class="hljs-literal">True</span>)<br>positive = torch.randn(<span class="hljs-number">100</span>, <span class="hljs-number">128</span>, requires_grad=<span class="hljs-literal">True</span>)<br>negative = torch.randn(<span class="hljs-number">100</span>, <span class="hljs-number">128</span>, requires_grad=<span class="hljs-literal">True</span>)<br>output = triplet_loss(anchor, positive, negative)<br>output.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;TripletMarginLoss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>TripletMarginLoss损失函数的计算结果为 tensor(1.1667, grad_fn=&lt;MeanBackward0&gt;)
+</code></pre>
+<h2 id="HingEmbeddingLoss"><a href="#HingEmbeddingLoss" class="headerlink" title="HingEmbeddingLoss"></a>HingEmbeddingLoss</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.HingeEmbeddingLoss(margin=<span class="hljs-number">1.0</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 对输出的 embedding 结果做 Hing 损失计算</p>
+<p><strong>主要参数:</strong></p>
+<p><code>reduction</code>：计算模式，可为 none&#x2F;sum&#x2F;mean。</p>
+<p><code>margin</code>：边界值</p>
+<p><strong>计算公式</strong>：</p>
+<p>$<br>l_{n}&#x3D;\left{\begin{array}{ll}<br>x_{n}, &amp; \text { if } y_{n}&#x3D;1 \<br>\max \left{0, \Delta-x_{n}\right}, &amp; \text { if } y_{n}&#x3D;-1<br>\end{array}\right.<br>$<br><strong>注意事项</strong>： 输入 x 应为两个输入之差的绝对值。</p>
+<p>可以这样理解，让个输出的是正例 yn&#x3D;1,那么 loss 就是 x，如果输出的是负例 y&#x3D;-1，那么输出的 loss 就是要做一个比较。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">loss_f = nn.HingeEmbeddingLoss()<br>inputs = torch.tensor([[<span class="hljs-number">1.</span>, <span class="hljs-number">0.8</span>, <span class="hljs-number">0.5</span>]])<br>target = torch.tensor([[<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">1</span>]])<br>output = loss_f(inputs,target)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;HingEmbeddingLoss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>HingEmbeddingLoss损失函数的计算结果为 tensor(0.7667)
+</code></pre>
+<h2 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a>余弦相似度</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.CosineEmbeddingLoss(margin=<span class="hljs-number">0.0</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 对两个向量做余弦相似度</p>
+<p><strong>主要参数:</strong></p>
+<p><code>reduction</code>：计算模式，可为 none&#x2F;sum&#x2F;mean。</p>
+<p><code>margin</code>：可取值[-1,1] ，推荐为[0,0.5] 。</p>
+<p><strong>计算公式</strong>：</p>
+<p>$<br>\operatorname{loss}(x, y)&#x3D;\left{\begin{array}{ll}<br>1-\cos \left(x_{1}, x_{2}\right), &amp; \text { if } y&#x3D;1 \<br>\max \left{0, \cos \left(x_{1}, x_{2}\right)-\text { margin }\right}, &amp; \text { if } y&#x3D;-1<br>\end{array}\right.<br>$<br>其中,<br>$<br>\cos (\theta)&#x3D;\frac{A \cdot B}{|A||B|}&#x3D;\frac{\sum_{i&#x3D;1}^{n} A_{i} \times B_{i&#125;&#125;{\sqrt{\sum_{i&#x3D;1}^{n}\left(A_{i}\right)^{2&#125;&#125; \times \sqrt{\sum_{i&#x3D;1}^{n}\left(B_{i}\right)^{2&#125;&#125;}<br>$</p>
+<p>这个损失函数应该是最广为人知的。对于两个向量，做余弦相似度。将余弦相似度作为一个距离的计算方式，如果两个向量的距离近，则损失函数值小，反之亦然。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">loss_f = nn.CosineEmbeddingLoss()<br>inputs_1 = torch.tensor([[<span class="hljs-number">0.3</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">0.7</span>], [<span class="hljs-number">0.3</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">0.7</span>]])<br>inputs_2 = torch.tensor([[<span class="hljs-number">0.1</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.5</span>], [<span class="hljs-number">0.1</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.5</span>]])<br>target = torch.tensor([<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>], dtype=torch.<span class="hljs-built_in">float</span>)<br>output = loss_f(inputs_1,inputs_2,target)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;CosineEmbeddingLoss损失函数的计算结果为&#x27;</span>,output)<br></code></pre></td></tr></table></figure>
+
+<pre><code>CosineEmbeddingLoss损失函数的计算结果为 tensor(0.5000)
+</code></pre>
+<h2 id="CTC-损失函数"><a href="#CTC-损失函数" class="headerlink" title="CTC 损失函数"></a>CTC 损失函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.CTCLoss(blank=<span class="hljs-number">0</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>, zero_infinity=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>功能</strong>： 用于解决时序类数据的分类</p>
+<p>计算连续时间序列和目标序列之间的损失。CTCLoss 对输入和目标的可能排列的概率进行求和，产生一个损失值，这个损失值对每个输入节点来说是可分的。输入与目标的对齐方式被假定为 “多对一”，这就限制了目标序列的长度，使其必须是 ≤ 输入长度。</p>
+<p><strong>主要参数:</strong></p>
+<p><code>reduction</code>：计算模式，可为 none&#x2F;sum&#x2F;mean。</p>
+<p><code>blank</code>：blank label。</p>
+<p><code>zero_infinity</code>：无穷大的值或梯度值为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Target are to be padded</span><br>T = <span class="hljs-number">50</span>      <span class="hljs-comment"># Input sequence length</span><br>C = <span class="hljs-number">20</span>      <span class="hljs-comment"># Number of classes (including blank)</span><br>N = <span class="hljs-number">16</span>      <span class="hljs-comment"># Batch size</span><br>S = <span class="hljs-number">30</span>      <span class="hljs-comment"># Target sequence length of longest target in batch (padding length)</span><br>S_min = <span class="hljs-number">10</span>  <span class="hljs-comment"># Minimum target length, for demonstration purposes</span><br><br><span class="hljs-comment"># Initialize random batch of input vectors, for *size = (T,N,C)</span><br><span class="hljs-built_in">input</span> = torch.randn(T, N, C).log_softmax(<span class="hljs-number">2</span>).detach().requires_grad_()<br><br><span class="hljs-comment"># Initialize random batch of targets (0 = blank, 1:C = classes)</span><br>target = torch.randint(low=<span class="hljs-number">1</span>, high=C, size=(N, S), dtype=torch.long)<br><br>input_lengths = torch.full(size=(N,), fill_value=T, dtype=torch.long)<br>target_lengths = torch.randint(low=S_min, high=S, size=(N,), dtype=torch.long)<br>ctc_loss = nn.CTCLoss()<br>loss = ctc_loss(<span class="hljs-built_in">input</span>, target, input_lengths, target_lengths)<br>loss.backward()<br><br><br><span class="hljs-comment"># Target are to be un-padded</span><br>T = <span class="hljs-number">50</span>      <span class="hljs-comment"># Input sequence length</span><br>C = <span class="hljs-number">20</span>      <span class="hljs-comment"># Number of classes (including blank)</span><br>N = <span class="hljs-number">16</span>      <span class="hljs-comment"># Batch size</span><br><br><span class="hljs-comment"># Initialize random batch of input vectors, for *size = (T,N,C)</span><br><span class="hljs-built_in">input</span> = torch.randn(T, N, C).log_softmax(<span class="hljs-number">2</span>).detach().requires_grad_()<br>input_lengths = torch.full(size=(N,), fill_value=T, dtype=torch.long)<br><br><span class="hljs-comment"># Initialize random batch of targets (0 = blank, 1:C = classes)</span><br>target_lengths = torch.randint(low=<span class="hljs-number">1</span>, high=T, size=(N,), dtype=torch.long)<br>target = torch.randint(low=<span class="hljs-number">1</span>, high=C, size=(<span class="hljs-built_in">sum</span>(target_lengths),), dtype=torch.long)<br>ctc_loss = nn.CTCLoss()<br>loss = ctc_loss(<span class="hljs-built_in">input</span>, target, input_lengths, target_lengths)<br>loss.backward()<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;CTCLoss损失函数的计算结果为&#x27;</span>,loss)<br></code></pre></td></tr></table></figure>
+
+<pre><code>CTCLoss损失函数的计算结果为 tensor(16.0885, grad_fn=&lt;MeanBackward0&gt;)
+</code></pre>
+<h2 id="焦点损失-FocalLoss"><a href="#焦点损失-FocalLoss" class="headerlink" title="焦点损失 FocalLoss"></a>焦点损失 FocalLoss</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">focal_loss</span>(<span class="hljs-params">input_values, gamma</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;Computes the focal loss&quot;&quot;&quot;</span><br>    p = torch.exp(-input_values)<br>    loss = (<span class="hljs-number">1</span> - p) ** gamma * input_values<br>    <span class="hljs-keyword">return</span> loss.mean()<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">FocalLoss</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, cls_num_list=<span class="hljs-literal">None</span>, weight=<span class="hljs-literal">None</span>, gamma=<span class="hljs-number">0.</span></span>):<br>        <span class="hljs-built_in">super</span>(FocalLoss, <span class="hljs-variable language_">self</span>).__init__()<br>        <span class="hljs-keyword">assert</span> gamma &gt;= <span class="hljs-number">0</span><br>        <span class="hljs-variable language_">self</span>.gamma = gamma<br>        <span class="hljs-variable language_">self</span>.weight = weight<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_hook_before_epoch</span>(<span class="hljs-params">self, epoch</span>):<br>        <span class="hljs-keyword">pass</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, output_logits, target</span>):<br>        <span class="hljs-keyword">return</span> focal_loss(F.cross_entropy(output_logits, target, reduction=<span class="hljs-string">&#x27;none&#x27;</span>, weight=<span class="hljs-variable language_">self</span>.weight), <span class="hljs-variable language_">self</span>.gamma)<br></code></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/05.%E8%AE%AD%E7%BB%83/02.%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/05.%E8%AE%AD%E7%BB%83/02.%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/PyTorch/">PyTorch</a><a class="post-meta__tags" href="/blog/tags/%E8%AE%AD%E7%BB%83/">训练</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/02.%E6%A8%A1%E5%9E%8B%E5%AE%B9%E5%99%A8/" title="模型容器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">模型容器</div></div><div class="info-2"><div class="info-item-1">模型容器Torch.nn中一个重要的概念是模型容器 (Containers)，常用的容器有 3 个，这些容器都是继承自nn.Module。  nn.Sequetial：常用于 block 构建，按照顺序包装多个网络层; nn.ModuleList：常用于大量重复网络构建，通过 for 循环实现重复构建，像 python 的 list 一样包装多个网络层，可以迭代; nn.ModuleDict：常用于可选择的网络层，像 python 的 dict一样包装多个网络层，通过 (key, value) 的方式为每个网络层指定名称;  nn.Sequential在传统的机器学习中，有一个步骤是特征...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/01.%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA/" title="模型构建"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">模型构建</div></div><div class="info-2"><div class="info-item-1">模型构建网络模型的内容如下，包括模型创建和权值初始化，这些内容都在nn.Module中有实现。   创建模型有 2 个要素**：构建子模块和拼接子模块**。如 LeNet 里包含很多卷积层、池化层、全连接层，当我们构建好所有的子模块之后，按照一定的顺序拼接起来。   以 lenet.py的 LeNet 为例，继承nn.Module，必须实现__init__()方法和forward()方法。其中__init__()方法里创建子模块，在forward()方法里拼接子模块。 1234567891011121314151617181920class LeNet(nn.Module):    # ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/05.%E8%AE%AD%E7%BB%83/01.%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/" title="基本配置"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">基本配置</div></div><div class="info-2"><div class="info-item-1">常见的包123456import osimport numpy as npimport torchimport torch.nn as nnfrom torch.utils.data import Dataset, DataLoaderimport torch.optim as optimizer  超参数设置 batch size 初始学习率（初始） 训练次数（max_epochs） GPU 配置  12345batch_size = 16# 批次的大小lr = 1e-4# 优化器的学习率max_epochs = 100  除了直接将超参数设置在训练的代码里，我们也可以使用 yaml、...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/05.%E8%AE%AD%E7%BB%83/03.%E4%BC%98%E5%8C%96%E5%99%A8/" title="优化器"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">优化器</div></div><div class="info-2"><div class="info-item-1">优化器PyTorch 中的优化器是用于管理并更新模型中可学习参数的值，使得模型输出更加接近真实标签。 Optimizer Optimizer是优化器的基类  12345class Optimizer(object):    def __init__(self, params, defaults):        self.defaults = defaults        self.state = defaultdict(dict)        self.param_groups = []  Optimizer 属性 defaults：存储的是优化器的超参数，例子如下：  1&#12...</div></div></div></a><a class="pagination-related no-desc" href="/blog/2025/11/16/AI/30.PyTorch/05.%E8%AE%AD%E7%BB%83/04.PyTorch%E8%AE%A1%E7%AE%97%E5%9B%BE/" title="PyTorch计算图"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">PyTorch计算图</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/101.%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/04.%E8%87%AA%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E5%A2%9E%E5%BC%BA/" title="自监督学习增强"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">自监督学习增强</div></div><div class="info-2"><div class="info-item-1">3. 自监督学习增强方法 SimCLR 风格的增强：包括一系列的随机裁剪、翻转、颜色抖动和模糊等操作，用于自监督学习。 BYOL 和 MoCo 等方法的增强：这些方法通过多视角增强生成不同的图像视图，以进行对比学习。  </div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/02.CNN%E5%8D%B7%E7%A7%AF%E5%B1%82%E5%8F%AF%E8%A7%86%E5%8C%96/" title="CNN卷积层可视化"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">CNN卷积层可视化</div></div><div class="info-2"><div class="info-item-1">CNN 可视化卷积神经网络（CNN）是深度学习中非常重要的模型结构，它广泛地用于图像处理，极大地提升了模型表现，推动了计算机视觉的发展和进步。但 CNN 是一个“黑盒模型”，人们并不知道 CNN 是如何获得较好表现的，由此带来了深度学习的可解释性问题。如果能理解 CNN 工作的方式，人们不仅能够解释所获得的结果，提升模型的鲁棒性，而且还能有针对性地改进 CNN 的结构以获得进一步的效果提升。 理解 CNN 的重要一步是可视化，包括可视化特征是如何提取的、提取到的特征的形式以及模型在输入数据上的关注点等。本节我们就从上述三个方面出发，介绍如何在 PyTorch 的框架下完成 CNN 模型的...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/04.%E6%A8%A1%E5%9E%8B/05.%E6%A8%A1%E5%9E%8B%E4%BF%9D%E5%AD%98%E4%B8%8E%E5%8A%A0%E8%BD%BD/" title="模型保存与加载"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">模型保存与加载</div></div><div class="info-2"><div class="info-item-1">模型存储内容一个PyTorch模型主要包含两个部分：模型结构和权重。其中模型是继承nn.Module的类，权重的数据结构是一个字典（key是层名，value是权重向量）。存储也由此分为两种形式：存储整个模型（包括结构和权重），和只存储模型权重。 12345678from torchvision import modelsmodel = models.resnet152(pretrained=True)save_dir = &#x27;./resnet152.pth&#x27;# 保存整个模型torch.save(model, save_dir)# 保存模型权重torch.save(mod...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#loss-backward"><span class="toc-number">2.</span> <span class="toc-text">loss.backward()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PyTorch-%E7%9A%84-autograd-%E7%B3%BB%E7%BB%9F"><span class="toc-number">2.1.</span> <span class="toc-text">PyTorch 的 autograd 系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-loss-backward"><span class="toc-number">2.2.</span> <span class="toc-text">使用 loss.backward()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.3.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">2.4.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E5%88%86%E7%B1%BB%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">二分类交叉熵损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">交叉熵损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#L1-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">L1 损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MSE-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text">MSE 损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B3%E6%BB%91-L1-Smooth-L1-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">7.</span> <span class="toc-text">平滑 L1 (Smooth L1)损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E6%B3%8A%E6%9D%BE%E5%88%86%E5%B8%83%E7%9A%84%E8%B4%9F%E5%AF%B9%E6%95%B0%E4%BC%BC%E7%84%B6%E6%8D%9F%E5%A4%B1"><span class="toc-number">8.</span> <span class="toc-text">目标泊松分布的负对数似然损失</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KL-%E6%95%A3%E5%BA%A6"><span class="toc-number">9.</span> <span class="toc-text">KL 散度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MarginRankingLoss"><span class="toc-number">10.</span> <span class="toc-text">MarginRankingLoss</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%A0%87%E7%AD%BE%E8%BE%B9%E7%95%8C%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">11.</span> <span class="toc-text">多标签边界损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E5%88%86%E7%B1%BB%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">12.</span> <span class="toc-text">二分类损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%88%86%E7%B1%BB%E7%9A%84%E6%8A%98%E9%A1%B5%E6%8D%9F%E5%A4%B1"><span class="toc-number">13.</span> <span class="toc-text">多分类的折页损失</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E5%85%83%E7%BB%84%E6%8D%9F%E5%A4%B1"><span class="toc-number">14.</span> <span class="toc-text">三元组损失</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HingEmbeddingLoss"><span class="toc-number">15.</span> <span class="toc-text">HingEmbeddingLoss</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%99%E5%BC%A6%E7%9B%B8%E4%BC%BC%E5%BA%A6"><span class="toc-number">16.</span> <span class="toc-text">余弦相似度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CTC-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">17.</span> <span class="toc-text">CTC 损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%84%A6%E7%82%B9%E6%8D%9F%E5%A4%B1-FocalLoss"><span class="toc-number">18.</span> <span class="toc-text">焦点损失 FocalLoss</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>常用函数 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="argparseargparse 是 Python 的一个标准库，用于编写用户友好的命令行接口。它允许开发者定义命令行参数，并解析这些参数以供程序使用。下面是对 argparse 中常用参数的一些说明： 参数说明 name or flags  这是参数的名称或标志。对于可选参数，通常使用 -- 或 - 前缀。例如，--verbose 或 -v。约定俗称的写法是 -- 后面跟完整参数名，- 后面是简">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用函数">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/14.%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="argparseargparse 是 Python 的一个标准库，用于编写用户友好的命令行接口。它允许开发者定义命令行参数，并解析这些参数以供程序使用。下面是对 argparse 中常用参数的一些说明： 参数说明 name or flags  这是参数的名称或标志。对于可选参数，通常使用 -- 或 - 前缀。例如，--verbose 或 -v。约定俗称的写法是 -- 后面跟完整参数名，- 后面是简">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.357Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="数据结构 函数 和文件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "常用函数",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/14.%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.357Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/14.%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '常用函数',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">常用函数</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">常用函数</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.357Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/Python/">Python</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/Python/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%87%BD%E6%95%B0-%E5%92%8C%E6%96%87%E4%BB%B6/">数据结构 函数 和文件</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="argparse"><a href="#argparse" class="headerlink" title="argparse"></a>argparse</h2><p><code>argparse</code> 是 Python 的一个标准库，用于编写用户友好的命令行接口。它允许开发者定义命令行参数，并解析这些参数以供程序使用。下面是对 <code>argparse</code> 中常用参数的一些说明：</p>
+<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><ul>
+<li>name or flags</li>
+</ul>
+<p>这是参数的名称或标志。对于可选参数，通常使用 <code>--</code> 或 <code>-</code> 前缀。例如，<code>--verbose</code> 或 <code>-v</code>。约定俗称的写法是 <code>--</code> 后面跟完整参数名，<code>-</code> 后面是简写。</p>
+<ul>
+<li>action</li>
+</ul>
+<p>定义参数被解析时执行的操作。常见的操作包括 <code>store</code>（存储值）、<code>store_const</code>（存储常量值）、<code>append</code>（将值添加到列表中）等。</p>
+<ul>
+<li>default</li>
+</ul>
+<p>当参数未在命令行中提供时使用的默认值。</p>
+<ul>
+<li>required</li>
+</ul>
+<p>一个布尔值，表示这个参数是否一定需要设置。如果设置为 <code>True</code>，那么用户必须在命令行中提供这个参数。</p>
+<ul>
+<li>type</li>
+</ul>
+<p>参数的类型。默认是字符串类型，但也可以指定为其他类型，如 <code>int</code>、<code>float</code> 或自定义类型。</p>
+<ul>
+<li>choices</li>
+</ul>
+<p>参数值只能从几个选项中选择。这可以确保用户只能提供有效的参数值。</p>
+<ul>
+<li>help</li>
+</ul>
+<p>指定参数的说明信息。当用户在命令行中使用 <code>-h</code> 或 <code>--help</code> 参数时，这些说明信息会被打印出来，帮助用户理解如何使用参数。</p>
+<ul>
+<li>nargs</li>
+</ul>
+<p>指定命令行参数应该读取的个数。可以是具体的数字，也可以是 <code>?</code>（表示参数是可选的）或 <code>*</code>（表示可以接收任意个参数）。</p>
+<ul>
+<li>const</li>
+</ul>
+<p>与 <code>action</code> 和 <code>store_const</code> 一起使用，表示当参数被触发时存储的常量值。</p>
+<ul>
+<li>metavar</li>
+</ul>
+<p>在帮助信息中显示的参数名。有时，参数的实际名称可能不适合在帮助信息中显示，这时可以使用 <code>metavar</code> 来提供一个更友好的名称。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>以下是一个简单的示例，展示了如何使用这些参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> argparse<br><br><span class="hljs-comment"># 定义一个ArgumentParser实例</span><br>parser = argparse.ArgumentParser(description=<span class="hljs-string">&#x27;一个简单的示例&#x27;</span>)<br><span class="hljs-comment">#jupyter notebook系统默认会给一个奇怪的参数-f，用-f来接收这个参数避免报错</span><br>parser.add_argument(<span class="hljs-string">&quot;-f&quot;</span>,<span class="hljs-string">&quot;--file&quot;</span>,default=<span class="hljs-string">&quot;file&quot;</span>)<br>parser.add_argument(<span class="hljs-string">&#x27;--input&#x27;</span>, <span class="hljs-built_in">type</span>=<span class="hljs-built_in">str</span>, required=<span class="hljs-literal">True</span>, <span class="hljs-built_in">help</span>=<span class="hljs-string">&#x27;输入文件的路径&#x27;</span>)<br>parser.add_argument(<span class="hljs-string">&#x27;--output&#x27;</span>, <span class="hljs-built_in">type</span>=<span class="hljs-built_in">str</span>, default=<span class="hljs-string">&#x27;output.txt&#x27;</span>, <span class="hljs-built_in">help</span>=<span class="hljs-string">&#x27;输出文件的路径（默认为 output.txt）&#x27;</span>)<br>parser.add_argument(<span class="hljs-string">&#x27;--verbose&#x27;</span>, action=<span class="hljs-string">&#x27;store_true&#x27;</span>, <span class="hljs-built_in">help</span>=<span class="hljs-string">&#x27;是否打印详细日志&#x27;</span>)<br><span class="hljs-comment"># 解析参数:</span><br>args = parser.parse_args()<br></code></pre></td></tr></table></figure>
+
+<p>在这个示例中：</p>
+<ul>
+<li><code>--input</code> 是一个必需的参数，类型为字符串。</li>
+<li><code>--output</code> 有一个默认值 <code>&#39;output.txt&#39;</code>，如果用户在命令行中没有提供该参数，将使用这个默认值。</li>
+<li><code>--verbose</code> 是一个布尔类型的参数，当它被提供时，<code>action=&#39;store_true&#39;</code> 会将 <code>args.verbose</code> 设置为 <code>True</code>。</li>
+</ul>
+<p>用户可以通过以下方式运行这个脚本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python script.py --input data.txt --output result.txt --verbose<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>args.input</code> 的值将是 <code>&#39;data.txt&#39;</code>，<code>args.output</code> 的值将是 <code>&#39;result.txt&#39;</code>，而 <code>args.verbose</code> 将被设置为 <code>True</code>。</p>
+<h2 id="parser-add-argument"><a href="#parser-add-argument" class="headerlink" title="parser.add_argument"></a>parser.add_argument</h2><p><code>ArgumentParser.add_argument(name or flags...[, action][, nargs][, const][, default][, type][, choices][, required][, help][, metavar][, dest])</code></p>
+<p>每个参数解释如下:</p>
+<ul>
+<li>name or flags - 选项字符串的名字或者列表，例如 foo 或者 -f, –foo。</li>
+<li>action - 命令行遇到参数时的动作，默认值是 store。</li>
+<li>store_const，表示赋值为 const；</li>
+<li>append，将遇到的值存储成列表，也就是如果参数重复则会保存多个值;</li>
+<li>append_const，将参数规范中定义的一个值保存到一个列表；</li>
+<li>count，存储遇到的次数；此外，也可以继承 argparse.Action 自定义参数解析；</li>
+<li>nargs - 应该读取的命令行参数个数，可以是具体的数字，或者是?号，当不指定值时对于 Positional argument 使用 default，对于 Optional argument 使用 const；或者是 * 号，表示 0 或多个参数；或者是 + 号表示 1 或多个参数。</li>
+<li>const - action 和 nargs 所需要的常量值。</li>
+<li>default - 不指定参数时的默认值。</li>
+<li>type - 命令行参数应该被转换成的类型。</li>
+<li>choices - 参数可允许的值的一个容器。</li>
+<li>required - 可选参数是否可以省略 (仅针对可选参数)。</li>
+<li>help - 参数的帮助信息，当指定为 argparse.SUPPRESS 时表示不显示该参数的帮助信息.</li>
+<li>metavar - 在 usage 说明中的参数名称，对于必选参数默认就是参数名称，对于可选参数默认是全大写的参数名称.</li>
+<li>dest - 解析后的参数名称，默认情况下，对于可选参数选取最长的名称，中划线转换为下划线.</li>
+</ul>
+<h2 id="map"><a href="#map" class="headerlink" title="map()"></a>map()</h2><p><code>map()</code> 函数是 Python 中的一个内置函数，常用于将某个函数应用到一个或多个可迭代对象（如列表、元组等）的每个元素上。<code>map()</code> 函数返回一个迭代器，其中包含函数应用后的结果。</p>
+<h3 id="1-map-函数的语法"><a href="#1-map-函数的语法" class="headerlink" title="1. map() 函数的语法"></a>1. <code>map()</code> 函数的语法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">map</span>(function, iterable, ...)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>function</code></strong>：要应用的函数。可以是一个内置函数、用户自定义函数或 <code>lambda</code> 表达式。</li>
+<li><strong><code>iterable</code></strong>：一个或多个可迭代对象，如列表、元组、字符串等。<code>map()</code> 函数会逐一将每个可迭代对象的元素传递给函数。</li>
+</ul>
+<h3 id="2-map-的返回值"><a href="#2-map-的返回值" class="headerlink" title="2. map() 的返回值"></a>2. <code>map()</code> 的返回值</h3><p><code>map()</code> 返回一个迭代器（&lt;class ‘map’&gt; 对象），如果你想查看 <code>map()</code> 的结果，可以将它转换为列表、元组等类型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">result = <span class="hljs-built_in">list</span>(<span class="hljs-built_in">map</span>(function, iterable))<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-示例"><a href="#3-示例" class="headerlink" title="3. 示例"></a>3. 示例</h3><h4 id="3-1-使用-map-处理单个可迭代对象"><a href="#3-1-使用-map-处理单个可迭代对象" class="headerlink" title="3.1 使用 map() 处理单个可迭代对象"></a>3.1 使用 <code>map()</code> 处理单个可迭代对象</h4><p>假设我们有一个列表，我们想对列表中的每个元素应用平方运算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">numbers = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]<br><br><span class="hljs-comment"># 使用 map 应用平方运算</span><br>squared_numbers = <span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> x: x ** <span class="hljs-number">2</span>, numbers)<br><br><span class="hljs-comment"># 转换为列表查看结果</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(squared_numbers))  <span class="hljs-comment"># 输出：[1, 4, 9, 16, 25]</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-2-使用自定义函数"><a href="#3-2-使用自定义函数" class="headerlink" title="3.2 使用自定义函数"></a>3.2 使用自定义函数</h4><p>我们可以用自定义函数代替 <code>lambda</code> 表达式。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 定义一个函数来计算平方</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">square</span>(<span class="hljs-params">x</span>):<br>    <span class="hljs-keyword">return</span> x ** <span class="hljs-number">2</span><br><br>numbers = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]<br>squared_numbers = <span class="hljs-built_in">map</span>(square, numbers)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(squared_numbers))  <span class="hljs-comment"># 输出：[1, 4, 9, 16, 25]</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-3-处理多个可迭代对象"><a href="#3-3-处理多个可迭代对象" class="headerlink" title="3.3 处理多个可迭代对象"></a>3.3 处理多个可迭代对象</h4><p><code>map()</code> 可以同时接受多个可迭代对象，将每个对象对应位置上的元素传递给函数。例如，我们想对两个列表的每个元素进行相加：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">numbers1 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br>numbers2 = [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]<br><br><span class="hljs-comment"># 使用 map 对两个列表中的元素逐一相加</span><br>summed_numbers = <span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> x, y: x + y, numbers1, numbers2)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(summed_numbers))  <span class="hljs-comment"># 输出：[5, 7, 9]</span><br></code></pre></td></tr></table></figure>
+
+<p>当 <code>map()</code> 处理多个可迭代对象时，它会根据最短的可迭代对象长度进行截断，这意味着如果一个列表的长度比另一个列表短，那么 <code>map()</code> 会忽略多出来的元素。</p>
+<h4 id="3-4-处理字符串"><a href="#3-4-处理字符串" class="headerlink" title="3.4 处理字符串"></a>3.4 处理字符串</h4><p><code>map()</code> 也可以用于字符串的处理，例如我们想将字符串中的每个字符转换为大写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">letters = [<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>]<br><br><span class="hljs-comment"># 使用 map 将字符转换为大写</span><br>uppercase_letters = <span class="hljs-built_in">map</span>(<span class="hljs-built_in">str</span>.upper, letters)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(uppercase_letters))  <span class="hljs-comment"># 输出：[&#x27;A&#x27;, &#x27;B&#x27;, &#x27;C&#x27;]</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-使用-map-与多个函数结合"><a href="#4-使用-map-与多个函数结合" class="headerlink" title="4. 使用 map() 与多个函数结合"></a>4. 使用 <code>map()</code> 与多个函数结合</h3><p><code>map()</code> 通常会与其他函数（如 <code>lambda</code>、<code>filter</code>、<code>reduce</code>）结合使用，帮助你构建简洁的函数式编程逻辑。</p>
+<p>例如，我们可以先用 <code>map()</code> 来对列表中的元素进行平方，再用 <code>filter()</code> 来筛选出偶数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">numbers = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]<br><br><span class="hljs-comment"># 先用 map 进行平方运算</span><br>squared_numbers = <span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> x: x ** <span class="hljs-number">2</span>, numbers)<br><br><span class="hljs-comment"># 再用 filter 筛选出偶数</span><br>even_squared_numbers = <span class="hljs-built_in">filter</span>(<span class="hljs-keyword">lambda</span> x: x % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>, squared_numbers)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(even_squared_numbers))  <span class="hljs-comment"># 输出：[4, 16, 36]</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-map-与列表推导式的对比"><a href="#5-map-与列表推导式的对比" class="headerlink" title="5. map() 与列表推导式的对比"></a>5. <code>map()</code> 与列表推导式的对比</h3><p><code>map()</code> 常常与 Python 的列表推导式相比较。两者的功能非常相似，但在某些情况下，使用列表推导式可能会更简洁，尤其是当操作比较简单时。</p>
+<p>例如，使用列表推导式来计算平方：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">numbers = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]<br><br><span class="hljs-comment"># 使用列表推导式</span><br>squared_numbers = [x ** <span class="hljs-number">2</span> <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> numbers]<br><br><span class="hljs-built_in">print</span>(squared_numbers)  <span class="hljs-comment"># 输出：[1, 4, 9, 16, 25]</span><br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，列表推导式比 <code>map()</code> 更加直观。</p>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h3><ul>
+<li><code>map()</code> 是一个非常有用的函数式编程工具，用于将一个函数应用到一个或多个可迭代对象的每个元素上。</li>
+<li>它返回一个惰性计算的迭代器，适合处理大数据集时的高效内存管理。</li>
+<li>在某些简单场景下，列表推导式可能更具可读性，但 <code>map()</code> 在处理多个可迭代对象或结合其他函数时显得更加灵活。</li>
+<li><strong>惰性计算</strong>：<code>map()</code> 返回的是一个迭代器，这意味着它不会立即计算所有结果，而是在需要时逐个生成。与生成完整的列表相比，<code>map()</code> 在处理大数据集时可以节省内存。</li>
+<li><strong>返回值是迭代器</strong>：<code>map()</code> 返回的是迭代器，而不是列表。因此，在某些情况下需要将其转换为列表或元组来查看结果。</li>
+</ul>
+<h2 id="lambda-函数"><a href="#lambda-函数" class="headerlink" title="lambda 函数"></a>lambda 函数</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/PY0312/article/details/88956795">Python 之 lambda 函数完整详解 &amp; 巧妙运用</a></p>
+</blockquote>
+<p>lambda 函数是 Python 中一个非常重要的语法，它允许我们创建匿名函数。它是一个函数，但没有函数名，没有 def 语句，只有参数列表和一个返回值。lambda 函数的语法格式如下：</p>
+<p>lambda 参数列表: 返回值</p>
+<p>例如，一个加法函数的 lambda 表达式如下：</p>
+<p>lambda a, b: a + b</p>
+<p>以下是一些使用 lambda 表达式创建的函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 定义一个加法函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">a, b</span>):<br>    <span class="hljs-keyword">return</span> a + b<br><br><span class="hljs-comment"># 定义一个 lambda 表达式</span><br>add_lambda = <span class="hljs-keyword">lambda</span> a, b: a + b<br><br><span class="hljs-comment"># 调用函数</span><br><span class="hljs-built_in">print</span>(add(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(add_lambda(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>))<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs">3<br>3<br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，<code>add</code> 是一个定义好的函数，<code>add_lambda</code> 是使用 lambda 表达式创建的函数。它们的使用方式是相同的，只是 <code>add</code> 是一个定义好的函数，<code>add_lambda</code> 是使用 lambda 表达式创建的函数。</p>
+<h3 id="lambda-表达式使用场景"><a href="#lambda-表达式使用场景" class="headerlink" title="lambda 表达式使用场景"></a>lambda 表达式使用场景</h3><ul>
+<li>作为函数参数传递</li>
+<li>作为装饰器</li>
+<li>作为生成器表达式中的生成器函数</li>
+<li>作为 sorted() 函数中的 key 参数</li>
+<li>作为 filter() 函数中的函数参数</li>
+</ul>
+<h3 id="作为-map-函数中的函数参数"><a href="#作为-map-函数中的函数参数" class="headerlink" title="作为 map() 函数中的函数参数"></a>作为 map() 函数中的函数参数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ===========一般写法：===========</span><br><span class="hljs-comment"># 1、计算平方数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">square</span>(<span class="hljs-params">x</span>):<br>  <span class="hljs-keyword">return</span> x ** <span class="hljs-number">2</span><br><br><span class="hljs-built_in">map</span>(square, [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>])<span class="hljs-comment"># 计算列表各个元素的平方</span><br><span class="hljs-comment"># 结果：</span><br>[<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">9</span>, <span class="hljs-number">16</span>, <span class="hljs-number">25</span>]<br><br><span class="hljs-comment"># ===========匿名函数写法：============</span><br><span class="hljs-comment"># 2、计算平方数，lambda 写法</span><br><span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> x: x ** <span class="hljs-number">2</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>])<br><span class="hljs-comment"># 结果：</span><br>[<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">9</span>, <span class="hljs-number">16</span>, <span class="hljs-number">25</span>]<br><br><span class="hljs-comment"># 3、提供两个列表，将其相同索引位置的列表元素进行相加</span><br><span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> x, y: x + y, [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">9</span>], [<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">8</span>, <span class="hljs-number">10</span>])<br><span class="hljs-comment"># 结果：</span><br>[<span class="hljs-number">3</span>, <span class="hljs-number">7</span>, <span class="hljs-number">11</span>, <span class="hljs-number">15</span>, <span class="hljs-number">19</span>]<br></code></pre></td></tr></table></figure>
+
+<h2 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h2><p><code>filter</code> 是 Python 中的一个内置函数，它用于过滤序列，过滤掉不符合条件的元素，返回一个迭代器对象。<code>filter</code> 函数通常用于处理数据筛选，它接收两个参数：一个函数和一个序列。这个函数用于判断序列中的每个元素是否符合条件，返回布尔值（True 或 False）。序列可以是列表、元组、字典等任何可迭代对象。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">filter</span>(function, iterable)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>function</code>：一个函数，用于判断每个元素是否保留。</li>
+<li><code>iterable</code>：一个序列，如列表、元组等。</li>
+</ul>
+<h3 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h3><p>返回一个迭代器，可以通过 <code>list()</code> 转换为列表。</p>
+<h3 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h3><ol>
+<li><strong>基本使用</strong></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 定义一个过滤函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">is_even</span>(<span class="hljs-params">num</span>):<br>    <span class="hljs-keyword">return</span> num % <span class="hljs-number">2</span> == <span class="hljs-number">0</span><br><br><span class="hljs-comment"># 使用 filter 函数过滤偶数</span><br>numbers = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>]<br>even_numbers = <span class="hljs-built_in">filter</span>(is_even, numbers)<br><br><span class="hljs-comment"># 将结果转换为列表</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(even_numbers))  <span class="hljs-comment"># 输出: [2, 4, 6, 8, 10]</span><br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>使用 lambda 表达式</strong></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 使用 lambda 表达式过滤偶数</span><br>numbers = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>]<br>even_numbers = <span class="hljs-built_in">filter</span>(<span class="hljs-keyword">lambda</span> x: x % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>, numbers)<br><br><span class="hljs-comment"># 将结果转换为列表</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(even_numbers))  <span class="hljs-comment"># 输出: [2, 4, 6, 8, 10]</span><br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>过滤字符串</strong></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 过滤出包含字母 &#x27;a&#x27; 的字符串</span><br>words = [<span class="hljs-string">&#x27;apple&#x27;</span>, <span class="hljs-string">&#x27;banana&#x27;</span>, <span class="hljs-string">&#x27;cherry&#x27;</span>, <span class="hljs-string">&#x27;date&#x27;</span>]<br>filtered_words = <span class="hljs-built_in">filter</span>(<span class="hljs-keyword">lambda</span> word: <span class="hljs-string">&#x27;a&#x27;</span> <span class="hljs-keyword">in</span> word, words)<br><br><span class="hljs-comment"># 将结果转换为列表</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(filtered_words))  <span class="hljs-comment"># 输出: [&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;cherry&#x27;, &#x27;date&#x27;]</span><br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><strong>过滤字典</strong></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 过滤出值大于 10 的字典项</span><br>data = &#123;<span class="hljs-string">&#x27;a&#x27;</span>: <span class="hljs-number">5</span>, <span class="hljs-string">&#x27;b&#x27;</span>: <span class="hljs-number">12</span>, <span class="hljs-string">&#x27;c&#x27;</span>: <span class="hljs-number">7</span>, <span class="hljs-string">&#x27;d&#x27;</span>: <span class="hljs-number">18</span>&#125;<br>filtered_data = <span class="hljs-built_in">filter</span>(<span class="hljs-keyword">lambda</span> item: item[<span class="hljs-number">1</span>] &gt; <span class="hljs-number">10</span>, data.items())<br><br><span class="hljs-comment"># 将结果转换为字典</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">dict</span>(filtered_data))  <span class="hljs-comment"># 输出: &#123;&#x27;b&#x27;: 12, &#x27;d&#x27;: 18&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ul>
+<li><code>filter</code> 返回的是一个迭代器，不是列表。如果需要列表形式，可以使用 <code>list()</code> 函数转换。</li>
+<li><code>filter</code> 函数本身不会修改原始数据，它只是创建一个新的迭代器。</li>
+<li>过滤函数必须返回布尔值，True 表示保留该元素，False 表示不保留。</li>
+<li><strong>惰性计算</strong>：<code>filter()</code> 返回一个迭代器对象，它是惰性求值的，意思是它不会立即计算所有结果，而是每次迭代时才进行计算。这意味着它比直接生成一个完整的列表更高效，特别是当数据量很大时。</li>
+<li><strong>函数为 <code>None</code> 的行为</strong>：当 <code>filter()</code> 的第一个参数 <code>function</code> 被设置为 <code>None</code> 时，它会将 <code>iterable</code> 中所有 “truthy” 的值保留下来，也就是会自动过滤掉等价于 <code>False</code> 的元素，比如 <code>None</code>、<code>0</code>、空字符串等。</li>
+</ul>
+<h2 id="next-和-iter-函数详解"><a href="#next-和-iter-函数详解" class="headerlink" title="next()和 iter()函数详解"></a>next()和 iter()函数详解</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/356054426">迭代相关**：iter<strong>函数和</strong>next**函数</a></p>
+</blockquote>
+<p>迭代器就是重复地做一些事情，可以简单的理解为循环，在 python 中实现了<code>__iter__</code>方法的对象是可迭代的，实现了<code>next()</code>方法的对象是迭代器，这样说起来有点拗口，实际上要想让一个迭代器工作，至少要实现<code>__iter__</code>方法和<code>next</code>方法。很多时候使用迭代器完成的工作使用列表也可以完成，但是如果有很多值列表就会占用太多的内存，而且使用迭代器也让我们的程序更加通用、优雅、pythonic。</p>
+<p>如果一个类想被用于<code>for ... in</code>循环，类似 list 或 tuple 那样，就必须实现一个<code>__iter__()</code>方法，该方法返回一个迭代对象，然后，Python 的 for 循环就会不断调用该迭代对象的<code>next()</code>方法拿到循环的下一个值，直到遇到 StopIteration 错误时退出循环。</p>
+<h3 id="容器（container）"><a href="#容器（container）" class="headerlink" title="容器（container）"></a>容器（container）</h3><p>容器是用来储存元素的一种数据结构，容器将所有数据保存在内存中，Python 中典型的容器有：list，set，dict，str 等等。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">test</span>():<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self,data=<span class="hljs-number">1</span></span>):<br>        <span class="hljs-variable language_">self</span>.data = data<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__iter__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__next__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.data &gt; <span class="hljs-number">5</span>:<br>            <span class="hljs-keyword">raise</span> StopIteration<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-variable language_">self</span>.data+=<span class="hljs-number">1</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.data<br><br><span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> test(<span class="hljs-number">3</span>):<br>    <span class="hljs-built_in">print</span>(item)<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-number">4</span><br><span class="hljs-number">5</span><br><span class="hljs-number">6</span><br></code></pre></td></tr></table></figure>
+
+<p><code>for … in…</code>这个语句其实做了两件事。第一件事是获得一个可迭代器，即调用了<code>__iter__()</code>函数。 第二件事是循环的过程，循环调用<code>__next__()</code>函数。</p>
+<p>对于 test 这个类来说，它定义了<code>__iter__</code>和<code>__next__</code>函数，所以是一个可迭代的类，也可以说是一个可迭代的对象（Python 中一切皆对象）。</p>
+<h3 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h3><p>含有<code>__next__()</code>函数的对象都是一个迭代器，所以 test 也可以说是一个迭代器。如果去掉<code>__itet__()</code>函数，test 这个类也不会报错。如下代码所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">test</span>():<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self,data=<span class="hljs-number">1</span></span>):<br>        <span class="hljs-variable language_">self</span>.data = data<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__next__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.data &gt; <span class="hljs-number">5</span>:<br>            <span class="hljs-keyword">raise</span> StopIteration<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-variable language_">self</span>.data+=<span class="hljs-number">1</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.data<br><br>t = test(<span class="hljs-number">3</span>)<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):<br>    <span class="hljs-built_in">print</span>(t.__next__())<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-number">4</span><br><span class="hljs-number">5</span><br><span class="hljs-number">6</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h3><p>生成器是一种特殊的迭代器。当调用 fib()函数时，生成器实例化并返回，这时并不会执行任何代码，生成器处于空闲状态，注意这里 prev, curr &#x3D; 0, 1 并未执行。然后这个生成器被包含在 list()中，list 会根据传进来的参数生成一个列表，所以它对 fib()对象(一切皆对象，函数也是对象)调用<strong>next</strong>方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">fib</span>(<span class="hljs-params">end = <span class="hljs-number">1000</span></span>):<br>    prev,curr=<span class="hljs-number">0</span>,<span class="hljs-number">1</span><br>    <span class="hljs-keyword">while</span> curr &lt; end:<br>        <span class="hljs-keyword">yield</span> curr<br>        prev,curr=curr,curr+prev<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(fib()))<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">8</span>, <span class="hljs-number">13</span>, <span class="hljs-number">21</span>, <span class="hljs-number">34</span>, <span class="hljs-number">55</span>, <span class="hljs-number">89</span>, <span class="hljs-number">144</span>, <span class="hljs-number">233</span>, <span class="hljs-number">377</span>, <span class="hljs-number">610</span>, <span class="hljs-number">987</span>]<br></code></pre></td></tr></table></figure>
+
+<p>上面只是做了几个演示，这里具体说明一下:</p>
+<p>当调用 iter 函数的时候，生成了一个迭代对象，要求<code>__iter__</code>必须返回一个实现了<code>__next__</code>的对象，我们就可以通过<code>next</code>函数访问这个对象的下一个元素了，并且在你不想继续有迭代的情况下抛出一个 StopIteration 的异常(for 语句会捕获这个异常，并且自动结束 for)，下面实现了一个自己的类似 range 函数的功能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyRange</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, end</span>):<br>        <span class="hljs-variable language_">self</span>.start = <span class="hljs-number">0</span><br>        <span class="hljs-variable language_">self</span>.end = end<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__iter__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__next__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.start &lt; <span class="hljs-variable language_">self</span>.end:<br>            ret = <span class="hljs-variable language_">self</span>.start<br>            <span class="hljs-variable language_">self</span>.start += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">return</span> ret<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">raise</span> StopIteration<br><br><span class="hljs-keyword">from</span> collections.abc <span class="hljs-keyword">import</span> *<br><br>a = MyRange(<span class="hljs-number">5</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">isinstance</span>(a, Iterable))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">isinstance</span>(a, Iterator))<br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> a:<br>    <span class="hljs-built_in">print</span>(i)<br></code></pre></td></tr></table></figure>
+
+<p>输出结果是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-literal">True</span><br><span class="hljs-literal">True</span><br><span class="hljs-number">0</span><br><span class="hljs-number">1</span><br><span class="hljs-number">2</span><br><span class="hljs-number">3</span><br><span class="hljs-number">4</span><br></code></pre></td></tr></table></figure>
+
+<p>接下来我们使用 next 函数模拟一次：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyRange</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, end</span>):<br>        <span class="hljs-variable language_">self</span>.start = <span class="hljs-number">0</span><br>        <span class="hljs-variable language_">self</span>.end = end<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__iter__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__next__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.start &lt; <span class="hljs-variable language_">self</span>.end:<br>            ret = <span class="hljs-variable language_">self</span>.start<br>            <span class="hljs-variable language_">self</span>.start += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">return</span> ret<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">raise</span> StopIteration<br><br>a = MyRange(<span class="hljs-number">5</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(a))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(a))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(a))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(a))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(a))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">next</span>(a)) <span class="hljs-comment"># 其实到这里已经完成了，我们在运行一次查看异常</span><br></code></pre></td></tr></table></figure>
+
+<p>可以看见一个很明显的好处是，每次产生的数据，是产生一个用一个，什么意思呢，比如我要遍历[0, 1, 2, 3…..]一直到 10 亿，如果使用列表的方式，那么是会全部载入内存的，但是如果使用迭代器，可以看见，当用到了(也就是在调用了 next)才会产生对应的数字，这样就可以节约内存了，这是一种懒惰的加载方式。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>可以使用<code>collection.abs</code>里面的<code>Iterator</code>和<code>Iterable</code>配合<code>isinstance</code>函数来判断一个对象是否是可迭代的，是否是迭代器对象。</li>
+<li><code>iter</code>实际是映射到了<code>__iter__</code>函数。</li>
+<li>只要实现了<code>__iter__</code>的对象就是可迭代对象(Iterable)，正常情况下，应该返回一个实现了<code>__next__</code>的对象(虽然这个要求不强制)，如果自己实现了<code>__next__</code>，当然也可以返回自己。</li>
+<li>同时实现了<code>__iter__</code>和<code>__next__</code>的是迭代器(Iterator)，当然也是一个可迭代对象了，其中<code>__next__</code>应该在迭代完成后，抛出一个 StopIteration 异常。</li>
+<li>for 语句会自动处理这个<code>StopIteration</code>异常以便结束 for 循环。</li>
+</ol>
+<h2 id="enumerate"><a href="#enumerate" class="headerlink" title="enumerate()"></a>enumerate()</h2><p><code>enumerate</code> 是 Python 中的一个内置函数，用于将一个可遍历的数据对象（如列表、元组或字符串）组合为一个索引序列，同时列出数据和数据下标，一般用在 for 循环当中。</p>
+<p><code>enumerate</code> 函数返回的是一个枚举对象，其中包含了元素及其索引（下标）。你可以通过遍历枚举对象来获取每个元素的索引和值。</p>
+<p>以下是 <code>enumerate</code> 的基本用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 示例：对一个列表使用 enumerate</span><br>my_list = [<span class="hljs-string">&#x27;apple&#x27;</span>, <span class="hljs-string">&#x27;banana&#x27;</span>, <span class="hljs-string">&#x27;cherry&#x27;</span>]<br><br><span class="hljs-comment"># 使用 enumerate 遍历列表</span><br><span class="hljs-keyword">for</span> index, value <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(my_list):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Index: <span class="hljs-subst">&#123;index&#125;</span>, Value: <span class="hljs-subst">&#123;value&#125;</span>&quot;</span>)<br><br><span class="hljs-comment"># 输出：</span><br><span class="hljs-comment"># Index: 0, Value: apple</span><br><span class="hljs-comment"># Index: 1, Value: banana</span><br><span class="hljs-comment"># Index: 2, Value: cherry</span><br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>enumerate(my_list)</code> 生成了一个枚举对象，该对象在每次迭代时产生一个包含索引和值的元组。然后，通过解包这个元组到 <code>index</code> 和 <code>value</code> 变量中，我们可以在循环体内部同时访问到每个元素的索引和值。</p>
+<p>此外，<code>enumerate</code> 函数还接受一个可选的 <code>start</code> 参数，用于指定索引的起始值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python">my_list = [<span class="hljs-string">&#x27;apple&#x27;</span>, <span class="hljs-string">&#x27;banana&#x27;</span>, <span class="hljs-string">&#x27;cherry&#x27;</span>]<br><br><span class="hljs-comment"># 从索引 1 开始枚举</span><br><span class="hljs-keyword">for</span> index, value <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(my_list, start=<span class="hljs-number">1</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Index: <span class="hljs-subst">&#123;index&#125;</span>, Value: <span class="hljs-subst">&#123;value&#125;</span>&quot;</span>)<br><br><span class="hljs-comment"># 输出：</span><br><span class="hljs-comment"># Index: 1, Value: apple</span><br><span class="hljs-comment"># Index: 2, Value: banana</span><br><span class="hljs-comment"># Index: 3, Value: cherry</span><br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，我们指定 <code>start=1</code>，所以索引从 1 开始而不是默认的 0。</p>
+<h2 id="logging-模块"><a href="#logging-模块" class="headerlink" title="logging 模块"></a>logging 模块</h2><blockquote>
+<p><code>logging</code> 是 Python 标准库中的一个模块，它提供了一套灵活且强大的日志系统。通过 <code>logging</code>，你可以记录程序中发生的事件，这对于调试、监控、分析以及理解程序行为都非常有帮助。</p>
+</blockquote>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ol>
+<li><p><strong>日志级别</strong>：<code>logging</code> 模块定义了几个日志级别，包括 <code>DEBUG</code>、<code>INFO</code>、<code>WARNING</code>、<code>ERROR</code> 和 <code>CRITICAL</code>。每个级别都对应一个数字，数字越大，级别越高。通常，级别高的日志会包含级别低的日志信息。</p>
+</li>
+<li><p><strong>日志处理器</strong>（Handlers）：负责将日志记录（Log Record）发送到指定的目的地，比如文件、控制台、网络等。</p>
+</li>
+<li><p><strong>日志记录器</strong>（Loggers）：记录器是 <code>logging</code> 模块的核心部分，它负责处理日志记录。你可以为应用程序的不同部分创建不同的记录器。</p>
+</li>
+<li><p><strong>日志格式化器</strong>（Formatters）：用于定义日志的最终输出格式。</p>
+</li>
+</ol>
+<h3 id="常用功能"><a href="#常用功能" class="headerlink" title="常用功能"></a>常用功能</h3><ol>
+<li><p><strong>配置日志</strong>：你可以使用 <code>basicConfig</code> 方法进行简单的日志配置，也可以手动创建记录器、处理器和格式化器进行更复杂的配置。</p>
+</li>
+<li><p><strong>记录日志</strong>：使用记录器的 <code>debug</code>、<code>info</code>、<code>warning</code>、<code>error</code> 和 <code>critical</code> 方法来记录不同级别的日志。</p>
+</li>
+<li><p><strong>日志传播</strong>：一个记录器可以有一个或多个处理器，如果处理器没有处理该记录，记录将被传递给该记录器的父记录器处理（如果存在的话）。</p>
+</li>
+<li><p><strong>线程安全</strong>：<code>logging</code> 模块是线程安全的，可以在多线程环境中使用。</p>
+</li>
+</ol>
+<h3 id="示例-2"><a href="#示例-2" class="headerlink" title="示例"></a>示例</h3><p>下面是一个简单的 <code>logging</code> 示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> logging<br><br><span class="hljs-comment"># 配置日志的基本设置</span><br>logging.basicConfig(filename=<span class="hljs-string">&#x27;app.log&#x27;</span>, level=logging.DEBUG,<br>                    <span class="hljs-built_in">format</span>=<span class="hljs-string">&#x27;%(asctime)s:%(levelname)s:%(message)s&#x27;</span>)<br><br><span class="hljs-comment"># 记录不同级别的日志</span><br>logging.debug(<span class="hljs-string">&#x27;这是一条 debug 级别的日志&#x27;</span>)<br>logging.info(<span class="hljs-string">&#x27;这是一条 info 级别的日志&#x27;</span>)<br>logging.warning(<span class="hljs-string">&#x27;这是一条 warning 级别的日志&#x27;</span>)<br>logging.error(<span class="hljs-string">&#x27;这是一条 error 级别的日志&#x27;</span>)<br>logging.critical(<span class="hljs-string">&#x27;这是一条 critical 级别的日志&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>在这个示例中，我们首先使用 <code>basicConfig</code> 方法配置了日志的基本设置，包括日志文件名、日志级别和日志格式。然后，我们使用不同级别的日志方法来记录日志。这些日志将被写入到 <code>app.log</code> 文件中。</p>
+<h3 id="高级配置"><a href="#高级配置" class="headerlink" title="高级配置"></a>高级配置</h3><p>对于更复杂的日志需求，你可能需要手动创建记录器、处理器和格式化器，并使用 <code>addHandler</code> 方法将它们关联起来。例如，你可能希望将不同级别的日志记录到不同的文件中，或者将日志同时输出到控制台和文件。</p>
+<p>总之，<code>logging</code> 模块是 Python 中非常强大且灵活的日志系统，它可以帮助你更好地管理、监控和调试你的应用程序。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/14.%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/14.%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/Python/">Python</a><a class="post-meta__tags" href="/blog/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%87%BD%E6%95%B0-%E5%92%8C%E6%96%87%E4%BB%B6/">数据结构 函数 和文件</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/04.NumPy/02.ndarray/" title="ndarray"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">ndarray</div></div><div class="info-2"><div class="info-item-1">1、NumPy 的ndarray：一种多维数组对象NumPy 最重要的一个特点就是其 N 维数组对象（即ndarray），该对象是一个快速而灵活的大数据集容器。你可以利用这种数组对整块数据执行一些数学运算，其语法跟标量元素之间的运算一样。 要明白 Python 是如何利用与标量值类似的语法进行批次计算，我先引入 NumPy，然后生成一个包含随机数据的小数组： 123456789In [12]: import numpy as np# Generate some random dataIn [13]: data = np.random.randn(2, 3)In [14]: dataOut...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/11.%E5%87%BD%E6%95%B0%E5%92%8C%E6%A8%A1%E5%9D%97%E7%9A%84%E4%BD%BF%E7%94%A8/" title="函数和模块的使用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">函数和模块的使用</div></div><div class="info-2"><div class="info-item-1">定义函数 def 函数名 (参数(0个或多个)) 函数体 return 返回值  函数名其实就是指向一个函数对象的引用，完全可以把函数名赋给一个变量，相当于给这个函数起了一个“别名”   123&gt;&gt;&gt; a = abs #变a指向abs函数&gt;&gt;&gt; a(-1) #所以也可以通过a调用abs函数 1   如果没有return语句，函数执行完毕后也会返回结果，只是结果为None  单前置下划线的名字:   《流畅的python》作者称之为“受保护的”名字，有两种主要的用法： 1、作为类名或函数名时， 会阻止其他python脚本通过【from module im...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/06.%E5%AD%97%E5%85%B8(dict)/" title="字典(dict)"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">字典(dict)</div></div><div class="info-2"><div class="info-item-1">字典(dict)定义 采用大括号**{}和dict()**创建，键值对用冒号: 表示； 可以存储任意类型对象 任何 Python 对象都可用作字典中的值；键可以是任何不可变的类型； **函数 dict():**从其他映射（如其他字典）或键值对序列创建字典 键-值对排列顺序与添加顺序不同  字典类型操作函数和方法   方法名称 功能    del d[k] 删除字典 d 中键 k 对应的数据值，永久删除   k in d 判断键 k是否在字典 d 中，如果在返回 True，否则 False   d.keys() 返回字典 d 中所有的键信息   d.values() 返回字典 d 中所有的...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/11.%E5%87%BD%E6%95%B0%E5%92%8C%E6%A8%A1%E5%9D%97%E7%9A%84%E4%BD%BF%E7%94%A8/" title="函数和模块的使用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">函数和模块的使用</div></div><div class="info-2"><div class="info-item-1">定义函数 def 函数名 (参数(0个或多个)) 函数体 return 返回值  函数名其实就是指向一个函数对象的引用，完全可以把函数名赋给一个变量，相当于给这个函数起了一个“别名”   123&gt;&gt;&gt; a = abs #变a指向abs函数&gt;&gt;&gt; a(-1) #所以也可以通过a调用abs函数 1   如果没有return语句，函数执行完毕后也会返回结果，只是结果为None  单前置下划线的名字:   《流畅的python》作者称之为“受保护的”名字，有两种主要的用法： 1、作为类名或函数名时， 会阻止其他python脚本通过【from module im...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/02.%E5%BA%8F%E5%88%97%E7%B1%BB%E5%9E%8B/" title="序列类型"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">序列类型</div></div><div class="info-2"><div class="info-item-1">序列类型定义 序列是具有先后关系的一组元素;是一个基类类型  序列是一维元素向量，元素类型可以不同  类似数学元素序列： s0, s1, … , sn-1   元素间由序号引导，通过下标访问序列的特定元素  容器序列—list、tuple 和 collections.deque 这些序列能存放不同类型的数据。  扁平序列—-str、bytes、bytearray、memoryview 和 array.array，这类序列只能容纳一种类型。  容器序列存放的是它们所包含的任意类型的对象的引用，而扁平序列里存放的是值而不是引用。   序列类型分类可变序列list、bytearray、arra...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/05.%E9%9B%86%E5%90%88(set)/" title="集合(set)"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">集合(set)</div></div><div class="info-2"><div class="info-item-1">集合(set)定义Python中的集合跟数学上的集合是一致的，不允许有重复元素，而且可以进行交集、并集、差集等运算。  集合是多个元素的无序组合 集合类型与数学中的集合概念一致 集合元素之间无序，每个元素唯一，不存在相同元素 集合元素不可更改，不能是可变数据类型 集合用大括号 {} 表示，元素间用逗号分隔 建立集合类型用 {} 或 set() 建立空集合类型，必须使用set()   可以按照下面代码所示的方式来创建和使用集合。 1234567891011121314151617&gt;&gt;&gt; A = &#123;&quot;python&quot;, 123, (&quot;p...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/04.%E5%85%83%E7%BB%84/" title="元组"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">元组</div></div><div class="info-2"><div class="info-item-1">定义 元组是一种序列类型，一旦创建就不能被修改; 使用小括号 () 或 tuple() 创建，元素间用逗号 , 分隔可以使用或不使用小括号 函数中返回的多个值本质为返回元组类型 def func():     return 1,2 元组继承了序列类型的全部通用操作。元组因为创建后不能修改，因此没有特殊操作 只有1个元素的tuple定义时必须加一个逗号,，来消除歧义：t     &#x3D; (1,) tuple也是一种list，唯一区别是tuple不可变。因此，tuple也可以用切片操作，只是操作的结果仍是tuple：  12&gt;&gt;&gt; (0, 1, 2, 3, 4, 5)...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/03.%E5%88%97%E8%A1%A8/" title="列表"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">列表</div></div><div class="info-2"><div class="info-item-1">列表（list），是一种结构化的、非标量类型，它的值是有序序列，每个值都可以通过索引进行标识。 列表定义 列表用 [ ] 表示，是有序集合，索引从0开始，最后一个索引可用 -1 表示 列表是一种序列类型，创建后可以随意被修改 使用方括号 [ ] 或 list() 创建，元素间用逗号 , 分隔 列表中各元素类型可以不同，无长度限制 方括号 [ ] 真正创建一个列表，赋值仅传递引用  列表类型操作函数和方法   方法名称 功能    s[i] &#x3D; x 替换列表s第i元素为x   ls[i: j: k] &#x3D; lt 用列表lt替换ls切片后所对应元素子列表   ls +&#x...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#argparse"><span class="toc-number">1.</span> <span class="toc-text">argparse</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E"><span class="toc-number">1.1.</span> <span class="toc-text">参数说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.2.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#parser-add-argument"><span class="toc-number">2.</span> <span class="toc-text">parser.add_argument</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#map"><span class="toc-number">3.</span> <span class="toc-text">map()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-map-%E5%87%BD%E6%95%B0%E7%9A%84%E8%AF%AD%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">1. map() 函数的语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-map-%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">3.2.</span> <span class="toc-text">2. map() 的返回值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.3.</span> <span class="toc-text">3. 示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E4%BD%BF%E7%94%A8-map-%E5%A4%84%E7%90%86%E5%8D%95%E4%B8%AA%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1"><span class="toc-number">3.3.1.</span> <span class="toc-text">3.1 使用 map() 处理单个可迭代对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.2.</span> <span class="toc-text">3.2 使用自定义函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E5%A4%84%E7%90%86%E5%A4%9A%E4%B8%AA%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1"><span class="toc-number">3.3.3.</span> <span class="toc-text">3.3 处理多个可迭代对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-%E5%A4%84%E7%90%86%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">3.3.4.</span> <span class="toc-text">3.4 处理字符串</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%BD%BF%E7%94%A8-map-%E4%B8%8E%E5%A4%9A%E4%B8%AA%E5%87%BD%E6%95%B0%E7%BB%93%E5%90%88"><span class="toc-number">3.4.</span> <span class="toc-text">4. 使用 map() 与多个函数结合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-map-%E4%B8%8E%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">3.5.</span> <span class="toc-text">5. map() 与列表推导式的对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%80%BB%E7%BB%93"><span class="toc-number">3.6.</span> <span class="toc-text">6. 总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lambda-%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">lambda 函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#lambda-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">4.1.</span> <span class="toc-text">lambda 表达式使用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA-map-%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0"><span class="toc-number">4.2.</span> <span class="toc-text">作为 map() 函数中的函数参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#filter"><span class="toc-number">5.</span> <span class="toc-text">filter</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-number">5.1.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">5.2.</span> <span class="toc-text">返回值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-1"><span class="toc-number">5.3.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">5.4.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#next-%E5%92%8C-iter-%E5%87%BD%E6%95%B0%E8%AF%A6%E8%A7%A3"><span class="toc-number">6.</span> <span class="toc-text">next()和 iter()函数详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%EF%BC%88container%EF%BC%89"><span class="toc-number">6.1.</span> <span class="toc-text">容器（container）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="toc-number">6.2.</span> <span class="toc-text">迭代器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%99%A8"><span class="toc-number">6.3.</span> <span class="toc-text">生成器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.4.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#enumerate"><span class="toc-number">7.</span> <span class="toc-text">enumerate()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#logging-%E6%A8%A1%E5%9D%97"><span class="toc-number">8.</span> <span class="toc-text">logging 模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">8.1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD"><span class="toc-number">8.2.</span> <span class="toc-text">常用功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-2"><span class="toc-number">8.3.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE"><span class="toc-number">8.4.</span> <span class="toc-text">高级配置</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

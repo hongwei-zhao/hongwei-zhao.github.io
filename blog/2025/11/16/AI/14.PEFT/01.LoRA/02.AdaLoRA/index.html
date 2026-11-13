@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>AdaLoRA | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、AdaLoRA在做一件什么事1.1 LoRA是怎么做微调的 假设原始参数为 $W$ ，全参数微调后对原始参数的改变量为 $\Delta W$ 。在LoRA中，我们用两个矩阵的乘积 $BA$ 来近似$\Delta W$做SVD分解后的结果，则模型的输出结果满足：$$h &#x3D; Wx + \Delta W x&#x3D;Wx + \frac{\alpha}{r}BAx$$ 其中，$r$ 就是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AdaLoRA">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/14.PEFT/01.LoRA/02.AdaLoRA/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="一、AdaLoRA在做一件什么事1.1 LoRA是怎么做微调的 假设原始参数为 $W$ ，全参数微调后对原始参数的改变量为 $\Delta W$ 。在LoRA中，我们用两个矩阵的乘积 $BA$ 来近似$\Delta W$做SVD分解后的结果，则模型的输出结果满足：$$h &#x3D; Wx + \Delta W x&#x3D;Wx + \frac{\alpha}{r}BAx$$ 其中，$r$ 就是">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.352Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="LoRA">
+<meta property="article:tag" content="PEFT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "AdaLoRA",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/14.PEFT/01.LoRA/02.AdaLoRA/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.352Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/14.PEFT/01.LoRA/02.AdaLoRA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'AdaLoRA',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">AdaLoRA</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">AdaLoRA</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.352Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PEFT/LoRA/">LoRA</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="一、AdaLoRA在做一件什么事"><a href="#一、AdaLoRA在做一件什么事" class="headerlink" title="一、AdaLoRA在做一件什么事"></a>一、AdaLoRA在做一件什么事</h2><h3 id="1-1-LoRA是怎么做微调的"><a href="#1-1-LoRA是怎么做微调的" class="headerlink" title="1.1 LoRA是怎么做微调的"></a>1.1 LoRA是怎么做微调的</h3><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202510271512987.jpeg"></p>
+<p>假设原始参数为 $W$ ，全参数微调后对原始参数的改变量为 $\Delta W$ 。在LoRA中，我们用两个矩阵的乘积 $BA$ 来近似$\Delta W$做SVD分解后的结果，则模型的输出结果满足：<br>$$<br>h &#x3D; Wx + \Delta W x&#x3D;Wx + \frac{\alpha}{r}BAx<br>$$</p>
+<p>其中，$r$ 就是我们设定的矩阵的秩**，在微调过程中，所有做LoRA适配器的module，它们的 $r$ 都是一致的，且在训练过程中不会改变**（对秩的含义不理解的，可参见<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/646831196">这篇文章</a>的4.1。对 $\frac{\alpha}{r}$ 不了解的，可参见<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/654897296">这篇文章</a>的3.2）。<strong>在LoRA原始论文中，作者最终选择对attention模块的</strong> $W_{q}, W_{v}$ <strong>做低秩适配</strong>。  </p>
+<p>好，那么现在，问题来了：  </p>
+<ul>
+<li><strong>对所有模块都采用同一个秩 $r$，这是合理的吗？</strong></li>
+<li><strong>在微调过程中，一直保持秩 $r$ 不变，这是合理的吗？</strong></li>
+</ul>
+<p>我们来分别细看这两个问题。</p>
+<h3 id="1-2-对所有模块都采用同一个秩，是否合理"><a href="#1-2-对所有模块都采用同一个秩，是否合理" class="headerlink" title="1.2 对所有模块都采用同一个秩，是否合理"></a>1.2 对所有模块都采用同一个秩，是否合理</h3><p>这个问题，早在AdaLoRA之前，LoRA的作者就意识到了，并做了如下实验：  </p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://pic2.zhimg.com/v2-219d50b80d95590fc77782cd3f7d5f6d_1440w.jpg"></p>
+<p>图中亮色表示对应模块的intrinsic rank（本征&#x2F;内在秩），从中可以发现， $W_{q}$ 的intrinsic rank要大于 $W_{v}$ ，<strong>因此LoRA的作者在这里就挖了个可以让后人来填的坑：不同的模块可以用不同的秩</strong>。（对LoRA实验结果有疑惑的，可以看<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/646831196">这篇文章</a>第五部分）。  </p>
+<p>所以到了AdaLoRA这里，它的作者也做了两个实验：  </p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20251104152548.png" style="zoom: 80%;" /></div>
+
+<p>实验（a）对应着左图，<strong>作者使用LoRA，在模型的每个layer中微调特定的某个模块</strong>，然后去评估模型的效果。可以直观发现，微调不同模块时效果差异显著。  </p>
+<p>实验（b）对应着右图，<strong>作者使用LoRA，对模型不同layer的所有模块做微调</strong>。例如1，2，3表示对模型前三层的所有模块做lora微调。可以发现，微调不同layer时模型效果差异显著，微调最后三层的效果最好。  </p>
+<p>这些实验都证明了一件事：<strong>在使用LoRA微调时，对模型的不同模块使用相同的秩，显然是不合理的</strong>。</p>
+<h3 id="1-3-微调过程中一直保持秩不变，是否合理"><a href="#1-3-微调过程中一直保持秩不变，是否合理" class="headerlink" title="1.3 微调过程中一直保持秩不变，是否合理"></a>1.3 微调过程中一直保持秩不变，是否合理</h3><p>对于这点，作者并没有做实验来说明，但我们可以从1.2的分析中得到一些思路。  </p>
+<p>在1.2中，我们通过实验证明“对不同模块采用不同秩”的必要性，那么接下来势必就要解决“每个模块的秩到底要设成多少”的问题。解答这个问题最直接的办法，就是交给模型去学。<strong>那模型学习的过程，肯定是个探索性的过程呀，理想情况下，你给模型一个初始化的秩，然后让它在训练过程中，学会慢慢调整这个秩，直到最优</strong>。所以，在微调step的更新过程中，秩也不会保持不变。</p>
+<h3 id="1-4-AdaLoRA的总体改进目标"><a href="#1-4-AdaLoRA的总体改进目标" class="headerlink" title="1.4 AdaLoRA的总体改进目标"></a>1.4 AdaLoRA的总体改进目标</h3><p>好，到此为止，<strong>AdaLoRA的总体改进目标</strong>就出来了：<br><strong>找到一种办法，让模型在微调过程中，去学习每个模块参数对训练结果（以loss衡量）的重要性。然后，根据重要性，动态地调整不同模块的秩。</strong></p>
+<p>作者管这样的策略叫**[参数预算]（parameter budget）**，作为一个学财会出身的人，这真是非常形象了。待训练的参数越多，训练代价越大，因此做好参数预算方案，集中训练最重要的那些参数，ROI才会越高。</p>
+<h2 id="二、AdaLoRA的原理"><a href="#二、AdaLoRA的原理" class="headerlink" title="二、AdaLoRA的原理"></a>二、AdaLoRA的原理</h2><h3 id="2-1-SVD分解"><a href="#2-1-SVD分解" class="headerlink" title="2.1 SVD分解"></a>2.1 SVD分解</h3><div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20251026101856.png" style="zoom: 80%;" /></div>
+
+<p>如图，矩阵 $M$ 是我们需要做信息量检查的矩阵。假设在输入数据的特征空间中，<strong>存在一组正交的单位向量</strong> $\vec{v_1}, \vec{v_2}$ ，经过 $M$ 的变换后，它们变成另一组正交向量 $\sigma_1 \vec{u_1}, \sigma_2 \vec{u_2}$ ，其中 $\vec{u_1}, \vec{u_2}$ <strong>也是一组正交的单位向量</strong>， $\sigma_1, \sigma_2$ 分别表示对应方向上的模。上面这一顿变幻，可以写成：<br>$$<br>M[\vec{v_1}, \vec{v_2}] &#x3D; [\sigma_1 \vec{u_1}, \sigma_2 \vec{u_2}]<br>$$<br>稍加改写，就有：<br>$$<br>M &#x3D; \begin{bmatrix}\vec{u_1}&amp;\vec{u_2}\end{bmatrix}\begin{bmatrix}\sigma_1&amp;0 \0&amp;\sigma_2\end{bmatrix}\begin{bmatrix}\vec{v_1}\\vec{v_2}\end{bmatrix}<br>$$</p>
+<p>不难发现， $\sigma_{1}, \sigma_{2}$ <strong>中隐含了对“信息量”的提示</strong>。在本例中 $v$ 经过 $M$ 的转换投射到 $u$ 上时， $M$ 强调了在1方向上蕴含的信息。  </p>
+<p>现在再宽泛一些，如果我们能找到这样的一组 $v$ 和 $u$ ，并令 $\sigma$ 矩阵的值从大到小进行排列，那么我们不就能对 $M$ 进行拆解，同时在拆解过程中，找出 $M$ 所强调的那些特征方向了吗？也就是说：<br>$$<br>M &#x3D; U\Sigma V^{T}<br>$$<br><strong>当我们找到这样的</strong> $U, \Sigma, V$ <strong>矩阵后，我们再从这三者中取出对应的<code>top r</code> 行（或列），不就相当于关注到了</strong> $M$ <strong>最强调的那几维特征，进而就能用更低维的矩阵，来近似表达</strong> $M$ <strong>了？<strong>按这种思维拆解 $M$ 的方法，我们称为</strong>SVD分解（奇异值分解）</strong>。</p>
+<p>我们再通过一个代码例子，更直观地感受一下这种近似，大家注意看下注释（例子改编自：<a target="_blank" rel="noopener" href="https://medium.com/@Shrishml/lora-low-rank-adaptation-from-the-first-principle-7e1adec71541">LoRA: Low-Rank Adaptation from the first principle</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br>torch.manual_seed(<span class="hljs-number">0</span>)<br><br><span class="hljs-comment"># ------------------------------------</span><br><span class="hljs-comment"># n：输入数据维度</span><br><span class="hljs-comment"># m：输出数据维度</span><br><span class="hljs-comment"># ------------------------------------</span><br>n = <span class="hljs-number">10</span><br>m = <span class="hljs-number">10</span><br><br><span class="hljs-comment"># ------------------------------------</span><br><span class="hljs-comment"># 随机初始化权重W</span><br><span class="hljs-comment"># 之所以这样初始化，是为了让W不要满秩，</span><br><span class="hljs-comment"># 这样才有低秩分解的意义</span><br><span class="hljs-comment"># ------------------------------------</span><br>nr = <span class="hljs-number">10</span><br>mr = <span class="hljs-number">2</span><br>W = torch.randn(nr,mr)@torch.randn(mr,nr)<br><br><span class="hljs-comment"># ------------------------------------</span><br><span class="hljs-comment"># 随机初始化输入数据x</span><br><span class="hljs-comment"># ------------------------------------</span><br>x = torch.randn(n)<br><br><span class="hljs-comment"># ------------------------------------</span><br><span class="hljs-comment"># 计算Wx</span><br><span class="hljs-comment"># ------------------------------------</span><br>y = W@x<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;原始权重W计算出的y值为:\n&quot;</span>, y)<br><br><span class="hljs-comment"># ------------------------------------</span><br><span class="hljs-comment"># 计算W的秩</span><br><span class="hljs-comment"># ------------------------------------</span><br>r= np.linalg.matrix_rank(W)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;W的秩为: &quot;</span>, r)<br><br><span class="hljs-comment"># ------------------------------------</span><br><span class="hljs-comment"># 对W做SVD分解</span><br><span class="hljs-comment"># ------------------------------------</span><br>U, S, V = torch.svd(W)<br><br><span class="hljs-comment"># ------------------------------------</span><br><span class="hljs-comment"># 根据SVD分解结果，</span><br><span class="hljs-comment"># 计算低秩矩阵A和B</span><br><span class="hljs-comment"># ------------------------------------</span><br>U_r = U[:, :r]<br>S_r = torch.diag(S[:r])<br>V_r = V[:,:r].t()<br><br>B = U_r@S_r <span class="hljs-comment"># shape = (d, r)</span><br>A = V_r     <span class="hljs-comment"># shape = (r, d)</span><br><br><span class="hljs-comment"># ------------------------------------</span><br><span class="hljs-comment"># 计算y_prime = BAx</span><br><span class="hljs-comment"># ------------------------------------</span><br>y_prime = B@A@x<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;SVD分解W后计算出的y值为:\n&quot;</span>, y_prime)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;原始权重W的参数量为: &quot;</span>, W.shape[<span class="hljs-number">0</span>]*W.shape[<span class="hljs-number">1</span>])<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;低秩适配后权重B和A的参数量为: &quot;</span>, A.shape[<span class="hljs-number">0</span>]*A.shape[<span class="hljs-number">1</span>] + B.shape[<span class="hljs-number">0</span>]*B.shape[<span class="hljs-number">1</span>])<br></code></pre></td></tr></table></figure>
+
+<p>输出结果为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">原始权重W计算出的y值为:<br> tensor([ <span class="hljs-number">3.3896</span>,  <span class="hljs-number">1.0296</span>,  <span class="hljs-number">1.5606</span>, -<span class="hljs-number">2.3891</span>, -<span class="hljs-number">0.4213</span>, -<span class="hljs-number">2.4668</span>, -<span class="hljs-number">4.4379</span>, -<span class="hljs-number">0.0375</span>,<br>        -<span class="hljs-number">3.2790</span>, -<span class="hljs-number">2.9361</span>])<br>W的秩为:  <span class="hljs-number">2</span><br>SVD分解W后计算出的y值为:<br> tensor([ <span class="hljs-number">3.3896</span>,  <span class="hljs-number">1.0296</span>,  <span class="hljs-number">1.5606</span>, -<span class="hljs-number">2.3891</span>, -<span class="hljs-number">0.4213</span>, -<span class="hljs-number">2.4668</span>, -<span class="hljs-number">4.4379</span>, -<span class="hljs-number">0.0375</span>,<br>        -<span class="hljs-number">3.2790</span>, -<span class="hljs-number">2.9361</span>])<br>原始权重W的参数量为:  <span class="hljs-number">100</span><br>低秩适配后权重B和A的参数量为:  <span class="hljs-number">40</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>参数量变少了，但并不影响最终输出的结果</strong>。</p>
+<h3 id="2-2-让模型学习SVD分解的近似"><a href="#2-2-让模型学习SVD分解的近似" class="headerlink" title="2.2 让模型学习SVD分解的近似"></a>2.2 让模型学习SVD分解的近似</h3><p>从2.1中，我们知道SVD分解后，会将原矩阵 $M$ 拆成 $M &#x3D; U\Sigma V^{T}$ 这样的形式，<strong>其中 $M$ 和 $V$ 都是正交矩阵</strong>，即满足 $M^{T}M&#x3D; I, V^{T}V &#x3D; I$ 。以 $M$ 为二维矩阵为例，这个SVD分解的式子长成下面这样：<br>$$<br>M &#x3D; \begin{bmatrix}\vec{u_1}&amp;\vec{u_2}\end{bmatrix}\begin{bmatrix}\sigma_1&amp;0 \0&amp;\sigma_2\end{bmatrix}\begin{bmatrix}\vec{v_1}\\vec{v_2}\end{bmatrix}<br>$$</p>
+<p><strong>LoRA的总体设计思想</strong>，是 $\Delta W &#x3D; U \Sigma V^{T} \approx BA$ ，也就是让模型去学习两个矩阵A和B，用来近似SVD分解的结果，同时将A和B的秩都统一设成 $r$。  </p>
+<p><strong>到了AdaLoRA这里，就有新方法了，我让模型去学习三个权重矩阵：</strong> $P, \Lambda, Q$ ，直接去近似 $\Delta W$ 真实的SVD分解结果，也就是 $\Delta W &#x3D; U \Sigma V^{T} \approx P\Lambda Q$ ，这样也能达到目的。</p>
+<h3 id="2-3-AdaLoRA动态更新秩的过程"><a href="#2-3-AdaLoRA动态更新秩的过程" class="headerlink" title="2.3 AdaLoRA动态更新秩的过程"></a>2.3 AdaLoRA动态更新秩的过程</h3><p>接下来，我们来仔细端详一下 $\Delta W &#x3D; P \Lambda Q$ 。下图中描绘了AdaLoRA动态变秩的过程：  </p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://pica.zhimg.com/v2-d1c8c18c6e14fc320c9da6bd476e898a_1440w.jpg"></p>
+<p><strong>AdaLoRA变秩的整体流程如下：</strong>  </p>
+<p>（1）<strong>首先，我们初始化三个矩阵</strong> $P, \Lambda, Q$ 。其中， $\Lambda$ 矩阵比较特殊，其大部分元素为0，只有对角线上的 $r$ 个元素有值。所以实操中我们可将其视为长度为 $r$ 的向量，即 $\Lambda \in \mathbb{R^{r&#125;&#125;$ 。初始化时，<strong>我们将</strong> $\Lambda$ <strong>初始化为0，</strong> $P, Q$ <strong>初始化为高斯随机矩阵</strong>。这样做的目的和LoRA一样，都是为了在训练开始保证 $\Delta W$ 是0，以此避免引入噪声。  </p>
+<p>（2）然后，<strong>我们正常做forward和backward，得到Loss和参数的梯度</strong>。（Loss的设计我们在后文细说）  </p>
+<p>（3）接着，<strong>根据Loss和参数梯度</strong>，我们可以对图中所示的每个三元组(triplets) $\mathcal{G_{i&#125;&#125;{P_{<em>i}, \sigma_{i}, Q_{i</em>}}$ <strong>计算重要性分数</strong>(importance scoring)，其中， $P_{<em>i}, Q_{i</em>}$ 分别表示“第i列”和“第i行”。（重要性分数的计算方法我们在后文细说）  </p>
+<p>（4）接着，<strong>根据计算出来的重要性分数，我们将不重要的三元组挑选出来</strong>。（根据重要性分数筛选三元组的方法，我们在后文细说）。  </p>
+<p>（5）接着，<strong>对于不重要的三元组，我们将其</strong> $\sigma$ <strong>值置0</strong>。这样，在下一次做forward时，这个三元组里对应的 $P$ 向量和 $Q$ 向量<strong>相当于</strong>被mask掉了，对Loss没有贡献。也就起到了<strong>变秩</strong>的效果。  </p>
+<p>（6）接着，使用（2）中计算出来的梯度，更新 $P$ 和 $Q$ 的参数。  </p>
+<p>（7）然后，使用更新完毕的 $P, \Lambda, Q$ ，开启新一轮forward和backward，重复上面步骤，随时动态更新参数的秩。  </p>
+<p><strong>需要特别说明的是，为什么在（5）中，我们只是将</strong> $\sigma$ **置0，而不是把整个三元组删掉呢？**因为前面说过，模型的学习是一个探索的过程，<strong>在一开始模型认为不重要的三元组，在后续过程中模型可能会慢慢学到它的重要性。因此，mask是比删掉更合理的方法</strong>。也正是这个原因，我们在（6）中，不管三元组有没有被mask掉，我们都会正常用梯度更新 $P$ 和 $Q$ 。  </p>
+<p>好，理清了整体流程后，我们就可以来看细节了，在上述过程里，我们遗留了3个细节问题有待探讨：  </p>
+<ul>
+<li><strong>AdaLoRA中，Loss要怎么设计？</strong></li>
+<li><strong>AdaLoRA中，重要性分数要怎么算？</strong></li>
+<li><strong>AdaLoRA中，如何根据重要性分数筛选不重要的三元组，进而动态调整矩阵的秩？</strong></li>
+</ul>
+<p>我们来分别细看这三个问题。</p>
+<h2 id="三、AdaLoRA的Loss设计"><a href="#三、AdaLoRA的Loss设计" class="headerlink" title="三、AdaLoRA的Loss设计"></a>三、AdaLoRA的Loss设计</h2><p>在第二部分中，我们以某一模块的更新做了举例，但是在实际应用中，需要做AdaLoRA适配的模块肯定不止一个( $W_{q}, W_{k}, W_{v}, W_{o}, W_{f_{1&#125;&#125;…$ )，<strong>假设我们有n个模块需要做AdaLoRA适配</strong>，<strong>现在我们来严谨定义一些数学表达符号</strong>：  </p>
+<ul>
+<li><p>$\Delta_{k} &#x3D; P_{k}\Lambda_{k}Q_{k}$ ，表示第k个需要做AdaLoRA适配的模块。其中 $k &#x3D; 1, …, n$ ，n表示共有n个模块需要做AdaLoRA适配</p>
+</li>
+<li><p>$\mathcal{G_{k, i&#125;&#125; &#x3D; {P_{k, <em>i}, \lambda_{k, i}, Q_{k, i</em>}}$ ，表示第k个模块的第i个<strong>三元组</strong>。注意上文中的 $\sigma$ 用 $\lambda$ 表示。（怪我，画完图才发现这个gap，但是不想改图了，大家能理解就行）</p>
+</li>
+<li><p>$S_{k, i}$ ：表示第k个模块的第i个三元组的<strong>重要性分数</strong>。</p>
+</li>
+<li><p>$\mathcal{P} &#x3D; &amp;#123;&#123;P_{k&#125;&#125;^{n}_{k&#x3D;1}}$ ：表示所有n个模块的P矩阵的集合</p>
+</li>
+<li><p>$\mathcal{E} &#x3D;&amp;#123;&#123;\lambda_{k&#125;&#125;^{n}_{k&#x3D;1}}$ ：表示所有n个模块的 $\Lambda$ 矩阵的集合（实操中不是矩阵，是r维向量，前文说过）</p>
+</li>
+<li><p>$\mathcal{Q} &#x3D; &amp;#123;&#123;Q_{k&#125;&#125;^{n}_{k&#x3D;1}}$ ：表示所有n个模块的Q矩阵的集合</p>
+</li>
+<li><p>$\mathcal{C}(\mathcal{P}, \mathcal{E}, \mathcal{Q})$ ：表示模型<strong>在训练集上的损失函数</strong></p>
+</li>
+<li><p>$\mathcal{L}(\mathcal{P}, \mathcal{E}, \mathcal{Q})$ ：表示<strong>模型最终的损失函数</strong></p>
+</li>
+</ul>
+<p>细心的你可能已经发现了，这怎么有两个损失函数呢？那我们就直接来看<strong>最终损失函数的定义</strong>：<br>$$<br>\mathcal{L}(\mathcal{P}, \mathcal{E}, \mathcal{Q}) &#x3D; \mathcal{C}(\mathcal{P}, \mathcal{E}, \mathcal{Q}) + \gamma \sum_{k&#x3D;1}^{n} R(P_{k}, Q_{k}), \gamma &gt; 0<br>$$<br>其中， $R(P, Q) &#x3D; || P^{T}P- I||<em>{F}^{2} + || Q^{T}Q - I||</em>{F}^{2}$  </p>
+<p>$\mathcal{C}(\mathcal{P}, \mathcal{E}, \mathcal{Q})$ 好理解，<strong>它表示预测结果和真实标签间的差异</strong>。那后面那项又是什么呢？还记得我们在2.1中提过<strong>SVD分解相关的定义吗：$P$ 和 $Q$ 都必须是正交矩阵</strong>，即满足 $P^{T}P &#x3D; I, Q^{T}Q &#x3D; I$ 。  </p>
+<p>而在AdaLoRA中，我们是寄希望于模型学出的 $P,Q$ 能满足这个性质，所以在设计Loss时我们当然也要考虑它：<strong>当 $P$ 和 $Q$ 偏离这个性质太远时，我们在Loss中给予相应的惩罚，</strong> $\gamma$ <strong>就是惩罚力度，也被称为正则项</strong>。  </p>
+<p><strong>其实，这也是AdaLoRA相比于LoRA效果能更好的原因之一</strong>：LoRA中是让模型学习BA，去近似SVD分解的结果，但是在训练过程中，没有引入任何SVD分解相关的性质做约束，所以模型就可能学歪了（因此LoRA作者在文章中写了很多实验，证明学出来的BA在一定程度上能近似SVD分解，能取得较好的效果）。而AdaLoRA则是直接将这一束缚考虑到了Loss中。</p>
+<h2 id="四、AdaLoRA中的重要性分数"><a href="#四、AdaLoRA中的重要性分数" class="headerlink" title="四、AdaLoRA中的重要性分数"></a>四、AdaLoRA中的重要性分数</h2><p>我们依然先明确几个数学表达：  </p>
+<ul>
+<li>$S_{k, i}$ ：表示第k个模块的第i个三元组的<strong>重要性分数</strong>。</li>
+<li>$\lambda_{k, i}$ ：表示第k个模块的 $\Lambda$ 矩阵（再强调一下，实操中不是矩阵是向量）的第i个元素。</li>
+<li>$P_{k, ji}$ ：表示第k个模块的P矩阵的第j行第i列个元素。</li>
+<li>$Q_{k, ij}$ ：表示第k个模块的Q矩阵的第i行第j列个元素。</li>
+<li>$s(.)$ ：表示计算单元素重要性的函数，我们在下文会细说。</li>
+<li>$\mathcal {L}$ ：表示模型的损失函数。</li>
+</ul>
+<h3 id="4-1-单参数重要性分数"><a href="#4-1-单参数重要性分数" class="headerlink" title="4.1 单参数重要性分数"></a>4.1 单参数重要性分数</h3><p><strong>在开始正式讲重要性分数怎么算之前，我们先来看一个问题：到底什么是重要性分数？</strong>  </p>
+<p>我们在1.4中说过，AdaLoRA的整体目标是要做<strong>参数预算（budget）</strong>，也就是忽略不重要的参数，然后把训练资源给重要的参数，在AdaLoRA中，我们是通过“<strong>变秩</strong>”来实现这种预算的动态分配的**。所以现在问题就变成：如何判断一个矩阵中的一个参数（我们将其表示为** $w_{ij}$ <strong>）对模型训练是否重要？</strong>  </p>
+<p><strong>一个最直观的想法就是：去看看这个参数对Loss的影响</strong>。所以，在前人的研究中，就提出过**“梯度\参数”（gradient-weight product）**这种算法：<br>$$<br>I(w_{ij}) &#x3D; |w_{ij}\bigtriangledown_{w_{ij&#125;&#125;\mathcal{L}|<br>$$<br>这种算法的设计思想非常直接：我去看看Loss在这个参数上的梯度，同时也考虑一下这个参数本身的大小，不就能综合判断出这个参数对模型的影响程度了吗？</p>
+<h3 id="4-2-改进：单参数重要性分数"><a href="#4-2-改进：单参数重要性分数" class="headerlink" title="4.2 改进：单参数重要性分数"></a>4.2 改进：单参数重要性分数</h3><p>4.1中的这个直观有效的想法，被广泛运用在前人做的参数剪枝的优化中，<strong>但它有一个显著的问题：我是在mini-batch上计算重要性分数的，不同step间重要性分数可能会受到mini-batch客观波动的影响</strong>，有啥办法能消除这种影响吗？  </p>
+<p>当然有啦，遇到这种消除波动的问题，我们肯定要祭出momentum 。  </p>
+<p>所以，<strong>AdaLoRA作者就提出了这样一种计算 $t$ 时刻，单个模型参数重要性的方法</strong>：  </p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://pic4.zhimg.com/v2-57b9f17c14df237090188659b85bcc13_1440w.jpg"></p>
+<p>其中：  </p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://picx.zhimg.com/v2-53154675b0d77d5886b3f454df6c116f_1440w.jpg"></p>
+<ul>
+<li><p>$ I^{(t)}(w_{ij})$ 表示根据4.1中的公式，计算出的t时刻的单参数重要性</p>
+</li>
+<li><p>$ \bar I^{(t)}(w_{ij}) $ 表示前t-1个时刻该单参数重要性的平滑值</p>
+</li>
+<li><p>$|I^{(t)}(w_{ij}) -\bar I^{(t)}(w_{ij}) |$ 表示当前值与平滑值之间的差异。这一项的意义是，你也不能一股脑地去平滑，也要考虑到重要性分数的真实波动情况</p>
+</li>
+</ul>
+<p><strong>好，到这一步，我们就把计算单参数重要性分数的函数</strong> $s^{(t)}(w_{ij})$ **讲清楚了！**知道了单参数的重要性分数，自然就可以知道整个三元组的重要性分数啦！</p>
+<h3 id="4-3-三元组重要性分数"><a href="#4-3-三元组重要性分数" class="headerlink" title="4.3 三元组重要性分数"></a>4.3 三元组重要性分数</h3><p>在AdaLoRA中，三元组重要性分数计算方式如下：  </p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://pic3.zhimg.com/v2-e5d0a345f6c6294ea0f79630b600f5de_1440w.jpg"></p>
+<p>其中，小写的s就是我们在4.2中定义的单参数计算函数。<br>现在看这个公式，是不是很好理解呢：<strong>三元组的重要性分数 &#x3D;</strong> $\lambda$ **的重要性分数 + P矩阵中所有元素重要性分数的均值 + Q矩阵中所有元素重要性分数的均值。**取均值的原因，是不希望参数量影响到重要性分数。  </p>
+<p>太好啦，到这一步为止，我们已经把AdaLoRA中难啃的Loss和三元组重要性分数讲完了，是不是比想象得简单很多？<strong>接下来我们来啃最后一块硬骨头：知道了三元组的重要性分数后，怎么动态调整矩阵的秩？</strong></p>
+<h2 id="五、动态调整矩阵的秩"><a href="#五、动态调整矩阵的秩" class="headerlink" title="五、动态调整矩阵的秩"></a>五、动态调整矩阵的秩</h2><p>老规矩，在开始讲解前，我们再来明确几个数学符号：  </p>
+<ul>
+<li>$\bigtriangledown_{P_{k&#125;&#125;\mathcal{L}(\mathcal{P}^{(t)}, \mathcal{E}^{(t)}, \mathcal{Q}^{(t)})$ ：表示第 $k$ 个模块的P矩阵在 $t$ 时刻的梯度</li>
+<li>$ \bigtriangledown_{Q_{k&#125;&#125;\mathcal{L}(\mathcal{P}^{(t)}, \mathcal{E}^{(t)}, \mathcal{Q}^{(t)})$ ：表示第 $k$ 个模块的Q矩阵在 $t$ 时刻的梯度</li>
+<li>$\bigtriangledown_{\Lambda_{k&#125;&#125;\mathcal{L}(\mathcal{P}^{(t)}, \mathcal{E}^{(t)}, \mathcal{Q}^{(t)})$ ：表示第 $k$ 个模块的 $\Lambda$ 矩阵在 $t$ 时刻的梯度</li>
+</ul>
+<h3 id="5-1-调整函数"><a href="#5-1-调整函数" class="headerlink" title="5.1 调整函数"></a>5.1 调整函数</h3><p>前文说过，<strong>动态调整矩阵秩的核心，就是根据三元组重要性分数，对</strong> $\Lambda$ <strong>矩阵中相应的</strong> $\lambda$ <strong>做置0处理。所以，我们就来看看</strong> $\lambda$ <strong>的置0策略。</strong>  </p>
+<p>（1）首先，我们拿 $ \bigtriangledown_{\Lambda_{k&#125;&#125;\mathcal{L}(\mathcal{P}^{(t)}, \mathcal{E}^{(t)}, \mathcal{Q}^{(t)})$ ，先更新一波 $\Lambda_{k}$ ，即我们有：<br>$$<br>\widetilde{\Lambda}<em>{k}^{t} &#x3D; \Lambda</em>{k}^{t} - \eta \bigtriangledown_{\Lambda_{k&#125;&#125;\mathcal{L}(\mathcal{P}^{(t)}, \mathcal{E}^{(t)}, \mathcal{Q}^{(t)})<br>$$<br>其中， $\eta$ 是我们的学习率（learning_rate）<br><strong>注意，这里</strong> $\widetilde{\Lambda}_{k}^{t}$ <strong>头上还顶着t时刻的标志，而不是t+1</strong>，也就是说，我<strong>们对</strong> $\Lambda$ <strong>做完梯度更新后的结果，并不是t+1时刻的结果。我们做完置0后，才是t+1时刻的结果。</strong>  </p>
+<p>（2）接着，我们按以下方式判断 $\Lambda$ 矩阵中哪些元素应该置0，哪些元素应该保持为梯度更新后的结果：  </p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://pic4.zhimg.com/v2-bbf33df9863bad423427f55dfc6b79c9_1440w.jpg"></p>
+<p>这个看起来很复杂的公式，表达的意思很简单：  </p>
+<ul>
+<li>t+1时刻 $\Lambda$ 矩阵，是由 $\mathcal{T}$ 这个函数决定的，这个函数的输入是梯度更新后的 $\widetilde{\Lambda}<em>{k}^{t}$ **，**以及第k个模块所有三元组的重要性分数 $S^{(t)}</em>{k}$ .</li>
+<li>那 $\mathcal{T}$ 这个函数具体就长成后面带大括号的那个样子。也就是重要性分数排在top_b的三元组，它们的 $\lambda$ 保持原样，其余的则置0</li>
+<li>最后，这里的top_b也涉及一种策略，那就是它的值是随着t的变动而变化的（例如t&#x3D;1时，我取的是top 2； t&#x3D;2时，我取的是top b之类）。我们在下一小节细说这个策略</li>
+</ul>
+<h3 id="5-2-top-b策略"><a href="#5-2-top-b策略" class="headerlink" title="5.2 top_b策略"></a>5.2 top_b策略</h3><p>在开始讲top_b策略前，我们先来思考一个问题：<strong>为什么每次选出的重要三元组的个数，要随着时刻t的变动而变动？</strong>  </p>
+<p>这个问题的答案还是：<strong>模型的学习是探索性的过程</strong>。  </p>
+<p><strong>在训练刚开始，我们逐渐增加top_b，也就是逐渐加秩，让模型尽可能多探索。到后期再慢慢把top_b降下来，直到最后以稳定的top_b进行训练，达到AdaLoRA的总目的：把训练资源留给最重要的参数。这个过程就和warm-up非常相似。</strong>  </p>
+<p>具体的策略在原始论文3.3节中有讲解，不难，所以我就不另外分析啦，大家可以自行阅读。以及本文的实验部分，我也不在这边写了，实验部分一句话总结就是相比LoRA确实有了不错的提升，大家可以自己去看细节。</p>
+<h2 id="六、AdaLoRA训练流程总结（必看）"><a href="#六、AdaLoRA训练流程总结（必看）" class="headerlink" title="六、AdaLoRA训练流程总结（必看）"></a>六、AdaLoRA训练流程总结（必看）</h2><p>最后，我们把AdaLoRA的整体训练流程总结一下：  </p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://pic3.zhimg.com/v2-46c39e1bda7a369b65489f1f6036d634_1440w.jpg"></p>
+<p>（1）拿到训练数据集，确定好总训练步长T。根据总步长T设计好top_b的warm-up策略，并设定好一系列超参，同时也把 $P, \Lambda, Q$ 的初始化做好<br>（2）进入某个step的迭代<br>（3）给模型喂一份mini-batch，正常做forward和backward，计算loss和梯度<br>（4）（5）对某一个三元组，我们先计算其中每个参数的重要性（单参数重要性）<br>（6）根据单参数重要性，计算出整个三元组的重要性分数<br>（7）使用（3）中计算好的梯度，正常更新矩阵P和Q<br>（8）根据三元组重要性分数、动态调秩策略、top_b来判断要给哪些 $\lambda$ 置0，其对应的三元组中的P和Q向量相当于被mask掉，以此来实现动态调秩的目的。这番操作后，我们得到更新的矩阵 $\Lambda$ 然后将 $P, \Lambda, Q$ 送入下一轮训练。  </p>
+<p>以此类推。  </p>
+<h2 id="七、参考"><a href="#七、参考" class="headerlink" title="七、参考"></a>七、参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/657130029">图解大模型微调系列之：AdaLoRA，能做“财务”预算的低秩适配器</a></li>
+<li><a href="https://link.zhihu.com/?target=https://arxiv.org/abs/2303.10512">https://arxiv.org/abs/2303.10512</a>  </li>
+<li><a href="https://link.zhihu.com/?target=https://github.com/QingruZhang/AdaLoRA">https://github.com/QingruZhang/AdaLoRA</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/14.PEFT/01.LoRA/02.AdaLoRA/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/14.PEFT/01.LoRA/02.AdaLoRA/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/PEFT/">PEFT</a><a class="post-meta__tags" href="/blog/tags/LoRA/">LoRA</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/01.LoRA/" title="LoRA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">LoRA</div></div><div class="info-2"><div class="info-item-1">一、全参数微调  我们知道，微调的含义，就是把已经训练好的模型（pretrained model）拿来，给它吃特定的下游任务数据，使得模型在预训练权重上继续训练，直至满足下游任务性能标准。预训练模型就像一个特征提取器，能够基于先前训练数据中学到的经验，为我们提取有效的特征，大大提升下游任务的训练效果和收敛速度。   全量微调指的是，在下游任务的训练中，对预训练模型的每一个参数都做更新。例如图中，给出了Transformer的Q&#x2F;K&#x2F;V矩阵的全量微调示例，对每个矩阵来说，在微调时，其d*d个参数，都必须参与更新。   全量微调的显著缺点是，训练代价昂贵。同时，由于模型在...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/05.Adapter/101.R-Adapter/" title="R-Adapter"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">R-Adapter</div></div><div class="info-2"><div class="info-item-1"> R-Adapter：零样本模型微调新突破，提升鲁棒性与泛化能力 | ECCV 2024   大规模图像-文本预训练模型实现了零样本分类，并在不同数据分布下提供了一致的准确性。然而，这些模型在下游任务中通常需要微调优化，这会降低对于超出分布范围的数据的泛化能力，并需要大量的计算资源。论文提出新颖的Robust Adapter（R-Adapter），可以在微调零样本模型用于下游任务的同时解决这两个问题。该方法将轻量级模块集成到预训练模型中，并采用新颖的自我集成技术以提高超出分布范围的鲁棒性，并大幅减少存储开销。此外，论文提出了针对视觉-语言下游任务设计的MPM-NCE损失，确保多个图像-文...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/09.MiLoRA/" title="MiLoRA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">MiLoRA</div></div><div class="info-2"><div class="info-item-1">MiLoRA: Effcient Mixture of Low-Rank Adaptation for Large Language Models Fine-tuning 低秩自适应（LoRA）及其混合专家（MOE）变体是高参数效率微调（PEFT）方法的有效途径。然而，由于在Transformer层中添加多个线性模块的LoRA模块和MOE路由器，它们在Multi-Tenant设置中引入了显著的延迟。 为了解决这个问题，作者提出了混合低秩自适应（MiLoRA），这是一种新颖且高效的LoRA变体。与先前的MOE-LoRA方法不同，MiLoRA将每个LoRA模块视为专家，并采用 Prompt ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/04.LoRA-Pro/" title="LoRA-Pro"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LoRA-Pro</div></div><div class="info-2"><div class="info-item-1">  解读来源：对齐全量微调！这是我看过最精彩的LoRA改进（二） 文章：LoRA-Pro: Are Low-Rank Adapters Properly Optimized?   文章解读“LoRA-GA”通过梯度SVD来改进LoRA的初始化，从而实现LoRA与全量微调的对齐。当然，从理论上来讲，这样做也只能尽量对齐第一步更新后的$W_1$，LoRA-Pro同样是想着对齐全量微调，但它对齐的是每一步梯度，从而对齐整条优化轨迹，这正好是跟LoRA-GA互补的改进点。 对齐全量LoRA的参数化方式是 $$W &#x3D; (W_0 - A_0 B_0) + AB\tag{1}$$其中$W_0...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/01.LoRA/" title="LoRA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LoRA</div></div><div class="info-2"><div class="info-item-1">一、全参数微调  我们知道，微调的含义，就是把已经训练好的模型（pretrained model）拿来，给它吃特定的下游任务数据，使得模型在预训练权重上继续训练，直至满足下游任务性能标准。预训练模型就像一个特征提取器，能够基于先前训练数据中学到的经验，为我们提取有效的特征，大大提升下游任务的训练效果和收敛速度。   全量微调指的是，在下游任务的训练中，对预训练模型的每一个参数都做更新。例如图中，给出了Transformer的Q&#x2F;K&#x2F;V矩阵的全量微调示例，对每个矩阵来说，在微调时，其d*d个参数，都必须参与更新。   全量微调的显著缺点是，训练代价昂贵。同时，由于模型在...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/08.AM-LoRA/" title="AM-LoRA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">AM-LoRA</div></div><div class="info-2"><div class="info-item-1">Learning Attentional Mixture ofLoRAs for Language Model Continual Learning微调大语言模型（LLMs）使用低秩适应（LoRA）被广泛认为是持续学习新任务的有效方法。然而，在处理多个任务连续时，它往往会导致灾难性遗忘。为此，作者提出了一种持续学习方法AttentionalMixture of LoRAs（AM-LoRA），专门针对LLMs。具体而言，AM-LoRA学习一系列任务的一系列LoRA，以持续学习来自不同任务的知识。AM-LoRA的关键在于设计了一个注意力机制作为知识混合模块，以适应地集成每个LoRA的信息。通...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/10.LoRAMoE/01.LoRAMoE/" title="LoRAMoE"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LoRAMoE</div></div><div class="info-2"><div class="info-item-1">LoRAMoE1. 背景大模型经过大量语料的无监督预训练后，得到所谓的基座模型，这时候通常还不能很好地完成下游任务，需要经过有监督的微调（SFT）后才能和人类指令对齐，释放其全部潜力。 一般来说，SFT的训练数据不需要太多，但当下游任务增多或者需要强化特定任务的性能时，增加SFT训练数据还是有必要的。如下图的左侧部分，当SFT数据从100K提升到3M时，大部分任务的性能显著增强。 但随着SFT数据的大规模增加，新的问题出现了：如下图的右侧部分所示，在某些评测数据集上性能显著下降，与之相伴的是大模型的参数变化量剧增（见红色线段）。这些数据集属于闭卷问答任务（Closed-Book Ques...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/03.LoRA-GA/" title="LoRA-GA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LoRA-GA</div></div><div class="info-2"><div class="info-item-1"> 来源：对齐全量微调！这是我看过最精彩的LoRA改进（一）  众所周知，LoRA是一种常见的参数高效的微调方法。LoRA利用低秩分解来降低微调参数量，节省微调显存，同时训练好的权重可以合并到原始权重上，推理架构不需要作出改变，是一种训练和推理都比较友好的微调方案。此外，https://kexue.fm/archives/10001还讨论过LoRA的不对称性，指出给$A,B$ 置不同的学习率能取得更好的效果，该结论被称为“LoRA+”。 基础回顾首先我们再来温习一下LoRA。假设预训练参数为$W_0 \in \mathbb{R}^{n\times m}$，那么全量微调时的更新量自然也是一个...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81AdaLoRA%E5%9C%A8%E5%81%9A%E4%B8%80%E4%BB%B6%E4%BB%80%E4%B9%88%E4%BA%8B"><span class="toc-number">1.</span> <span class="toc-text">一、AdaLoRA在做一件什么事</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-LoRA%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E5%BE%AE%E8%B0%83%E7%9A%84"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 LoRA是怎么做微调的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%AF%B9%E6%89%80%E6%9C%89%E6%A8%A1%E5%9D%97%E9%83%BD%E9%87%87%E7%94%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E7%A7%A9%EF%BC%8C%E6%98%AF%E5%90%A6%E5%90%88%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 对所有模块都采用同一个秩，是否合理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%BE%AE%E8%B0%83%E8%BF%87%E7%A8%8B%E4%B8%AD%E4%B8%80%E7%9B%B4%E4%BF%9D%E6%8C%81%E7%A7%A9%E4%B8%8D%E5%8F%98%EF%BC%8C%E6%98%AF%E5%90%A6%E5%90%88%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 微调过程中一直保持秩不变，是否合理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-AdaLoRA%E7%9A%84%E6%80%BB%E4%BD%93%E6%94%B9%E8%BF%9B%E7%9B%AE%E6%A0%87"><span class="toc-number">1.4.</span> <span class="toc-text">1.4 AdaLoRA的总体改进目标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81AdaLoRA%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、AdaLoRA的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-SVD%E5%88%86%E8%A7%A3"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 SVD分解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E8%AE%A9%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0SVD%E5%88%86%E8%A7%A3%E7%9A%84%E8%BF%91%E4%BC%BC"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 让模型学习SVD分解的近似</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-AdaLoRA%E5%8A%A8%E6%80%81%E6%9B%B4%E6%96%B0%E7%A7%A9%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 AdaLoRA动态更新秩的过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81AdaLoRA%E7%9A%84Loss%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">三、AdaLoRA的Loss设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81AdaLoRA%E4%B8%AD%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7%E5%88%86%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">四、AdaLoRA中的重要性分数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%8D%95%E5%8F%82%E6%95%B0%E9%87%8D%E8%A6%81%E6%80%A7%E5%88%86%E6%95%B0"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 单参数重要性分数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%94%B9%E8%BF%9B%EF%BC%9A%E5%8D%95%E5%8F%82%E6%95%B0%E9%87%8D%E8%A6%81%E6%80%A7%E5%88%86%E6%95%B0"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 改进：单参数重要性分数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E4%B8%89%E5%85%83%E7%BB%84%E9%87%8D%E8%A6%81%E6%80%A7%E5%88%86%E6%95%B0"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 三元组重要性分数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E7%9F%A9%E9%98%B5%E7%9A%84%E7%A7%A9"><span class="toc-number">5.</span> <span class="toc-text">五、动态调整矩阵的秩</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E8%B0%83%E6%95%B4%E5%87%BD%E6%95%B0"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 调整函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-top-b%E7%AD%96%E7%95%A5"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 top_b策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81AdaLoRA%E8%AE%AD%E7%BB%83%E6%B5%81%E7%A8%8B%E6%80%BB%E7%BB%93%EF%BC%88%E5%BF%85%E7%9C%8B%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">六、AdaLoRA训练流程总结（必看）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">七、参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

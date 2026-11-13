@@ -1,0 +1,755 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>论文写作 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Ten simple rules for structuring papers 论文结构的十条简单原则 https:&#x2F;&#x2F;journals.plos.org&#x2F;ploscompbiol&#x2F;article?id&#x3D;10.1371&#x2F;journal.pcbi.1005619  OverviewGood scientific writing is essential to career development a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文写作">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/02.%E5%86%99%E4%BD%9C%E6%8A%80%E5%B7%A7/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="Ten simple rules for structuring papers 论文结构的十条简单原则 https:&#x2F;&#x2F;journals.plos.org&#x2F;ploscompbiol&#x2F;article?id&#x3D;10.1371&#x2F;journal.pcbi.1005619  OverviewGood scientific writing is essential to career development a">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-11-13T02:46:11.771Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="论文阅读与写作">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "论文写作",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/02.%E5%86%99%E4%BD%9C%E6%8A%80%E5%B7%A7/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-11-13T02:46:11.771Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/02.%E5%86%99%E4%BD%9C%E6%8A%80%E5%B7%A7/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '论文写作',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">论文写作</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">论文写作</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-13T02:46:11.771Z" title="更新于 2026-11-13 10:46:11">2026-11-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/">论文阅读与写作</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Ten-simple-rules-for-structuring-papers"><a href="#Ten-simple-rules-for-structuring-papers" class="headerlink" title="Ten simple rules for structuring papers"></a>Ten simple rules for structuring papers</h1><blockquote>
+<p>论文结构的十条简单原则 <a target="_blank" rel="noopener" href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005619">https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005619</a></p>
+</blockquote>
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>Good scientific writing is essential to career development and to the progress of science. A well-structured manuscript allows readers and reviewers to get excited about the subject matter, to understand and verify the paper’s contributions, and to integrate these contributions into a broader context. However, many scientists struggle with producing high-quality manuscripts and are typically untrained in paper writing. Focusing on how readers consume information, we present a set of ten simple rules to help you communicate the main idea of your paper. These rules are designed to make your paper more influential and the process of writing more efficient and pleasurable.</p>
+<p>良好的科学写作对于职业发展和科学进步都至关重要。结构良好的论文能够使读者和审稿人对研究主题产生兴趣，理解并验证论文的贡献，并将这些贡献纳入更广泛的背景之中。然而，许多科学家在撰写高质量论文时都会遇到困难，而且通常没有接受过论文写作方面的训练。本文从读者如何接收信息这一角度出发，提出十条简单原则，以帮助你传达论文的核心思想。这些原则旨在使你的论文更具影响力，同时让写作过程更加高效、更加愉快。</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Writing and reading papers are key skills for scientists. Indeed, success at publishing is used to evaluate scientists [1] and can help predict their future success [2]. In the production and consumption of papers, multiple parties are involved, each having their own motivations and priorities. The editors want to make sure that the paper is significant, and the reviewers want to determine whether the conclusions are justified by the results. The reader wants to quickly understand the conceptual conclusions of the paper before deciding whether to dig into the details, and the writer wants to convey the important contributions to the broadest audience possible while convincing the specialist that the findings are credible. You can facilitate all of these goals by structuring the paper well at multiple scales—spanning the sentence, paragraph, section, and document.</p>
+<p>Clear communication is also crucial for the broader scientific enterprise because “concept transfer” is a rate-limiting step in scientific cross-pollination. This is particularly true in the biological sciences and other fields that comprise a vast web of highly interconnected sub-disciplines. As scientists become increasingly specialized, it becomes more important (and difficult) to strengthen the conceptual links. Communication across disciplinary boundaries can only work when manuscripts are readable, credible, and memorable.</p>
+<p>The claim that gives significance to your work has to be supported by data and by a logic that gives it credibility. Without carefully planning the paper’s logic, writers will often be missing data or missing logical steps on the way to the conclusion. While these lapses are beyond our scope, your scientific logic must be crystal clear to powerfully make your claim.</p>
+<p>Here we present ten simple rules for structuring papers. The first four rules are principles that apply to all the parts of a paper and further to other forms of communication such as grants and posters. The next four rules deal with the primary goals of each of the main parts of papers. The final two rules deliver guidance on the process—heuristics for efficiently constructing manuscripts.</p>
+<p>论文写作与论文阅读是科学家的关键技能。事实上，论文发表方面的成功常被用于评价科学家，并有助于预测其未来的成功。在论文的生产与阅读过程中，涉及多个参与方，而每一方都有自己的动机与优先事项。编辑希望确认论文具有重要意义；审稿人希望判断论文结论是否得到了结果的充分支持；读者希望快速理解论文在概念层面的结论，然后再决定是否深入阅读细节；作者则希望把重要贡献传达给尽可能广泛的受众，同时说服专业读者相信研究发现是可信的。通过在多个尺度上对论文进行良好组织——包括句子、段落、章节以及整篇文稿——你可以同时促进这些目标的实现。</p>
+<p>清晰的交流对于更广泛的科学事业同样至关重要，因为“概念传递”是科学交叉融合中的一个限速环节。对于生物科学以及其他由大量高度互联的子学科构成的领域而言，这一点尤其如此。随着科学家变得越来越专业化，加强不同概念之间的联系也变得越来越重要，同时也越来越困难。只有当论文具有可读性、可信度并且容易被记住时，跨学科交流才可能真正发挥作用。</p>
+<p>赋予研究工作重要性的主张，必须由数据以及能够赋予它可信度的逻辑来支持。如果不仔细规划论文的逻辑，作者往往会在得出结论的过程中缺少必要的数据，或者缺少关键的逻辑步骤。尽管这些缺陷超出了本文讨论的范围，但你的科学逻辑必须极其清晰，才能有力地支撑你的主张。</p>
+<p>本文提出十条关于论文结构的简单原则。前四条是适用于论文各个组成部分的通用原则，同时也适用于基金申请书、海报等其他交流形式。接下来的四条讨论论文主要部分各自的核心目标。最后两条则针对写作过程提供指导，即给出一些能够高效构建论文的启发式方法。</p>
+<h2 id="Principles-Rules-1–4"><a href="#Principles-Rules-1–4" class="headerlink" title="Principles (Rules 1–4)"></a>Principles (Rules 1–4)</h2><p>Writing is communication. Thus, the reader’s experience is of primary importance, and all writing serves this goal. When you write, you should constantly have your reader in mind. These four rules help you to avoid losing your reader.</p>
+<p>写作就是交流。因此，读者的阅读体验应被置于首要位置，所有写作都应服务于这一目标。在写作时，你应始终把读者放在心中。以下四条原则能够帮助你避免失去读者。</p>
+<h2 id="Rule-1-Focus-your-paper-on-a-central-contribution-which-you-communicate-in-the-title"><a href="#Rule-1-Focus-your-paper-on-a-central-contribution-which-you-communicate-in-the-title" class="headerlink" title="Rule 1: Focus your paper on a central contribution, which you communicate in the title"></a>Rule 1: Focus your paper on a central contribution, which you communicate in the title</h2><p>Your communication efforts are successful if readers can still describe the main contribution of your paper to their colleagues a year after reading it. Although it is clear that a paper often needs to communicate a number of innovations on the way to its final message, it does not pay to be greedy. Focus on a single message; papers that simultaneously focus on multiple contributions tend to be less convincing about each and are therefore less memorable.</p>
+<p>The most important element of a paper is the title—think of the ratio of the number of titles you read to the number of papers you read. The title is typically the first element a reader encounters, so its quality [3] determines whether the reader will invest time in reading the abstract.</p>
+<p>The title not only transmits the paper’s central contribution but can also serve as a constant reminder (to you) to focus the text on transmitting that idea. Science is, after all, the abstraction of simple principles from complex data. The title is the ultimate refinement of the paper’s contribution. Thinking about the title early—and regularly returning to hone it—can help not only the writing of the paper but also the process of designing experiments or developing theories.</p>
+<p>This Rule of One is the most difficult rule to optimally implement because it comes face-to-face with the key challenge of science, which is to make the claim and&#x2F;or model as simple as the data and logic can support but no simpler. In the end, your struggle to find this balance may appropriately result in “one contribution” that is multifaceted. For example, a technology paper may describe both its new technology and a biological result using it; the bridge that unifies these two facets is a clear description of how the new technology can be used to do new biology.</p>
+<h2 id="原则1：将论文聚焦于一个核心贡献，并在标题中传达这一贡献"><a href="#原则1：将论文聚焦于一个核心贡献，并在标题中传达这一贡献" class="headerlink" title="原则1：将论文聚焦于一个核心贡献，并在标题中传达这一贡献"></a>原则1：将论文聚焦于一个核心贡献，并在标题中传达这一贡献</h2><p>如果读者在阅读论文一年之后，仍然能够向同事描述论文的主要贡献，那么你的交流就是成功的。虽然一篇论文为了传达最终信息，往往需要在过程中介绍多项创新，但在这里贪多并没有好处。应聚焦于一个单一信息；同时强调多个贡献的论文，往往无法令人充分信服地接受其中任何一个贡献，因此也更不容易被记住。</p>
+<p>论文中最重要的元素是标题——想一想你读过的标题数量与真正读完的论文数量之间的比例。标题通常是读者接触到的第一个元素，因此，标题的质量决定了读者是否愿意投入时间继续阅读摘要。</p>
+<p>标题不仅传达论文的核心贡献，也可以不断提醒作者本人，让全文始终聚焦于这一思想。毕竟，科学的本质就是从复杂数据中抽象出简单原则。标题是对论文贡献最凝练的表达。尽早思考标题，并在写作过程中反复回到标题进行打磨，不仅有助于论文写作，也有助于实验设计或理论发展。</p>
+<p>这一“唯一原则”是最难恰当实施的一条原则，因为它直接面对科学中的核心挑战：应当把主张或模型简化到数据与逻辑所能支持的程度，但不能进一步过度简化。最终，在寻找这种平衡的过程中，你得到的“一个贡献”可能本身具有多个侧面。例如，一篇技术论文可能既介绍一种新技术，也展示利用该技术获得的一项生物学发现；将这两个侧面统一起来的桥梁，是清晰说明这项新技术如何使新的生物学研究成为可能。</p>
+<h2 id="Rule-2-Write-for-flesh-and-blood-human-beings-who-do-not-know-your-work"><a href="#Rule-2-Write-for-flesh-and-blood-human-beings-who-do-not-know-your-work" class="headerlink" title="Rule 2: Write for flesh-and-blood human beings who do not know your work"></a>Rule 2: Write for flesh-and-blood human beings who do not know your work</h2><p>Because you are the world’s leading expert at exactly what you are doing, you are also the world’s least qualified person to judge your writing from the perspective of the naïve reader. The majority of writing mistakes stem from this predicament. Think like a designer—for each element, determine the impact that you want to have on people and then strive to achieve that objective [4]. Try to think through the paper like a naïve reader who must first be made to care about the problem you are addressing (see Rule 6) and then will want to understand your answer with minimal effort.</p>
+<p>Define technical terms clearly because readers can become frustrated when they encounter a word that they don’t understand. Avoid abbreviations and acronyms so that readers do not have to go back to earlier sections to identify them.</p>
+<p>The vast knowledge base of human psychology is useful in paper writing. For example, people have working memory constraints in that they can only remember a small number of items and are better at remembering the beginning and the end of a list than the middle [5]. Do your best to minimize the number of loose threads that the reader has to keep in mind at any one time.</p>
+<h2 id="原则2：为真实的人而写，并假设他们并不了解你的工作"><a href="#原则2：为真实的人而写，并假设他们并不了解你的工作" class="headerlink" title="原则2：为真实的人而写，并假设他们并不了解你的工作"></a>原则2：为真实的人而写，并假设他们并不了解你的工作</h2><p>因为你是世界上最了解自己研究内容的人，所以你同时也是最不适合从初学者读者视角判断自己写作质量的人。大多数写作错误都源于这一困境。应像设计师一样思考：对于每一个写作元素，先确定你希望它对读者产生什么影响，然后努力实现这一目标。</p>
+<p>试着像一位对你的工作并不熟悉的读者那样理解论文。你首先必须让这位读者关心你所解决的问题，然后还要让他以尽可能小的认知负担理解你的答案。</p>
+<p>应清楚定义专业术语，因为读者遇到不理解的词语时会感到挫败。尽量避免缩写和首字母缩略词，以免读者不得不返回前文寻找它们的含义。</p>
+<p>关于人类心理的大量知识对于论文写作很有帮助。例如，人类的工作记忆容量有限，一次只能记住少量信息；对于一组信息，人们通常更容易记住开头和结尾，而较难记住中间部分。因此，应尽可能减少读者在同一时刻需要记住但尚未解决的线索数量。</p>
+<h2 id="Rule-3-Stick-to-the-context-content-conclusion-C-C-C-scheme"><a href="#Rule-3-Stick-to-the-context-content-conclusion-C-C-C-scheme" class="headerlink" title="Rule 3: Stick to the context-content-conclusion (C-C-C) scheme"></a>Rule 3: Stick to the context-content-conclusion (C-C-C) scheme</h2><p>The vast majority of popular (i.e., memorable and re-tellable) stories have a structure with a discernible beginning, a well-defined body, and an end. The beginning sets up the context for the story, while the body (content) advances the story towards an ending in which the problems find their conclusions. This structure reduces the chance that the reader will wonder “Why was I told that?” (if the context is missing) or “So what?” (if the conclusion is missing).</p>
+<p>There are many ways of telling a story. Mostly, they differ in how well they serve a patient reader versus an impatient one [6]. The impatient reader needs to be engaged quickly; this can be accomplished by presenting the most exciting content first (e.g., as seen in news articles). The C-C-C scheme that we advocate serves a more patient reader who is willing to spend the time to get oriented with the context. A consequent disadvantage of C-C-C is that it may not optimally engage the impatient reader. This disadvantage is mitigated by the fact that the structure of scientific articles, specifically the primacy of the title and abstract, already forces the content to be revealed quickly. Thus, a reader who proceeds to the introduction is likely engaged enough to have the patience to absorb the context. Furthermore, one hazard of excessive “content first” story structures in science is that you may generate skepticism in the reader because they may be missing an important piece of context that makes your claim more credible. For these reasons, we advocate C-C-C as a “default” scientific story structure.</p>
+<p>The C-C-C scheme defines the structure of the paper on multiple scales. At the whole-paper scale, the introduction sets the context, the results are the content, and the discussion brings home the conclusion. Applying C-C-C at the paragraph scale, the first sentence defines the topic or context, the body hosts the novel content put forth for the reader’s consideration, and the last sentence provides the conclusion to be remembered.</p>
+<p>Deviating from the C-C-C structure often leads to papers that are hard to read, but writers often do so because of their own autobiographical context. During our everyday lives as scientists, we spend a majority of our time producing content and a minority amidst a flurry of other activities. We run experiments, develop the exposition of available literature, and combine thoughts using the magic of human cognition. It is natural to want to record these efforts on paper and structure a paper chronologically. But for our readers, most details of our activities are extraneous. They do not care about the chronological path by which you reached a result; they just care about the ultimate claim and the logic supporting it (see Rule 7). Thus, all our work must be reformatted to provide a context that makes our material meaningful and a conclusion that helps the reader to understand and remember it.</p>
+<h2 id="原则3：遵循“背景—内容—结论”（Context-Content-Conclusion，C-C-C）结构"><a href="#原则3：遵循“背景—内容—结论”（Context-Content-Conclusion，C-C-C）结构" class="headerlink" title="原则3：遵循“背景—内容—结论”（Context-Content-Conclusion，C-C-C）结构"></a>原则3：遵循“背景—内容—结论”（Context-Content-Conclusion，C-C-C）结构</h2><p>绝大多数广受欢迎、容易记住且便于复述的故事，都具有清晰的开端、明确的主体以及结尾。开端为故事建立背景，主体即内容，推动故事走向结尾，而问题在结尾得到解决。这样的结构能够降低读者产生以下疑问的可能性：如果缺少背景，读者会问“为什么要告诉我这些？”；如果缺少结论，读者会问“那又怎样？”</p>
+<p>讲述故事有很多方式。它们之间的主要区别，在于它们更适合有耐心的读者还是缺乏耐心的读者。缺乏耐心的读者需要迅速被吸引，因此可以先呈现最令人兴奋的内容，例如新闻报道常采用这种方式。</p>
+<p>我们倡导的 C-C-C 结构更适合愿意花时间理解背景、完成认知定位的读者。因此，C-C-C 的一个缺点是，它可能并不能以最佳方式吸引缺乏耐心的读者。不过，科学论文的结构本身已经在一定程度上缓解了这一问题，尤其是标题和摘要的优先地位，迫使论文迅速揭示其主要内容。因此，继续阅读引言的读者通常已经具有足够兴趣，也愿意耐心理解背景。</p>
+<p>此外，在科学写作中，过度使用“内容优先”的叙事方式还存在一种风险：由于缺少使主张可信的重要背景信息，读者可能会对你的结论产生怀疑。基于这些原因，我们倡导把 C-C-C 作为科学叙事的默认结构。</p>
+<p>C-C-C 结构适用于论文的多个尺度。在整篇论文的尺度上，引言负责建立背景，结果部分负责呈现内容，讨论部分负责明确结论。在段落尺度上，首句界定主题或背景，中间部分承载需要读者思考的新内容，末句则给出希望读者记住的结论。</p>
+<p>偏离 C-C-C 结构通常会导致论文难以阅读，但作者常常这样做，是因为受到个人研究经历的影响。在科学家的日常工作中，我们大部分时间都在产生内容，而只有少部分时间用于其他活动。我们开展实验、梳理已有文献，并通过人类认知的奇妙机制整合各种想法。因此，人们自然会希望把这些努力记录下来，并按照时间顺序组织论文。</p>
+<p>但对于读者而言，我们研究过程中的大多数细节都是无关紧要的。他们并不关心你是沿着怎样的时间路径获得结果的；他们只关心最终主张以及支撑该主张的逻辑。因此，我们必须重新组织自己的工作，为材料提供使其有意义的背景，并给出帮助读者理解和记忆的结论。</p>
+<h2 id="Rule-4-Optimize-your-logical-flow-by-avoiding-zig-zag-and-using-parallelism"><a href="#Rule-4-Optimize-your-logical-flow-by-avoiding-zig-zag-and-using-parallelism" class="headerlink" title="Rule 4: Optimize your logical flow by avoiding zig-zag and using parallelism"></a>Rule 4: Optimize your logical flow by avoiding zig-zag and using parallelism</h2><p>Avoiding zig-zag. Only the central idea of the paper should be touched upon multiple times. Otherwise, each subject should be covered in only one place in order to minimize the number of subject changes. Related sentences or paragraphs should be strung together rather than interrupted by unrelated material. Ideas that are similar, such as two reasons why we should believe something, should come one immediately after the other.</p>
+<p>Using parallelism. Similarly, across consecutive paragraphs or sentences, parallel messages should be communicated with parallel form. Parallelism makes it easier to read the text because the reader is familiar with the structure. For example, if we have three independent reasons why we prefer one interpretation of a result over another, it is helpful to communicate them with the same syntax so that this syntax becomes transparent to the reader, which allows them to focus on the content. There is nothing wrong with using the same word multiple times in a sentence or paragraph. Resist the temptation to use a different word to refer to the same concept—doing so makes readers wonder if the second word has a slightly different meaning.</p>
+<h2 id="原则4：通过避免来回跳跃并使用平行结构来优化逻辑流程"><a href="#原则4：通过避免来回跳跃并使用平行结构来优化逻辑流程" class="headerlink" title="原则4：通过避免来回跳跃并使用平行结构来优化逻辑流程"></a>原则4：通过避免来回跳跃并使用平行结构来优化逻辑流程</h2><p><strong>避免来回跳跃</strong></p>
+<p>只有论文的核心思想可以在全文中多次出现。除此之外，每一个主题都应尽量只在一个位置集中讨论，从而减少主题切换的次数。相关的句子或段落应连续排列，而不应被无关内容打断。相似的思想，例如支持某种观点的两个理由，应当紧挨着出现。</p>
+<p><strong>使用平行结构</strong></p>
+<p>同样，在相邻的段落或句子中，彼此平行的信息应采用平行的表达形式。平行结构使文本更容易阅读，因为读者已经熟悉了结构本身。</p>
+<p>例如，如果我们有三个彼此独立的理由支持对某一结果的一种解释，而反对另一种解释，那么最好使用相同的句法来表达这三个理由。这样，句法结构就会对读者变得“透明”，使其能够把注意力集中在内容上。</p>
+<p>在一个句子或段落中多次使用同一个词并没有问题。不要为了避免重复而用不同词语指代同一个概念，因为这样会让读者怀疑第二个词是否具有略微不同的含义。</p>
+<h2 id="The-components-of-a-paper-Rules-5–8"><a href="#The-components-of-a-paper-Rules-5–8" class="headerlink" title="The components of a paper (Rules 5–8)"></a>The components of a paper (Rules 5–8)</h2><p>The individual parts of a paper—abstract, introduction, results, and discussion—have different objectives, and thus they each apply the C-C-C structure a little differently in order to achieve their objectives. We will discuss these specialized structures in this section and summarize them in Fig 1.</p>
+<h2 id="论文的组成部分（原则5—8）"><a href="#论文的组成部分（原则5—8）" class="headerlink" title="论文的组成部分（原则5—8）"></a>论文的组成部分（原则5—8）</h2><p>论文的各个部分——摘要、引言、结果和讨论——具有不同目标。因此，为了实现这些目标，它们会以略有不同的方式应用 C-C-C 结构。下面将讨论这些专门化的结构。</p>
+<h2 id="Rule-5-Tell-a-complete-story-in-the-abstract"><a href="#Rule-5-Tell-a-complete-story-in-the-abstract" class="headerlink" title="Rule 5: Tell a complete story in the abstract"></a>Rule 5: Tell a complete story in the abstract</h2><p>The abstract is, for most readers, the only part of the paper that will be read. This means that the abstract must convey the entire message of the paper effectively. To serve this purpose, the abstract’s structure is highly conserved. Each of the C-C-C elements is detailed below.</p>
+<p>The context must communicate to the reader what gap the paper will fill. The first sentence orients the reader by introducing the broader field in which the particular research is situated. Then, this context is narrowed until it lands on the open question that the research answered. A successful context section sets the stage for distinguishing the paper’s contributions from the current state of the art by communicating what is missing in the literature (i.e., the specific gap) and why that matters (i.e., the connection between the specific gap and the broader context that the paper opened with).</p>
+<p>The content (“Here we”) first describes the novel method or approach that you used to fill the gap or question. Then you present the meat—your executive summary of the results.</p>
+<p>Finally, the conclusion interprets the results to answer the question that was posed at the end of the context section. There is often a second part to the conclusion section that highlights how this conclusion moves the broader field forward (i.e., “broader significance”). This is particularly true for more “general” journals with a broad readership.</p>
+<p>This structure helps you avoid the most common mistake with the abstract, which is to talk about results before the reader is ready to understand them. Good abstracts usually take many iterations of refinement to make sure the results fill the gap like a key fits its lock. The broad-narrow-broad structure allows you to communicate with a wider readership (through breadth) while maintaining the credibility of your claim (which is always based on a finite or narrow set of results).</p>
+<h2 id="原则5：在摘要中讲述一个完整的故事"><a href="#原则5：在摘要中讲述一个完整的故事" class="headerlink" title="原则5：在摘要中讲述一个完整的故事"></a>原则5：在摘要中讲述一个完整的故事</h2><p>对于大多数读者而言，摘要是他们唯一会阅读的部分。这意味着摘要必须有效传达论文的全部信息。为了实现这一目标，摘要的结构通常高度固定。下面分别说明 C-C-C 的各个组成部分。</p>
+<p>背景部分必须告诉读者，论文将填补什么空白。第一句话通过介绍该研究所属的更广泛领域，帮助读者建立方向感。随后，背景逐步收窄，最终落在本研究所回答的开放问题上。</p>
+<p>成功的背景部分，应通过说明现有文献中缺少什么，即具体研究空白，以及这一缺失为什么重要，即该具体空白与摘要开头所述更广泛背景之间的联系，为区分本文贡献与当前研究水平奠定基础。</p>
+<p>内容部分通常从“在本文中，我们……”开始，首先描述用于填补研究空白或回答问题的新方法或新路径。随后呈现核心内容，即对主要结果的高度概括。</p>
+<p>最后，结论部分对结果进行解释，以回答背景部分末尾提出的问题。结论部分常常还包含第二层含义，用于强调这一结论如何推动更广泛的领域发展，也就是说明其“更广泛意义”。对于面向广泛读者的综合性期刊而言，这一点尤其常见。</p>
+<p>这种结构能够帮助作者避免摘要中最常见的错误：在读者尚未具备理解结果所需背景之前，就直接谈论结果。</p>
+<p>好的摘要通常需要多轮反复修改，以确保结果能够像钥匙插入锁孔一样，精确填补前面提出的研究空白。“宽—窄—宽”的结构能够借助广泛背景覆盖更多读者，同时又通过有限而具体的结果维持主张的可信度。</p>
+<h2 id="Rule-6-Communicate-why-the-paper-matters-in-the-introduction"><a href="#Rule-6-Communicate-why-the-paper-matters-in-the-introduction" class="headerlink" title="Rule 6: Communicate why the paper matters in the introduction"></a>Rule 6: Communicate why the paper matters in the introduction</h2><p>The introduction highlights the gap that exists in current knowledge or methods and why it is important. This is usually done by a set of progressively more specific paragraphs that culminate in a clear exposition of what is lacking in the literature, followed by a paragraph summarizing what the paper does to fill that gap.</p>
+<p>As an example of the progression of gaps, a first paragraph may explain why understanding cell differentiation is an important topic and that the field has not yet solved what triggers it (a field gap). A second paragraph may explain what is unknown about the differentiation of a specific cell type, such as astrocytes (a subfield gap). A third may provide clues that a particular gene might drive astrocytic differentiation and then state that this hypothesis is untested (the gap within the subfield that you will fill). The gap statement sets the reader’s expectation for what the paper will deliver.</p>
+<p>The structure of each introduction paragraph (except the last) serves the goal of developing the gap. Each paragraph first orients the reader to the topic (a context sentence or two) and then explains the “knowns” in the relevant literature (content) before landing on the critical “unknown” (conclusion) that makes the paper matter at the relevant scale. Along the path, there are often clues given about the mystery behind the gaps; these clues lead to the untested hypothesis or undeveloped method of the paper and give the reader hope that the mystery is solvable. The introduction should not contain a broad literature review beyond the motivation of the paper. This gap-focused structure makes it easy for experienced readers to evaluate the potential importance of a paper—they only need to assess the importance of the claimed gap.</p>
+<p>The last paragraph of the introduction is special: it compactly summarizes the results, which fill the gap you just established. It differs from the abstract in the following ways: it does not need to present the context (which has just been given), it is somewhat more specific about the results, and it only briefly previews the conclusion of the paper, if at all.</p>
+<h2 id="原则6：在引言中说明论文为什么重要"><a href="#原则6：在引言中说明论文为什么重要" class="headerlink" title="原则6：在引言中说明论文为什么重要"></a>原则6：在引言中说明论文为什么重要</h2><p>引言应突出当前知识或方法中存在的空白，并解释这一空白为什么重要。通常的做法是安排一组逐步具体化的段落，最终清楚指出现有文献缺少什么，然后再用一个段落概括本文如何填补这一空白。</p>
+<p>以研究空白逐步收窄为例，第一段可以说明为什么理解细胞分化是一个重要问题，以及该领域尚未解决是什么触发了细胞分化，这属于领域层面的空白。</p>
+<p>第二段可以说明某一特定细胞类型，例如星形胶质细胞，其分化机制中还有哪些未知问题，这属于子领域层面的空白。</p>
+<p>第三段可以提供线索，说明某个特定基因可能驱动星形胶质细胞分化，然后指出这一假设尚未经过检验。这就是论文准备填补的子领域内部空白。对研究空白的明确陈述，会为读者设定关于论文应当交付什么结果的预期。</p>
+<p>引言中的每一个段落，除最后一段外，其结构都应服务于逐步建立研究空白这一目标。每一段首先用一两句话帮助读者理解主题，即背景；随后说明相关文献中已经知道的内容，即内容；最后落在一个关键的“未知问题”上，即结论。这个未知问题使论文在相应尺度上变得重要。</p>
+<p>在这一过程中，作者通常还会提供一些关于研究空白背后谜题的线索。这些线索会引向论文中尚未检验的假设或尚未开发的方法，并让读者相信该谜题是可以解决的。</p>
+<p>引言不应包含超出论文研究动机所需范围的大篇幅文献综述。以研究空白为中心的结构，使经验丰富的读者能够轻松评价一篇论文的潜在重要性，因为他们只需要判断作者声称的研究空白是否重要。</p>
+<p>引言的最后一段具有特殊作用：它对填补前述空白的结果进行紧凑概括。它与摘要存在以下区别：它不需要再次介绍背景，因为背景刚刚已经给出；它会更具体地说明结果；并且它通常只简要预告论文结论，甚至完全不预告结论。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20260722151813.png" style="zoom: 80%;" /></div>
+
+<blockquote>
+<p>Fig 1. Summary of a paper’s structural elements at three spatial scales: Across sections, across paragraphs, and within paragraphs. Note that the abstract is special in that it contains all three elements (Context, Content, and Conclusion), thus comprising all three colors. </p>
+</blockquote>
+<blockquote>
+<p>图1. 论文结构要素在三个空间尺度上的总结：跨章节、跨段落以及段落内部。需要注意的是，摘要较为特殊，因为它同时包含背景、内容和结论三个要素，因此包含图中的三种颜色。</p>
+</blockquote>
+<h2 id="Rule-7-Deliver-the-results-as-a-sequence-of-statements-supported-by-figures-that-connect-logically-to-support-the-central-contribution"><a href="#Rule-7-Deliver-the-results-as-a-sequence-of-statements-supported-by-figures-that-connect-logically-to-support-the-central-contribution" class="headerlink" title="Rule 7: Deliver the results as a sequence of statements, supported by figures, that connect logically to support the central contribution"></a>Rule 7: Deliver the results as a sequence of statements, supported by figures, that connect logically to support the central contribution</h2><p>The results section needs to convince the reader that the central claim is supported by data and logic. Every scientific argument has its own particular logical structure, which dictates the sequence in which its elements should be presented.</p>
+<p>For example, a paper may set up a hypothesis, verify that a method for measurement is valid in the system under study, and then use the measurement to disprove the hypothesis. Alternatively, a paper may set up multiple alternative (and mutually exclusive) hypotheses and then disprove all but one to provide evidence for the remaining interpretation. The fabric of the argument will contain controls and methods where they are needed for the overall logic.</p>
+<p>In the outlining phase of paper preparation (see Rule 9), sketch out the logical structure of how your results support your claim and convert this into a sequence of declarative statements that become the headers of subsections within the results section (and&#x2F;or the titles of figures). Most journals allow this type of formatting, but if your chosen journal does not, these headers are still useful during the writing phase and can either be adapted to serve as introductory sentences to your paragraphs or deleted before submission. Such a clear progression of logical steps makes the paper easy to follow.</p>
+<p>Figures, their titles, and legends are particularly important because they show the most objective support (data) of the steps that culminate in the paper’s claim. Moreover, figures are often viewed by readers who skip directly from the abstract in order to save time. Thus, the title of the figure should communicate the conclusion of the analysis, and the legend should explain how it was done. Figure making is an art unto itself; the Edward Tufte books remain the gold standard for learning this craft [7,8].</p>
+<p>The first results paragraph is special in that it typically summarizes the overall approach to the problem outlined in the introduction, along with any key innovative methods that were developed. Most readers do not read the methods, so this paragraph gives them the gist of the methods that were used.</p>
+<p>Each subsequent paragraph in the results section starts with a sentence or two that set up the question that the paragraph answers, such as the following: “To verify that there are no artifacts. . .,” “What is the test-retest reliability of our measure?,” or “We next tested whether Ca²⁺ flux through L-type Ca²⁺ channels was involved.” The middle of the paragraph presents data and logic that pertain to the question, and the paragraph ends with a sentence that answers the question. For example, it may conclude that none of the potential artifacts were detected. This structure makes it easy for experienced readers to fact-check a paper. Each paragraph convinces the reader of the answer given in its last sentence. This makes it easy to find the paragraph in which a suspicious conclusion is drawn and to check the logic of that paragraph. The result of each paragraph is a logical statement, and paragraphs farther down in the text rely on the logical conclusions of previous paragraphs, much as theorems are built in mathematical literature.</p>
+<h2 id="原则7：把结果组织为一系列陈述，并用图表支持这些陈述，使其在逻辑上共同支撑核心贡献"><a href="#原则7：把结果组织为一系列陈述，并用图表支持这些陈述，使其在逻辑上共同支撑核心贡献" class="headerlink" title="原则7：把结果组织为一系列陈述，并用图表支持这些陈述，使其在逻辑上共同支撑核心贡献"></a>原则7：把结果组织为一系列陈述，并用图表支持这些陈述，使其在逻辑上共同支撑核心贡献</h2><p>结果部分需要说服读者，论文的核心主张得到了数据与逻辑的支持。每一种科学论证都有其特定的逻辑结构，而这种结构决定了论证要素应以怎样的顺序呈现。</p>
+<p>例如，一篇论文可能首先提出一个假设，然后验证用于研究系统的测量方法是有效的，最后利用该测量结果否定该假设。</p>
+<p>另一篇论文可能提出多个互相排斥的备选假设，然后否定除其中一个之外的所有假设，从而为剩余解释提供证据。</p>
+<p>整个论证过程会在总体逻辑需要的位置引入控制实验和方法说明。</p>
+<p>在论文准备的提纲阶段，应画出结果如何支撑论文主张的逻辑结构，并把这一结构转化为一系列陈述句。这些陈述句可以成为结果部分各小节的标题，也可以成为图的标题。</p>
+<p>大多数期刊允许使用这种格式。如果目标期刊不允许，这些标题在写作阶段仍然很有帮助；在投稿前，可以把它们改写为段落的开头句，或者直接删除。清晰的逻辑步骤序列会使论文更容易理解。</p>
+<p>图、图题和图注尤其重要，因为它们展示了最终汇聚为论文主张的各个逻辑步骤中最客观的支持，也就是数据。此外，许多读者在读完摘要后会为了节省时间直接查看图表。因此，图题应传达分析结论，而图注应解释分析是如何完成的。</p>
+<p>制作图表本身是一门艺术。Edward Tufte 的著作至今仍是学习这一技能的经典参考。</p>
+<p>结果部分的第一段具有特殊作用。它通常概述针对引言中提出的问题所采用的总体方法，并简要介绍为此开发的关键创新方法。多数读者不会阅读方法部分，因此，这一段能够使他们掌握所用方法的基本思路。</p>
+<p>结果部分之后的每一个段落，都应以一到两句话开始，用于提出该段要回答的问题。例如：</p>
+<ul>
+<li>“为了验证不存在伪影……”</li>
+<li>“我们的测量具有怎样的重测信度？”</li>
+<li>“接下来，我们检验了通过 L 型钙通道发生的 Ca²⁺ 通量是否参与了这一过程。”</li>
+</ul>
+<p>段落中部呈现与该问题相关的数据与逻辑，段落末尾则用一句话回答该问题。例如，段落可以在结尾得出结论：没有检测到任何潜在伪影。</p>
+<p>这种结构使有经验的读者能够轻松核查论文。每个段落都应通过数据与逻辑，使读者接受末句给出的答案。这样，当读者怀疑某个结论时，就能迅速找到得出该结论的段落，并检查该段落的推理过程。</p>
+<p>每一个结果段落都产生一个逻辑陈述，而后面的段落依赖前面段落已经得出的逻辑结论，这与数学文献中定理建立在先前定理基础上的方式相似。</p>
+<h2 id="Rule-8-Discuss-how-the-gap-was-filled-the-limitations-of-the-interpretation-and-the-relevance-to-the-field"><a href="#Rule-8-Discuss-how-the-gap-was-filled-the-limitations-of-the-interpretation-and-the-relevance-to-the-field" class="headerlink" title="Rule 8: Discuss how the gap was filled, the limitations of the interpretation, and the relevance to the field"></a>Rule 8: Discuss how the gap was filled, the limitations of the interpretation, and the relevance to the field</h2><p>The discussion section explains how the results have filled the gap that was identified in the introduction, provides caveats to the interpretation, and describes how the paper advances the field by providing new opportunities. This is typically done by recapitulating the results, discussing the limitations, and then revealing how the central contribution may catalyze future progress. The first discussion paragraph is special in that it generally summarizes the important findings from the results section. Some readers skip over substantial parts of the results, so this paragraph at least gives them the gist of that section.</p>
+<p>Each of the following paragraphs in the discussion section starts by describing an area of weakness or strength of the paper. It then evaluates the strength or weakness by linking it to the relevant literature. Discussion paragraphs often conclude by describing a clever, informal way of perceiving the contribution or by discussing future directions that can extend the contribution.</p>
+<p>For example, the first paragraph may summarize the results, focusing on their meaning. The second through fourth paragraphs may deal with potential weaknesses and with how the literature alleviates concerns or how future experiments can deal with these weaknesses. The fifth paragraph may then culminate in a description of how the paper moves the field forward. Step by step, the reader thus learns to put the paper’s conclusions into the right context.</p>
+<h2 id="原则8：讨论研究空白如何被填补、解释的局限性以及研究对领域的意义"><a href="#原则8：讨论研究空白如何被填补、解释的局限性以及研究对领域的意义" class="headerlink" title="原则8：讨论研究空白如何被填补、解释的局限性以及研究对领域的意义"></a>原则8：讨论研究空白如何被填补、解释的局限性以及研究对领域的意义</h2><p>讨论部分应解释研究结果如何填补引言中指出的空白，说明对这些结果进行解释时需要注意的限制，并描述论文如何通过创造新的机会推动领域发展。</p>
+<p>通常的组织方式是：先重新概括结果，然后讨论局限性，最后说明核心贡献如何促进未来进展。</p>
+<p>讨论部分的第一段具有特殊作用，因为它通常概括结果部分中最重要的发现。部分读者会跳过结果部分的大量内容，因此，这一段至少可以让他们把握结果部分的总体含义。</p>
+<p>随后每一个讨论段落，通常以描述论文的某个弱点或优点开始。接着，通过将这一弱点或优点与相关文献联系起来，对其进行评估。</p>
+<p>讨论段落的结尾，常常给出一种巧妙而非正式的方式来理解论文贡献，或者讨论能够进一步拓展该贡献的未来研究方向。</p>
+<p>例如，第一段可以概括结果，并重点解释其意义；第二至第四段可以讨论潜在弱点，以及现有文献如何缓解相关担忧，或者未来实验如何解决这些问题；第五段则可以最终说明论文如何推动整个领域向前发展。</p>
+<p>通过这种逐步推进的方式，读者可以学会把论文结论放入恰当的背景中理解。</p>
+<h2 id="Process-Rules-9-and-10"><a href="#Process-Rules-9-and-10" class="headerlink" title="Process (Rules 9 and 10)"></a>Process (Rules 9 and 10)</h2><p>To produce a good paper, authors can use helpful processes and habits. Some aspects of a paper affect its impact more than others, which suggests that your investment of time should be weighted towards the issues that matter most. Moreover, iteratively using feedback from colleagues allows authors to improve the story at all levels to produce a powerful manuscript. Choosing the right process makes writing papers easier and more effective.</p>
+<h2 id="写作过程（原则9—10）"><a href="#写作过程（原则9—10）" class="headerlink" title="写作过程（原则9—10）"></a>写作过程（原则9—10）</h2><p>为了写出一篇好论文，作者可以采用一些有帮助的流程和习惯。论文的某些部分对最终影响力的作用远大于其他部分，因此，时间投入应更多集中在真正重要的问题上。</p>
+<p>此外，反复利用同事的反馈，可以从各个层面改进论文叙事，最终形成一篇有说服力的文稿。选择正确的写作流程，会使论文写作更容易，也更有效。</p>
+<h2 id="Rule-9-Allocate-time-where-it-matters-Title-abstract-figures-and-outlining"><a href="#Rule-9-Allocate-time-where-it-matters-Title-abstract-figures-and-outlining" class="headerlink" title="Rule 9: Allocate time where it matters: Title, abstract, figures, and outlining"></a>Rule 9: Allocate time where it matters: Title, abstract, figures, and outlining</h2><p>The central logic that underlies a scientific claim is paramount. It is also the bridge that connects the experimental phase of a research effort with the paper-writing phase. Thus, it is useful to formalize the logic of ongoing experimental efforts (e.g., during lab meetings) into an evolving document of some sort that will ultimately steer the outline of the paper.</p>
+<p>You should also allocate your time according to the importance of each section. The title, abstract, and figures are viewed by far more people than the rest of the paper, and the methods section is read least of all. Budget accordingly.</p>
+<p>The time that we do spend on each section can be used efficiently by planning text before producing it. Make an outline. We like to write one informal sentence for each planned paragraph. It is often useful to start the process around descriptions of each result—these may become the section headers in the results section. Because the story has an overall arc, each paragraph should have a defined role in advancing this story. This role is best scrutinized at the outline stage in order to reduce wasting time on wordsmithing paragraphs that don’t end up fitting within the overall story.</p>
+<h2 id="原则9：把时间投入到真正重要的地方——标题、摘要、图表和提纲"><a href="#原则9：把时间投入到真正重要的地方——标题、摘要、图表和提纲" class="headerlink" title="原则9：把时间投入到真正重要的地方——标题、摘要、图表和提纲"></a>原则9：把时间投入到真正重要的地方——标题、摘要、图表和提纲</h2><p>科学主张背后的核心逻辑最为重要。它也是连接研究工作的实验阶段与论文写作阶段的桥梁。</p>
+<p>因此，将持续进行的实验工作的逻辑正式记录下来是很有帮助的，例如在实验室会议中把它整理成不断更新的文档，并最终让这一文档引导论文提纲的形成。</p>
+<p>作者还应根据论文各部分的重要性来分配时间。标题、摘要和图表的读者数量远多于论文其余部分，而方法部分通常阅读人数最少。因此，时间预算应与此相匹配。</p>
+<p>在每个部分上投入的时间，还可以通过先规划文本、再实际写作的方式得到高效利用。应先制作提纲。</p>
+<p>一种可行的方法是：为计划中的每一个段落先写一句非正式的话，用来说明该段落的作用。</p>
+<p>通常，从描述每一项结果开始组织提纲很有帮助，而这些描述之后可以发展成结果部分的小节标题。</p>
+<p>由于整篇论文应具有完整的叙事弧线，所以每一个段落都应承担一个明确作用，推动故事继续向前发展。</p>
+<p>最好在提纲阶段就审查每个段落的作用，从而避免把大量时间浪费在润色那些最终无法融入整体叙事的段落上。</p>
+<h2 id="Rule-10-Get-feedback-to-reduce-reuse-and-recycle-the-story"><a href="#Rule-10-Get-feedback-to-reduce-reuse-and-recycle-the-story" class="headerlink" title="Rule 10: Get feedback to reduce, reuse, and recycle the story"></a>Rule 10: Get feedback to reduce, reuse, and recycle the story</h2><p>Writing can be considered an optimization problem in which you simultaneously improve the story, the outline, and all the component sentences. In this context, it is important not to get too attached to one’s writing. In many cases, trashing entire paragraphs and rewriting is a faster way to produce good text than incremental editing.</p>
+<p>There are multiple signs that further work is necessary on a manuscript (see Table 1). For example, if you, as the writer, cannot describe the entire outline of a paper to a colleague in a few minutes, then clearly a reader will not be able to. You need to further distill your story. Finding such violations of good writing helps to improve the paper at all levels.</p>
+<p>Successfully writing a paper typically requires input from multiple people. Test readers are necessary to make sure that the overall story works. They can also give valuable input on where the story appears to move too quickly or too slowly. They can clarify when it is best to go back to the drawing board and retell the entire story. Reviewers are also extremely useful. Non-specific feedback and unenthusiastic reviews often imply that the reviewers did not “get” the big picture story line. Very specific feedback usually points out places where the logic within a paragraph was not sufficient. It is vital to accept this feedback in a positive way. Because input from others is essential, a network of helpful colleagues is fundamental to making a story memorable. To keep this network working, make sure to pay back your colleagues by reading their manuscripts.</p>
+<h2 id="原则10：通过获取反馈来删减、复用并重构论文叙事"><a href="#原则10：通过获取反馈来删减、复用并重构论文叙事" class="headerlink" title="原则10：通过获取反馈来删减、复用并重构论文叙事"></a>原则10：通过获取反馈来删减、复用并重构论文叙事</h2><p>写作可以被视为一个优化问题。在这个过程中，你需要同时改进故事、提纲以及构成全文的所有句子。</p>
+<p>在这种情况下，不应对自己已经写出的内容产生过强依恋。在许多时候，与其一点点修改，不如直接删除整段并重新写，这反而能够更快地产生高质量文本。</p>
+<p>有许多迹象表明一篇论文还需要继续修改。例如，如果作者无法在几分钟内向同事讲清整篇论文的完整提纲，那么读者显然也无法做到。此时，你需要进一步提炼论文故事。</p>
+<p>发现这些违反良好写作原则的现象，有助于从各个层面改进论文。</p>
+<p>成功写出一篇论文通常需要多个人提供意见。测试读者对于确认整体故事是否成立是必不可少的。</p>
+<p>他们还可以提供有价值的反馈，指出论文叙事在哪些地方推进得过快或过慢。他们也能帮助判断，什么时候最好重新回到起点，用新的方式重新讲述整个故事。</p>
+<p>审稿人的意见同样极其有用。缺乏具体内容的反馈或不够积极的审稿意见，往往意味着审稿人没有理解论文整体叙事。</p>
+<p>非常具体的反馈通常指出某个段落内部的逻辑不够充分。因此，以积极态度接受这些反馈至关重要。</p>
+<p>由于他人的意见不可或缺，一个由乐于提供帮助的同事组成的网络，是使论文故事变得令人难忘的重要基础。</p>
+<p>为了维持这一网络，你也应通过阅读同事的论文来回报他们的帮助。</p>
+<h2 id="Discussion"><a href="#Discussion" class="headerlink" title="Discussion"></a>Discussion</h2><p>This paper focused on the structure, or “anatomy,” of manuscripts. We had to gloss over many finer points of writing, including word choice and grammar, the creative process, and collaboration. A paper about writing can never be complete; as such, there is a large body of literature dealing with issues of scientific writing [9,10,11,12,13,14,15,16,17].</p>
+<p>Personal style often leads writers to deviate from a rigid, conserved structure, and it can be a delight to read a paper that creatively bends the rules. However, as with many other things in life, a thorough mastery of the standard rules is necessary to successfully bend them [18]. In following these guidelines, scientists will be able to address a broad audience, bridge disciplines, and more effectively enable integrative science.</p>
+<p>本文重点讨论了论文的结构，也就是论文的“解剖学”。许多更细致的写作问题没有得到展开，包括词语选择与语法、创造性过程以及协作方式。</p>
+<p>关于写作的文章永远不可能穷尽所有问题，因此，已有大量文献从不同角度讨论科学写作。</p>
+<p>个人写作风格常常会促使作者偏离严格、固定的结构。有些论文能够以富有创造性的方式突破规则，阅读这样的论文可能是一种享受。</p>
+<p>然而，与生活中的许多事情一样，只有充分掌握标准规则之后，才有可能成功地打破规则。</p>
+<p>遵循这些原则，将有助于科学家面向更广泛的受众，跨越学科边界，并更有效地促进综合性科学的发展。</p>
+<h2 id="Table-1-A-summary-of-the-ten-rules-and-how-to-tell-if-they-are-being-violated"><a href="#Table-1-A-summary-of-the-ten-rules-and-how-to-tell-if-they-are-being-violated" class="headerlink" title="Table 1. A summary of the ten rules and how to tell if they are being violated"></a>Table 1. A summary of the ten rules and how to tell if they are being violated</h2><table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Sign it is violated</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1: Focus on one big idea</td>
+<td>Readers cannot give a 1-sentence summary.</td>
+</tr>
+<tr>
+<td>2: Write for naïve humans</td>
+<td>Readers do not “get” the paper.</td>
+</tr>
+<tr>
+<td>3: Use context, content, conclusion structure</td>
+<td>Readers ask why something matters or what it means.</td>
+</tr>
+<tr>
+<td>4: Optimize logical flow</td>
+<td>Readers stumble on a small section of the text.</td>
+</tr>
+<tr>
+<td>5: Abstract: Compact summary of paper</td>
+<td>Readers cannot give the “elevator pitch” of your work after reading it.</td>
+</tr>
+<tr>
+<td>6: Introduction: Why the paper matters</td>
+<td>Readers show little interest in the paper.</td>
+</tr>
+<tr>
+<td>7: Results: Why the conclusion is justified</td>
+<td>Readers do not agree with your conclusion.</td>
+</tr>
+<tr>
+<td>8: Discussion: Preempt criticism, give future impact</td>
+<td>Readers are left with unanswered criticisms and&#x2F;or questions on their mind.</td>
+</tr>
+<tr>
+<td>9: Allocate time wisely</td>
+<td>Readers struggle to understand your central contribution despite your having worked hard.</td>
+</tr>
+<tr>
+<td>10: Iterate the story</td>
+<td>The paper’s contribution is rejected by test readers, editors, or reviewers.</td>
+</tr>
+</tbody></table>
+<p><strong>表1 十条原则及其被违反时的表现</strong></p>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>违反该原则的表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. 聚焦一个核心思想</td>
+<td>读者无法用一句话概括论文。</td>
+</tr>
+<tr>
+<td>2. 为不了解该工作的真实读者写作</td>
+<td>读者无法理解论文。</td>
+</tr>
+<tr>
+<td>3. 使用“背景—内容—结论”结构</td>
+<td>读者会问某件事为什么重要，或者它意味着什么。</td>
+</tr>
+<tr>
+<td>4. 优化逻辑流程</td>
+<td>读者在某个很小的文本片段上阅读受阻。</td>
+</tr>
+<tr>
+<td>5. 摘要：对论文进行紧凑而完整的概括</td>
+<td>读者读完摘要后，仍无法简要介绍你的工作。</td>
+</tr>
+<tr>
+<td>6. 引言：说明论文为什么重要</td>
+<td>读者对论文表现出很少兴趣。</td>
+</tr>
+<tr>
+<td>7. 结果：说明为什么结论是合理的</td>
+<td>读者不同意你的结论。</td>
+</tr>
+<tr>
+<td>8. 讨论：预先回应批评并说明未来影响</td>
+<td>读者心中仍留下未被回答的批评或问题。</td>
+</tr>
+<tr>
+<td>9. 合理分配时间</td>
+<td>尽管作者投入了大量精力，读者仍难以理解论文的核心贡献。</td>
+</tr>
+<tr>
+<td>10. 反复迭代论文故事</td>
+<td>测试读者、编辑或审稿人拒绝接受论文贡献。</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="How-to-write-a-first-class-paper"><a href="#How-to-write-a-first-class-paper" class="headerlink" title="How to write a first-class paper"></a>How to write a first-class paper</h1><p><a target="_blank" rel="noopener" href="https://www.nature.com/articles/d41586-018-02404-4">How to write a first-class paper</a></p>
+<p>Manuscripts may have a rigidly defined structure, but there’s still room to tell a compelling story — one that clearly communicates the science and is a pleasure to read. Scientist-authors and editors debate the importance and meaning of creativity and offer tips on how to write a top paper.<br>手稿可能有严格定义的结构，但仍然有空间来讲述一个引人入胜的故事——一个清晰地传达科学知识并且阅读起来令人愉悦的故事。科学家作者和编辑讨论创造力的重要性和意义，并提供如何撰写顶级论文的技巧。</p>
+<h2 id="Keep-your-message-clear保持您的信息清晰"><a href="#Keep-your-message-clear保持您的信息清晰" class="headerlink" title="Keep your message clear保持您的信息清晰"></a>Keep your message clear保持您的信息清晰</h2><p>Angel Borja, marine scientist at AZTI-Tecnalia, a producer of sustainable business services and goods, Pasaia, Spain; journal editor; author of a series on preparing a manuscript.<br>Angel Borja，西班牙帕萨亚可持续商业服务和商品生产商 AZTI-Tecnalia 的海洋科学家；期刊编辑；准备手稿系列的作者。</p>
+<p>Think about the message you want to give to readers. If that is not clear, misinterpretations may arise later. And a clear message is even more important when there is a multidisciplinary group of authors, which is increasingly common. I encourage groups to sit together in person and seek consensus — not only in the main message, but also in the selection of data, the visual presentation and the information necessary to transmit a strong message.<br>考虑一下您想向读者传达的信息。如果不清楚，以后可能会出现误解。当有一个越来越普遍的多学科作者群体时，清晰的信息就显得更加重要。我鼓励各团体面对面坐在一起寻求共识——不仅在主要信息上，而且在数据的选择、视觉呈现和传递强烈信息所需的信息方面。</p>
+<p>The most important information should be in the main text. To avoid distraction, writers should put additional data in the supplementary material.<br>最重要的信息应该在正文中。为了避免分散注意力，作者应该在补充材料中添加额外的数据。</p>
+<p>Countless manuscripts are rejected because the discussion section is so weak that it’s obvious the writer does not clearly understand the existing literature. Writers should put their results into a global context to demonstrate what makes those results significant or original.<br>无数的稿件被拒绝，因为讨论部分太薄弱，很明显作者没有清楚地理解现有的文献。作者应该将他们的结果放在全球背景下，以证明是什么使这些结果具有重要意义或原创性。</p>
+<p>There is a narrow line between speculation and evidence-based conclusions. A writer can speculate in the discussion — but not too much. When the discussion is all speculation, it’s no good because it is not rooted in the author’s experience. In the conclusion, include a one- or two-sentence statement on the research you plan to do in the future and on what else needs to be explored.<br>猜测和基于证据的结论之间存在着一条狭窄的界限。作者可以在讨论中进行推测——但不能太多。当讨论全是猜测时，那是没有好处的，因为它没有植根于作者的经验。在结论中，用一两句话来说明您计划在未来进行的研究以及还需要探索的内容。</p>
+<h2 id="Create-a-logical-framework-创建逻辑框架"><a href="#Create-a-logical-framework-创建逻辑框架" class="headerlink" title="Create a logical framework 创建逻辑框架"></a>Create a logical framework 创建逻辑框架</h2><p>Brett Mensh, scientific adviser, Howard Hughes Medical Institute, Janelia Research Campus, Ashburn, Virginia; consultant, science communications.<br>Brett Mensh，科学顾问，霍华德休斯医学研究所，珍妮莉亚研究园区，阿什本，弗吉尼亚州；顾问，科学传播</p>
+<p>Structure is paramount. If you don’t get the structure right, you have no hope.<br>结构是最重要的。如果你的结构不正确，你就没有希望。</p>
+<p>I co-wrote a paper (B. Mensh and K. Kording PLoS Comput. Biol. <a target="_blank" rel="noopener" href="http://doi.org/ckqp">http://doi.org/ckqp</a>; 2017) that lays out structural details for using a context–content–conclusion scheme to build a core concept. It is one of the most highly tweeted papers so far. In each paragraph, the first sentence defines the context, the body contains the new idea and the final sentence offers a conclusion. For the whole paper, the introduction sets the context, the results present the content and the discussion brings home the conclusion.<br>我与他人共同撰写了一篇论文（ B. Mensh 和 K. Kording PLoS Comput. Biol. <a target="_blank" rel="noopener" href="http://doi.org/ckqp%EF%BC%9B2017">http://doi.org/ckqp；2017</a> ），该论文列出了使用上下文-内容-结论方案构建核心概念的结构细节。这是迄今为止推特上转发次数最多的论文之一。在每个段落中，第一句话定义了上下文，正文包含了新的想法，最后一句话提供了结论。对于整篇论文来说，引言设定背景，结果呈现内容，讨论得出结论。</p>
+<p>It’s crucial to focus your paper on a single key message, which you communicate in the title. Everything in the paper should logically and structurally support that idea. It can be a delight to creatively bend the rules, but you need to know them first.<br>将您的论文集中在标题中传达的单一关键信息上至关重要。论文中的所有内容都应该在逻辑和结构上支持这个想法。创造性地打破规则可能是一种乐趣，但您需要首先了解它们。</p>
+<p>You have to guide the naive reader to the point at which they are ready to absorb what you did. As a writer, you need to detail the problem. I won’t know why I should care about your experiment until you tell me why I should.<br>你必须引导天真的读者，让他们准备好吸收你所做的事情。作为一名作家，你需要详细说明问题。在你告诉我为什么我应该关心你的实验之前，我不会知道为什么我应该关心你的实验。</p>
+<h2 id="State-your-case-with-confidence-自信地陈述您的情况"><a href="#State-your-case-with-confidence-自信地陈述您的情况" class="headerlink" title="State your case with confidence 自信地陈述您的情况"></a>State your case with confidence 自信地陈述您的情况</h2><p>Dallas Murphy, book author, New York City; instructor, writing workshops for scientists in Germany, Norway and the United States.<br>达拉斯·墨菲 (Dallas Murphy)，书籍作者，纽约市；讲师，为德国、挪威和美国的科学家撰写研讨会。</p>
+<p>Clarity is the sole obligation of the science writer, yet I find constantly that the ‘What’s new’ element is buried. Answering one central question — What did you do? — is the key to finding the structure of a piece. Every section of the manuscript needs to support that one fundamental idea.<br>清晰是科普作家的唯一义务，但我不断发现“新内容”元素被掩盖了。回答一个核心问题——你做了什么？ ——是寻找作品结构的关键。手稿的每一部分都需要支持这一基本思想。</p>
+<p>There is a German concept known as the ‘red thread’, which is the straight line that the audience follows from the introduction to the conclusion. In science, ‘What’s new and compelling?’ is the red thread. It’s the whole reason for writing the paper. Then, once that’s established, the paragraphs that follow become the units of logic that comprise the red thread.<br>德国有一个概念，称为“红线” ，即观众从引言到结论所遵循的直线。在科学领域，“什么是新的、引人注目的？”是红线。这就是写这篇论文的全部原因。然后，一旦建立起来，接下来的段落就成为组成红线的逻辑单元。</p>
+<p>Scientific authors are often scared to make confident statements with muscularity. The result is turgid or obfuscatory writing that sounds defensive, with too many caveats and long lists — as if the authors are writing to fend off criticism that hasn’t been made yet. When they write for a journal gatekeeper rather than for a human being, the result is muddy prose.<br>科学作者常常害怕以强有力的方式做出自信的陈述。结果是浮夸或含糊不清的写作，听起来像是防御性的，有太多的警告和长长的清单——就好像作者写这些是为了抵御尚未提出的批评一样。当他们为期刊看门人而不是为人类写作时，结果就是混乱的散文。</p>
+<p>Examples such as this are not uncommon: “Though not inclusive, this paper provides a useful review of the well-known methods of physical oceanography using as examples various research that illustrates the methodological challenges that give rise to successful solutions to the difficulties inherent in oceanographic research.” Why not this instead: “We review methods of oceanographic research with examples that reveal specific challenges and solutions”?<br>诸如此类的例子并不少见：“虽然不具有包容性，但本文以各种研究为例，对物理海洋学的众所周知的方法进行了有益的回顾，这些研究说明了方法论的挑战，这些挑战成功地解决了海洋学固有的困难。研究。”为什么不这样说：“我们通过揭示具体挑战和解决方案的例子来回顾海洋学研究的方法”？</p>
+<p>And if the prose muddies the science, the writer has not only failed to convey their idea, but they’ve also made the reader work so hard that they have alienated him or her. The reader’s job is to pay attention and remember what they read. The writer’s job is to make those two things easy to do. I encourage scientists to read outside their field to better appreciate the craft and principles of writing.<br>如果散文混淆了科学，那么作者不仅没有传达出他们的想法，而且还让读者如此努力，以至于疏远了他或她。读者的工作是注意并记住他们所读到的内容。作者的工作就是让这两件事变得容易做。我鼓励科学家在他们的领域之外阅读，以更好地理解写作的技巧和原则。</p>
+<h2 id="Beware-the-curse-of-‘zombie-nouns’-当心“僵尸名词”的诅咒"><a href="#Beware-the-curse-of-‘zombie-nouns’-当心“僵尸名词”的诅咒" class="headerlink" title="Beware the curse of ‘zombie nouns’ 当心“僵尸名词”的诅咒"></a>Beware the curse of ‘zombie nouns’ 当心“僵尸名词”的诅咒</h2><p>Zoe Doubleday, ecologist, University of Adelaide, Australia; co-author of a paper on embracing creativity and writing accessible prose in scientific publications.<br>Zoe Doubleday，生态学家，澳大利亚阿德莱德大学；一篇关于拥抱创造力和在科学出版物中撰写易于理解的散文的论文的合著者。</p>
+<p>Always think of your busy, tired reader when you write your paper — and try to deliver a paper that you would enjoy reading yourself.<br>当你写论文时，一定要想到忙碌、疲惫的读者——并尝试写出一篇你自己喜欢阅读的论文。</p>
+<p>Why does scientific writing have to be stodgy, dry and abstract? Humans are story-telling animals. If we don’t engage that aspect of ourselves, it’s hard to absorb the meaning of what we’re reading. Scientific writing should be factual, concise and evidence-based, but that doesn’t mean it can’t also be creative — told in a voice that is original — and engaging (Z. A. Doubleday et al. Trends Ecol. Evol. 32, 803–805; 2017). If science isn’t read, it doesn’t exist.<br>为什么科学写作必须枯燥、枯燥和抽象？人类是会讲故事的动物。如果我们不参与自己的这一方面，就很难吸收我们正在阅读的内容的含义。科学写作应该是事实、简洁和基于证据的，但这并不意味着它不能具有创造性——用原创的声音讲述——并且引人入胜（ ZA Doubleday et al. Trends Ecol. Evol. 32, 803 –805；2017 ）。如果不阅读科学，它就不存在。</p>
+<p>One of the principal problems with writing a manuscript is that your individual voice is stamped out. Writers can be stigmatized by mentors, manuscript reviewers or journal editors if they use their own voice. Students tell me they are inspired to write, but worry that their adviser won’t be supportive of creativity. It is a concern. We need to take a fresh look at the ‘official style’ — the dry, technical language that hasn’t evolved in decades.<br>撰写手稿的主要问题之一是你个人的声音被压制了。如果作家使用自己的声音，他们可能会受到导师、稿件审稿人或期刊编辑的侮辱。学生们告诉我，他们受到写作的启发，但担心他们的导师不会支持创造力。这是一个问题。我们需要重新审视“官方风格”——几十年来一直没有发展的枯燥的技术语言。</p>
+<p>Author Helen Sword coined the phrase ‘zombie nouns’ to describe terms such as ‘implementation’ or ‘application’ that suck the lifeblood out of active verbs. We should engage readers’ emotions and avoid formal, impersonal language. Still, there’s a balance. Don’t sensationalize the science. Once the paper has a clear message, I suggest that writers try some vivid language to help to tell the story. For example, I got some pushback on the title of one of my recent papers: ‘Eight habitats, 38 threats, and 55 experts: Assessing ecological risk in a multi-use marine region’. But, ultimately, the editors let me keep it. There’s probably less resistance out there than people might think.<br>作者 Helen Sword 创造了“僵尸名词”这个短语来描述诸如“实施”或“应用”之类的术语，这些术语会吸走主动动词的生命线。我们应该调动读者的情感，避免使用正式的、客观的语言。尽管如此，还是有一个平衡。不要耸人听闻的科学。一旦论文有了明确的信息，我建议作者尝试一些生动的语言来帮助讲述故事。例如，我最近发表的一篇论文的标题遭到了一些反对：“八个栖息地、38 个威胁和 55 位专家：评估多用途海洋区域的生态风险”。但最终编辑们让我保留它。那里的阻力可能比人们想象的要小。</p>
+<p>Recently, after hearing me speak on this topic, a colleague mentioned that she had just rejected a review paper because she felt the style was too non-scientific. She admitted that she felt she had made the wrong decision and would try to reverse it.<br>最近，一位同事听我讲完这个话题后提到，她刚刚拒绝了一篇综述论文，因为她觉得论文风格太不科学了。她承认，她觉得自己做出了错误的决定，并会尝试扭转这一决定。</p>
+<h2 id="Prune-that-purple-prose-修剪那些紫色的散文"><a href="#Prune-that-purple-prose-修剪那些紫色的散文" class="headerlink" title="Prune that purple prose 修剪那些紫色的散文"></a>Prune that purple prose 修剪那些紫色的散文</h2><p>Peter Gorsuch, managing editor, Nature Research Editing Service, London; former plant biologist.<br>Peter Gorsuch，自然研究编辑服务总编辑，伦敦；前植物生物学家。</p>
+<p>Writers must be careful about ‘creativity’. It sounds good, but the purpose of a scientific paper is to convey information. That’s it. Flourishes can be distracting. Figurative language can also bamboozle a non-native English speaker. My advice is to make the writing only as complex as it needs to be.<br>作家必须小心“创造力”。听起来不错，但科学论文的目的是传达信息。就是这样。繁花似锦可能会分散注意力。比喻语言也会迷惑非英语母语人士。我的建议是让写作尽可能复杂。</p>
+<p>That said, there are any number of ways of writing a paper that are far from effective. One of the most important is omitting crucial information from the methods section. It’s easy to do, especially in a complicated study, but missing information can make it difficult, if not impossible, to reproduce the study. That can mean the research is a dead end.<br>也就是说，有很多写论文的方法都远非有效。最重要的问题之一是从方法部分省略关键信息。这很容易做到，尤其是在复杂的研究中，但缺失信息可能会导致重现研究变得困难（如果不是不可能的话）。这可能意味着这项研究走进了死胡同。</p>
+<p>It’s also important that the paper’s claims are consistent with collected evidence. At the same time, authors should avoid being over-confident in their conclusions.<br>同样重要的是，论文的主张与收集到的证据一致。与此同时，作者应避免对自己的结论过于自信。</p>
+<p>Editors and peer reviewers are looking for interesting results that are useful to the field. Without those, a paper might be rejected. Unfortunately, authors tend to struggle with the discussion section. They need to explain why the findings are interesting and how they affect a wider understanding of the topic. Authors should also reassess the existing literature and consider whether their findings open the door for future work. And, in making clear how robust their findings are, they must convince readers that they’ve considered alternative explanations.<br>编辑和同行评审员正在寻找对该领域有用的有趣结果。如果没有这些，论文可能会被拒绝。不幸的是，作者往往在讨论部分遇到困难。他们需要解释为什么这些发现很有趣，以及它们如何影响对该主题的更广泛理解。作者还应该重新评估现有文献，并考虑他们的发现是否为未来的工作打开了大门。而且，为了明确他们的发现有多么有力，他们必须让读者相信他们已经考虑过其他解释。</p>
+<h2 id="Aim-for-a-wide-audience瞄准广泛的受众"><a href="#Aim-for-a-wide-audience瞄准广泛的受众" class="headerlink" title="Aim for a wide audience瞄准广泛的受众"></a>Aim for a wide audience瞄准广泛的受众</h2><p>Stacy Konkiel, director of research and education at Altmetric, London, which scores research papers on the basis of their level of digital attention.<br>Stacy Konkiel 是伦敦 Altmetric 的研究和教育总监，该机构根据研究论文的数字关注程度对研究论文进行评分。</p>
+<p>There have been no in-depth studies linking the quality of writing to a paper’s impact, but a recent one (N. Di Girolamo and R. M. Reynders J. Clin. Epidemiol. 85, 32–36; 2017) shows that articles with clear, succinct, declarative titles are more likely to get picked up by social media or the popular press.<br>目前还没有深入的研究将写作质量与论文的影响联系起来，但最近的一项研究（ N. Di Girolamo 和 RM Reynders J. Clin. Epidemiol. 85, 32–36; 2017 ）表明，具有明确、简洁、陈述性的标题更有可能被社交媒体或大众媒体采用。</p>
+<p>Those findings tie in with my experience. My biggest piece of advice is to get to the point. Authors spend a lot of time setting up long-winded arguments to knock down possible objections before they actually state their case. Make your point clearly and concisely — if possible in non-specialist language, so that readers from other fields can quickly make sense of it.<br>这些发现与我的经验相吻合。我最大的建议是切入主题。作者在真正陈述自己的观点之前，花费了大量时间来提出冗长的论点，以消除可能的反对意见。清楚、简洁地表达你的观点——如果可能的话，使用非专业语言，以便其他领域的读者可以快速理解它。</p>
+<p>If you write in a way that is accessible to non-specialists, you are not only opening yourself up to citations by experts in other fields, but you are also making your writing available to laypeople, which is especially important in the biomedical fields. My Altmetric colleague Amy Rees notes that she sees a trend towards academics being more deliberate and thoughtful in how they disseminate their work. For example, we see more scientists writing lay summaries in publications such as The Conversation, a media outlet through which academics share news and opinions.<br>如果您以非专业人士可以理解的方式写作，那么您不仅可以被其他领域的专家引用，而且还可以让外行人可以阅读您的作品，这在生物医学领域尤其重要。我的 Altmetric 同事艾米·里斯 (Amy Rees) 指出，她认为学者们在传播其研究成果时更加深思熟虑和深思熟虑。例如，我们看到更多的科学家在《The Conversation》等出版物上撰写简明摘要，这是学者们分享新闻和观点的媒体渠道。</p>
+<hr>
+<h1 id="十次-CV-论文会议投稿的经验总结"><a href="#十次-CV-论文会议投稿的经验总结" class="headerlink" title="十次 CV 论文会议投稿的经验总结"></a>十次 CV 论文会议投稿的经验总结</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/627032371">「走出新手村」十次 CV 论文会议投稿的经验总结</a></p>
+</blockquote>
+<h2 id="创新点和论文核心"><a href="#创新点和论文核心" class="headerlink" title="创新点和论文核心"></a>创新点和论文核心</h2><p>在谈论一篇深度学习论文时，大家常常谈到的一个词是 novelty（创新性），那么什么是创新性？在计算机技术领域，创新性不是天然存在的，因为技术本身不引起大多数人的兴趣，特别是随时被淘汰的前沿技术；科研是一种文化传播，创新性的衡量主要靠的是读者的直觉和经验，论文在其中起到说服的作用。Michael Black 曾经说，论文的创新性就像艺术作品的美感，毕加索的简笔画和伦勃朗的油画展示了完全不同维度的美。创新性也可以有很多角度，可能是提出新的问题，报告新的发现，颠覆现存理论等等。</p>
+<p><a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=227471980&content_type=Article&match_order=1&q=MXNet&zhida_source=entity">MXNet</a> 作者李沐有个很有实践意义的计算公式，创新性大致是论文的<strong>影响领域范围（解决问题的大小），有效性，以及方法的新颖性</strong>的三者乘积。比如在深度学习领域，早期很多影响大的工作出自基础模型研究，因为它们能影响整个领域。其中像“<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=227471980&content_type=Article&match_order=1&q=%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96&zhida_source=entity">批归一化</a>”，“残差学习”这样的方法因其有效性而备受推崇。方法的新颖性主要是区分一个任务更像是一个工程类任务还是研究类任务，因为前者可能用已有工具就能解决。<a href="https://link.zhihu.com/?target=https://www.bilibili.com/video/BV1ea41127Bq/?from=search&seid=11616428877357033690&spm_id_from=333.337.0.0">李沐老师 B 站视频 - 你（被）吐槽过论文不够 novel 吗？</a></p>
+<p>在衡量创新性上，常见的错误有很多。比如认为复杂就是创新，简单就不是创新。但是把一个东西变得很复杂而无用是很容易的，找到本质是难的，越本质的东西越有广泛的影响力。再比如把别人已有的工作说成是自己的创新，没有找出增量的那一部分。还有一个忌讳是说不清自己的工作到底创新性在哪，“我的方法整体体现了我的创新性”，这种模糊的说辞通常会被认为没有创新性，像是一个做技术报告而非学术论文。</p>
+<p>明确了什么是创新性，尽量在论文选题的时候就要想好瞄准的目标，先想好它的潜在影响力有多大，要做到什么程度才算有效。在真正开始写论文时，尝试为论文明确一个核心的想法。举例：本文做了一件别人做不到的事，我们是这样做的；本文提出了一个算法，它可以把某些问题做得更好；人们对于某个问题的认识是空白或错误的，本文试图更新大家的认知，等等。有时一开始的核心想法听起来未必很棒，需要慢慢打磨，让它能够说服更多的人。往往做到最后会发现，其实很多想法会变得很好，只是一开始不够明确。理想状态是“一条巨龙，一招制敌”。</p>
+<p>核心想法的<strong>反面教材</strong>举例：我从多个方面改进了某个算法（除非这个算法非常重要，不然读者可能没兴趣读下去）；**没有人在 A 领域用过 B 算法，我是第一个；**论文想法设计的概念完全过时，社区不太关心。当然也有一些硬拗的核心想法，可能听着很棒，消融实验却无法验证。</p>
+<h2 id="论文的写作要点"><a href="#论文的写作要点" class="headerlink" title="论文的写作要点"></a>论文的写作要点</h2><p>当把论文核心思想和主要实验都做完后，就可以尝试写论文了。大部分深度学习的论文挺“八股文”的，常用的写作思路是：摘要本身就可以是一个完整的小故事，介绍是扩写版的故事脉络，全文是一个完整的故事。换句话说，一个同样的故事在一篇论文里面说三遍，逐层递进。</p>
+<p>论文<strong>最重要</strong>的部分是<strong>标题和摘要</strong>，其次是介绍部分，剩下部分只有百分之一的人会读。取个好标题非常重要，笔者读过一些很不错的论文，后来想要引用的时候发现怎么也没法检索到，就是标题起的晦涩难懂。现在比较流行的做法是除了标题，还给自己的方法起一个好记的名字，比如 <a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=227471980&content_type=Article&match_order=1&q=ShuffleNet&zhida_source=entity">ShuffleNet</a>，<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=227471980&content_type=Article&match_order=1&q=MoCo&zhida_source=entity">MoCo</a>，<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=227471980&content_type=Article&match_order=1&q=Transformer&zhida_source=entity">Transformer</a> 都是不错的例子。标题和摘要除了吸引读者，在投稿阶段还有一个更重要的作用，即匹配合适的审稿人。把论文的主题在标题和摘要处点明能够帮助自己的论文更易匹配到合适的审稿人。比如做轻量化模型的会在标题写“Efficient”，在摘要部分强调运行速度相对提升了多少倍。</p>
+<p>从读者的角度，读一篇论文的感觉是：</p>
+<p><strong>「好论文」</strong> 介绍：这个问题确实重要或者新颖，解决思路有理有据；</p>
+<p>核心想法：听起来就很有效果；</p>
+<p>实验部分：前人之述备矣，这篇更上一层楼；</p>
+<p>消融实验：贡献非常扎实，没有藏着掖着。</p>
+<p><strong>「差论文」</strong> 介绍：千篇一律，跳过，或者好不容易读完，感觉啥也没说清楚；</p>
+<p>核心想法：瞎拼凑的，或者哪抄来的；</p>
+<p>实验部分：故意挑自己好的，或者根本不好；</p>
+<p>消融实验：根本不看，早就关了。</p>
+<p>在构建论文的时候，新手常见的一个错误是“带着读者经历作者的痛苦”：想象读者们开心地坐着观光车去旅游，结果旅途中遍历各种死路，死路的墙上还能看见作者的血！弯路曲折可以偶尔提及，论文主要还是要把成功的喜悦分享给读者。在内容修改上，有几个有用的小技巧：</p>
+<ol>
+<li><p>尝试把图串一遍，看故事是否完整。努力提高图表质量，做到<strong>图表自明</strong>，即不看论文也能看懂。</p>
+</li>
+<li><p>看文本和图片的详略是否得当，尽量去掉冗余，把重要的信息放在显眼的位置。</p>
+</li>
+<li><p>先考虑怎么写一篇满分作文（严谨性），再想着写一篇好作文（美观性）。</p>
+</li>
+<li><p>查缺补漏，把细节、引用处理清楚；最容易引起迷惑的错误是<strong>符号或者缩写没定义和用法前后不统一</strong>。</p>
+</li>
+<li><p>想想哪些东西其实不是常识，需要在论文里说清。这里可能隐藏了一些作者的创新，被作者误认为是大家都认可的知识。多和其它人讨论，可以慢慢地把错误认知给修正。要在写作时就考虑不同的读者群体。</p>
+</li>
+<li><p>在最终修改的时候，着重检查容易被看到的部分，比如图的配字，公式等。</p>
+</li>
+</ol>
+<h2 id="笔者的论文投稿"><a href="#笔者的论文投稿" class="headerlink" title="笔者的论文投稿"></a>笔者的论文投稿</h2><p>笔者在多次改稿投稿中，有两个深刻体会：一是作者容易存在各种各样的盲区，因为和读者的知识储备不同以及对方法的熟悉程度不同，需要大量自我反思或者他人反馈才能意识到。二是要通过审稿意见理解审稿人的真实意图，在接下来的章节会有讨论。</p>
+<p>被拒四次论文名字是 <a href="https://link.zhihu.com/?target=https://github.com/megvii-research/ECCV2022-RIFE">RIFE</a>，做的是轻量化的光流视频插帧。1) <strong>第一次投稿</strong>遇到的主要负面评价是说论文基准有问题，一个审稿人指出我们报告的已有算法的测速是错误的，因为我们写论文的时候图省事复制了前人的一些结果没有检验。前人并不是非常关心算法的速度，所以他们的表格做的不对但无伤大雅，到我们论文里就成了原则问题。<strong>第二次投稿</strong>负面评价主要是研究动机不明，以及 “overclaim”，意思是可能夸大了自己的结果。因为过往研究很多，我们的论文没有充分地合并到前人的研究路线上，导致论文的陈述和实验设计都不容易被圈内人理解。<strong>第三第四次投稿</strong>都有一个明显负面评价，说这篇论文好像没什么特别新的东西，然后大家挑一些看起来不是很要紧的问题就拒了。经过分析后，我们认为本质是因为论文呈现上，没有把亮点突出。改起来就比较简单了，把乏味的东西缩略或者往论文后面放，把大家想看的新的东西强调一下放在前面。最后<strong>第五次投稿</strong>获得了比较一致的正面意见。</p>
+<p>另两篇论文笔者主要负责写作和修改。其中被拒了三次的论文名字是 <a href="https://link.zhihu.com/?target=https://github.com/megvii-research/IJCAI2023-CoNR">CoNR</a>，这篇论文做的事情战线很长：首先是定义了一个新的任务，根据已有的一些动漫人物设定生成舞蹈动画。为了做这个任务，收集了数据集和标注，然后提出了一整套方法来解决这个问题。因为是用计算机视觉的方法来解决一个偏图形学的问题，几次投稿遇到了很多看起来背景完全不同的审稿人，提出的意见也是五花八门。但是总结起来就是两类：1）关于研究话题的讨论，论文试图解决的问题范围以及如何说明方法有效性？2）论文的细节和贡献不明，因为做的是一个设计领域跨度较大的系统，所以没表述清的细节很多，以及哪些是新东西让人不解。除了逐步提高论文的整体质量以外，针对 (1)，我们不能求着一篇论文包罗万象，需要适当裁剪论文的内容，把几个重点说清。针对（2），我们把一些琐碎的细节给出参考文献或者放到附录，尽量把新颖的凝练的内容留在正文里。</p>
+<p>一次就中的论文名字是 <a href="https://link.zhihu.com/?target=https://github.com/megvii-research/CVPR2023-DMVFN">DMVFN</a>，我们在写的时候就希望突出优势：效果好，有新方法，实验详尽，而且宁可内容少些也不能不清晰，这样第一次投稿就得到了很不错的反馈，最后甚至被录为 CVPR 亮点论文之一（占接收论文的10%）。</p>
+<h2 id="常见的负面审稿意见"><a href="#常见的负面审稿意见" class="headerlink" title="常见的负面审稿意见"></a>常见的负面审稿意见</h2><p>对于会议论文来说，审稿人一般会觉得，投稿周期最多三四个月，有问题的论文改改重新投下一个会议也无妨。所以一般挑到几个明显问题就会给出拒绝的评分。在投稿前，想想论文有哪些可能被拒稿会对修改很有帮助。笔者列出了在投稿和审稿期间，最常见到的几类负面评价，并把潜在的解决方案以方括号注在后面。</p>
+<ul>
+<li><p><strong>觉得作者不懂行</strong>：缺少了某些重要参考文献；论文结构混乱，该有的要素缺乏，比如做视频的研究却不提交补充的视频结果 ；实验配置和前人明显不同。[参考近期发表论文的参考文献列表，查漏补缺，配置应当对齐]</p>
+</li>
+<li><p><strong>觉得作者做错了</strong>：报告的结果不符合常识，不可信；夸大自己的成果或者作出一些明显错误的论断；实验设置或者论证有漏洞。 [多做实验，改良表达，尽量严谨一些]</p>
+</li>
+<li><p><strong>没有尊重先前工作</strong>：没引用最新的结果，做低基准实验；过分贬低前人的工作；混淆自己的工作和前人的贡献。 [和现有工作的表格多对照，多做论文调研，如果说别人做得不好要有理有据]</p>
+</li>
+<li><p><strong>创新性差</strong>：故事写得不好，逻辑没说清楚，或者大部分都是已知知识；觉得工作是增量式（incremental）的贡献不大。换句话说在嫌弃效果不好。[找一些小同行讨论，突出亮点]</p>
+</li>
+<li><p><strong>论文呈现质量差</strong>：语法错误多，写的不好，英文水平差；看不懂，缺乏某些细节。[用chatGPT或者grammarly修改，找朋友帮忙读一下]</p>
+</li>
+<li><p><strong>路线分歧</strong>：不认可实验设计或者不相信这个技术路线 。[多做一些实验或者引述相关文献中的类似表述撑腰，争取其它审稿人]</p>
+</li>
+</ul>
+<p>基本上审稿人先是找到一些严重的缺点，但不一定会在审稿意见里挑明说到底最关心哪个，会混着一些其它的问题或者给小意见。反驳审稿意见或修改论文的时候，需要读懂弦外之音。关于写论文反驳，推荐阅读丁霄汉博士的《<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/602024489">顶会rebuttal技术浅谈：站着，还把论文中了</a>》，有特别丰富的实操讲解。</p>
+<hr>
+<h2 id="顶会论文写作建议（上）：宏观布局，避免“hard-to-follow”"><a href="#顶会论文写作建议（上）：宏观布局，避免“hard-to-follow”" class="headerlink" title="顶会论文写作建议（上）：宏观布局，避免“hard to follow”"></a>顶会论文写作建议（上）：宏观布局，避免“hard to follow”</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/593195527">顶会论文写作建议（上）：宏观布局，避免“hard to follow”</a></p>
+</blockquote>
+<h3 id="审稿人视角"><a href="#审稿人视角" class="headerlink" title="审稿人视角"></a>审稿人视角</h3><p>这个评价可能表示论文的宏观组织形式和内容分布与审稿人所期望的有较大的差距，所以<strong>他在耐心耗尽前没能搞懂你做了什么</strong>。对同一篇文章，审稿人想的跟作者想的到底差在哪呢？</p>
+<p>一位同学可能会对自己刚完成的论文很满意，因为：</p>
+<ul>
+<li><p>A. 在对一个重要问题的研究过程中，我遇到了几个复杂的子问题，我一环扣一环地解决了这几个问题，最终得到了一个巧妙的解决方案。我记录了这个精彩的过程，审稿人应当为这一方案的系统性和自洽性折服。</p>
+</li>
+<li><p>B. 我讨论的问题有点难以理解，但只要脑子里转过那个弯儿来，经过一系列挑战性十足的思想游戏，就可以把这个问题转化为另一个简单的问题，那么解决方案就自然呼之欲出了。我用两页纸的篇幅进行了这一思辨，逐步推出了最终的结论，审稿人肯定会受到灵魂的启迪。</p>
+</li>
+<li><p>C. 我在别人的工作上加入了本质的创新，变成了全新的东西，最终的效果很好，如假包换的SOTA。审稿人只要能看懂实验结果，就应该给我accept。</p>
+</li>
+</ul>
+<p>那审稿人是怎么看的呢？</p>
+<p><strong>审稿人根本就不在乎。</strong></p>
+<p>审稿人点开了你的文章，边看边想：</p>
+<ul>
+<li><p>A. 他到底要解决什么问题？怎么一个问题又一个问题？到底哪个是他要解决的？哪个方法是common practice，哪个是他提出来的？</p>
+</li>
+<li><p>B. 这两页纸在写什么东西？前面没总起，后面没总结，中间又是假设又是推论的在干什么？这个结论是怎么回事，这不是很显然的吗？磨叽了两页纸，就这？</p>
+</li>
+<li><p>C. 哦，这个懂了，yet another AAA + BBB，我跳过中间四页直接看看效果吧。这张表里面的这个指标是啥意思，就比别人高了0.2，这个差别很大吗？</p>
+</li>
+</ul>
+<p><strong>审稿人期望的是什么呢？</strong></p>
+<ul>
+<li><p>审稿人想要的是<strong>迅速搞明白你提出了什么新东西</strong>，而不是听你娓娓道来、抽丝剥茧，跟着你一起由浅入深地感受那四方求索、最终豁然开朗的成就感。写论文的目的在于向读者<strong>介绍工作的最终形态</strong>，而<strong>不是记录研究过程</strong>。有的同学会在文章里描述自己从最初的idea艰难跋涉直到最终结果的心路历程，这多半是没用的。</p>
+</li>
+<li><p>审稿人不会逐字逐句地看论文，他希望他直接跳到任何一页上之后都能<strong>在所有人都习惯的地方</strong>迅速找到他想要看到的内容。所以，如果你的论文组织形式不太常规，审稿人可能根本就懒得看。</p>
+</li>
+<li><p>很多人是为了<strong>学到新东西</strong>才来审稿的。如果你把一些反直觉、有趣或很实用的结论摆在<strong>显眼的地方</strong>给他看，他可能会感到有收获。但不要期望每个审稿人都愿意从你的大段文字和意义不明的图表中自己经过思考得到这些结论。</p>
+</li>
+</ul>
+<h3 id="例子1：不要完整还原研究的心路历程"><a href="#例子1：不要完整还原研究的心路历程" class="headerlink" title="例子1：不要完整还原研究的心路历程"></a><strong>例子1：不要完整还原研究的心路历程</strong></h3><p>我为了解决一个重要的已知问题（问题甲）提出了方案A（跟其他人的方法相比变化很大），发现方案A不够好，研究一下为什么方案A不够好呢，发现这是因为方案A引入了另一个问题（问题乙）；我研究了一下如何解决问题乙，最终提出了改进版方案B（在A的基础上改动很小，加一个trick），所有问题都解决了。而且这个trick用在其他方法中也有提升。我提出了两个方案，还发现了一个别人没发现的问题，我觉得这篇文章很稳。</p>
+<p>但审稿人是以不同的视角来看这篇文章的，他并没有亲身经历我的研究过程，不可能像我一样清楚重点在哪里。他可能会问：</p>
+<ul>
+<li><p>如何证明方案A不好使的本质原因是问题乙？</p>
+</li>
+<li><p>方案A也有一定效果，如何证明这是因为解决了问题甲？</p>
+</li>
+<li><p>方案B相对于方案A只有很小的差别，怎么就这么点novelty？</p>
+</li>
+<li><p>你说B的改进用在其他方法上也有提升，那我为什么还需要A？A不也没比其他方法好到哪去吗？</p>
+</li>
+</ul>
+<p>我觉得很冤：这篇文章的最终结果明明是方案B，B是A的巧妙升级版，差别当然很小了，但是A也是我提出的呀！还有，为什么要纠结A和问题甲的关系，这很重要吗？</p>
+<p>如果审稿人能听到我的抱怨，他会说：</p>
+<ul>
+<li><p>你全篇都在鼓吹方案B，你没有强调A，我怎么知道它也是这篇文章主要内容的一部分？</p>
+</li>
+<li><p>就算A是你提出的，它也没有解决你强调的问题乙啊，难道它也算主要贡献？</p>
+</li>
+<li><p>既然A不算主要贡献，那你所强调的B可不就是只有很小的改动吗？</p>
+</li>
+</ul>
+<p>辩经是没有意义的，我们只能在写作时注意避免引发这种无意义的争论。如果我们稍微改变一下写作的方式，审稿人就更容易看懂了：</p>
+<ul>
+<li><p>我提出了一个全新的方法来解决一个重要问题。</p>
+</li>
+<li><p>这个全新的方法包括一个全新的框架和一个通用的trick。</p>
+</li>
+<li><p>分别证明二者的有效性：用这一框架而不用这个trick会导致效果相对变差；这是因为另一个有趣的问题（做一些分析）；这个trick用在其他方法里，也可以有一定的提升；二者结合，效果才是最好的。</p>
+</li>
+</ul>
+<p>为什么审稿人喜欢这样的组织形式呢？因为他一眼就看出你提出了什么东西，以及它们各自有什么作用。他只需要判断你提出的东西技术上是否正确和效果是否显著就可以了。</p>
+<h3 id="例子2：不要轻言“based-on”和“A-B”"><a href="#例子2：不要轻言“based-on”和“A-B”" class="headerlink" title="例子2：不要轻言“based on”和“A+B”"></a><strong>例子2：不要轻言“based on”和“A+B”</strong></h3><p>“提出了基于AAA和BBB的XXX”是本科毕业论文里常用的说法，适用于需要稳妥安全而不怎么需要创新性的场合。在顶会论文里这么写，可能会把本来还不错的创新性给写没了。在大多数情况下，不要轻言自己的工作“based on”，你完全可以说自己注意到了某个重要问题，琢磨明白了背后的原理，想到了一个解决方案，提出的是一种新的东西，这种东西自然地用到了AAA和BBB，而不是简单地改了改人家的成果。</p>
+<p>设想一下，把<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=219954542&content_type=Article&match_order=1&q=ResNet&zhida_source=entity">ResNet</a>的写作改成“based on”和“A+B”的形式，是不是就把创新性写没了？</p>
+<p>《ResNet: Yet Another Simplified GoogLeNet》 ：我们基于GoogLeNet和<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=219954542&content_type=Article&match_order=1&q=VGGNet&zhida_source=entity">VGGNet</a>设计了一种大量用3x3卷积（借鉴VGGNet）和并行shortcut（简化自GoogleNet）的模型，超越了GoogLeNet和VGGNet。为什么效果这么好呢？因为VGGNet和GoogLeNet珠玉在前，<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=219954542&content_type=Article&match_order=1&q=Batch+Norm&zhida_source=entity">Batch Norm</a>也很好用。反正这个工作就是这么简单，我们没有想到理论上有什么创新性，但我们给后续的工作搭建了一个好的baseline。</p>
+<p>这样的文章能让读者学到多少东西呢？</p>
+<p>ResNet实际上是怎么写的呢？</p>
+<ul>
+<li><p>各位想必都知道当今有个重要的问题：模型越深，居然会越掉点。</p>
+</li>
+<li><p>我们提出的解决方法惊人地简单：将模型中的映射形式从y&#x3D;f(x)改成y&#x3D;f(x)+x，也就是所提出的“残差学习”，就能解决这个问题。这是因为模型容易拟合f(x)&#x3D;0，不容易学出f(x)&#x3D;x。</p>
+</li>
+<li><p>残差学习非常容易实现，效果非常好。</p>
+</li>
+</ul>
+<p>提出问题——抽象出背后的原理——提出自己的解决方案和具体的实现——实验验证，这才是更符合人类认知规律的论文写法。</p>
+<p>有的同学觉得，一篇贡献没那么大的论文硬要写成这样是在“讲故事”，但只要实事求是，只要实验证据能够支撑你的故事，这样的故事既有利于审稿人给你打出高分，也有利于读者学到新知识，更有利于你的观点的传播，属于是赢麻了。</p>
+<h3 id="总结和其他建议"><a href="#总结和其他建议" class="headerlink" title="总结和其他建议"></a>总结和其他建议</h3><ul>
+<li><p>上面说的第一件事其实也跟ResNet有关：真实历史上的ResNet来自于对GoogLeNet的拆解研究，并不是突然发现了“残差学习”的原理才有了ResNet，而是孙剑老师带领的团队先通过拆解GoogLeNet发现shortcut结构好用后思考出来的解释。我们上面设想的“丐版”写法虽然是反映了真实的研究过程的，却并不利于背后原理的深挖和核心思想的传播。这个实例正好能够支持本文的观点：研究怎么做和论文怎么写，是两码事。</p>
+</li>
+<li><p>论文是传播知识的工具，是方便别人省时省力地学到新东西的标准化交流方式，不是个人展示个性的舞台。审稿人（读者）习惯于看什么样的论文，我们就写什么样的论文。这本质上跟流行歌曲和通俗小说是一样的，费尽心机来迎合受众而已，不寒碜。</p>
+</li>
+<li><p>没必要在文章结构上寻求创新。大多数文章都可以写成Introduction + Related Work + Method + Experiment + Conclusion的形式。如果你提出的不是单一创新点而是一揽子小改动的组合，可以学习<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=219954542&content_type=Article&match_order=1&q=ShuffleNet+v2&zhida_source=entity">ShuffleNet v2</a>是怎样写的。</p>
+</li>
+<li><p>Be explicit. 你不强调的东西，不要指望别人自己悟出来。</p>
+</li>
+<li><p>要在一个地方集中地完整描述你提出的东西，不要散落得到处都是。不要假设一个读者会有耐心看完50%的篇幅才理解你做了什么。</p>
+</li>
+</ul>
+<hr>
+<h2 id="顶会论文写作建议（下）：精耕细作，提高“readability”"><a href="#顶会论文写作建议（下）：精耕细作，提高“readability”" class="headerlink" title="顶会论文写作建议（下）：精耕细作，提高“readability”"></a>顶会论文写作建议（下）：精耕细作，提高“readability”</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/639732057">顶会论文写作建议（下）：精耕细作，提高“readability”</a></p>
+</blockquote>
+<p>在《<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/593195527">顶会论文写作建议（上）：宏观布局，避免“hard to follow”</a>》中，我们讨论了如何在宏观层面设计论文的结构，以大多数人乐于接受的方式卖出自己的核心贡献。</p>
+<p>在本篇中，我们将会聚焦于语言组织的层面，通过十几个我近几年从清华的学弟或实习生同学的论文中收集到的例子，讨论如何提高文章可读性，让读者能心平气和、行云流水地读完，让审稿人能更客观且无痛地评判文章的价值。</p>
+<p>需要注意的是，我们讨论的前提是假设论文至少在语法层面是正确的，不再讨论那些可以用Grammarly或ChatGPT自动解决的基础问题。</p>
+<p>正如上篇所说，大部分论文都可以写成提出问题——抽象出背后的原理——解决问题的格式（俗称讲故事）。本篇的宏观结构也将遵循这一套路，从而作为对上篇所述宏观写作原则的一次具体实践。</p>
+<p>假设本文真的是一篇论文，那么在省略了一大堆关于写作如何重要、写作如何成为了一个重要的研究领域、引用了一大堆关于写作的重要prior work（作者自己也不一定看过，但是看到别人都在引所以就引了）的铺垫语句之后（这些气氛句子本来也没人会看，所以我就不写了），我们的故事现在开始。</p>
+<p>本文提出用以下概念来度量文章的可读性：<strong><a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=230293347&content_type=Article&match_order=1&q=%E9%80%BB%E8%BE%91%E5%BC%BA%E5%BA%A6&zhida_source=entity">逻辑强度</a>、<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=230293347&content_type=Article&match_order=1&q=%E9%98%B2%E5%BE%A1%E5%BC%B9%E6%80%A7&zhida_source=entity">防御弹性</a>、<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=230293347&content_type=Article&match_order=1&q=%E8%BF%B7%E6%83%91%E6%97%B6%E9%97%B4&zhida_source=entity">迷惑时间</a>、<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=230293347&content_type=Article&match_order=1&q=%E4%BF%A1%E6%81%AF%E5%AF%86%E5%BA%A6&zhida_source=entity">信息密度</a></strong>。在此之上，本文提出一些实用的建议和技巧来提高文章的可读性。</p>
+<hr>
+<h3 id="逻辑强度"><a href="#逻辑强度" class="headerlink" title="逻辑强度"></a>逻辑强度</h3><p>在任何语言的学术写作中，逻辑的连贯都远比用词的华丽更重要。上篇已经介绍了一些宏观逻辑设计上的技巧。在微观层面需要注意的是，<strong>逻辑的连贯在于逻辑本身，而不在于<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=230293347&content_type=Article&match_order=1&q=%E8%A1%94%E6%8E%A5%E8%AF%8D&zhida_source=entity">衔接词</a></strong>（to this end, in contrast, specifically等等）。</p>
+<p>换句话说，<strong>我们应该把衔接词当成使语言更加流畅的点缀，而不是通过衔接词来为本没有逻辑的句子强行构造逻辑</strong>。例如从总括到具体描述时，用“Specifically, …”；前后两句存在对比关系时，用“In contrast, …”。</p>
+<p>而不是反过来！并不是我们写下“In contrast”，前后两句就真的因此而有了对比关系。衔接词与真实逻辑的不匹配会让人疑惑，显著降低文章的可读性。</p>
+<p>我们的高中英语写作将衔接词的存在视作逻辑本身，甚至当成作文中的加分项。实际上，用一大堆衔接词不一定能提高文章的流畅程度，反而可能有负面作用。</p>
+<p><strong>我们写下每一个衔接词之后都要三省吾身：它前后两句的逻辑关系真实存在吗？它自身放在这个语境下正确吗？不用它行不行？</strong></p>
+<p><strong>例1：衔接词必须自身正确，经得起推敲。</strong></p>
+<blockquote>
+<p>We argue that problem A is critical. To this end, we propose method B.</p>
+</blockquote>
+<p>作者写下这句的时候想的可能只是挑个词来通过problem A引出method B，逻辑是显然的，但写出来的句子却是经不起推敲的：”this end”中的this指的是哪个end？上文说了一个“end“（要做什么&#x2F;要实现什么目的）吗？上文实际上只是提出了一个观点，并没有说要做什么，所以这个衔接词自身的存在就是错误的。</p>
+<p><strong>例2：衔接词不能强加逻辑关系。</strong></p>
+<blockquote>
+<p>The system comprises three modules. First of all, Module A is …. Second, Module B is …. Last but not least, Module C is ….</p>
+</blockquote>
+<p>作者的本意是描述三个并列的事物，这几个衔接词却给这三个本来没有次序关系的东西强加了一定的次序。这时候就不如去掉这些词，分别介绍三个事物即可，根本不用加任何衔接，语言依然流畅：The system comprises three modules. Module A… Module B… Module C..</p>
+<p><strong>例3：衔接词要准确反应真实逻辑关系。</strong></p>
+<blockquote>
+<p>The baseline model is … On top of that, model A employs an extra attention module. In contrast, we propose a novel objective function.</p>
+</blockquote>
+<p>这句话让人迷惑：我们的模型除了这个novel objective function以外是否也用了这个extra attention module呢？读者在寻找“In contrast”对比的对象的时候可以有两种理解。</p>
+<p>读者可以理解成model A和我们的模型是用两种方式来解决同一问题，model A用了这一结构而没用这一目标函数，我们是用了这一目标函数而没用这一结构。读者也可以理解成我们试图拿model A和我们自己的方法对比以凸显这个目标函数的效果，所以我们的模型等于model A + 这个新提出的目标函数。</p>
+<p>如何修改呢？如果一定要对比的话（比如你的那位不怎么懂但是confidence分数拉满的审稿人一定要让你对比），应该在结构和loss两方面分别讨论从而形成对比，消除歧义，顺便突出我们的优势：</p>
+<blockquote>
+<p>From a structural perspective, model A introduces an extra attention module while we use the same model structure as the baseline. In terms of the objective function, method A adopts the vanilla XXX loss, which suffers from …, while we …</p>
+</blockquote>
+<p>这也就是我们所说的，先有逻辑（“我们要从两个方面进行对比！”）后有衔接词（当然不用也行），而不是用衔接词构造逻辑（简单塞进去一个In contrast并期望对比关系就因此而产生）。</p>
+<hr>
+<h3 id="防御弹性"><a href="#防御弹性" class="headerlink" title="防御弹性"></a>防御弹性</h3><p>在写作的时候，<strong>我们每写完一句话都要考虑审稿人可能从哪个角度攻击这句话</strong>。“防御弹性”指的是我们的语言引起审稿人的质疑的频率和面对审稿人的挑剔时的抵抗能力。</p>
+<p>正如写代码时要有“<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=230293347&content_type=Article&match_order=1&q=%E9%98%B2%E5%BE%A1%E5%BC%8F%E7%BC%96%E7%A8%8B&zhida_source=entity">防御式编程</a>”的概念，写作时也要有“防御式写作”的意识，随时考虑笔下的语句是不是无懈可击的。</p>
+<p><strong>例4：言出有据。</strong></p>
+<p>当我们说“Problem A是本领域的关键问题且尚未得到解决”，这时就要考虑到审稿人可能会问：“为什么说这是关键问题？它造成的后果有多严重？这种后果对最终性能影响大吗？”这就需要我们完善引用：</p>
+<blockquote>
+<p>It is reported that problem A results in … [1,2,3] and … [4,5], which are critical to … because … [6, 7, 8].</p>
+</blockquote>
+<p>丰富且适当的引用会让人觉得作者学识渊博，对本领域理解深刻（哪怕你只看过那些文章的摘要，只是在制造这样的幻象也行）。</p>
+<p><strong>例5：轻重适当。</strong></p>
+<p>在展示了实验结果之后，我们往往需要解释为什么我们的方法会work。不解释一般是不行的，解释的太绝对了又可能被审稿人challenge（“怎么证明？有什么理论？”），这时就要把握轻重。</p>
+<ul>
+<li><p>我们有直接的证据时：The performance improves, which is attributed to that XXX can … （后面要高调地把证据展示出来）</p>
+</li>
+<li><p>没有直接的证据，但有一些可视化等间接证据：The performance improves, which may be explained that XXX can …</p>
+</li>
+<li><p>几乎没有证据，只是感觉应该是这样的，反正跟我们的motivation是相符的：The performance improves, suggesting that XXX can …</p>
+</li>
+</ul>
+<p><strong>例6：不要用自讨苦吃的主观词汇。</strong></p>
+<blockquote>
+<p>In Table 1, it is obviously exhibited that …</p>
+</blockquote>
+<p>在学术写作这种场合使用诸如obviously之类的带有强烈主观色彩的词汇没有任何好处。如果审稿人能看出你的结果好，不需要你自己强调这个obviously；如果审稿人看不懂，你越强调他就会越迷惑：到底好在哪了，跟我仔细唠唠，我先判你一个overclaim，阁下又该如何应对呢？</p>
+<hr>
+<h3 id="迷惑时间"><a href="#迷惑时间" class="headerlink" title="迷惑时间"></a>迷惑时间</h3><p>“迷惑时间”是读者在阅读过程中每一次“咦，这是啥”到“哦，原来是这样”之间的时间的总和。当代人类的耐心是有限的，一篇文章的总的迷惑时间越短，可读性就越高，审稿人就会越心平气和。</p>
+<p><strong>例7：提出一个概念后应就近解释。</strong></p>
+<p>在深度学习领域中，一个复杂的模型中的一个简单结构根据其功能（和讲故事的需要）可能被命名为XXX Perceiver, XXX Perceptron, XXX Recognizer, XXX Gating Function等等。</p>
+<p>建议在给出其名字以后直接解释其实质（we propose XXX, which is implemented with a two-layer MLP）。不然如果在Introduction里只给出了它的名字而在Method部分再给出其实现的话，读者会在很长的一段时间里带着“这么玄乎的东西到底是个啥”的疑惑，最后发现“原来就这啊”，阅读体验很不好。</p>
+<p><strong>例8：指代对象应显然且毫无歧义。</strong></p>
+<blockquote>
+<p>We update structure A to solve the problem caused by model B, which is widely used in the literature.</p>
+</blockquote>
+<p>这里“widely used”到底是A还是B？如果我们的写作水平有限，无法让长句完全不带歧义的话，就应该将其拆为短句。没有人会因为你缺少展示高超英语水平的长难句而拒你的文章！</p>
+<p><strong>例9：不要在需要读者集中注意力时多次引用数页后的内容。</strong></p>
+<p>我们在introduction里可以提几句我们的结果有多么多么好，带上几个对后面的图表的reference，但不要频繁这么干，尤其是不要在需要读者集中注意力（比如你正在激情四射地展开自己的核心故事，需要读者来判断这个故事是否合理的时候），不然读者翻过去再翻回来的这段时间里思维就断了。读者思维的连续性也是可读性的一部分，毕竟论文是线性叙事。这也是孙剑老师教我的最后一点。</p>
+<hr>
+<h3 id="信息密度"><a href="#信息密度" class="headerlink" title="信息密度"></a>信息密度</h3><p>信息密度就不是什么新的概念了，指的是读者能从单位长度的文字中提取到的有效信息量。信息密度过低的文章会让人走神并怀疑作者的专业性。</p>
+<p><strong>例10：气氛组语句不应过于冗长</strong>。</p>
+<p>我们都知道每篇论文中总有一些不会有人认真看的句子，这些句子一般位于各章开头，且其中“recent years”含量极高。这些句子一般还是要写几句的，但建议注意以下几点。</p>
+<ul>
+<li><p>不要太长，写长了没人会看的。我曾经审过一篇做模型压缩的文章，开头从LeNet唠到<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=230293347&content_type=Article&match_order=1&q=ViT&zhida_source=entity">ViT</a>，直到第二页右半栏才提出“model compression”的定义。</p>
+</li>
+<li><p>不相关的不要写。如果你这篇文章是做ViT的且不涉及底层算子，就不要提卷积网络是如何滑动窗口的了。</p>
+</li>
+<li><p>不要写成历史书。审了这么多稿，我现在对从人类发现动物视皮质原理到LeNet再到AlexNet再到ResNet这段历史已经完全PTSD了。</p>
+</li>
+<li><p>写都写了，尽量跟主旨有点关系，尽快引出正题。例如，如果你提出的是一种新的hierarchical ViT，那么就可以在正文第一句里就把ViT按是否hierarchical分成两类（最近ViT们繁荣发展，包括两类……），第二句就进入主题。</p>
+</li>
+</ul>
+<p><strong>例11：精炼语言</strong>。</p>
+<p>非英语母语者写出来的英语一般不如母语者精炼，初学者更是经常因为害怕语言不够准确而越写越长。例如：</p>
+<blockquote>
+<p>The image classification performance on ImageNet is 79.99% 改为 The ImageNet top-1 accuracy is 79.99%.</p>
+<p>As can be observed in Table 1, A outperforms B. 改为 Table 1 shows that A outperforms B.</p>
+<p>Table 1 shows that the accuracy of model A is 81.0% and the accuracy of model B is 80.0%, so we conclude that model A outperforms model B. 改为 Table 1 shows that model A outperforms model B by 1.0% in the accuracy (81.0% v.s. 80.0%).</p>
+</blockquote>
+<p>用简练的语言准确表达意思是一门技术活，具有本质的困难性。建议多看英语母语者写的论文和其他文字内容，特别是那些有丰富教学经验的年轻选手，因为写教案是最锻炼语言组织能力的（对的，我说的就是当年斯坦福CS231N的主讲Andrej Karpathy）。</p>
+<p><strong>例12：图表附近应是全文中信息密度最高的地方，重要的解释和阐述距离图表越近越好。</strong></p>
+<ul>
+<li><p>如果图表中有缩写，那么标题里最好就有解释。</p>
+</li>
+<li><p>如果希望强调Table 5中的某个结果，那么分析这一结果的语句最好跟Table 5在同一页上，而且那句话前后最好就有“Table 5”这几个字。这是因为<strong>读者可能根本不会仔细看你写的文字，而是先看图表再去找跟图表中的内容关联的文字</strong>。一眼看到Table 5中某个亮眼的结果并感到好奇时，<strong>他很可能用pdf阅读器的搜索功能来搜“Table 5”</strong>。</p>
+</li>
+<li><p>不要指望读者自己从复杂的表格中自己想明白应该拿谁去跟谁对比以得出结论，<strong>我们应该把希望形成对比的内容放在一起</strong>。如果这样的表格很难设计的话，哪怕为此必须得把某个结果（一般是需要跟若干组结果全对比一遍的baseline）重复几行也在所不惜。没有人会因为表格设计不够优雅而拒你的论文，但看不明白表格进而血压升高的审稿人是真的会。</p>
+</li>
+</ul>
+<h1 id="资源推荐"><a href="#资源推荐" class="headerlink" title="资源推荐"></a>资源推荐</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/hzwer/WritingAIPaper">WritingAIPaper</a></li>
+<li>Chao Ma 整理的<a target="_blank" rel="noopener" href="https://vision.sjtu.edu.cn/writing.html">写作技巧资源列表</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/02.%E5%86%99%E4%BD%9C%E6%8A%80%E5%B7%A7/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/02.%E5%86%99%E4%BD%9C%E6%8A%80%E5%B7%A7/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/">论文阅读与写作</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/41.%E5%B0%8F%E6%A0%B7%E6%9C%AC%E7%B1%BB%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0FSCIL/03.PriViLege/" title="PriViLege"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">PriViLege</div></div><div class="info-2"><div class="info-item-1">Pre-trained Vision and Language Transformers Are Few-Shot Incremental Learners CVPR 2024  0. 摘要少样本类增量学习（Few-Shot Class Incremental Learning，简称 FSCIL）是一项任务，要求模型在每个类别只有少量样本的情况下，逐步学习新类别而不遗忘旧类别。   FSCIL 面临两大挑战：灾难性遗忘和过拟合。这些挑战促使以往的研究主要依赖于浅层模型，如 ResNet-18。虽然浅层模型因容量有限，可以缓解遗忘和过拟合问题，但也导致了在少样本增量阶段中知识迁移的不足。 ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/14.LaTeX%E5%B8%B8%E8%A7%81%E7%AC%A6%E5%8F%B7/" title="LaTeX常见符号"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">LaTeX常见符号</div></div><div class="info-2"><div class="info-item-1">常见符号$ \theta^∗&#x3D; \underset{ \theta }{\operatorname{arg\ min&#125;&#125;  L(\theta)  $ 表 1: 数学模式重音符   示例 代码 示例 代码 示例 代码 示例 代码    $\hat {a}$ \hat{a} $\check{a}$ \check{a} $\tilde{a}$ \tilde{a} $\acute{a}$ \acute{a}   $\grave{a}$ \grave{a} $\dot {a}$ \dot{a} $\bar{a}$ \bar{a} $\ddot a$ \ddot{a} ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/03.ChatGPT%E6%B6%A6%E8%89%B2/" title="ChatGPT润色"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">ChatGPT润色</div></div><div class="info-2"><div class="info-item-1">ChatGPT学术论文指令以下是50个学术论文指令的目录，当然，用完了复制的时候.千万记得删除指令 。  一、学术角色预设指令（2个) 二、论文撰写指令（8个） 三、学术润色指令（20个） 四、中英翻译指令（5个） 五、论文查重指令（1个） 六、参考文献指令（2个） 七、投稿审稿指令（2个） 八、快速读文献指令（6个） 九、其他学术指令（11个）  一、学术角色预设论文中无论是润色，语法检查还是降重，都要先进行角色预设，先给定一个身份。 有些学术GPT是自带提示词的，有些人使用的GPT并没有提前进行预设，这种需要我们手动进行预设。 例如你需要问论文方面的问题，可以先用这个指令对GPT提问...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/01.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AF%BB%E8%AE%BA%E6%96%87Prompt/" title="大模型读论文—Prompt"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">大模型读论文—Prompt</div></div><div class="info-2"><div class="info-item-1">全文翻译  prompt未能实现全文无遗漏翻译，翻译内容经常被简化   Prompt: 这是一篇学术论文，请帮我逐句翻译，不得省略内容，不得概括内容。要求：1、摘要、引言等标记为二级标题，并用序号进行标记，例如 “## 0. 摘要”，二 三 四 级标题前后添加空行。2、公式要用 latex，如果公式有编号，则翻译内容也要添加相应的编号，标号用\tag{}表示。3、参考文献不用翻译。4、如有附录，需要翻译。  细读论文 对论文进行详细分析，并在分析报告中包括以下关键方面，可以增加二级标题，二级标题要添加序号。  论文标题 论文信息：会议名称 年份 | 作者信息 | 机构  研究背景与动机请...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/05.Rebuttal/" title="浅谈学术论文rebuttal"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">浅谈学术论文rebuttal</div></div><div class="info-2"><div class="info-item-1">浅谈学术论文rebuttal 浅谈学术论文rebuttal  学术论文是发布自己或团队最新研究进展正式且最快捷的途径，也是和同行交流想法最方便、高效的方式。当同行评议（Peer review）作为学术成果正式发布的必经之路已运行200余年时，用正确的姿势进行review rebuttal便成为提高论文录用机率甚至扭转乾坤的最后一搏。本文从“What is peer review？”、“How to rebuttal?”及“Does rebuttal matter?”三部分来聊聊学术论文（主要针对人工智能领域会议和期刊）rebuttal的那些事。 What is peer review？要...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/11.arXiv/" title="arXiv"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">arXiv</div></div><div class="info-2"><div class="info-item-1"> arXiv(发音同archive)是一个提供学术文章在线发表的服务器，领域涵盖物理学、数学、非线性科学、计算机科学、定量生命科学、计量金融学和统计学。 arXiv名中的“X”对应于希腊字母“χ”（大写为“Χ”，发音chi)。故arXiv的本意即archive（文献库）。 发表arXiv的论文不需要通过审核(peer review)，因此被用作发表手稿或者预出版的论文。由于论文的审核工作一般需要几个月的时间，最新的研究结果发表到学术期刊上时已经失去了一定的时效性。另外，一些创新性过强的文章可能很难通过审核，因此只能以未审核的形式发表。由于没有通过审核，读者应当更加谨慎地对待发表在arXi...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/12.%E8%AE%BA%E6%96%87%E5%AE%A1%E7%A8%BF%E5%A4%A7%E8%87%B4%E6%B5%81%E7%A8%8B/" title="论文审稿大致流程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">论文审稿大致流程</div></div><div class="info-2"><div class="info-item-1">先看题目，摘要和引言引言部分的teaser图会重点看，看是否把文章的main idea或者卖点说清楚了，引言部分的故事逻辑和动机是重点，动机强不强，直接决定我买不买账 相关工作如果熟悉，会直接跳过；不熟悉，会当背景快速过一遍，补充下，看看这篇论文跟其他文章有哪些不同 方法框架图和整体流程然后跳到实验部分，看方法效果是否突出，对比是否公平，消融实验是否全面，可视化分析有没有做到位 最后回到方法细节具体的loss设计、小模块设计，有没有明显不合理的地方 ，这一整套下来，基本就有个整体的分数判断了，就可以开始写审稿意见了 写意见的过程也会再回顾论文的某些部分，来double check细节和自...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/14.LaTeX%E5%B8%B8%E8%A7%81%E7%AC%A6%E5%8F%B7/" title="LaTeX常见符号"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LaTeX常见符号</div></div><div class="info-2"><div class="info-item-1">常见符号$ \theta^∗&#x3D; \underset{ \theta }{\operatorname{arg\ min&#125;&#125;  L(\theta)  $ 表 1: 数学模式重音符   示例 代码 示例 代码 示例 代码 示例 代码    $\hat {a}$ \hat{a} $\check{a}$ \check{a} $\tilde{a}$ \tilde{a} $\acute{a}$ \acute{a}   $\grave{a}$ \grave{a} $\dot {a}$ \dot{a} $\bar{a}$ \bar{a} $\ddot a$ \ddot{a} ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ten-simple-rules-for-structuring-papers"><span class="toc-number">1.</span> <span class="toc-text">Ten simple rules for structuring papers</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Overview"><span class="toc-number">1.1.</span> <span class="toc-text">Overview</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.2.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Principles-Rules-1%E2%80%934"><span class="toc-number">1.3.</span> <span class="toc-text">Principles (Rules 1–4)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-1-Focus-your-paper-on-a-central-contribution-which-you-communicate-in-the-title"><span class="toc-number">1.4.</span> <span class="toc-text">Rule 1: Focus your paper on a central contribution, which you communicate in the title</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%88%991%EF%BC%9A%E5%B0%86%E8%AE%BA%E6%96%87%E8%81%9A%E7%84%A6%E4%BA%8E%E4%B8%80%E4%B8%AA%E6%A0%B8%E5%BF%83%E8%B4%A1%E7%8C%AE%EF%BC%8C%E5%B9%B6%E5%9C%A8%E6%A0%87%E9%A2%98%E4%B8%AD%E4%BC%A0%E8%BE%BE%E8%BF%99%E4%B8%80%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.5.</span> <span class="toc-text">原则1：将论文聚焦于一个核心贡献，并在标题中传达这一贡献</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-2-Write-for-flesh-and-blood-human-beings-who-do-not-know-your-work"><span class="toc-number">1.6.</span> <span class="toc-text">Rule 2: Write for flesh-and-blood human beings who do not know your work</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%88%992%EF%BC%9A%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%9A%84%E4%BA%BA%E8%80%8C%E5%86%99%EF%BC%8C%E5%B9%B6%E5%81%87%E8%AE%BE%E4%BB%96%E4%BB%AC%E5%B9%B6%E4%B8%8D%E4%BA%86%E8%A7%A3%E4%BD%A0%E7%9A%84%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.7.</span> <span class="toc-text">原则2：为真实的人而写，并假设他们并不了解你的工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-3-Stick-to-the-context-content-conclusion-C-C-C-scheme"><span class="toc-number">1.8.</span> <span class="toc-text">Rule 3: Stick to the context-content-conclusion (C-C-C) scheme</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%88%993%EF%BC%9A%E9%81%B5%E5%BE%AA%E2%80%9C%E8%83%8C%E6%99%AF%E2%80%94%E5%86%85%E5%AE%B9%E2%80%94%E7%BB%93%E8%AE%BA%E2%80%9D%EF%BC%88Context-Content-Conclusion%EF%BC%8CC-C-C%EF%BC%89%E7%BB%93%E6%9E%84"><span class="toc-number">1.9.</span> <span class="toc-text">原则3：遵循“背景—内容—结论”（Context-Content-Conclusion，C-C-C）结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-4-Optimize-your-logical-flow-by-avoiding-zig-zag-and-using-parallelism"><span class="toc-number">1.10.</span> <span class="toc-text">Rule 4: Optimize your logical flow by avoiding zig-zag and using parallelism</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%88%994%EF%BC%9A%E9%80%9A%E8%BF%87%E9%81%BF%E5%85%8D%E6%9D%A5%E5%9B%9E%E8%B7%B3%E8%B7%83%E5%B9%B6%E4%BD%BF%E7%94%A8%E5%B9%B3%E8%A1%8C%E7%BB%93%E6%9E%84%E6%9D%A5%E4%BC%98%E5%8C%96%E9%80%BB%E8%BE%91%E6%B5%81%E7%A8%8B"><span class="toc-number">1.11.</span> <span class="toc-text">原则4：通过避免来回跳跃并使用平行结构来优化逻辑流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-components-of-a-paper-Rules-5%E2%80%938"><span class="toc-number">1.12.</span> <span class="toc-text">The components of a paper (Rules 5–8)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86%EF%BC%88%E5%8E%9F%E5%88%995%E2%80%948%EF%BC%89"><span class="toc-number">1.13.</span> <span class="toc-text">论文的组成部分（原则5—8）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-5-Tell-a-complete-story-in-the-abstract"><span class="toc-number">1.14.</span> <span class="toc-text">Rule 5: Tell a complete story in the abstract</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%88%995%EF%BC%9A%E5%9C%A8%E6%91%98%E8%A6%81%E4%B8%AD%E8%AE%B2%E8%BF%B0%E4%B8%80%E4%B8%AA%E5%AE%8C%E6%95%B4%E7%9A%84%E6%95%85%E4%BA%8B"><span class="toc-number">1.15.</span> <span class="toc-text">原则5：在摘要中讲述一个完整的故事</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-6-Communicate-why-the-paper-matters-in-the-introduction"><span class="toc-number">1.16.</span> <span class="toc-text">Rule 6: Communicate why the paper matters in the introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%88%996%EF%BC%9A%E5%9C%A8%E5%BC%95%E8%A8%80%E4%B8%AD%E8%AF%B4%E6%98%8E%E8%AE%BA%E6%96%87%E4%B8%BA%E4%BB%80%E4%B9%88%E9%87%8D%E8%A6%81"><span class="toc-number">1.17.</span> <span class="toc-text">原则6：在引言中说明论文为什么重要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-7-Deliver-the-results-as-a-sequence-of-statements-supported-by-figures-that-connect-logically-to-support-the-central-contribution"><span class="toc-number">1.18.</span> <span class="toc-text">Rule 7: Deliver the results as a sequence of statements, supported by figures, that connect logically to support the central contribution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%88%997%EF%BC%9A%E6%8A%8A%E7%BB%93%E6%9E%9C%E7%BB%84%E7%BB%87%E4%B8%BA%E4%B8%80%E7%B3%BB%E5%88%97%E9%99%88%E8%BF%B0%EF%BC%8C%E5%B9%B6%E7%94%A8%E5%9B%BE%E8%A1%A8%E6%94%AF%E6%8C%81%E8%BF%99%E4%BA%9B%E9%99%88%E8%BF%B0%EF%BC%8C%E4%BD%BF%E5%85%B6%E5%9C%A8%E9%80%BB%E8%BE%91%E4%B8%8A%E5%85%B1%E5%90%8C%E6%94%AF%E6%92%91%E6%A0%B8%E5%BF%83%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.19.</span> <span class="toc-text">原则7：把结果组织为一系列陈述，并用图表支持这些陈述，使其在逻辑上共同支撑核心贡献</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-8-Discuss-how-the-gap-was-filled-the-limitations-of-the-interpretation-and-the-relevance-to-the-field"><span class="toc-number">1.20.</span> <span class="toc-text">Rule 8: Discuss how the gap was filled, the limitations of the interpretation, and the relevance to the field</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%88%998%EF%BC%9A%E8%AE%A8%E8%AE%BA%E7%A0%94%E7%A9%B6%E7%A9%BA%E7%99%BD%E5%A6%82%E4%BD%95%E8%A2%AB%E5%A1%AB%E8%A1%A5%E3%80%81%E8%A7%A3%E9%87%8A%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7%E4%BB%A5%E5%8F%8A%E7%A0%94%E7%A9%B6%E5%AF%B9%E9%A2%86%E5%9F%9F%E7%9A%84%E6%84%8F%E4%B9%89"><span class="toc-number">1.21.</span> <span class="toc-text">原则8：讨论研究空白如何被填补、解释的局限性以及研究对领域的意义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Process-Rules-9-and-10"><span class="toc-number">1.22.</span> <span class="toc-text">Process (Rules 9 and 10)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E4%BD%9C%E8%BF%87%E7%A8%8B%EF%BC%88%E5%8E%9F%E5%88%999%E2%80%9410%EF%BC%89"><span class="toc-number">1.23.</span> <span class="toc-text">写作过程（原则9—10）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-9-Allocate-time-where-it-matters-Title-abstract-figures-and-outlining"><span class="toc-number">1.24.</span> <span class="toc-text">Rule 9: Allocate time where it matters: Title, abstract, figures, and outlining</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%88%999%EF%BC%9A%E6%8A%8A%E6%97%B6%E9%97%B4%E6%8A%95%E5%85%A5%E5%88%B0%E7%9C%9F%E6%AD%A3%E9%87%8D%E8%A6%81%E7%9A%84%E5%9C%B0%E6%96%B9%E2%80%94%E2%80%94%E6%A0%87%E9%A2%98%E3%80%81%E6%91%98%E8%A6%81%E3%80%81%E5%9B%BE%E8%A1%A8%E5%92%8C%E6%8F%90%E7%BA%B2"><span class="toc-number">1.25.</span> <span class="toc-text">原则9：把时间投入到真正重要的地方——标题、摘要、图表和提纲</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-10-Get-feedback-to-reduce-reuse-and-recycle-the-story"><span class="toc-number">1.26.</span> <span class="toc-text">Rule 10: Get feedback to reduce, reuse, and recycle the story</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%88%9910%EF%BC%9A%E9%80%9A%E8%BF%87%E8%8E%B7%E5%8F%96%E5%8F%8D%E9%A6%88%E6%9D%A5%E5%88%A0%E5%87%8F%E3%80%81%E5%A4%8D%E7%94%A8%E5%B9%B6%E9%87%8D%E6%9E%84%E8%AE%BA%E6%96%87%E5%8F%99%E4%BA%8B"><span class="toc-number">1.27.</span> <span class="toc-text">原则10：通过获取反馈来删减、复用并重构论文叙事</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Discussion"><span class="toc-number">1.28.</span> <span class="toc-text">Discussion</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Table-1-A-summary-of-the-ten-rules-and-how-to-tell-if-they-are-being-violated"><span class="toc-number">1.29.</span> <span class="toc-text">Table 1. A summary of the ten rules and how to tell if they are being violated</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#How-to-write-a-first-class-paper"><span class="toc-number">2.</span> <span class="toc-text">How to write a first-class paper</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Keep-your-message-clear%E4%BF%9D%E6%8C%81%E6%82%A8%E7%9A%84%E4%BF%A1%E6%81%AF%E6%B8%85%E6%99%B0"><span class="toc-number">2.1.</span> <span class="toc-text">Keep your message clear保持您的信息清晰</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Create-a-logical-framework-%E5%88%9B%E5%BB%BA%E9%80%BB%E8%BE%91%E6%A1%86%E6%9E%B6"><span class="toc-number">2.2.</span> <span class="toc-text">Create a logical framework 创建逻辑框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#State-your-case-with-confidence-%E8%87%AA%E4%BF%A1%E5%9C%B0%E9%99%88%E8%BF%B0%E6%82%A8%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-number">2.3.</span> <span class="toc-text">State your case with confidence 自信地陈述您的情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Beware-the-curse-of-%E2%80%98zombie-nouns%E2%80%99-%E5%BD%93%E5%BF%83%E2%80%9C%E5%83%B5%E5%B0%B8%E5%90%8D%E8%AF%8D%E2%80%9D%E7%9A%84%E8%AF%85%E5%92%92"><span class="toc-number">2.4.</span> <span class="toc-text">Beware the curse of ‘zombie nouns’ 当心“僵尸名词”的诅咒</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prune-that-purple-prose-%E4%BF%AE%E5%89%AA%E9%82%A3%E4%BA%9B%E7%B4%AB%E8%89%B2%E7%9A%84%E6%95%A3%E6%96%87"><span class="toc-number">2.5.</span> <span class="toc-text">Prune that purple prose 修剪那些紫色的散文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Aim-for-a-wide-audience%E7%9E%84%E5%87%86%E5%B9%BF%E6%B3%9B%E7%9A%84%E5%8F%97%E4%BC%97"><span class="toc-number">2.6.</span> <span class="toc-text">Aim for a wide audience瞄准广泛的受众</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%81%E6%AC%A1-CV-%E8%AE%BA%E6%96%87%E4%BC%9A%E8%AE%AE%E6%8A%95%E7%A8%BF%E7%9A%84%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">十次 CV 论文会议投稿的经验总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9%E5%92%8C%E8%AE%BA%E6%96%87%E6%A0%B8%E5%BF%83"><span class="toc-number">3.1.</span> <span class="toc-text">创新点和论文核心</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E7%9A%84%E5%86%99%E4%BD%9C%E8%A6%81%E7%82%B9"><span class="toc-number">3.2.</span> <span class="toc-text">论文的写作要点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%94%E8%80%85%E7%9A%84%E8%AE%BA%E6%96%87%E6%8A%95%E7%A8%BF"><span class="toc-number">3.3.</span> <span class="toc-text">笔者的论文投稿</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E8%B4%9F%E9%9D%A2%E5%AE%A1%E7%A8%BF%E6%84%8F%E8%A7%81"><span class="toc-number">3.4.</span> <span class="toc-text">常见的负面审稿意见</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B6%E4%BC%9A%E8%AE%BA%E6%96%87%E5%86%99%E4%BD%9C%E5%BB%BA%E8%AE%AE%EF%BC%88%E4%B8%8A%EF%BC%89%EF%BC%9A%E5%AE%8F%E8%A7%82%E5%B8%83%E5%B1%80%EF%BC%8C%E9%81%BF%E5%85%8D%E2%80%9Chard-to-follow%E2%80%9D"><span class="toc-number">3.5.</span> <span class="toc-text">顶会论文写作建议（上）：宏观布局，避免“hard to follow”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A1%E7%A8%BF%E4%BA%BA%E8%A7%86%E8%A7%92"><span class="toc-number">3.5.1.</span> <span class="toc-text">审稿人视角</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E5%AD%901%EF%BC%9A%E4%B8%8D%E8%A6%81%E5%AE%8C%E6%95%B4%E8%BF%98%E5%8E%9F%E7%A0%94%E7%A9%B6%E7%9A%84%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B"><span class="toc-number">3.5.2.</span> <span class="toc-text">例子1：不要完整还原研究的心路历程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E5%AD%902%EF%BC%9A%E4%B8%8D%E8%A6%81%E8%BD%BB%E8%A8%80%E2%80%9Cbased-on%E2%80%9D%E5%92%8C%E2%80%9CA-B%E2%80%9D"><span class="toc-number">3.5.3.</span> <span class="toc-text">例子2：不要轻言“based on”和“A+B”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E5%92%8C%E5%85%B6%E4%BB%96%E5%BB%BA%E8%AE%AE"><span class="toc-number">3.5.4.</span> <span class="toc-text">总结和其他建议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B6%E4%BC%9A%E8%AE%BA%E6%96%87%E5%86%99%E4%BD%9C%E5%BB%BA%E8%AE%AE%EF%BC%88%E4%B8%8B%EF%BC%89%EF%BC%9A%E7%B2%BE%E8%80%95%E7%BB%86%E4%BD%9C%EF%BC%8C%E6%8F%90%E9%AB%98%E2%80%9Creadability%E2%80%9D"><span class="toc-number">3.6.</span> <span class="toc-text">顶会论文写作建议（下）：精耕细作，提高“readability”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%BC%BA%E5%BA%A6"><span class="toc-number">3.6.1.</span> <span class="toc-text">逻辑强度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E5%BC%B9%E6%80%A7"><span class="toc-number">3.6.2.</span> <span class="toc-text">防御弹性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%B7%E6%83%91%E6%97%B6%E9%97%B4"><span class="toc-number">3.6.3.</span> <span class="toc-text">迷惑时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E5%AF%86%E5%BA%A6"><span class="toc-number">3.6.4.</span> <span class="toc-text">信息密度</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E6%8E%A8%E8%8D%90"><span class="toc-number">4.</span> <span class="toc-text">资源推荐</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

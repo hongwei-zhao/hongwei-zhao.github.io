@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>字符串 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="字符串表示 由一对单引号或双引号表示，仅表示单行字符串；  由一对三单引号或三双引号表示，可表示多行字符串；  字符串不可变;   12345678s1 &#x3D; &#x27;hello, world!&#x27;s2 &#x3D; &quot;hello, world!&quot;# 以三个双引号或单引号开头的字符串可以折行s3 &#x3D; &quot;&quot;&quot;hello, world!&quot;&amp;q">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符串">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/01.%E5%AD%97%E7%AC%A6%E4%B8%B2/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="字符串表示 由一对单引号或双引号表示，仅表示单行字符串；  由一对三单引号或三双引号表示，可表示多行字符串；  字符串不可变;   12345678s1 &#x3D; &#x27;hello, world!&#x27;s2 &#x3D; &quot;hello, world!&quot;# 以三个双引号或单引号开头的字符串可以折行s3 &#x3D; &quot;&quot;&quot;hello, world!&quot;&amp;q">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-03T13:04:14.446Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="数据结构 函数 和文件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "字符串",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/01.%E5%AD%97%E7%AC%A6%E4%B8%B2/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-03T13:04:14.446Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/01.%E5%AD%97%E7%AC%A6%E4%B8%B2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '字符串',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">字符串</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">字符串</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-03T13:04:14.446Z" title="更新于 2026-03-03 21:04:14">2026-03-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/Python/">Python</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/Python/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%87%BD%E6%95%B0-%E5%92%8C%E6%96%87%E4%BB%B6/">数据结构 函数 和文件</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><h2 id="表示"><a href="#表示" class="headerlink" title="表示"></a>表示</h2><ul>
+<li><p>由一对<strong>单引号</strong>或<strong>双引号</strong>表示，仅表示<strong>单行</strong>字符串；</p>
+</li>
+<li><p>由一对<strong>三单引号或三双引号</strong>表示，可表示<strong>多行</strong>字符串；</p>
+</li>
+<li><p><strong>字符串不可变</strong>;</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Python">s1 = <span class="hljs-string">&#x27;hello, world!&#x27;</span><br>s2 = <span class="hljs-string">&quot;hello, world!&quot;</span><br><span class="hljs-comment"># 以三个双引号或单引号开头的字符串可以折行</span><br>s3 = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">hello, </span><br><span class="hljs-string">world!</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-built_in">print</span>(s1, s2, s3, end=<span class="hljs-string">&#x27;&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>可以在字符串中使用<code>\</code>（反斜杠）来表示转义，也就是说<code>\</code>后面的字符不再是它原来的意义，例如：<code>\n</code>不是代表反斜杠和字符n，而是表示换行；而<code>\t</code>也不是代表反斜杠和字符t，而是表示制表符。所以如果想在字符串中表示<code>&#39;</code>要写成<code>\&#39;</code>，同理想表示<code>\</code>要写成<code>\\</code>。可以运行下面的代码看看会输出什么。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs Python">s1 = <span class="hljs-string">&#x27;\&#x27;hello, world!\&#x27;&#x27;</span><br>s2 = <span class="hljs-string">&#x27;\n\\hello, world!\\\n&#x27;</span><br><span class="hljs-built_in">print</span>(s1, s2, end=<span class="hljs-string">&#x27;&#x27;</span>)<br>&gt;&gt;&gt;<span class="hljs-string">&#x27;hello, world!&#x27;</span> <br>&gt;&gt;&gt;\hello, world!\<br><br></code></pre></td></tr></table></figure>
+
+<p>在<code>\</code>后面还可以跟一个八进制或者十六进制数来表示字符，例如<code>\141</code>和<code>\x61</code>都代表小写字母<code>a</code>，前者是八进制的表示法，后者是十六进制的表示法。也可以在<code>\</code>后面跟Unicode字符编码来表示字符，例如<code>\u9a86\u660a</code>代表的是中文“骆昊”。运行下面的代码，看看输出了什么。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs Python">s1 = <span class="hljs-string">&#x27;\141\142\143\x61\x62\x63&#x27;</span><br>s2 = <span class="hljs-string">&#x27;\u9a86\u660a&#x27;</span><br><span class="hljs-built_in">print</span>(s1, s2)<br>&gt;&gt;&gt;abcabc 骆昊<br></code></pre></td></tr></table></figure>
+
+<p>如果不希望字符串中的<code>\</code>表示转义，我们可以通过在字符串的最前面加上字母<code>r</code>来加以说明，再看看下面的代码又会输出什么。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs Python">s1 = <span class="hljs-string">r&#x27;\&#x27;hello, world!\&#x27;&#x27;</span><br>s2 = <span class="hljs-string">r&#x27;\n\\hello, world!\\\n&#x27;</span><br><span class="hljs-built_in">print</span>(s1, s2, end=<span class="hljs-string">&#x27;&#x27;</span>)<br>&gt;&gt;&gt;\<span class="hljs-string">&#x27;hello, world!\&#x27; \n\\hello, world!\\\n</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="字符串切片高级用法"><a href="#字符串切片高级用法" class="headerlink" title="字符串切片高级用法"></a>字符串切片高级用法</h2><p>使用<code>[M: N: K]</code>根据步长对字符串切片</p>
+<p><code>&lt;字符串&gt;[M: N]</code>，M缺失表示至开头，N缺失表示至结尾</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;〇一二三四五六七八九十&quot;</span>[:<span class="hljs-number">3</span>] <br>&gt;&gt;&gt;结果是 <span class="hljs-string">&quot;〇一二&quot;</span> <br></code></pre></td></tr></table></figure>
+
+<p><code>&lt;字符串&gt;[M: N: K]</code>，根据步长K对字符串切片</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;〇一二三四五六七八九十&quot;</span>[<span class="hljs-number">1</span>:<span class="hljs-number">8</span>:<span class="hljs-number">2</span>] <br><br>&gt;&gt;&gt;结果是 <span class="hljs-string">&quot;一三五七&quot;</span><br><br><span class="hljs-string">&quot;〇一二三四五六七八九十&quot;</span>[::-<span class="hljs-number">1</span>] <br><br>&gt;&gt;&gt;结果是 <span class="hljs-string">&quot;十九八七六五四三二一〇&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="字符串操作符"><a href="#字符串操作符" class="headerlink" title="字符串操作符"></a>字符串操作符</h3><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>拼接两个字符串</td>
+</tr>
+<tr>
+<td>*</td>
+<td>n<em>x 或者 x</em>n复制n次字符串x</td>
+</tr>
+<tr>
+<td>in</td>
+<td>x in s：判断x是否为s的子串</td>
+</tr>
+</tbody></table>
+<h3 id="字符串处理方法"><a href="#字符串处理方法" class="headerlink" title="字符串处理方法"></a>字符串处理方法</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>len(x)</strong></td>
+<td>返回字符串x的长度，如果换成bytes，len()函数就计算字节数</td>
+</tr>
+<tr>
+<td><strong>str(x)</strong></td>
+<td>任意类型x所对应的字符串形式</td>
+</tr>
+<tr>
+<td><strong>hex(x)</strong> 或 <strong>oct(x)</strong></td>
+<td>整数x(整型)的十六进制或八进制小写形式字符串</td>
+</tr>
+<tr>
+<td><strong>chr(x)</strong></td>
+<td>x为Unicode编码，返回其对应的字符</td>
+</tr>
+<tr>
+<td><strong>ord(x)</strong></td>
+<td>x为字符，返回其对应的Unicode编码</td>
+</tr>
+<tr>
+<td><strong>center()</strong></td>
+<td>通过在两边添加字符让字符串<strong>居中</strong></td>
+</tr>
+<tr>
+<td><strong>find()</strong></td>
+<td>返回子串的第一个字符的索引，否则返回-1</td>
+</tr>
+<tr>
+<td><strong>join()</strong></td>
+<td><strong>合并</strong>序列的元素，与split相反;str.join(iter) 在iter变量除最后元素外<strong>每个元素后</strong>增加一个str；<strong>eg</strong>“,”.join(“12345”) 结果为”1,2,3,4,5” #主要用于字符串分隔等</td>
+</tr>
+<tr>
+<td><strong>split()</strong></td>
+<td>将字符串<strong>拆分</strong>为序列，如果未指定分隔符，将<strong>默认</strong>在单个或多个连续的<strong>空白字符</strong>（<strong>空白</strong>泛指任何非打印字符，如空格、制表符、换行符等）进行拆分</td>
+</tr>
+<tr>
+<td><strong>translate()</strong></td>
+<td>单字符替换</td>
+</tr>
+<tr>
+<td><strong>str.split(sep&#x3D;None)</strong></td>
+<td>返回一个<strong>列表</strong>，由str根据sep被分隔的部分组成；”A,B,C”.split(“,”) 结果为 [‘A’,’B’,’C’]</td>
+</tr>
+<tr>
+<td><strong>str.count(sub)</strong></td>
+<td>返回子串sub在str中出现的次数</td>
+</tr>
+<tr>
+<td><strong>str.replace(old, new)</strong></td>
+<td>返回字符串str副本，所有old子串被替换为new</td>
+</tr>
+<tr>
+<td><strong>str.center(width[,fillchar])</strong></td>
+<td>字符串str根据宽度width居中，fillchar可选；”python”.center(20,”&#x3D;”)     结果为’&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;python&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;’</td>
+</tr>
+<tr>
+<td><strong>str.strip(chars)</strong></td>
+<td>从str中去掉在其<strong>左侧和右侧</strong>chars中列出的字符，<strong>rstrip（）****：末尾</strong>（暂时删除）、<strong>lstrip（）****：头</strong>；要想永久删除，将修改后的值<strong>重新赋值</strong>给变量。”&#x3D; python&#x3D; “.strip(“ &#x3D;np”)     结果为”ytho”</td>
+</tr>
+<tr>
+<td><strong>title()</strong>、<strong>upper()</strong>、 <strong>lower()</strong></td>
+<td><strong>首</strong>字母<strong>大写</strong>、<strong>全部</strong>大写、全部小写</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs Python">s1 = <span class="hljs-string">&#x27;hello &#x27;</span> * <span class="hljs-number">3</span><br><span class="hljs-built_in">print</span>(s1) <span class="hljs-comment"># hello hello hello </span><br>s2 = <span class="hljs-string">&#x27;world&#x27;</span><br>s1 += s2<br><span class="hljs-built_in">print</span>(s1) <span class="hljs-comment"># hello hello hello world</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;ll&#x27;</span> <span class="hljs-keyword">in</span> s1) <span class="hljs-comment"># True</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;good&#x27;</span> <span class="hljs-keyword">in</span> s1) <span class="hljs-comment"># False</span><br>str2 = <span class="hljs-string">&#x27;abc123456&#x27;</span><br><span class="hljs-comment"># 从字符串中取出指定位置的字符(下标运算)</span><br><span class="hljs-built_in">print</span>(str2[<span class="hljs-number">2</span>]) <span class="hljs-comment"># c</span><br><span class="hljs-comment"># 字符串切片(从指定的开始索引到指定的结束索引)</span><br><span class="hljs-built_in">print</span>(str2[<span class="hljs-number">2</span>:<span class="hljs-number">5</span>]) <span class="hljs-comment"># c12</span><br><span class="hljs-built_in">print</span>(str2[<span class="hljs-number">2</span>:]) <span class="hljs-comment"># c123456</span><br><span class="hljs-built_in">print</span>(str2[<span class="hljs-number">2</span>::<span class="hljs-number">2</span>]) <span class="hljs-comment"># c246</span><br><span class="hljs-built_in">print</span>(str2[::<span class="hljs-number">2</span>]) <span class="hljs-comment"># ac246</span><br><span class="hljs-built_in">print</span>(str2[::-<span class="hljs-number">1</span>]) <span class="hljs-comment"># 654321cba</span><br><span class="hljs-built_in">print</span>(str2[-<span class="hljs-number">3</span>:-<span class="hljs-number">1</span>]) <span class="hljs-comment"># 45</span><br></code></pre></td></tr></table></figure>
+
+<p>在Python中，我们还可以通过一系列的方法来完成对字符串的处理，代码如下所示。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs Python">str1 = <span class="hljs-string">&#x27;hello, world!&#x27;</span><br><span class="hljs-comment"># 通过内置函数len计算字符串的长度</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(str1)) <span class="hljs-comment"># 13</span><br><span class="hljs-comment"># 获得字符串首字母大写的拷贝</span><br><span class="hljs-built_in">print</span>(str1.capitalize()) <span class="hljs-comment"># Hello, world!</span><br><span class="hljs-comment"># 获得字符串每个单词首字母大写的拷贝</span><br><span class="hljs-built_in">print</span>(str1.title()) <span class="hljs-comment"># Hello, World!</span><br><span class="hljs-comment"># 获得字符串变大写后的拷贝</span><br><span class="hljs-built_in">print</span>(str1.upper()) <span class="hljs-comment"># HELLO, WORLD!</span><br><span class="hljs-comment"># 从字符串中查找子串所在位置</span><br><span class="hljs-built_in">print</span>(str1.find(<span class="hljs-string">&#x27;or&#x27;</span>)) <span class="hljs-comment"># 8</span><br><span class="hljs-built_in">print</span>(str1.find(<span class="hljs-string">&#x27;shit&#x27;</span>)) <span class="hljs-comment"># -1</span><br><span class="hljs-comment"># 与find类似但找不到子串时会引发异常</span><br><span class="hljs-comment"># print(str1.index(&#x27;or&#x27;))</span><br><span class="hljs-comment"># print(str1.index(&#x27;shit&#x27;))</span><br><span class="hljs-comment"># 检查字符串是否以指定的字符串开头</span><br><span class="hljs-built_in">print</span>(str1.startswith(<span class="hljs-string">&#x27;He&#x27;</span>)) <span class="hljs-comment"># False</span><br><span class="hljs-built_in">print</span>(str1.startswith(<span class="hljs-string">&#x27;hel&#x27;</span>)) <span class="hljs-comment"># True</span><br><span class="hljs-comment"># 检查字符串是否以指定的字符串结尾</span><br><span class="hljs-built_in">print</span>(str1.endswith(<span class="hljs-string">&#x27;!&#x27;</span>)) <span class="hljs-comment"># True</span><br><span class="hljs-comment"># 将字符串以指定的宽度居中并在两侧填充指定的字符</span><br><span class="hljs-built_in">print</span>(str1.center(<span class="hljs-number">50</span>, <span class="hljs-string">&#x27;*&#x27;</span>))<br><span class="hljs-comment"># 将字符串以指定的宽度靠右放置左侧填充指定的字符</span><br><span class="hljs-built_in">print</span>(str1.rjust(<span class="hljs-number">50</span>, <span class="hljs-string">&#x27; &#x27;</span>))<br>str2 = <span class="hljs-string">&#x27;abc123456&#x27;</span><br><span class="hljs-comment"># 检查字符串是否由数字构成</span><br><span class="hljs-built_in">print</span>(str2.isdigit())  <span class="hljs-comment"># False</span><br><span class="hljs-comment"># 检查字符串是否以字母构成</span><br><span class="hljs-built_in">print</span>(str2.isalpha())  <span class="hljs-comment"># False</span><br><span class="hljs-comment"># 检查字符串是否以数字和字母构成</span><br><span class="hljs-built_in">print</span>(str2.isalnum())  <span class="hljs-comment"># True</span><br>str3 = <span class="hljs-string">&#x27;  jackfrued@126.com &#x27;</span><br><span class="hljs-built_in">print</span>(str3)<br><span class="hljs-comment"># 获得字符串修剪左右两侧空格之后的拷贝</span><br><span class="hljs-built_in">print</span>(str3.strip())<br></code></pre></td></tr></table></figure>
+
+<h3 id="字符串类型格式化"><a href="#字符串类型格式化" class="headerlink" title="字符串类型格式化"></a>字符串类型格式化</h3><p><strong>%<strong>运算符就是用来格式化字符串的。在字符串内部，</strong>%s</strong>表示用字符串替换，<strong>%d</strong>表示用整数替换，<strong>%x</strong>表示十六进制整数，<strong>%f</strong>表示浮点数；有几个**%?<strong>占位符，后面就跟几个变量或者值，顺序要对应好。如果只有一个</strong>%?**，括号可以省略。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-string">&#x27;Hello, %s&#x27;</span> % <span class="hljs-string">&#x27;world&#x27;</span><br><span class="hljs-string">&#x27;Hello, world&#x27;</span><br><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-string">&#x27;Hi, %s, you have $%d.&#x27;</span> % (<span class="hljs-string">&#x27;Michael&#x27;</span>, <span class="hljs-number">1000000</span>)<br><span class="hljs-string">&#x27;Hi, Michael, you have $1000000.&#x27;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>格式化是对字符串进行格式表达的方式</p>
+<p>字符串格式化使用**.format()**方法，用法如下：</p>
+<p>&lt;模板字符串&gt;.format(&lt;逗号分隔的参数&gt;)</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208152014242.png" alt="image-20210821215354696"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208152014648.png" alt="image-20210821215401441"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208152014140.png" alt="image-20210821215408051"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208152014564.png" alt="image-20210821215414052"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208152014023.png" alt="image-20210821215418954"></p>
+<p>Python 3.6以后，格式化字符串还有更为简洁的书写方式，就是在字符串前加上字母<code>f</code>，我们可以使用下面的语法糖来简化上面的代码。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs Python">a, b = <span class="hljs-number">5</span>, <span class="hljs-number">10</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;<span class="hljs-subst">&#123;a&#125;</span> * <span class="hljs-subst">&#123;b&#125;</span> = <span class="hljs-subst">&#123;a * b&#125;</span>&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/01.%E5%AD%97%E7%AC%A6%E4%B8%B2/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/01.%E5%AD%97%E7%AC%A6%E4%B8%B2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/Python/">Python</a><a class="post-meta__tags" href="/blog/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%87%BD%E6%95%B0-%E5%92%8C%E6%96%87%E4%BB%B6/">数据结构 函数 和文件</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/109.%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/" title="梯度下降"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">梯度下降</div></div><div class="info-2"><div class="info-item-1">梯度下降解决下面的最优化问题：$$\theta^∗&#x3D; \underset{ \theta }{\operatorname{arg\ min&#125;&#125;  L(\theta) \tag1$$  $L$ :lossfunction（损失函数） $\theta$ :parameters（参数）  这里的parameters是复数，即 $\theta$ 指代一系列参数，比如 $w$ 和 $b$ 。 我们要找一组参数 $\theta$ ，让损失函数越小越好，这个问题可以用梯度下降法解决： 假设 $\theta$ 有里面有两个参数 $\theta_1, \theta_2$随机选...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/02.%E5%BA%8F%E5%88%97%E7%B1%BB%E5%9E%8B/" title="序列类型"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">序列类型</div></div><div class="info-2"><div class="info-item-1">序列类型定义 序列是具有先后关系的一组元素;是一个基类类型  序列是一维元素向量，元素类型可以不同  类似数学元素序列： s0, s1, … , sn-1   元素间由序号引导，通过下标访问序列的特定元素  容器序列—list、tuple 和 collections.deque 这些序列能存放不同类型的数据。  扁平序列—-str、bytes、bytearray、memoryview 和 array.array，这类序列只能容纳一种类型。  容器序列存放的是它们所包含的任意类型的对象的引用，而扁平序列里存放的是值而不是引用。   序列类型分类可变序列list、bytearray、arra...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/02.%E5%BA%8F%E5%88%97%E7%B1%BB%E5%9E%8B/" title="序列类型"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">序列类型</div></div><div class="info-2"><div class="info-item-1">序列类型定义 序列是具有先后关系的一组元素;是一个基类类型  序列是一维元素向量，元素类型可以不同  类似数学元素序列： s0, s1, … , sn-1   元素间由序号引导，通过下标访问序列的特定元素  容器序列—list、tuple 和 collections.deque 这些序列能存放不同类型的数据。  扁平序列—-str、bytes、bytearray、memoryview 和 array.array，这类序列只能容纳一种类型。  容器序列存放的是它们所包含的任意类型的对象的引用，而扁平序列里存放的是值而不是引用。   序列类型分类可变序列list、bytearray、arra...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/14.%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/" title="常用函数"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">常用函数</div></div><div class="info-2"><div class="info-item-1">argparseargparse 是 Python 的一个标准库，用于编写用户友好的命令行接口。它允许开发者定义命令行参数，并解析这些参数以供程序使用。下面是对 argparse 中常用参数的一些说明： 参数说明 name or flags  这是参数的名称或标志。对于可选参数，通常使用 -- 或 - 前缀。例如，--verbose 或 -v。约定俗称的写法是 -- 后面跟完整参数名，- 后面是简写。  action  定义参数被解析时执行的操作。常见的操作包括 store（存储值）、store_const（存储常量值）、append（将值添加到列表中）等。  default  当参数未...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/04.%E5%85%83%E7%BB%84/" title="元组"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">元组</div></div><div class="info-2"><div class="info-item-1">定义 元组是一种序列类型，一旦创建就不能被修改; 使用小括号 () 或 tuple() 创建，元素间用逗号 , 分隔可以使用或不使用小括号 函数中返回的多个值本质为返回元组类型 def func():     return 1,2 元组继承了序列类型的全部通用操作。元组因为创建后不能修改，因此没有特殊操作 只有1个元素的tuple定义时必须加一个逗号,，来消除歧义：t     &#x3D; (1,) tuple也是一种list，唯一区别是tuple不可变。因此，tuple也可以用切片操作，只是操作的结果仍是tuple：  12&gt;&gt;&gt; (0, 1, 2, 3, 4, 5)...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/05.%E9%9B%86%E5%90%88(set)/" title="集合(set)"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">集合(set)</div></div><div class="info-2"><div class="info-item-1">集合(set)定义Python中的集合跟数学上的集合是一致的，不允许有重复元素，而且可以进行交集、并集、差集等运算。  集合是多个元素的无序组合 集合类型与数学中的集合概念一致 集合元素之间无序，每个元素唯一，不存在相同元素 集合元素不可更改，不能是可变数据类型 集合用大括号 {} 表示，元素间用逗号分隔 建立集合类型用 {} 或 set() 建立空集合类型，必须使用set()   可以按照下面代码所示的方式来创建和使用集合。 1234567891011121314151617&gt;&gt;&gt; A = &#123;&quot;python&quot;, 123, (&quot;p...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/06.%E5%AD%97%E5%85%B8(dict)/" title="字典(dict)"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">字典(dict)</div></div><div class="info-2"><div class="info-item-1">字典(dict)定义 采用大括号**{}和dict()**创建，键值对用冒号: 表示； 可以存储任意类型对象 任何 Python 对象都可用作字典中的值；键可以是任何不可变的类型； **函数 dict():**从其他映射（如其他字典）或键值对序列创建字典 键-值对排列顺序与添加顺序不同  字典类型操作函数和方法   方法名称 功能    del d[k] 删除字典 d 中键 k 对应的数据值，永久删除   k in d 判断键 k是否在字典 d 中，如果在返回 True，否则 False   d.keys() 返回字典 d 中所有的键信息   d.values() 返回字典 d 中所有的...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/00.Python/02.%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%20%E5%87%BD%E6%95%B0%20%E5%92%8C%E6%96%87%E4%BB%B6/03.%E5%88%97%E8%A1%A8/" title="列表"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">列表</div></div><div class="info-2"><div class="info-item-1">列表（list），是一种结构化的、非标量类型，它的值是有序序列，每个值都可以通过索引进行标识。 列表定义 列表用 [ ] 表示，是有序集合，索引从0开始，最后一个索引可用 -1 表示 列表是一种序列类型，创建后可以随意被修改 使用方括号 [ ] 或 list() 创建，元素间用逗号 , 分隔 列表中各元素类型可以不同，无长度限制 方括号 [ ] 真正创建一个列表，赋值仅传递引用  列表类型操作函数和方法   方法名称 功能    s[i] &#x3D; x 替换列表s第i元素为x   ls[i: j: k] &#x3D; lt 用列表lt替换ls切片后所对应元素子列表   ls +&#x...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">1.</span> <span class="toc-text">字符串</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A8%E7%A4%BA"><span class="toc-number">2.</span> <span class="toc-text">表示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%87%E7%89%87%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">字符串切片高级用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">3.1.</span> <span class="toc-text">字符串操作符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">字符串处理方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="toc-number">3.3.</span> <span class="toc-text">字符串类型格式化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text"></span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

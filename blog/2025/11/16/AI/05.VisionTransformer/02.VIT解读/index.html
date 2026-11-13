@@ -1,0 +1,372 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>VIT解读 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Vision Transformer 详解   论文名称：An Image Is Worth 16x16 Words: Transformers For Image Recognition At Scale原论文对应源码：https:&#x2F;&#x2F;github.com&#x2F;google-research&#x2F;vision_transformerPyTorch 实现代码： pytorch_classification">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VIT解读">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/05.VisionTransformer/02.VIT%E8%A7%A3%E8%AF%BB/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="Vision Transformer 详解   论文名称：An Image Is Worth 16x16 Words: Transformers For Image Recognition At Scale原论文对应源码：https:&#x2F;&#x2F;github.com&#x2F;google-research&#x2F;vision_transformerPyTorch 实现代码： pytorch_classification">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.354Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="VisionTransformer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "VIT解读",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/05.VisionTransformer/02.VIT%E8%A7%A3%E8%AF%BB/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.354Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/05.VisionTransformer/02.VIT%E8%A7%A3%E8%AF%BB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'VIT解读',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">VIT解读</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">VIT解读</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.354Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/VisionTransformer/">VisionTransformer</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Vision-Transformer-详解"><a href="#Vision-Transformer-详解" class="headerlink" title="Vision Transformer 详解"></a>Vision Transformer 详解</h2><div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/vit.gif" style="zoom: 80%;" /></div>
+
+<blockquote>
+<p>论文名称：<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=Scale&spm=1001.2101.3001.7020">An Image Is Worth 16x16 Words: Transformers For Image Recognition At Scale</a></br><br>原论文对应源码：<a target="_blank" rel="noopener" href="https://github.com/google-research/vision_transformer">https://github.com/google-research/vision_transformer</a></br><br>PyTorch 实现代码： <a target="_blank" rel="noopener" href="https://github.com/WZMIAOMIAO/deep-learning-for-image-processing/tree/master/pytorch_classification/vision_transformer">pytorch_classification&#x2F;vision_transformer</a></br><br>Tensorflow2 实现代码：<a target="_blank" rel="noopener" href="https://github.com/WZMIAOMIAO/deep-learning-for-image-processing/tree/master/tensorflow_classification/vision_transformer">tensorflow_classification&#x2F;vision_transformer</a></br><br>在 bilibili 上的视频讲解：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Jh411Y7WQ">https://www.bilibili.com/video/BV1Jh411Y7WQ</a></p>
+</blockquote>
+<h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一 前言"></a>一 前言</h2><p><a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=Transformer&spm=1001.2101.3001.7020">Transformer</a>最初提出是针对 NLP 领域的，并且在 NLP 领域大获成功。这篇论文也是受到其启发，尝试将 Transformer 应用到 CV 领域。通过这篇文章的实验，给出的最佳模型在 ImageNet1K 上能够达到 88.55%的准确率（先在 Google 自家的 JFT 数据集上进行了预训练），说明 Transformer 在 CV 领域确实是有效的，而且效果还挺惊人。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202306121058155.png"/></div>
+
+<hr>
+<h2 id="二-Vision-Transformer-模型详解"><a href="#二-Vision-Transformer-模型详解" class="headerlink" title="二 Vision Transformer 模型详解"></a>二 Vision Transformer 模型详解</h2><p>下图是原论文中给出的关于 Vision Transformer(ViT)的模型框架。简单而言，模型由三个模块组成：</p>
+<ul>
+<li>Linear Projection of Flattened Patches(Embedding 层)</li>
+<li>Transformer Encoder(图右侧有给出更加详细的结构)</li>
+<li>MLP Head（最终用于分类的层结构）</li>
+</ul>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202306121100546.png"/></div>
+
+<h3 id="2-1-Embedding-层结构详解"><a href="#2-1-Embedding-层结构详解" class="headerlink" title="2.1 Embedding 层结构详解"></a>2.1 Embedding 层结构详解</h3><p>对于标准的 Transformer 模块，要求输入的是 token（向量）序列，即二维矩阵[num_token, token_dim]，如下图，token0-9 对应的都是向量，以 ViT-B&#x2F;16 为例，每个 token 向量长度为 768。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202306121101761.png"/></div>
+
+<p>对于图像数据而言，其数据格式为[H, W, C]是三维矩阵明显不是 Transformer 想要的。所以需要先通过一个 Embedding 层来对数据做个变换。如下图所示，首先将一张图片按给定大小分成一堆 Patches。以 ViT-B&#x2F;16 为例，将输入图片(224x224)按照 16x16 大小的 Patch 进行划分，划分后会得到$(224&#x2F;16)^2&#x3D;196$  Patches。接着通过线性映射将每个 Patch 映射到一维向量中，以 ViT-B&#x2F;16 为例，每个 Patche 数据 shape 为[16, 16, 3]通过映射得到一个长度为 768 的向量（后面都直接称为 token）。<code>[16, 16, 3] -&gt; [768]</code></p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141442669.png"/></div>
+
+<p><strong>在代码实现中，直接通过一个卷积层来实现</strong>。 以 ViT-B&#x2F;16 为例，直接使用一个卷积核大小为 16x16，步距为 16，卷积核个数为 768 的卷积来实现。通过卷积<code>[224, 224, 3] -&gt; [14, 14, 768]</code>，然后把 H 以及 W 两个维度展平即可<code>[14, 14, 768] -&gt; [196, 768]</code>，此时正好变成了一个二维矩阵，正是 Transformer 想要的。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141444086.png"/></div>
+
+<p><strong>在输入 Transformer Encoder 之前注意需要加上[class]token 以及 Position Embedding</strong>。 在原论文中，作者说参考 BERT，在刚刚得到的一堆 tokens 中插入一个专门用于分类的[class]token，这个[class]token 是一个可训练的参数，数据格式和其他 token 一样都是一个向量，以 ViT-B&#x2F;16 为例，就是一个长度为 768 的向量，与之前从图片中生成的 tokens 拼接在一起，<code>Cat([1, 768], [196, 768]) -&gt; [197, 768]</code>。然后关于 Position Embedding 就是之前 Transformer 中讲到的 Positional Encoding，这里的 Position Embedding 采用的是一个可训练的参数（<code>1D Pos. Emb.</code>），是直接叠加在 tokens 上的（add），所以 shape 要一样。以 ViT-B&#x2F;16 为例，刚刚拼接[class]token 后 shape 是<code>[197, 768]</code>，那么这里的 Position Embedding 的 shape 也是<code>[197, 768]</code>。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202306121126617.png"/></div>
+
+<p>在 Bert（及其它 NLP 任务中）：</p>
+<p>输入 &#x3D; <strong>token_embedding</strong>(将单个词转变为词向量) +<strong>position_embedding</strong>(位置编码，用于表示 token 在输入序列中的位置) + <strong>segment_emebdding</strong>(非必须，在 bert 中用于表示每个词属于哪个句子)。</p>
+<p><strong>在 ViT 中，同样存在 token_embedding 和 postion_emebedding</strong>。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141659539.png"/></div>
+
+<h4 id="2-1-1-Token-Emebdding"><a href="#2-1-1-Token-Emebdding" class="headerlink" title="2.1.1 Token Emebdding"></a>2.1.1 Token Emebdding</h4><p>我们记 token emebdding 为$E$，则$E$ 一个形状为<code>(768, 768)</code>的矩阵。</p>
+<p>由前文知经过 patch 处理后输入$X$ 形状为<code>(196, 768)</code>，则输入$X$  toke*embedding 后的结果为：</p>
+<p>$$X_{TE}&#x3D;X_E&#x3D;(196,768)_(768,768)&#x3D;(196,768)$$</p>
+<p><strong>你可能想问，输入 $X$ 本来就是一个</strong><code>(196，768)</code><strong>的矩阵啊，我为什么还要过一次 embedding 呢？</strong></p>
+<p><strong>这个问题的关键不在于数据的维度，而在于 embedding 的含义</strong>。原始的$X$ 是由数据预处理而来，和主体模型毫无关系。而 token_embedding 却参与了主体模型训练中的梯度更新，在使用它之后，能更好地表示出 token 向量。更进一步，$E$ 维度可以表示成(768, x)的形式，也就是第二维不一定要是 768，你可以自由设定词向量的维度。</p>
+<h4 id="2-1-2-Position-Embedding（位置向量）"><a href="#2-1-2-Position-Embedding（位置向量）" class="headerlink" title="2.1.2 Position Embedding（位置向量）"></a>2.1.2 Position Embedding（位置向量）</h4><p>记位置向量为$E_{pos}$，则它是一个形状为<code>(196，768)</code>的矩阵，表示 196 个维度为 768 的向量，<strong>每个向量表示对应 token 的位置信息</strong>。</p>
+<p>构造位置向量的方法有很多种，在 ViT 中，作者做了不同的消融实验，来验证不同方案的效果（论文附录 D.4）部分。在源码中默认使用的是<code>1D Pos. Emb.</code>，对比不使用Position Embedding准确率提升了大概3个点，和<code>2D Pos. Emb.</code>比起来没太大差别。</p>
+<p><strong>方案一：不添加任何位置信息</strong></p>
+<p>将输入视为一堆无序的 patch，不往其中添加任何位置向量。</p>
+<p><strong>方案二：使用 1-D 绝对位置编码</strong></p>
+<p>也就是我们在上文介绍的方案，这也是 ViT 最终选定的方案。1-D 绝对位置编码又分为<strong>函数式</strong>（Transformer 的三角函数编码，详情可参见<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454482273">这篇文章</a>）和<strong>可学习式</strong>（Bert 采用编码方式），ViT 采用的是后者。之所以被称为“绝对位置编码”，是因为位置向量代表的是 token 的绝对位置信息（例如第 1 个 token，第 2 个 token 之类）。</p>
+<p><strong>方案三：使用 2-D 绝对位置编码</strong></p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141635379.png"/></div>
+
+<p>如图所示，因为图像数据的特殊性，在 2-D 位置编码中，认为按全局绝对位置信息来表示一个 patch 是不足够的（如左侧所示），一个 patch 在 x 轴和 y 轴上具有不同含义的位置信息（如右侧所示）。因此，2-D 位置编码将原来的 PE 向量拆成两部分来分别训练。</p>
+<p><strong>方案四：相对位置编码（relative positional embeddings）</strong></p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141635383.png"/></div>
+
+<p>相对位置编码（RPE）的设计思想是**：我们不应该只关注patch的绝对位置信息，更应该关注patch间的相对位置信息**。如图所示，对于token4，它和其余每一个token间都存在相对位置关系，我们分别用 $w_{-3}, w_{-2}, … w_{1}$ 这5个向量来表示这种位置关系。</p>
+<p>那么接下来，<strong>只要在正常计算attention的过程中，将这5个向量当作bias添加到计算过程中（如图公式所示），我们就可以正常训练这些相对位置向量了</strong>。为了减少训练时的参数量，我们还可以做<strong>clip操作</strong>，在制定clip的步数$k$ 后，在$k$ 围之外的$w$ 们都用固定的$w$ 示。例如图中当$k&#x3D;2$ ，向token4的前方找，我们发现 $w_{-3}$ 已经在$k&#x3D;2$ 之外了，因此就可以用 $w_{-2}$ 来替代 $w_{-3}$ ，如果token1之前还有token，那么它们的w都可用 $w_{-2}$ 替代。向token4的后方找，发现大家都在$k&#x3D;2$ 之内，因此无需做任何替换操作。</p>
+<p>关于相对位置编码的更多信息，可以阅读<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1803.02155.pdf">原始论文</a></p>
+<h5 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h5><p>这四种位置编码方案的实验结果如下：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141635451.png"/></div>
+
+<p>可以发现除了“不加任何位置编码”的效果显著低之外，其余三种方案的结果都差不多。所以作者们当然选择最快捷省力的 1-D 位置编码方案啦。当你在阅读 ViT 的论文中，会发现大量的消融实验细节（例如分类头<code>&lt;cls&gt;</code>要怎么加），<strong>作者这样做的目的也很明确：“我们的方案是在诸多可行的方法中，逐一做实验比对出来的，是全面考虑后的结果</strong>。”这也是我一直觉得这篇论文在技术之外值得借鉴和反复读的地方。</p>
+<h3 id="2-2-为什么要处理成-patch"><a href="#2-2-为什么要处理成-patch" class="headerlink" title="2.2 为什么要处理成 patch"></a>2.2 为什么要处理成 patch</h3><p><strong>第一个原因，是为了减少模型计算量。</strong><br>在Transformer中，假设输入的序列长度为$N$，那么经过attention时，计算复杂度就为 $O(N^{2})$ ，因为注意力机制下，每个token都要和包括自己在内的所有token做一次attention score计算。<br>在ViT中， $O(N^{2})$ ，当patch尺寸$P$ 小时，$N$ 大，此时模型的计算量也就越大。因此，我们需要找到一个合适的$P$ ，来减少计算压力。</p>
+<p><strong>第二个原因，是图像数据带有较多的冗余信息。</strong><br>和语言数据中蕴含的丰富语义不同，像素本身含有大量的冗余信息。比如，相邻的两个像素格子间的取值往往是相似的。因此我们并不需要特别精准的计算粒度（比如把$P$ 为1）。这个特性也是之后MAE，MoCo之类的像素级预测模型能够成功的原因之一。</p>
+<h3 id="2-3-Transformer-Encoder-详解"><a href="#2-3-Transformer-Encoder-详解" class="headerlink" title="2.3 Transformer Encoder 详解"></a>2.3 Transformer Encoder 详解</h3><p>Transformer Encoder 其实就是重复堆叠 Encoder Block $L$ 次，主要由以下几部分组成：</p>
+<ul>
+<li><strong>Layer Norm</strong>，这种 Normalization 方法主要是针对 NLP 领域提出的，这里是对每个 token 进行 Norm 处理，之前也有讲过 Layer Norm 不懂的可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37541097/article/details/117653177">链接</a></li>
+<li><strong>Multi-Head Attention</strong>，这个结构之前在讲 Transformer 中很详细的讲过，不在赘述，不了解的可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37541097/article/details/117691873">链接</a></li>
+<li><strong>Dropout&#x2F;DropPath</strong>，在原论文的代码中是直接使用的 Dropout 层，但在<code>rwightman</code>实现的代码中使用的是 DropPath（stochastic depth），可能后者会更好一点。</li>
+<li><strong>MLP Block</strong>，如图右侧所示，就是全连接+GELU 激活函数+Dropout 组成也非常简单，需要注意的是第一个全连接层会把输入节点个数翻 4 倍<code>[197, 768] -&gt; [197, 3072]</code>，第二个全连接层会还原回原节点个数<code>[197, 3072] -&gt; [197, 768]</code></li>
+</ul>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202306121056396.png"/></div>
+
+<h3 id="2-4-MLP-Head-详解"><a href="#2-4-MLP-Head-详解" class="headerlink" title="2.4 MLP Head 详解"></a>2.4 MLP Head 详解</h3><p>上面通过 Transformer Encoder 后输出的 shape 和输入的 shape 是保持不变的，以 ViT-B&#x2F;16 为例，输入的是<code>[197, 768]</code>输出的还是<code>[197, 768]</code>。注意，在 Transformer Encoder 后其实还有一个 Layer Norm 没有画出来，后面有我自己画的 ViT 的模型可以看到详细结构。这里我们只是需要分类的信息，所以我们只需要提取出[class]token 生成的对应结果就行，即<code>[197, 768]</code>中抽取出[class]token 对应的<code>[1, 768]</code>。接着我们通过 MLP Head 得到我们最终的分类结果。MLP Head 原论文中说在训练 ImageNet21K 时是由<code>Linear</code>+<code>tanh激活函数</code>+<code>Linear</code>组成。但是迁移到 ImageNet1K 上或者你自己的数据上时，只用一个<code>Linear</code>即可。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202306121056600.png" alt="mlp head" style="zoom:67%;" /></div>
+
+<p><strong>网络结构详细图(以 ViT-B&#x2F;16 为例)</strong></p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202306121128006.png"/></div>
+
+<blockquote>
+<p>算法结构图左侧 Patch Embedding 的 shape 是 196*768</p>
+</blockquote>
+<h2 id="三-Hybrid-模型详解"><a href="#三-Hybrid-模型详解" class="headerlink" title="三 Hybrid 模型详解"></a>三 Hybrid 模型详解</h2><p>在论文 4.1 章节的<code>Model Variants</code>中有比较详细的讲到 Hybrid 混合模型，就是将传统 CNN 特征提取和 Transformer 进行结合。下图绘制的是以 ResNet50 作为特征提取器的混合模型，但这里的 Resnet 与之前讲的 Resnet 有些不同。首先这里的 R50 的卷积层采用的 StdConv2d 不是传统的 Conv2d，然后将所有的 BatchNorm 层替换成 GroupNorm 层。在原 Resnet50 网络中，stage1 重复堆叠 3 次，stage2 重复堆叠 4 次，stage3 重复堆叠 6 次，stage4 重复堆叠 3 次，但在这里的 R50 中，把 stage4 中的 3 个 Block 移至 stage3 中，所以 stage3 中共重复堆叠 9 次。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20241221153222.png" style="zoom: 80%;" /></div>
+
+<p>通过 R50 Backbone 进行特征提取后，得到的特征矩阵 shape 是<code>[14, 14, 1024]</code>，接着再输入 Patch Embedding 层，注意 Patch Embedding 中卷积层 Conv2d 的 kernel_size 和 stride 都变成了 1，只是用来调整 channel。后面的部分和前面 ViT 中讲的完全一样，就不在赘述。</p>
+<p>下表是论文用来对比 ViT，Resnet（和刚刚讲的一样，使用的卷积层和 Norm 层都进行了修改）以及 Hybrid 模型的效果。通过对比发现，在训练 epoch 较少时 Hybrid 优于 ViT，但当 epoch 增大后 ViT 优于 Hybrid。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202306121056812.png"/></div>
+
+<h2 id="四-模型架构的数学表达"><a href="#四-模型架构的数学表达" class="headerlink" title="四 模型架构的数学表达"></a>四 模型架构的数学表达</h2><p>训练中的计算过程：</p>
+<p>$$<br>\begin{align}<br>z_0 &amp;&#x3D; \begin{bmatrix}<br>x_{\text{class&#125;&#125;; x_p^1 \mathbf{E}; x_p^2 \mathbf{E}; \cdots; x_p^N \mathbf{E}<br>\end{bmatrix} + \mathbf{E}<em>{\text{pos&#125;&#125;, \mathbf{E} \in \mathbb{R}^{(P^2 \cdot C) \times D}, \quad \mathbf{E}</em>{\text{pos&#125;&#125; \in \mathbb{R}^{(N+1) \times D}, \tag{1} \<br>z_\ell’ &amp;&#x3D; \text{MSA}(\text{LN}(z_{\ell-1})) + z_{\ell-1}, \quad \ell &#x3D; 1 \ldots L, \tag{2} \<br>z_\ell &amp;&#x3D; \text{MLP}(\text{LN}(z_\ell’)) + z_\ell’, \quad \ell &#x3D; 1 \ldots L, \tag{3} \<br>y &amp;&#x3D; \text{LN}(z_L^0). \tag{4}<br>\end{align}<br>$$</p>
+<ul>
+<li>$x_p^i$：第 i 块 patch</li>
+<li>$E,E_{pos}$：Token Embedding，1-D Positional Embedding</li>
+<li>$x_{class}$：和 Bert 类似，是额外加的一个分类头</li>
+<li>$z_0$：最终 ViT 的输入</li>
+</ul>
+<p>(1)即是我们说的图像预处理过程,(2)即是计算 multi-head attention 的过程，(3)是计算 MLP 的过程。(4)是最终分类任务，LN 表示是一个简单的线性分类模型，$z_0$ 是<code>&lt;cls&gt;</code>对应的向量。</p>
+<h2 id="五-ViT-效果"><a href="#五-ViT-效果" class="headerlink" title="五 ViT 效果"></a>五 ViT 效果</h2><h3 id="5-1-不同-ViT-模型的表示符号"><a href="#5-1-不同-ViT-模型的表示符号" class="headerlink" title="5.1 不同 ViT 模型的表示符号"></a>5.1 不同 ViT 模型的表示符号</h3><h3 id="5-2-ViT-VS-卷积神经网络"><a href="#5-2-ViT-VS-卷积神经网络" class="headerlink" title="5.2 ViT VS 卷积神经网络"></a>5.2 ViT VS 卷积神经网络</h3><p>既然 ViT 的目的是替换卷积神经网络，那么当然要比较一下它和目前 SOTA 的卷积网络间的性能了。</p>
+<p>作者选取了 ResNet 和 Noisy Student 这两种经典高性能的卷积神经网络与 ViT 进行比较，比较内容为<strong>预测图片类别的准确性</strong>与<strong>训练时长</strong>，结果如下：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141709960.png"/></div>
+
+<p>前三列 Ours-JFT(ViT-H&#x2F;14)，Ours-JFT(ViT-L&#x2F;16)，Ours-I12K(ViT-L&#x2F;16)表示三个 ViT 预训练模型，它们分别在不同规模和不同数据集（JFT, I12K）上预训练而来。后两列表示两个卷积神经网络模型。</p>
+<p>纵向的 ImageNet，ImageNet Real 等表示不同的图像数据集，当我们的 ViT 模型和卷积模型预训练好后，我们就可以借助这些 pretrain 模型，在图像数据集上做 fine-tune，而表格里给出的就是 fine-tune 后的准确率。</p>
+<p>观察表格，我们发现一个有趣的现象**：ViT 和卷积神经网络相比，表现基本一致**。关于这一点，我们会在下文详细分析。虽然准确率没有突出表现，但是训练时间上 ViT 的还是有亮点的，表格最后一行表示，假设用单块 TPU 训练模型，所需要的天数。我们发现 ViT 最高也只需要 2500 核-天（当然其实这个值也不小啦），卷积网络要花至 9900 核-天以上。所以 ViT 的一个优势在于，训练没那么贵了。关于这点，我的猜想是基于 Transformer 架构的 ViT，和卷积神经网络相比，更适合做<strong>切分均匀</strong>的矩阵计算，这样我们就能把参数均匀切到不同卡上做分布式训练，更好利用 GPU 算力，平衡整个训练系统了。</p>
+<p>现在，我们回到刚才的问题，<strong>为什么 ViT 相比卷积网络，在准确率上没有突出优势？<strong>为了解答这个问题，我们先来看卷积神经网络的</strong>归纳偏置（inductive biases）</strong></p>
+<h4 id="5-2-1-卷积神经网络的归纳偏置"><a href="#5-2-1-卷积神经网络的归纳偏置" class="headerlink" title="5.2.1 卷积神经网络的归纳偏置"></a>5.2.1 卷积神经网络的归纳偏置</h4><p><strong>归纳偏置用大白话来说，就是一种假设，或者说一种先验知识。有了这种先验，我们就能知道哪一种方法更适合解决哪一类任务。所以归纳偏置是一种统称，不同的任务其归纳偏置下包含的具体内容不一样。</strong><br>对图像任务来说，它的归纳偏置有以下两点：  </p>
+<ul>
+<li><strong>空间局部性（locality）</strong>：假设一张图片中，相邻的区域是有相关特征的。比如太阳和天空就经常一起出现。</li>
+<li><strong>平移等边性（translation equivariance）</strong>： $f(g(x)) &#x3D; g(f(x)), f&#x3D;卷积, g&#x3D;平$ 。假设一张图中，左上角有一个太阳，你对这张图正常做卷积得到特征图，则左上角的卷积可表示为 $f(x)$ ，做完卷积后，你想把左上角的特征图移动到右上角去，则你这一顿操作可以用 $g(f(x))$ 来表示。这一系列操作等同于，你先把左上角的太阳移动到右上角去( $g(x)$ )，然后再做卷积 $f(g(x))$ ，这就是图像的平移等边性。不论物体移动到哪里，只要给卷积核的输入不变，那么输出也是一致的。</li>
+</ul>
+<p>在这两种先验假设下，CNN成为了图像任务最佳的方案之一。<strong>卷积核能最大程度保持空间局部性（保存相关物体的位置信息）和平移等边性</strong>，使得在训练过程中，最大限度学习和保留原始图片信息。  </p>
+<p>好，那么现在，如果说ViT相比于卷积，在图像任务上没有显著优势，那大概率ViT对这两种先验的维护没有CNN做的好，具体来看：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141709957.png"/></div>
+
+<p>图中箭头所指的两部分都属于同一栋建筑。在卷积中，我们可以用大小适当的卷积核将它们圈在一起。但是在ViT中，它们之间的位置却拉远了，如果我把patch再切分细一些，它们的距离就更远了。虽然attention可以学习到向量间的想关系，但是ViT在<strong>空间局部性</strong>的维护上，确实没有卷积做的好。而在<strong>平移等边性</strong>上，由于ViT需要对patch的位置进行学习，所以对于一个patch，当它位置变幻时，它的输出结果也是不一样的。<strong>所以，ViT的架构没有很好维护图像问题中的归纳偏置假设</strong>。  </p>
+<p>但是，这就意味着ViT没有翻盘的一天了吗？当然不是，<strong>不要忘了，Transformer架构的模型都有一个广为人知的特性：大力出奇迹</strong>。只要它见过的数据够多，它就能更好地学习像素块之间的关联性，当然也能抹去归纳偏置的问题。</p>
+<h4 id="5-2-2-ViT：大力出奇迹"><a href="#5-2-2-ViT：大力出奇迹" class="headerlink" title="5.2.2 ViT：大力出奇迹"></a>5.2.2 ViT：大力出奇迹</h4><p>作者当然也考虑到了这点，所以采用了不同数量的数据集，对 ViT 进行训练，效果如下：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141709961.png"/></div>
+
+<p>如图，横轴表示不同量级的数据集（越往右数据集越大），纵轴表示准确率。图中灰色阴影部分表示在相应数据集下，不同架构的卷积神经网络的准确率范围。<strong>可以发现，当数据集较小时，ViT表现明显弱于卷积网络。但当数据量级大于21k时，ViT的能力就上来了</strong>。</p>
+<h3 id="5-3-ViT-的-Attention-到底看到了什么"><a href="#5-3-ViT-的-Attention-到底看到了什么" class="headerlink" title="5.3 ViT 的 Attention 到底看到了什么"></a>5.3 ViT 的 Attention 到底看到了什么</h3><p>讲完了 ViT 的整体效果，我们来探究下 ViT 具体学到了什么，才能帮助它达到这样的效果。我们首先来看 attention 层。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141709934.png"/></div>
+
+<p>这张实验图刻画了ViT的16个multi-head attention学到的像素距离信息。横轴表示网络的深度，纵轴表示“平均注意力距离”，我们设第$i$ 和第$j$ 像素的平均注意力距离为 $d_{ij}$ ，真实像素距离为 $d_{ij}^{\prime}$ ，这两个像素所在patch某一个head上的attention score为 $a_{ij}$ ，则有： $d_{ij} &#x3D; a_{ij} * d_{ij}^{\prime}$ 。当 $d_{ij}$ 越大时，说明ViT的attention机制能让它关注到距离较远的两个像素，类似于CNN中的“扩大感受野”。  </p>
+<p>图中每一列上，都有16个彩色原点，它们分别表示16个head观测到的平均像素距离。由图可知，在浅层网络中，ViT还只能关注到距离较近的像素点，<strong>随着网络加深，ViT逐渐学会去更远的像素点中寻找相关信息了。这个过程就和用在CNN中用卷积逐层去扩大感受野非常相似</strong>。  </p>
+<p>下图的左侧表示原始的输入图片，右侧表示ViT最后一层看到的图片信息，可以清楚看见，ViT在最后一层已经学到了将注意力放到关键的物体上了，这是非常有趣的结论：  </p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141709564.png"/></div>
+
+<h3 id="5-4-ViT-的位置编码学到了什么"><a href="#5-4-ViT-的位置编码学到了什么" class="headerlink" title="5.4 ViT 的位置编码学到了什么"></a>5.4 ViT 的位置编码学到了什么</h3><p>我们在上文讨论过图像的<strong>空间局部性（locality）</strong>，即有相关性的物体（例如太阳和天空）经常一起出现。CNN采用卷积框取特征的方式，极大程度上维护了这种特性。<strong>其实，ViT也有维护这种特性的方法，上面所说的attention是一种，位置编码也是一种。</strong>  </p>
+<p>我们来看看ViT的位置编码学到了什么信息：  </p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202310141709547.png"/></div>
+
+<p>上图是<code>ViT-L/32</code>模型下的位置编码信息，图中每一个方框表示一个patch，图中共有7*7个patch。而每个方框内，也有一个7*7的矩阵，这个矩阵中的每一个值，表示当前patch的position embedding和其余对应位置的position embedding的余弦相似度。<strong>颜色越黄，表示越相似，也即patch和对应位置间的patch密切相关</strong>。</p>
+<p>注意到每个方框中，最黄的点总是当前patch所在位置，这个不难理解，因为自己和自己肯定是最相似的。除此以外<strong>颜色较黄的部分都是当前patch所属的行和列，以及以当前patch为中心往外扩散的一小圈。这就说明ViT通过位置编码，已经学到了一定的空间局部性</strong>。</p>
+<h2 id="六-总结：ViT-的意义何在"><a href="#六-总结：ViT-的意义何在" class="headerlink" title="六 总结：ViT 的意义何在"></a>六 总结：ViT 的意义何在</h2><p>到此为止，关于 ViT 模型，我们就介绍完毕了。一顿读下来，你可能有个印象：如果训练数据量不够多的话，看起来 ViT 也没比 CNN 好多少呀，ViT 的意义是什么呢？</p>
+<p><strong>这是个很好的问题**</strong>，因为在工业界，人们的标注数据量和算力都是有限的**，因此 CNN 可能还是首要选择。</p>
+<p>但是，ViT 的出现，不仅是用模型效果来考量这么简单，今天再来看这个模型，发现它的意义在于：</p>
+<ul>
+<li>证明了一个统一框架在不同模态任务上的表现能力。在 ViT 之前，NLP 的 SOTA 范式被认为是 Transformer，而图像的 SOTA 范式依然是 CNN。ViT 出现后，证明了用 NLP 领域的 SOTA 模型一样能解图像领域的问题，同时在论文中<strong>通过丰富的实验，证明了 ViT 对 CNN 的替代能力，同时也论证了大规模+大模型在图像领域的涌现能力</strong>（论文中没有明确指出这是涌现能力，但通过实验展现了这种趋势）。这也为后续两年多模态任务的发展奠定了基石。</li>
+<li>虽然 ViT 只是一个分类任务，但在它提出的几个月之后，立刻就有了用 Transformer 架构做检测（detection）和分割（segmentation）的模型。而不久之后，GPT 式的无监督学习，也在 CV 届开始火热起来。</li>
+<li>工业界上，对大部分企业来说，受到训练数据和算力的影响，预训练和微调一个 ViT 都是困难的，但是这不妨碍直接拿大厂训好的 ViT 特征做下游任务。同时，低成本的微调方案研究，在今天也层出不穷。</li>
+</ul>
+<h2 id="七-ViT改进"><a href="#七-ViT改进" class="headerlink" title="七 ViT改进"></a>七 ViT改进</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2203.09795">Three things everyone should know about Vision Transformers</a></li>
+</ol>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/488574791">关于ViT，你必须要知道的三点改进</a></p>
+</blockquote>
+<p>在迁移学习方面，即先在ImageNet上预训练，然后在其它分类数据集上finetune，这里测试了6个数据集，结果如下表所示，其中在较小的数据集上（CARS和Flowers，训练数据较少，类别少），只finetune attention层效果比finetune全部层要好一点。但是在其它较大一点的数据集上（INAT-18，INAT-19和CIFAR-100），只finetune attention层和finetune全部层存在较大的性能gap，而且也差于只finetune FFN层。这主要是因为这些数据集存在较多的ImageNet1K没有的新类别，需要更多的参数来学习，而attention层的参数只占整个模型的1&#x2F;3；对于较大的模型如ViT-L，其性能gap就较小一点，因为此时attention层参数也达到了finetune所需。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37541097/article/details/118242600?spm=1001.2014.3001.5501">Vision Transformer 详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2010.11929.pdf">https://arxiv.org/pdf/2010.11929.pdf</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV15P4y137jb/?spm_id_from=333.337.search-card.all.click">https://www.bilibili.com/video/BV15P4y137jb/?spm_id_from=333.337.search-card.all.click</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1803.02155.pdf">https://arxiv.org/pdf/1803.02155.pdf</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44166630/article/details/127429697">https://blog.csdn.net/qq_44166630/article/details/127429697</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XyUIAyO6OokK1lm4YByCLA">再读 ViT，还有多少细节是你不知道的</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/05.VisionTransformer/02.VIT%E8%A7%A3%E8%AF%BB/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/05.VisionTransformer/02.VIT%E8%A7%A3%E8%AF%BB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/VisionTransformer/">VisionTransformer</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/05.VisionTransformer/01.VIT%E5%85%A8%E6%96%87%E7%BF%BB%E8%AF%91/" title="VIT全文翻译"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">VIT全文翻译</div></div><div class="info-2"><div class="info-item-1">An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale0. 摘要虽然 Transformer 架构已成为自然语言处理任务的实际标准，但其在计算机视觉中的应用仍然有限。在视觉领域，注意力机制要么与卷积网络结合使用，要么用来替换卷积网络的某些部分，同时保持其整体结构不变。我们展示了这种对 CNNs 的依赖并非必要，直接应用于图像块序列的纯 Transformer 在图像分类任务上可以表现得非常好。当在大量数据上预训练并转移到多个中小规模的图像识别基准测试时（如 ImageNet、CIFAR-100、...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/06.%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/04.StableDiffusion/" title="StableDiffusion"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">StableDiffusion</div></div><div class="info-2"><div class="info-item-1">Author: [Hao Bai]  Link: [https://www.zhihu.com/question/536012286/answer/2671001607] 泻药。实验室最近人人都在做扩散，从连续到离散，从CV到NLP，基本上都被diffusion洗了一遍。但是观察发现，里面的数学基础并不是模型应用的必须。其实大部分的研究者都不需要理解扩散模型的数学本质，更需要的是对扩散模型的原理的经验化理解，从而应用到research里面去。笔者做VAE和diffussion也有一段时间了，就在这里通俗地解释一下diffusion的来龙去脉。  Variational AutoEncod...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/05.VisionTransformer/51.ViT_four%20secrets/" title="ViT_four secrets"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">ViT_four secrets</div></div><div class="info-2"><div class="info-item-1">Vision transformer: To discover the “four secrets” of image patches0. 摘要视觉Transformer（ViT）在计算机视觉领域被广泛使用，在 ViT 中，有四个主要步骤，即“四个秘密”，如图像块划分、标记选择、位置编码添加和注意力计算，现有的关于计算机视觉中Transformer的研究主要集中在上述四个步骤上。因此，“如何划分图像块？”、“如何选择标记？”、“如何添加位置编码？”和“如何计算注意力？”对于提高 ViT 性能至关重要。但到目前为止，大多数综述文献都是从应用的角度进行总结的，没有相应的文献从技术角度全面总结...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/05.VisionTransformer/00.ViT%E7%BB%BC%E8%BF%B0/" title="ViT综述"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">ViT综述</div></div><div class="info-2"><div class="info-item-1">Peeling Back the Layers: Interpreting the Storytelling of ViT MM 2024 ViT逐层解码：揭示图像理解过程  使用了Instruct-Blip作为基础模型，包含一个40层的图像编码器（EVA-CLIP-ViT）和一个大模型作为文本解码器，逐层逐头分析了ViT的内部结构。借鉴该思路分析一下ViT-B&#x2F;16。 </div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/05.VisionTransformer/01.VIT%E5%85%A8%E6%96%87%E7%BF%BB%E8%AF%91/" title="VIT全文翻译"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">VIT全文翻译</div></div><div class="info-2"><div class="info-item-1">An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale0. 摘要虽然 Transformer 架构已成为自然语言处理任务的实际标准，但其在计算机视觉中的应用仍然有限。在视觉领域，注意力机制要么与卷积网络结合使用，要么用来替换卷积网络的某些部分，同时保持其整体结构不变。我们展示了这种对 CNNs 的依赖并非必要，直接应用于图像块序列的纯 Transformer 在图像分类任务上可以表现得非常好。当在大量数据上预训练并转移到多个中小规模的图像识别基准测试时（如 ImageNet、CIFAR-100、...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/05.VisionTransformer/101.DyT/" title="DyT"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">DyT</div></div><div class="info-2"><div class="info-item-1">Dynamic Tuning Towards Parameter and Inference Efficiency for ViT Adaptation0. 摘要现有参数高效的微调（PEFT）方法在ViTs的适应性改进上取得了显著的成功，但在适应过程中提高推理效率的探索仍然不足。这限制了预训练 ViT 模型的更广泛应用，尤其是在模型计算密集的情况下。本文提出了一种新的方法 Dynamic Tuning（DyT），旨在提高 ViT 适应性的参数和推理效率。具体来说，除了使用轻量级适配器模块，我们还提出了一个令牌调度器来区分信息丰富的令牌和较不重要的令牌，允许后者动态跳过原始块，减少推理期间...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/05.VisionTransformer/102.Sparse-Tuning/" title="Sparse-Tuning"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Sparse-Tuning</div></div><div class="info-2"><div class="info-item-1">0. 摘要参数效率微调（PEFT）已成为适应预训练ViT模型到下游应用的流行解决方案。虽然当前的 PEFT 方法实现了参数效率，但它们忽视了在微调和推理期间的计算和 GPU 内存效率，未能满足实际需求。在本文中，我们提出了 Sparse-Tuning，这是一种新颖的 PEFT 方法，它考虑了图像和视频中的信息冗余，以提高上述效率。通过稀疏保留语义相关令牌并合并无关令牌，Sparse-Tuning 最小化了每个层处理的令牌数量，从而导致计算和内存开销的二次减少。为了使我们的令牌稀疏化策略与微调目的适当对齐，我们进一步设计了密集适配器，建立从浅层到深层的密集连接。这些密集适配器集成了多级局部...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/05.VisionTransformer/04.ViT%E5%BE%AE%E8%B0%83%E6%97%B6position_embedding%E6%8F%92%E5%80%BC/" title="ViT微调时position_embedding插值"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">ViT微调时position_embedding插值</div></div><div class="info-2"><div class="info-item-1">ViT 微调时position embedding如何插值（interpolate）【源码解析】 Author: [好耶]  Link: [https://zhuanlan.zhihu.com/p/592580783] 1. 问题描述本文适合对Vision Transformer有一定了解（知道内部结构和一些实现细节，最好是精读过ViT这篇论文）的读者阅读，这篇博客不会详细说明ViT的结构和前向推断过程。    符号 含义    b batch size   N patch size   H W 低分辨率图像的高和宽   H’ W’ 高分辨率图像的高和宽   So 低分辨率图像的sequ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Vision-Transformer-%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">Vision Transformer 详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E5%89%8D%E8%A8%80"><span class="toc-number">2.</span> <span class="toc-text">一 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-Vision-Transformer-%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text">二 Vision Transformer 模型详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Embedding-%E5%B1%82%E7%BB%93%E6%9E%84%E8%AF%A6%E8%A7%A3"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 Embedding 层结构详解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-1-Token-Emebdding"><span class="toc-number">3.1.1.</span> <span class="toc-text">2.1.1 Token Emebdding</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-2-Position-Embedding%EF%BC%88%E4%BD%8D%E7%BD%AE%E5%90%91%E9%87%8F%EF%BC%89"><span class="toc-number">3.1.2.</span> <span class="toc-text">2.1.2 Position Embedding（位置向量）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">3.1.2.1.</span> <span class="toc-text">实验结果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%A4%84%E7%90%86%E6%88%90-patch"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 为什么要处理成 patch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-Transformer-Encoder-%E8%AF%A6%E8%A7%A3"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 Transformer Encoder 详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-MLP-Head-%E8%AF%A6%E8%A7%A3"><span class="toc-number">3.4.</span> <span class="toc-text">2.4 MLP Head 详解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-Hybrid-%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">三 Hybrid 模型详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B-%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84%E7%9A%84%E6%95%B0%E5%AD%A6%E8%A1%A8%E8%BE%BE"><span class="toc-number">5.</span> <span class="toc-text">四 模型架构的数学表达</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94-ViT-%E6%95%88%E6%9E%9C"><span class="toc-number">6.</span> <span class="toc-text">五 ViT 效果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E4%B8%8D%E5%90%8C-ViT-%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%A1%A8%E7%A4%BA%E7%AC%A6%E5%8F%B7"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 不同 ViT 模型的表示符号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-ViT-VS-%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 ViT VS 卷积神经网络</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-1-%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E5%BD%92%E7%BA%B3%E5%81%8F%E7%BD%AE"><span class="toc-number">6.2.1.</span> <span class="toc-text">5.2.1 卷积神经网络的归纳偏置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-2-ViT%EF%BC%9A%E5%A4%A7%E5%8A%9B%E5%87%BA%E5%A5%87%E8%BF%B9"><span class="toc-number">6.2.2.</span> <span class="toc-text">5.2.2 ViT：大力出奇迹</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-ViT-%E7%9A%84-Attention-%E5%88%B0%E5%BA%95%E7%9C%8B%E5%88%B0%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 ViT 的 Attention 到底看到了什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-ViT-%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%AD%A6%E5%88%B0%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">6.4.</span> <span class="toc-text">5.4 ViT 的位置编码学到了什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD-%E6%80%BB%E7%BB%93%EF%BC%9AViT-%E7%9A%84%E6%84%8F%E4%B9%89%E4%BD%95%E5%9C%A8"><span class="toc-number">7.</span> <span class="toc-text">六 总结：ViT 的意义何在</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83-ViT%E6%94%B9%E8%BF%9B"><span class="toc-number">8.</span> <span class="toc-text">七 ViT改进</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">9.</span> <span class="toc-text">Reference</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

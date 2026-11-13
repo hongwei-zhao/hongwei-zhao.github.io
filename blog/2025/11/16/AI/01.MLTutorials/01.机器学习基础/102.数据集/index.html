@@ -1,0 +1,439 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>数据集 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Train &#x2F; Dev &#x2F; Test sets假设这是训练数据，我用一个长方形表示，我们通常会将这些数据划分成几部分  训练集： 训练模型 验证集（dev set）：选定模型 测试集：评估模型  在机器学习发展的小数据量时代，常见做法是将所有数据三七分，就是人们常说的 70%训练集，30%测试集。如果明确设置了验证集，也可以按照 60%训练集，20%验证集和 20%测试集来划分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据集">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/102.%E6%95%B0%E6%8D%AE%E9%9B%86/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="Train &#x2F; Dev &#x2F; Test sets假设这是训练数据，我用一个长方形表示，我们通常会将这些数据划分成几部分  训练集： 训练模型 验证集（dev set）：选定模型 测试集：评估模型  在机器学习发展的小数据量时代，常见做法是将所有数据三七分，就是人们常说的 70%训练集，30%测试集。如果明确设置了验证集，也可以按照 60%训练集，20%验证集和 20%测试集来划分">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.356Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="MLTutorials">
+<meta property="article:tag" content="机器学习基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "数据集",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/102.%E6%95%B0%E6%8D%AE%E9%9B%86/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.356Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/102.%E6%95%B0%E6%8D%AE%E9%9B%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '数据集',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">数据集</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">数据集</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.356Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/MLTutorials/">MLTutorials</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/MLTutorials/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/">机器学习基础</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Train-Dev-Test-sets"><a href="#Train-Dev-Test-sets" class="headerlink" title="Train &#x2F; Dev &#x2F; Test sets"></a>Train &#x2F; Dev &#x2F; Test sets</h2><p>假设这是训练数据，我用一个长方形表示，我们通常会将这些数据划分成几部分</p>
+<ul>
+<li>训练集： 训练模型</li>
+<li>验证集（dev set）：选定模型</li>
+<li>测试集：评估模型</li>
+</ul>
+<p>在机器学习发展的小数据量时代，常见做法是将所有数据三七分，就是人们常说的 70%训练集，30%测试集。如果明确设置了验证集，也可以按照 60%训练集，20%验证集和 20%测试集来划分。这是前几年机器学习领域普遍认可的最好的实践方法。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208160956940.png"></p>
+<p>如果只有 100 条，1000 条或者 1 万条数据，那么上述比例划分是非常合理的。</p>
+<p>但是在大数据时代，我们现在的数据量可能是百万级别，那么<strong>验证集和测试集占数据总量的比例会趋向于变得更小</strong>。因为验证集的目的就是验证不同的算法，检验哪种算法更有效，因此，验证集只要足够大到能评估不同的算法，比如 2 个甚至 10 个不同算法，并迅速判断出哪种算法更有效。我们可能不需要拿出 20%的数据作为验证集。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208160956268.png"></p>
+<p>比如我们有 100 万条数据，那么取 1 万条数据便足以进行评估，找出其中表现最好的 1-2 种算法。同样地，根据最终选择的分类器，测试集的主要目的是正确评估分类器的性能，所以，如果拥有百万数据，我们只需要 1000 条数据，便足以评估单个分类器，并且准确评估该分类器的性能。假设我们有 100 万条数据，其中 1 万条作为验证集，1 万条作为测试集，100 万里取 1 万，比例是 1%，即：训练集占 98%，验证集和测试集各占 1%。<strong>对于数据量过百万的应用，训练集可以占到 99.5%，验证和测试集各占 0.25%，或者验证集占 0.4%，测试集占 0.1%。</strong></p>
+<p>要确保验证集和测试集的数据来自同一分布，关于这个问题我也会多讲一些。因为你们要用验证集来评估不同的模型，尽可能地优化性能。如果验证集和测试集来自同一个分布就会很好。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208160956976.png"></p>
+<p>最后一点，就算没有测试集也不要紧，测试集的目的是对最终所选定的神经网络系统做出无偏估计，如果不需要无偏估计，也可以不设置测试集。所以如果只有验证集，没有测试集，我们要做的就是，在训练集上训练，尝试不同的模型框架，在验证集上评估这些模型，然后迭代并选出适用的模型。因为验证集中已经涵盖测试集数据，其不再提供无偏性能评估。当然，如果你不需要无偏估计，那就再好不过了。</p>
+<hr>
+<h2 id="划分方法"><a href="#划分方法" class="headerlink" title="划分方法"></a>划分方法</h2><h3 id="留出法"><a href="#留出法" class="headerlink" title="留出法"></a>留出法</h3><p>直接将数据集划分为两个互斥集合，注意保持数据分布的一致性（比如比例相似）。保留类别比例的采样方式又叫<strong>分层采样（stratified sampling）</strong>。举个例子，原始数据集有 100 个样本，假设训练集占 70 个，验证集占 30 个。若训练集中正例反例各 35 个，也即比例为<code>1:1</code>，那么验证集中就应该正例反例个 15 个，同样保持<code>1:1</code>的比例。当然，这个比例最好还是遵循原始数据集中数据的分布规律。</p>
+<p>单独一次留出法的结果往往不可靠，<strong>一般是进行多次随机划分</strong>，然后取各次评估的平均值作为评估结果。</p>
+<p>留出法最大的缺点就是要进行划分，当训练集占的比例较大时，模型可以更准确地刻画原始数据集的特征，但是因为验证集较小，评估的结果往往不稳定也不准确；当训练集占的比例较小时，训练出的模型又不能充分学习到原始数据集的特征，评估结果可信度不高。这个问题没有完美的解决方案，一般取数据集<strong>2&#x2F;3~4&#x2F;5</strong>的样本作为训练集，余下的作为验证集。</p>
+<h3 id="交叉验证"><a href="#交叉验证" class="headerlink" title="交叉验证"></a>交叉验证</h3><p>又称为<strong>k 折交叉验证（k-fold cross validation）</strong>，将数据集划分为 k 个互斥子集。每次使用 k-1 个子集的并集作为训练集，余下的一个子集作为验证集，这就构成了 k 组训练&#x2F;验证集，从而可以进行 k 次训练和验证。最终取 k 次验证的均值作为评估结果。常用的 k 值包括 5，10，20。类似于留出法，因为存在多种划分 k 个子集的方式，为了减少因不同的样本划分而引入的差别，需要进行多次 k 折交叉验证。例如 10 次 10 折交叉验证，指的是进行了总计 100 次训练和 100 次评估。特别地，令 k&#x3D;数据集样本数的交叉验证称为<strong>留一法（Leave-One-Out，简称 LOO）</strong>，即有多少样本就进行多少次训练&#x2F;验证，并且每次只留下一个样本做验证。这样做的好处是不需要担心随即样本划分带来的误差，因为这样的划分是唯一的。一般来说，留一法的评估结果被认为是比较准确的。但是！当数据集较大时，使用留一法需要训练的模型太多了！这种计算开销是难以忍受的！</p>
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208160956434.png" alt="image-20211127111739118" style="zoom:50%;" />
+
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209262005926.png" alt="image-20220926200526880"></p>
+<h3 id="自助法"><a href="#自助法" class="headerlink" title="自助法"></a>自助法</h3><p>在留出法和交叉验证法中，我们都需要对数据集进行划分，从而使得训练所用的数据集比源数据集小，引入了一些因规模不同而造成的偏差，有没有办法避免规模不同造成的影响呢？</p>
+<p><strong>自助法（bootstrapping）<strong>正是我们需要的答案，以</strong>自助采样（bootstrap sampling）<strong>为基础，对包含 m 个样本的源数据集进行有放回的 m 次采样以获得同等规模的训练集。在这 m 次采样中都不被抽到的概率大约为 0.368，也即源数据集中有大约 1&#x2F;3 的样本是训练集中没有的。因此，我们可以采用这部分样本作为验证集，所得的结果称为</strong>包外估计（out-of-bag estimate）</strong>。</p>
+<p><strong>注意</strong>，自助法适用于数据集小，难以划分训练&#x2F;验证集的情况。因为自助法能产生多个不同训练集，所以对集成学习也大有好处。但是！<strong>自助法改变了数据集的分布</strong>，也因此引入了一些额外的误差。因此，<strong>数据量足的时候还是留出法和交叉验证法用得多一些</strong>。</p>
+<h2 id="MNIST"><a href="#MNIST" class="headerlink" title="MNIST"></a>MNIST</h2><p>链接：<a href="https://link.zhihu.com/?target=https://datahack.analyticsvidhya.com/contest/practice-problem-identify-the-digits/">https://datahack.analyticsvidhya.com/contest/practice-problem-identify-the-digits/</a></p>
+<p>MNIST 是最流行的深度学习数据集之一。这是一个手写数字数据集，包含一个有着 60000 样本的训练集和一个有着 10000 样本的测试集。</p>
+<p>大小：约 50 MB 数量：70000 张图像，共分为 10 个类别</p>
+<h2 id="MS-COCO"><a href="#MS-COCO" class="headerlink" title="MS-COCO"></a>MS-COCO</h2><p>链接：<a href="https://link.zhihu.com/?target=http://cocodataset.org/%23home">http://cocodataset.org/#home</a></p>
+<p>COCO 是一个大型数据集，用于目标检测、分割和标题生成。它有以下几个特征：</p>
+<p>目标分割</p>
+<p>在语境中识别</p>
+<p>超像素物品分割</p>
+<p>33 万张图像（其中超过 20 万张是标注图像）</p>
+<p>150 万个目标实例</p>
+<p>80 个目标类别</p>
+<p>91 个物品分类</p>
+<p>每张图像有 5 个标题</p>
+<p>25 万张带有关键点的人像</p>
+<p>大小：约 25 GB（压缩后） 数量：33 万张图像、80 个目标类别、每张图像 5 个标题、25 万张带有关键点的人像</p>
+<h2 id="ImageNet"><a href="#ImageNet" class="headerlink" title="ImageNet"></a>ImageNet</h2><p>链接：<a href="https://link.zhihu.com/?target=http://www.image-net.org/">http://www.image-net.org/</a></p>
+<p>ImageNet 是根据 WordNet 层次来组织的图像数据集。WordNet 包含大约 10 万个短语，而 ImageNet 为每个短语提供平均约 1000 张描述图像。</p>
+<ul>
+<li><p>大小：约 150 GB</p>
+</li>
+<li><p>数量：图像的总数约为 1,500,000；</p>
+</li>
+<li><p>每一张图像都具备多个边界框和各自的类别标签。</p>
+</li>
+<li><p><code>imagenet-1k</code>是 ISLVRC2012 的数据集，训练集大约是 1281167 张+标签，验证集是 50000 张图片加标签，最终打分的测试集是 100000 张图片，一共 1000 个类别。</p>
+</li>
+<li><p><code>imagenet-21k</code>是 WordNet 架构组织收集的所有图片，大约 1400 万张，2.1 万个类。多用于自监督预训练，比如 ViT。与 ImageNet-1k 相比，ImageNet-21k 具有更高的类别多样性，但它的标签质量可能较低，因为类别不是相互独立的，并且存在多个层级。此外，由于类别的不平衡性，处理起来会相对复杂一些。</p>
+</li>
+</ul>
+<h3 id="官网下载"><a href="#官网下载" class="headerlink" title="官网下载"></a>官网下载</h3><p><a target="_blank" rel="noopener" href="https://www.image-net.org/">ImageNet</a></p>
+<p>在官方网站注册账号，注册时最好使用教育邮箱(.edu )之后。按照流程申请，收到邮件之后可以就可以在 Download界面里下数据。</p>
+<p>点进去之后，下载如下三个压缩包（图片分类任务用这三个足够了）</p>
+<h3 id="数据解压"><a href="#数据解压" class="headerlink" title="数据解压"></a>数据解压</h3><p>下载完毕后把 Development kit 留着备用，我们会得到训练集与验证集的两个压缩包，分别是 <code>ILSVRC2012_img_train.tar</code> 和 <code>ILSVRC2012_img_val.tar</code>。</p>
+<p>首先创建两个用于放训练集和测试集的文件夹，然后解压：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> train<br><span class="hljs-built_in">mkdir</span> val<br>tar xvf ILSVRC2012_img_train.tar -C ./train<br>tar xvf ILSVRC2012_img_val.tar -C ./val<br></code></pre></td></tr></table></figure>
+
+<p>对于train的压缩包，解压之后其实还是1000个tar压缩包（对应1000个类别），需要再次解压，解压脚本unzip.sh如下（PS：可能需要自己改一下目录 dir ）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">dir</span>=./train <br><span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> `<span class="hljs-built_in">ls</span> <span class="hljs-variable">$dir</span>/*tar` <span class="hljs-keyword">do</span>     <br>  filename=`<span class="hljs-built_in">basename</span> <span class="hljs-variable">$x</span> .tar`     <br>  <span class="hljs-built_in">mkdir</span> <span class="hljs-variable">$dir</span>/<span class="hljs-variable">$filename</span>     <br>  tar -xvf <span class="hljs-variable">$x</span> -C <span class="hljs-variable">$dir</span>/<span class="hljs-variable">$filename</span> <br><span class="hljs-keyword">done</span> <br><span class="hljs-built_in">rm</span> *.tar<br></code></pre></td></tr></table></figure>
+
+<p>执行脚本之后，我们就获得了1000个文件夹和对应的图片数据啦~截至目前，我们已经把所有的 JPEG 图片搞了出来。</p>
+<h3 id="数据标签"><a href="#数据标签" class="headerlink" title="数据标签"></a>数据标签</h3><p>对于训练集，不同类别的数据躺在不同的文件夹里，用起来很方便（同一文件夹的视为一类）。但是验证集没有对应的标签，需要额外处理。</p>
+<p>验证集的标签在 Development kit （文件名为 <code>ILSVRC2012_devkit_t12.tar.gz</code>）中的<code>ILSVRC2012_devkit_t12\data\ILSVRC2012_validation_ground_truth.txt</code> 中：</p>
+<p>但是新的问题又来了，那就是这个数字和文件夹的名字虽然是一一对应的，但还是需要额外的映射……好在映射关系储存在和txt文件同目录下的 <code>meta.mat</code> 文件中。我们希望验证集的文件结构长得和训练集一样，即 :  </p>
+<ul>
+<li>&#x2F;val<ul>
+<li>&#x2F;n01440764<ul>
+<li>images</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>&#x2F;n01443537<ul>
+<li>images</li>
+</ul>
+</li>
+</ul>
+<p>因此，我们首先解压 devkit 压缩包，把我们需要的东西取出来：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -xzf ILSVRC2012_devkit_t12.tar.gz<br></code></pre></td></tr></table></figure>
+
+<p>之后，在imagenet目录（devkit和val的根目录下）创建并运行如下 python 脚本  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> scipy <span class="hljs-keyword">import</span> io<br><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> shutil<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">move_valimg</span>(<span class="hljs-params">val_dir=<span class="hljs-string">&#x27;./val&#x27;</span>, devkit_dir=<span class="hljs-string">&#x27;./ILSVRC2012_devkit_t12&#x27;</span></span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    move valimg to correspongding folders.</span><br><span class="hljs-string">    val_id(start from 1) -&gt; ILSVRC_ID(start from 1) -&gt; WIND</span><br><span class="hljs-string">    organize like:</span><br><span class="hljs-string">    /val</span><br><span class="hljs-string">       /n01440764</span><br><span class="hljs-string">           images</span><br><span class="hljs-string">       /n01443537</span><br><span class="hljs-string">           images</span><br><span class="hljs-string">        .....</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># load synset, val ground truth and val images list</span><br>    synset = io.loadmat(os.path.join(devkit_dir, <span class="hljs-string">&#x27;data&#x27;</span>, <span class="hljs-string">&#x27;meta.mat&#x27;</span>))<br>    <br>    ground_truth = <span class="hljs-built_in">open</span>(os.path.join(devkit_dir, <span class="hljs-string">&#x27;data&#x27;</span>, <span class="hljs-string">&#x27;ILSVRC2012_validation_ground_truth.txt&#x27;</span>))<br>    lines = ground_truth.readlines()<br>    labels = [<span class="hljs-built_in">int</span>(line[:-<span class="hljs-number">1</span>]) <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> lines]<br>    <br>    root, _, filenames = <span class="hljs-built_in">next</span>(os.walk(val_dir))<br>    <span class="hljs-keyword">for</span> filename <span class="hljs-keyword">in</span> filenames:<br>        <span class="hljs-comment"># val image name -&gt; ILSVRC ID -&gt; WIND</span><br>        val_id = <span class="hljs-built_in">int</span>(filename.split(<span class="hljs-string">&#x27;.&#x27;</span>)[<span class="hljs-number">0</span>].split(<span class="hljs-string">&#x27;_&#x27;</span>)[-<span class="hljs-number">1</span>])<br>        ILSVRC_ID = labels[val_id-<span class="hljs-number">1</span>]<br>        WIND = synset[<span class="hljs-string">&#x27;synsets&#x27;</span>][ILSVRC_ID-<span class="hljs-number">1</span>][<span class="hljs-number">0</span>][<span class="hljs-number">1</span>][<span class="hljs-number">0</span>]<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;val_id:%d, ILSVRC_ID:%d, WIND:%s&quot;</span> % (val_id, ILSVRC_ID, WIND))<br><br>        <span class="hljs-comment"># move val images</span><br>        output_dir = os.path.join(root, WIND)<br>        <span class="hljs-keyword">if</span> os.path.isdir(output_dir):<br>            <span class="hljs-keyword">pass</span><br>        <span class="hljs-keyword">else</span>:<br>            os.mkdir(output_dir)<br>        shutil.move(os.path.join(root, filename), os.path.join(output_dir, filename))<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    move_valimg()<br></code></pre></td></tr></table></figure>
+
+<h3 id="用Pytorch加载"><a href="#用Pytorch加载" class="headerlink" title="用Pytorch加载"></a>用Pytorch加载</h3><p>使用 torchvision.datasets.ImageFolder() 就可以直接加载处理好的数据集</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torchvision.datasets <span class="hljs-keyword">as</span> datasets<br><br>root = <span class="hljs-string">&#x27;data/imagenet&#x27;</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_imagenet</span>(<span class="hljs-params">root, train = <span class="hljs-literal">True</span>, transform = <span class="hljs-literal">None</span>, target_transform = <span class="hljs-literal">None</span></span>):<br>    <span class="hljs-keyword">if</span> train:<br>        root = os.path.join(root, <span class="hljs-string">&#x27;train&#x27;</span>)<br>    <span class="hljs-keyword">else</span>:<br>        root = os.path.join(root, <span class="hljs-string">&#x27;val&#x27;</span>)<br>    <span class="hljs-keyword">return</span> datasets.ImageFolder(root = root,<br>                               transform = transform,<br>                               target_transform = target_transform)<br></code></pre></td></tr></table></figure>
+
+<h2 id="ImageNet-R"><a href="#ImageNet-R" class="headerlink" title="ImageNet-R"></a>ImageNet-R</h2><p>ImageNet-R 全称 ImageNet-Rendition，是 ImageNet 数据集的拓展。 ImageNet-R 数据集包含对多个 ImageNet 类别（艺术、卡通、 DIYART 、涂鸦、刺绣、图形、折纸、绘画、图案、塑料制品、毛绒制品、雕塑、素描、纹身、玩具和视频游戏等）的演绎。</p>
+<p>ImageNet-R 数据集涉及对 200 个 ImageNet 类别的演绎，产生了 30,000 张图像。</p>
+<h2 id="OpenImages-数据集"><a href="#OpenImages-数据集" class="headerlink" title="OpenImages 数据集"></a>OpenImages 数据集</h2><p>链接：<a href="https://link.zhihu.com/?target=https://github.com/openimages/dataset">https://github.com/openimages/dataset</a></p>
+<p>Open Images 是一个包含近 900 万个图像 URL 的数据集。这些图像使用包含数千个类别的图像级标签边界框进行了标注。该数据集的训练集包含 9,011,219 张图像，验证集包含 41,260 张图像，测试集包含 125,436 张图像。</p>
+<p>大小：500GB（压缩后） 数量：9,011,219 张图像，带有超过 5000 个标签</p>
+<h2 id="CIFAR-10"><a href="#CIFAR-10" class="headerlink" title="CIFAR-10"></a>CIFAR-10</h2><p>链接：<a href="https://link.zhihu.com/?target=http://www.cs.toronto.edu/~kriz/cifar.html">http://www.cs.toronto.edu/~kriz&#x2F;cifar.html</a></p>
+<p>该数据集也用于图像分类。它由 10 个类别共计 60,000 张图像组成（每个类在上图中表示为一行）。该数据集共有 50,000 张训练集图像和 10,000 个测试集图像。数据集分为 6 个部分——5 个训练批和 1 个测试批。每批含有 10,000 张图像。</p>
+<p>大小：170MB 数量：60,000 张图像，共 10 类</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209141536043.png" alt="Untitled"></p>
+<p>CIFAR-10 是一个更接近普适物体的彩色图像数据集。CIFAR-10 是由 Hinton 的学生 Alex Krizhevsky 和 Ilya Sutskever 整理的一个用于识别普适物体的小型数据集。</p>
+<p>一共包含 10 个类别的 RGB 彩色图片：飞机（ airplane ）、汽车（ automobile ）、鸟类（ bird ）、猫（ cat ）、鹿（ deer ）、狗（ dog ）、蛙类（ frog ）、马（ horse ）、船（ ship ）和卡车（ truck ）。</p>
+<p>每个图片的尺寸为 32 × 32 ，每个类别有 6000 个图像，数据集中一共有 50000 张训练图片和 10000 张测试图片。</p>
+<p><strong>数据文件名及用途</strong></p>
+<p>在 CIFAR-10 数据集中，文件 data<em>batch_1.bin、data_batch_2.bin 、··data_batch_5.bin 和 test</em> batch.bin 中各有 10000 个样本。一个样本由 3073 个字节组成，第一个字节为标签 label ，剩下 3072 个字节为图像数据。样本和样本之间没高多余的字节分割， 因此这几个二进制文件的大小都是 30730000 字节。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209141536507.png"/></div>
+
+<h2 id="CIL-数据集整理"><a href="#CIL-数据集整理" class="headerlink" title="CIL 数据集整理"></a>CIL 数据集整理</h2><table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Domain Similarity</th>
+<th>Classes</th>
+<th>Train</th>
+<th>Train&#x2F;Class</th>
+<th>Validation</th>
+<th>Test</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CropDiseases</td>
+<td>0.386</td>
+<td>35</td>
+<td>34260</td>
+<td>978</td>
+<td>8566</td>
+<td>10692</td>
+</tr>
+<tr>
+<td>ChestX</td>
+<td>0.39</td>
+<td>6</td>
+<td>7252</td>
+<td>1208</td>
+<td>2417</td>
+<td>2417</td>
+</tr>
+<tr>
+<td>ISIC</td>
+<td>0.409</td>
+<td>6</td>
+<td>5940</td>
+<td>990</td>
+<td>1980</td>
+<td>1980</td>
+</tr>
+<tr>
+<td>RESISC45</td>
+<td>0.432</td>
+<td>45</td>
+<td>18900</td>
+<td>420</td>
+<td>6300</td>
+<td>6300</td>
+</tr>
+<tr>
+<td>EuroSAT</td>
+<td>0.444</td>
+<td>10</td>
+<td>16200</td>
+<td>1620</td>
+<td>5400</td>
+<td>5400</td>
+</tr>
+<tr>
+<td>Pets</td>
+<td>0.47</td>
+<td>35</td>
+<td>2774</td>
+<td>79</td>
+<td>706</td>
+<td>3469</td>
+</tr>
+<tr>
+<td>CIFAR-100</td>
+<td>0.491</td>
+<td>100</td>
+<td>40,000</td>
+<td>400</td>
+<td>10,000</td>
+<td>10000</td>
+</tr>
+<tr>
+<td>ImageNet-R</td>
+<td>0.577</td>
+<td>200</td>
+<td>18000</td>
+<td>90</td>
+<td>6000</td>
+<td>6000</td>
+</tr>
+<tr>
+<td>DomainNet</td>
+<td>0.6</td>
+<td>345</td>
+<td>96724</td>
+<td>280</td>
+<td>24182</td>
+<td>52041</td>
+</tr>
+<tr>
+<td>miniImageNet</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>CUB-200</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/102.%E6%95%B0%E6%8D%AE%E9%9B%86/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/102.%E6%95%B0%E6%8D%AE%E9%9B%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/MLTutorials/">MLTutorials</a><a class="post-meta__tags" href="/blog/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/">机器学习基础</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/13.BayesClassifier/" title="BayesClassifier"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">BayesClassifier</div></div><div class="info-2"><div class="info-item-1">贝叶斯分类器贝叶斯分类器（Bayes Classifier）是一种通过最大化后验概率进行单点估计的分类器。 这一章的内容大致如下：  贝叶斯决策论：如何计算某个样本误分类的期望损失&#x2F;条件风险？贝叶斯判定准则是怎样的？什么是判别式模型？什么是生成式模型？贝叶斯定理中各个概率代表什么？估计后验概率有什么难处？  极大似然估计：如何估计类条件概率？频率学派和贝叶斯学派对参数估计有什么不同的见解？极大似然估计的思想是什么？如何处理概率连成造成的下溢？试想一下连续属性和离散属性的极大似然估计。这种估计方法有什么缺点？  朴素贝叶斯分类器：朴素贝叶斯分类器是基于什么假设的？表达式怎么写？为...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/11.GAT/" title="GAT"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">GAT</div></div><div class="info-2"><div class="info-item-1">GAT（Graph Attention Network）1 基础概念1.1 Graph数据结构的两种“特征”当我们说起graph或者network的数据结构，通常是包含着顶点和边的关系。研究目标聚焦在顶点之上，边诉说着顶点之间的关系。 对于任意一个顶点$i$，它在图上邻居$N_i$​  ,构成第一种特征，即图的结构关系。  ​																												图1 **当然，除了图的结构之外，每个顶点还有自己的特征$h_i$（通常是一个高维向量)。**它可以是社交网络中每个用户的个体属性；可以是生物网络中，每个蛋白质的性质；还可以使交通路网中，每个交叉口的车流量。 ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/10.GCN/" title="GCN"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">GCN</div></div><div class="info-2"><div class="info-item-1">Graph Convolutional NetworkOverview 在CNN、RNN如此强大的模型之后，为什么出现GCN？CNN：针对图像（二维数据结构，矩阵形式。Eucliden Structure），它的核心在于其kernel，一个滑动窗口，通过卷积来提取特征。因为图像具有平移不变性：滑动窗口无论移动到图片的哪一个位置，其内部的结构都是一模一样的，因此CNN可以实现参数共享。这就是CNN的精髓所在。 RNN：针对自然语言（序列信息，一维结构），通过各种门的操作，使得序列前后的信息互相影响，从而很好地捕捉序列的特征。 GCN：针对图结构，即Non Eucliden Structur...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/100.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E9%9B%86%E9%94%A6%E4%BB%8E%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%B0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%90%84%E8%87%AA%E4%BC%98%E7%BC%BA%E7%82%B9/" title="机器学习算法集锦从贝叶斯到深度学习及各自优缺点"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">机器学习算法集锦从贝叶斯到深度学习及各自优缺点</div></div><div class="info-2"><div class="info-item-1"> 机器学习算法集锦：从贝叶斯到深度学习及各自优缺点   在我们日常生活中所用到的推荐系统、智能图片美化应用和聊天机器人等应用中，各种各样的机器学习和数据处理算法正尽职尽责地发挥着自己的功效。本文筛选并简单介绍了一些最常见算法类别，还为每一个类别列出了一些实际的算法并简单介绍了它们的优缺点。     https:&#x2F;&#x2F; 目录  正则化算法（Regularization Algorithms） 集成算法（Ensemble Algorithms） 决策树算法（Decision Tree Algorithm） 回归（Regression） 人工神经网络（Artificial N...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/11.GAT/" title="GAT"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">GAT</div></div><div class="info-2"><div class="info-item-1">GAT（Graph Attention Network）1 基础概念1.1 Graph数据结构的两种“特征”当我们说起graph或者network的数据结构，通常是包含着顶点和边的关系。研究目标聚焦在顶点之上，边诉说着顶点之间的关系。 对于任意一个顶点$i$，它在图上邻居$N_i$​  ,构成第一种特征，即图的结构关系。  ​																												图1 **当然，除了图的结构之外，每个顶点还有自己的特征$h_i$（通常是一个高维向量)。**它可以是社交网络中每个用户的个体属性；可以是生物网络中，每个蛋白质的性质；还可以使交通路网中，每个交叉口的车流量。 ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/15.%E8%B7%9D%E7%A6%BB%E5%87%BD%E6%95%B0/" title="距离函数"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">距离函数</div></div><div class="info-2"><div class="info-item-1">  欧氏距离（Euclidean Distance）  我们从最常见的欧式距离开始，欧式距离可解释为连接两个点的线段的长度。欧式距离公式非常简单，使用勾股定理从这些点的笛卡尔坐标计算距离。 $$D(x,y)&#x3D;\sqrt {\sum_{i&#x3D;1}^n(x_i-y_i)^2}$$ 缺点：尽管这是一种常用的距离度量，但欧式距离并不是尺度不变的，这意味着所计算的距离可能会根据特征的单位发生倾斜。通常，在使用欧式距离度量之前，需要对数据进行归一化处理。此外，随着数据维数的增加，欧氏距离的作用也就越小。这与维数灾难（curse of dimensionality）有关。 用例：当你...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/02.%E5%8D%95%E5%8F%98%E9%87%8F%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" title="单变量线性回归"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">单变量线性回归</div></div><div class="info-2"><div class="info-item-1"> 单变量线性回归(Linear Regression with One Variable)  模型表示(Model Representation) 房价预测训练集     Size in $feet^2$ ($x$) Price ($) in 1000’s($y$)    2104 460   1416 232   1534 315   852 178   … …   房价预测训练集中，同时给出了输入 $x$ 和输出结果 $y$，即给出了人为标注的”正确结果”，且预测的量是连续的，属于监督学习中的回归问题。  问题解决模型    其中 $h$ 代表结果函数，也称为假设(hypothesi...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/103.%E5%93%88%E5%B8%8C%E5%AD%A6%E4%B9%A0/" title="哈希学习"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">哈希学习</div></div><div class="info-2"><div class="info-item-1">1. 背景介绍首先介绍一下最近邻搜索：最近邻搜索问题，也叫相似性搜索，近似搜索，是从给定数据库中找到里查询点最近的点集的问题。   给定一个点集，以及一个查询点q，需要找到离q最近的点的集合；在大规模高维度空间的情况下，这个问题就变得非常难，而且大多数算法计算量极大，复杂度很高； 因此，一般用近似的最邻近搜索代替；哈希就是解决上述这类问题的主要方法; 2. 哈希学习概述　　定义：哈希学习（learning to hash）是通过机器学习机制将数据映射成二进制串的形式，能显著减少数据的存储和通信开销，从而有效提高学习系统的效率。 ​        目的：通过机器学习机制将数据映射成简洁的二...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Train-Dev-Test-sets"><span class="toc-number">1.</span> <span class="toc-text">Train &#x2F; Dev &#x2F; Test sets</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%92%E5%88%86%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">划分方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%95%99%E5%87%BA%E6%B3%95"><span class="toc-number">2.1.</span> <span class="toc-text">留出法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81"><span class="toc-number">2.2.</span> <span class="toc-text">交叉验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A9%E6%B3%95"><span class="toc-number">2.3.</span> <span class="toc-text">自助法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MNIST"><span class="toc-number">3.</span> <span class="toc-text">MNIST</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MS-COCO"><span class="toc-number">4.</span> <span class="toc-text">MS-COCO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ImageNet"><span class="toc-number">5.</span> <span class="toc-text">ImageNet</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BD"><span class="toc-number">5.1.</span> <span class="toc-text">官网下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%A7%A3%E5%8E%8B"><span class="toc-number">5.2.</span> <span class="toc-text">数据解压</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%A0%87%E7%AD%BE"><span class="toc-number">5.3.</span> <span class="toc-text">数据标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8Pytorch%E5%8A%A0%E8%BD%BD"><span class="toc-number">5.4.</span> <span class="toc-text">用Pytorch加载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ImageNet-R"><span class="toc-number">6.</span> <span class="toc-text">ImageNet-R</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenImages-%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">7.</span> <span class="toc-text">OpenImages 数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CIFAR-10"><span class="toc-number">8.</span> <span class="toc-text">CIFAR-10</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CIL-%E6%95%B0%E6%8D%AE%E9%9B%86%E6%95%B4%E7%90%86"><span class="toc-number">9.</span> <span class="toc-text">CIL 数据集整理</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

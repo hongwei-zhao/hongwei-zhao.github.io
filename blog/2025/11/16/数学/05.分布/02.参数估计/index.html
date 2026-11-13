@@ -1,0 +1,467 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>参数估计 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="统计学与概率论的区别就是归纳和演绎，前者通过样本推测总体的分布，而后者已知总体分布去研究样本。因此参数估计则是归纳的过程，参数估计有两种形式：点估计和区间估计（点估计和区间估计都是对于未知参数的估计，而点估计给出的是一个参数可能的值，区间估计给出的是参数可能在的范围）。 基本概念 统计量: 样本中包含着总体的信息， 针对不同要求构造出样本的某种函数， 这种函数在统计学中称统计量。 参数空间: 假设">
+<meta property="og:type" content="article">
+<meta property="og:title" content="参数估计">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/02.%E5%8F%82%E6%95%B0%E4%BC%B0%E8%AE%A1/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="统计学与概率论的区别就是归纳和演绎，前者通过样本推测总体的分布，而后者已知总体分布去研究样本。因此参数估计则是归纳的过程，参数估计有两种形式：点估计和区间估计（点估计和区间估计都是对于未知参数的估计，而点估计给出的是一个参数可能的值，区间估计给出的是参数可能在的范围）。 基本概念 统计量: 样本中包含着总体的信息， 针对不同要求构造出样本的某种函数， 这种函数在统计学中称统计量。 参数空间: 假设">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:38:26.723Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="分布">
+<meta property="article:tag" content="数学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "参数估计",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/02.%E5%8F%82%E6%95%B0%E4%BC%B0%E8%AE%A1/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:38:26.723Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/02.%E5%8F%82%E6%95%B0%E4%BC%B0%E8%AE%A1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '参数估计',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">参数估计</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">参数估计</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:38:26.723Z" title="更新于 2026-03-01 16:38:26">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E6%95%B0%E5%AD%A6/">数学</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/%E6%95%B0%E5%AD%A6/%E5%88%86%E5%B8%83/">分布</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>统计学与概率论的区别就是归纳和演绎，前者通过样本推测总体的分布，而后者已知总体分布去研究样本。因此参数估计则是归纳的过程，参数估计有两种形式：<strong>点估计</strong>和<strong>区间估计</strong><u>（点估计和区间估计都是对于未知参数的估计，而<strong>点估计给出的是一个参数可能的值</strong>，<strong>区间估计给出的是参数可能在的范围</strong>）</u>。</p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li><strong>统计量</strong>: 样本中包含着总体的信息， 针对不同要求构造出样本的某种函数， 这种函数在统计学中称统计量。</li>
+<li><strong>参数空间</strong>: 假设总体概率密度函数形式已知，未知分布中的参数$\theta$, $\theta$ 全部可容许值组成的集合称为参数空间， 记为$\Theta$</li>
+</ul>
+<h2 id="点估计"><a href="#点估计" class="headerlink" title="点估计"></a>点估计</h2><h3 id="点估计的概念"><a href="#点估计的概念" class="headerlink" title="点估计的概念"></a>点估计的概念</h3><p><strong>点估计（<em>Point estimation</em>）</strong> ：设$x_1, …, x_n$ 来自总体的一个样本，用于估计未知参数$\theta$ 统计量$\hat{\theta}&#x3D;\hat{\theta}(x_1,…,x_n)$ 为$\theta$ 估计量，或称为$\theta$ 点估计。</p>
+<h3 id="点估计的方法"><a href="#点估计的方法" class="headerlink" title="点估计的方法"></a>点估计的方法</h3><ol>
+<li><p><strong>矩估计</strong></p>
+<p><strong>定义</strong> ：设总体概率函数已知，为$p(x;\theta_1,…,\theta_k)$，$(\theta_1,…,\theta_k)\in\Theta$ 未知参数或参数向量，$x_1,…,x_n$ 样本，假定总体的$k$ 原点矩$\mu_k$ 在，则对所有的$j$，$o&lt;j&lt;k$，$\mu_j$ 存在，若假设$\theta_1,…,\theta_k$ 够表示成$\mu_1,…,\mu_k$ 函数$\theta_j&#x3D;\theta_j(\mu_1,…,\mu_k)$，则可给出诸$\theta_j$ 矩估计：</p>
+</li>
+</ol>
+<p>$$<br>   \hat{\theta_j}&#x3D;\theta_j(a_1,…,a_k),\quad j&#x3D;1,…,k<br>$$</p>
+<p>   其中$a_1,…,a_k$ 前$k$ 样本原点矩$a_j&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^{n}x_i^j$.</p>
+<p>   矩估计基于大数定律（格里纹科定理），实质是用经验分布函数去替换总体分布，矩估计可以概括为：</p>
+<ul>
+<li><p>用样本矩代替总体矩（可以是原点矩也可以是中心矩）；</p>
+<ul>
+<li>用样本矩的函数去替换相应的总体矩的函数。</li>
+</ul>
+<blockquote>
+<p><strong>注</strong> ：矩估计可能是不唯一的，尽量使用低阶矩给出未知参数的估计 。</p>
+</blockquote>
+</li>
+</ul>
+<ol start="2">
+<li><p><strong>最大似然估计</strong></p>
+<p><strong>定义</strong> ：设总体的概率函数为$p(x;\theta),\ \theta\in\Theta$，其中$\theta$ 一个未知参数或几个未知参数组成的参数向量，$\Theta$ 参数空间，$x_1,…,x_n$ 来自该总体的样本，将样本的联合概率函数看成$\theta$ 函数，用$L(\theta;x_1,…,x_n)$ 示，简记为$L(\theta)$，<br>$$<br>L(\theta)&#x3D;L(\theta;x_1,…,x_n)&#x3D;p(x_1;\theta)p(x_2;\theta)…p(x_n;\theta)<br>$$<br>$L(\theta)$ 为样本的<strong>似然函数</strong>。若统计量$\hat{\theta}&#x3D;\hat{\theta}(x_1,…,x_n)$ 足<br>$$<br>L(\hat{\theta})&#x3D;\max_{\theta\in\Theta}L(\theta)<br>$$<br>则称$\hat{\theta}$ $\theta$ <strong>最大似然估计</strong>，简称<strong>MLE（maximum likelihood estimate）.</strong></p>
+<p><strong>注</strong> ：最大似然估计基于样本观测数据，根据概率论思想进行参数估计，首先抽取一定样本，默认这些样本的出现概率是符合原始分布的，即恰好抽到这些样本是因为这些样本出现的概率极大，然后根据概率密度计算联合概率，形成似然函数，似然函数极值位置即为参数的估计值。<strong><u>最大似然估计的前提是已知数据的分布。</u></strong></p>
+<p><strong>最大似然估计步骤</strong> ：</p>
+<ul>
+<li>写出似然函数；</li>
+<li>对似然函数取对数，并整理；</li>
+<li>求参数向量的偏导，令其为0，得到似然方程；</li>
+<li>求解似然方程，其解为参数值。</li>
+</ul>
+</li>
+<li><p><strong>最小均方误差估计</strong></p>
+<p>在样本量一定时，评价一个点估计好坏的度量指标可使用估计值$\hat{\theta}$ 参数真值$\theta$ 距离函数，最常用的是距离平方，由于$\hat{\theta}$ 有随机性，对该函数求期望即得<strong>均方误差</strong>：<br>$$<br>\begin{align}<br>MSE(\hat{\theta})&amp;&#x3D;E(\hat{\theta}-\theta)^2\<br>&amp;&#x3D;E[(\hat{\theta}-E\hat{\theta})+(E\hat{\theta}-\theta)]^2\<br>&amp;&#x3D;E(\hat{\theta}-E\hat{\theta})^2+(E\hat{\theta}-\theta)^2+\underbrace{2E[(\hat{\theta}-E\hat{\theta})(E\hat{\theta}-\theta)]}<em>{E(\hat{\theta}-E\hat{\theta})&#x3D;0}\<br>&amp;&#x3D;\underbrace{Var(\hat{\theta})}</em>{点估计的方差}+\underbrace{(E\hat{\theta}-\theta)^2}_{偏差的平方}<br>\end{align}<br>$$<br>其中，<strong>如果$\hat{\theta}$ $\theta$ 无偏估计，则$MSE(\hat{\theta})&#x3D;Var(\hat{\theta})$，此时用均方误差评价点估计与用方差是完全一样的</strong>。如果如果$\hat{\theta}$ 是$\theta$ 无偏估计，就要看其均方误差$MSE(\hat{\theta})$，即不仅要看其方差大小，还要看其偏差大小。</p>
+<p><strong>定义</strong> ：设有样本$x_1,…,x_n$，对待估参数$\theta$，设有一个估计类，如果对该估计类中另外任意一个$\theta$ 估计$\widetilde{\theta}$，在参数空间$\Theta$ 都有$MSE_\theta(\hat{\theta})\leq MSE_\theta(\widetilde{\theta})$，称$\hat{\theta}(x_1,…,x_n)$ 该估计类中$\theta$ 一致最小均方误差估计。</p>
+</li>
+<li><p><strong>最小方差无偏估计</strong></p>
+<p><strong>定义</strong> ：设$\hat{\theta}$ $\theta$ 一个无偏估计，如果对另外任意一个$\theta$ 无偏估计$\widetilde{\theta}$，在参数空间$\Theta&#x3D;{\theta}$ 都有$Var_{\theta}(\hat{\theta})\leq Var_{\theta}(\widetilde{\theta})$，则称$\hat{\theta}$ $\theta$ 一致最小方差无偏估计，简记为<strong>UMVUE</strong>。</p>
+<p><strong>判断准则</strong> ：设$\hat{\theta}&#x3D;\hat{\theta}(x_1,…,x_n)$ $\theta$ 一个无偏估计，$Var(\hat{\theta})&lt;+\infty$.如果对任意一个满足$E(\varphi(x_1,…,x_n))&#x3D;0$ $\varphi$，都有<br>$$<br>Cov_\theta(\hat{\theta},\varphi)&#x3D;0,\quad\forall\theta\in\Theta,<br>$$<br>则$\hat{\theta}$ $\theta$ UMVUE.</p>
+</li>
+<li><p><strong>贝叶斯估计</strong></p>
+<p>区别于频率学派，在统计推断中贝叶斯用到了三种信息** ：总体信息、样本信息和先验信息**（频率学派只用了前两种），其中：</p>
+<ul>
+<li>总体信息：总体信息即总体分布或总体所属分布族提供的信息，如，若已知总体是正态分布，则可以知道很多信息；</li>
+<li>样本信息：样本信息即抽取样本所得观测值提供的信息，如，在有了样本观测值后，可以根据它知道总体的一些特征数；</li>
+<li>先验信息：若把抽取样本看作做一次试验，则样本信息就是试验中得到的信息，如，在一次抽样后，这第一次的抽样就是先验信息。先验信息来源于经验和历史资料。</li>
+</ul>
+<p><strong>回顾贝叶斯公式</strong>：设${B_1, B_2, …B_n}$ 样本空间的一个分割，$A$ $\Omega$ 的一个事件，$P(B_i)&gt;0$，$i&#x3D;1,2,…,n$，$P(A)&gt;0$，则<br>$$<br>P(B_i|A)&#x3D;\frac{P(A|B_i)P(B_i)}{\sum_{j&#x3D;1}^{n}P(A|B_j)P(B_j)}<br>$$<br><strong>贝叶斯密度函数形式</strong> ：</p>
+<ul>
+<li><p>在参数$\theta$ 布已知（已假设）的情况下，$p(x|\theta)$ 示随机变量$\theta$ 某个给定值时总体的<strong>条件概率函数</strong>，（参考$P(A|B)$）；</p>
+</li>
+<li><p>任一未知量$\theta$ 可以看作随机变量，可用一个概率分布去描述，这个分布成为<strong>先验分布</strong>，该先验分布$\pi(\theta)$，（参考$P(B)$）；</p>
+</li>
+<li><p>贝叶斯的观点，样本$X&#x3D;(x_1,…,x_n)$ 产生需分两步：</p>
+<ul>
+<li>从先验分布$\pi(\theta)$ 生一个样本$\theta_0$；</li>
+<li>从$p(X|\theta_0)$ 产生一组样本。</li>
+</ul>
+<p>此时，样本$X&#x3D;(x_1,…,x_n)$ <strong>联合条件概率函数</strong>（参考$\sum_{j&#x3D;1}^{n}P(A|B_j)$）为<br>$$<br>p(X|\theta_0)&#x3D;p(x_1,…,x_n|\theta_0)&#x3D;\prod^{n}_{i&#x3D;1}p(x_i|\theta_0)<br>$$</p>
+</li>
+<li><p>因为$\theta_0$ 知，是从先验分布$\pi(\theta)$ 产生的，所以需要考虑它的发生概率，样本$X$ 参数$\theta$ <strong>联合分布</strong>（参考$\sum_{j&#x3D;1}^{n}P(A|B_j)P(B_j)$）为<br>$$<br>h(X,\theta)&#x3D;p(X|\theta)\pi(\theta)<br>$$</p>
+</li>
+<li><p>因为目的是对$\theta$ 行推断，所以在有样本观测值$X&#x3D;(x_1,…,x_n)$ 后，可依据$h(X,\theta)$ $\theta$ 出推断，按照乘法公式（参考1.5.2节），$h(X,\theta)$ 分解为<br>$$<br>h(X,\theta)&#x3D;\pi(\theta|X)m(X)<br>$$<br>其中，$m(X)$ $X$ 边际概率函数，类比$\pi(\theta)$，<br>$$<br>m(X)&#x3D;\int_\Theta h(X,\theta)d\theta&#x3D;\int_\Theta p(X|\theta)\pi(\theta)d\theta<br>$$<br>所以可通过条件概率$\pi(\theta|X)$ 断$\theta$ 分布<br>$$<br>\pi(\theta|X)&#x3D;\frac{h(X,\theta)}{m(X)}&#x3D;\frac{p(X|\theta)\pi(\theta)}{\int_{\Theta}p(X|\theta)\pi(\theta)d\theta}<br>$$<br>该分布成为$\theta$ <strong>后验分布</strong>。<strong>它其实是利用总体和样本对先验分布$\pi(\theta)$ 整的结果，比$\pi(\theta)$ 接近$\theta$ 实际情况（机器学习里的贝叶斯模型就是基于这样的原理）</strong>。</p>
+<blockquote>
+<p><strong>Flag</strong> ：感觉贝叶斯定理很有意思，今后也会学习相关的贝叶斯分析数据，敬请期待～</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="点估计的优良性准则"><a href="#点估计的优良性准则" class="headerlink" title="点估计的优良性准则"></a>点估计的优良性准则</h3><ol>
+<li><p><strong>无偏性</strong> ：设$\hat{\theta}&#x3D;\hat{\theta}(x_1,…,x_n)$ $\theta$ 一个估计，$\theta$ 参数空间为$\Theta$，若对任意的$\theta \in \Theta$，有<br>$$<br>E_{\theta}(\hat{\theta})&#x3D;\theta<br>$$<br>则称$\hat{\theta}$ $\theta$ <strong>无偏估计</strong>，否则称为<strong>有偏估计</strong>。无偏性的要求也可以改写为$E_{\theta}(\hat{\theta-\theta})&#x3D;0$，无偏性表示表示估计参数与真实参数没有系统偏差。</p>
+<blockquote>
+<p><strong>一个重要的结论</strong> ：样本均值$\bar{x}&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^nx_i$ 总体均值$\mu$ 无偏估计。样本方差$s_n^2&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^n(x_i-\bar{x})^2$ 是总体方差$\sigma^2$ 无偏估计（而是渐进无偏估计），因此需要对样本方差进行修正，$s^2&#x3D;\frac{1}{n-1}\sum_{i&#x3D;1}^n(x_i-\bar{x})^2$.</p>
+<ul>
+<li>样本均值的无偏性推导</li>
+</ul>
+<p>$$<br>\begin{align}<br>E(\bar{x})&#x3D;&amp;E(\frac{1}{n}\sum_{i&#x3D;1}^nx_i)\<br>&#x3D;&amp;\frac{1}{n}\sum_{i&#x3D;1}^nE(x_i),\ x_i为iid\<br>&#x3D;&amp;\frac{1}{n}\sum_{i&#x3D;1}^n\mu\<br>&#x3D;&amp;\mu<br>\end{align}<br>$$</p>
+<ul>
+<li>样本方差的有偏性推导<br>$$<br>\begin{align}<br>E(s_n^2)&#x3D;&amp;E[\frac{1}{n}\sum_{i&#x3D;1}^n(x_i-\bar{x})^2]\<br>&#x3D;&amp;E[\frac{1}{n}\sum_{i&#x3D;1}^n((x_i-\mu)-\frac{1}{n}(\bar{x}-\mu))^2]\<br>&#x3D;&amp;E[\frac{1}{n}\sum_{i&#x3D;1}^n((x_i-\mu)^2-\frac{2}{n}(x_i-\mu)(\bar{x}-\mu)+\frac{1}{n}(\bar{x}-\mu)^2)]\<br>&#x3D;&amp;E[\frac{1}{n}\sum_{i&#x3D;1}^n(x_i-\mu)^2-\frac{2}{n}\sum_{i&#x3D;1}^n(x_i-\mu)(\bar{x}-\mu)+(\bar{x}-\mu)^2],\ 其中,\bar{X}-\mu&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^n(x_i-\mu)\<br>&#x3D;&amp;E[\frac{1}{n}\sum_{i&#x3D;1}^n(x_i-\mu)^2-2(\bar{x}-\mu)^2+(\bar{x}-\mu)^2]\<br>&#x3D;&amp;E[\frac{1}{n}\sum_{i&#x3D;1}^n(x_i-\mu)^2-(\bar{x}-\mu)^2]\<br>&#x3D;&amp;E[\frac{1}{n}\sum_{i&#x3D;1}^n(x_i-\mu)^2]-E[(\bar{x}-\mu)^2]\<br>&#x3D;&amp;\sigma^2-E[(\bar{x}-\mu)^2]\ …(1)\<br>&#x3D;&amp;\sigma^2-\frac{\sigma^2}{n}\<br>&#x3D;&amp;\frac{n-1}{n}\sigma^2,\quad 当n\rightarrow \infty时, E(s_n^2)\rightarrow \sigma^2\<br>\<br>E[(\bar{x}-\mu)^2]&#x3D;&amp;E(\bar{x}^2)-2\mu E(\bar{x})+\mu^2\<br>&#x3D;&amp;E(\bar{x}^2)-\mu^2\<br>&#x3D;&amp;Var(\bar{x})+E^2(\bar{x})-\mu^2\<br>&#x3D;&amp;Var(x)\<br>&#x3D;&amp;\frac{\sigma^2}{n}\ …代入(1)式<br>\end{align}<br>$$</li>
+</ul>
+</blockquote>
+</li>
+<li><p><strong>有效性</strong></p>
+<p>无偏估计往往有很多种，以总体均值为例，$x_1,…,x_n$ 取自某总体的样本，样本均值$\mu$ 样本$x_i$ 是总体均值的无偏估计，对于两个估计参数的选取需要基于一个度量无偏估计优劣的准则。有效性作为这样的准则，反映了<strong>参数估计值和参数真值的波动</strong>，波动大小可用方差来衡量，波动越小表示参数的估计越有效。</p>
+<p>设$\hat{\theta_1}$，$\hat{\theta_2}$ $\theta$ 两个无偏估计，如果对任意的$\theta\in\Theta$<br>$$<br>Var(\hat{\theta}_1)\leq Var(\hat{\theta}_2)<br>$$<br>且至少有一个$\theta\in\Theta$ 得上述不等号严格成立，则称$\hat{\theta}_1$ $\hat{\theta}_2$ 效。</p>
+</li>
+<li><p><strong>相合性</strong></p>
+<p>根据格里纹科定理，随着样本量不断增大，经验分布函数逼近真实分布函数，即设$\theta\in\Theta$ 未知参数，$\hat{\theta}_n&#x3D;\hat{\theta}<em>n(x_1,…,x_n)$ $\theta$ 一个估计量，$n$ 样本容量，若对任何一个$\epsilon&gt;0$，有<br>$$<br>\lim</em>{n\rightarrow\infty}P(|\hat{\theta}_n-\theta|\geq\epsilon)&#x3D;0<br>$$<br>则称$\hat{\theta}_n$ 参数$\theta$ 相合估计。</p>
+<p><strong>定理1</strong> ：设$\hat{\theta}_n&#x3D;\hat{\theta}<em>n(x_1,…,x_n)$ $\theta$ 一个估计量，若<br>$$<br>\lim</em>{n\rightarrow\infty}E(\hat{\theta}<em>n)&#x3D;\theta,\quad\lim</em>{n\rightarrow\infty}Var(\hat{\theta}_n)&#x3D;0<br>$$<br>则$\hat{\theta}_n$ $\theta$ 相合估计。</p>
+<p><strong>定理2</strong> ：若$\hat{\theta}<em>{n1},…,\hat{\theta}</em>{nk}$ 别是$\theta_1,…,\theta_k$ 相合估计，$\eta&#x3D;g(\theta_1,…,\theta_k)$ $\theta_1,…,\theta_k$ 连续函数，则$\hat{\eta}<em>n&#x3D;g(\hat{\theta}</em>{n1},…,\hat{\theta}_{nk})$ $\eta$ 相合估计。</p>
+<blockquote>
+<p>矩估计一般都具有相合性：</p>
+<ul>
+<li>样本均值是总体均值的相合估计；</li>
+<li>样本标准差是总体标准差的相合估计；</li>
+<li>样本变异系数$s&#x2F;\bar{x}$ 总体变异系数的相合估计。</li>
+</ul>
+</blockquote>
+</li>
+<li><p><strong>渐进正态性</strong>（MLE）</p>
+<p>在很一般条件下，总体分布$p(x;\theta)$ 的$\theta$ MLE$\hat{\theta}_n$ 有相合性和渐进正态性，即$\hat{\theta}<em>n\sim AN(\theta,\frac{1}{nI(\theta)})$，其中$n$ 样本容量，$I(\theta)&#x3D;\int</em>{-\infty}^{\infty}(\frac{\part{lnp&#125;&#125;{\part\theta})^2p(x;\theta)dx$ 费希尔信息量。</p>
+</li>
+<li><p><strong>充分性</strong>（UMVUE）</p>
+<ul>
+<li>任一参数$\theta$ UMVUE不一定存在，若存在，则它一定是充分统计量的函数；</li>
+<li>若$\theta$ 某个无偏估计$\hat{\theta}$ 是充分统计量$T&#x3D;T(x_1,…,x_n)$ 函数，则通过条件期望可以获得一个新的无偏估计$\widetilde{\theta}&#x3D;E(\hat{\theta|T})$，且方差比原估计的方差要小；</li>
+<li>考虑$\theta$ 估计时，只需要在其充分统计量的函数中寻找即可，该说法对所有统计推断都是正确的，这便是充分性原则。</li>
+</ul>
+</li>
+</ol>
+<h2 id="区间估计"><a href="#区间估计" class="headerlink" title="区间估计"></a>区间估计</h2><h3 id="区间估计的概念"><a href="#区间估计的概念" class="headerlink" title="区间估计的概念"></a>区间估计的概念</h3><ol>
+<li><p><strong>双侧区间</strong></p>
+<p>设$\theta$ 总体的一个参数，其参数空间为$\Theta$，$x_1,…,x_n$ 来自该总体的样本，对给定的一个$\alpha\quad(0&lt;\alpha&lt;1)$，假设有两个统计量$\hat{\theta}_L&#x3D;\hat{\theta}_L(x_1,…,x_n)$ $\hat{\theta}_U&#x3D;\hat{\theta}<em>U(x_1,…,x_n)$，若对任意的$\theta\in\Theta$，有<br>$$<br>P</em>\theta(\hat{\theta}_L\leq\theta\leq\hat{\theta}_U)\geq(&#x3D;)1-\alpha<br>$$<br>其中，总体为连续分布时取等号，表示用足了置信水平。称随机区间$[\hat{\theta}_L,\hat{\theta}_U]$ $\theta$ <strong>置信水平为$1-\alpha$ 置信区间</strong>，或简称$[\hat{\theta}_L,\hat{\theta}_U]$ $\theta$ <strong>$1-\alpha$ 信区间</strong>，$\hat{\theta}_L$ $\hat{\theta}_U$ 别称为$\theta$ <strong>置信下限</strong>和<strong>置信上限</strong>。</p>
+<blockquote>
+<p>置信水平$1-\alpha$ 频率解释：在大量的区间估计观测值中，至少有$100(1-\alpha)%$ 含$\theta$，如下图所示，其置信度为0.95.</p>
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209222015291.gif" style="zoom:100%;" /></blockquote>
+</li>
+<li><p><strong>单侧区间</strong></p>
+<p>设$\hat{\theta}_L&#x3D;\hat{\theta}<em>L(x_1,…,x_n)$ 统计量，对给定的$\alpha\in(0,1)$ 任意的$\theta\in\Theta$，有<br>$$<br>P</em>\theta(\hat{\theta}_L\leq\theta)\geq1-\alpha,\quad\forall\theta\in\Theta<br>$$<br>则称$\hat{\theta}_L$ $\theta$ 置信水平为$1-\alpha$ <strong>置信下限</strong>。同理，设$\hat{\theta}_U&#x3D;\hat{\theta}<em>U(x_1,…,x_n)$ 统计量，对给定的$\alpha\in(0,1)$ 任意的$\theta\in\Theta$，有<br>$$<br>P</em>\theta(\hat{\theta}_L\geq\theta)\geq1-\alpha,\quad\forall\theta\in\Theta<br>$$<br>则称$\hat{\theta}_L$ $\theta$ 置信水平为$1-\alpha$ <strong>置信上限</strong>。</p>
+</li>
+</ol>
+<h3 id="区间估计的方法"><a href="#区间估计的方法" class="headerlink" title="区间估计的方法"></a>区间估计的方法</h3><ol>
+<li><p><strong>枢轴量法</strong></p>
+<p><em><strong>Step 1</strong></em>：设法构造一个样本和$\theta$ 函数$G&#x3D;G(x_1,…,x_n,\theta)$ 得**$G$ 分布不依赖于未知参数**，称具有这种性质的$G$ 枢轴量。</p>
+<p><em><strong>Step 2</strong></em>：适当地选择两个常数c，d，使对给定的$\alpha\quad(0&lt;\alpha&lt;1)$，有<br>$$<br>P(c\leq G\leq d)&#x3D;1-\alpha<br>$$<br>（在离散场合，将上式等号改为$\geq$）</p>
+<p><em><strong>Step 3</strong></em>：假如能将$c\leq G\leq d$ 行不等式等价变形化为$\hat{\theta}_L\leq\theta\leq\hat{\theta}<em>U$，则有<br>$$<br>P</em>\theta(\hat{\theta}_L\leq\theta\leq\hat{\theta}_U)&#x3D;1-\alpha<br>$$<br>表明$[\hat{\theta}_L,\hat{\theta}_U]$ $\theta$ $1-\alpha$ 等置信区间。</p>
+<blockquote>
+<p><strong>注</strong> ：满足条件的c和d有很多，最终选择的目的是希望平均长度$E_\theta(\hat{\theta}_U)-\hat{\theta}<em>L$ 可能短，但在一些场合中很难做到这一点，因此可以选择c和d，使得两个尾部概率各为$\alpha&#x2F;2$，即<br>$$<br>P</em>\theta(G&lt;c)&#x3D;P_\theta(G&gt;d)&#x3D;\alpha&#x2F;2<br>$$<br>得到<strong>等尾置信区间</strong>。</p>
+</blockquote>
+<blockquote>
+<p>例：设$x_1,…,x_n$ 来自均匀总体$U(0,\theta)$ 一个样本，试对设定的$\alpha\ (0&lt;\alpha&lt;1)$ 出$\theta$ $1-\alpha$ 等置信区间。</p>
+<p>解：三步法：</p>
+<ul>
+<li>已知$\theta$ 最大似然估计为样本的最大次序统计量$x_{(n)}$，而$x_{(n)}&#x2F;\theta$ 密度函数为</li>
+</ul>
+<p>$$<br>p(y;\theta)&#x3D;ny^{n-1},\quad 0&lt;y&lt;1<br>$$</p>
+<p>它与参数$\theta$ 关，故可取$x_{(n)}&#x2F;\theta$ 为枢轴量$G$。</p>
+<ul>
+<li>由于$x_{(n)}&#x2F;\theta$ 分布函数为$F(y)&#x3D;y^n$，$0&lt;y&lt;1$，故$P(c\leq x_{(n)}&#x2F;\theta\leq d&#x3D;d^n-c^n)$，因此可以选择适当的c和d满足</li>
+</ul>
+<p>$$<br>d^n-c^n&#x3D;1-\alpha<br>$$</p>
+<ul>
+<li>在$0\leq c&lt;d\leq 1$ $d^n-c^n&#x3D;1-\alpha$ 条件下，当$d&#x3D;1, c&#x3D;\sqrt[n]{\alpha}$ ，$E_\theta(\hat{\theta}<em>U)-\hat{\theta}<em>L$ 最小值，所以$[x</em>{(n)},x</em>{(n)}&#x2F;\sqrt[n]{\alpha}]$ $1-\alpha$ 信区间</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+<h3 id="一些情况下的区间估计"><a href="#一些情况下的区间估计" class="headerlink" title="一些情况下的区间估计"></a>一些情况下的区间估计</h3><ol>
+<li><p><strong>单个正态总体参数的置信区间</strong></p>
+<ul>
+<li><strong>$\sigma$ 知时$\mu$ 置信区间</strong>：$[\bar{x}-u_{1-\alpha&#x2F;2}\sigma&#x2F;\sqrt{n},\quad\bar{x}+u_{1-\alpha&#x2F;2}\sigma&#x2F;\sqrt{n}]$</li>
+<li><strong>$\sigma$ 知时$\mu$ 置信区间</strong>：$[\bar{x}-t_{1-\alpha&#x2F;2}(n-1)s&#x2F;\sqrt{n},\quad\bar{x}+t_{1-\alpha&#x2F;2}(n-1)s&#x2F;\sqrt{n}]$</li>
+<li><strong>$\sigma^2$ 置信区间（$\mu$ 知）</strong>：$[(n-1)s^2&#x2F;\chi^2_{1-\alpha&#x2F;2}(n-1),\quad(n-1)s^2&#x2F;\chi^2_{\alpha&#x2F;2}(n-1)]$</li>
+</ul>
+</li>
+<li><p><strong>大样本置信区间</strong>：$[\bar{x}-u_{1-\alpha&#x2F;2}\sqrt{\frac{\bar{x}(1-\bar{x})}{n&#125;&#125;,\quad \bar{x}+u_{1-\alpha&#x2F;2}\sqrt{\frac{\bar{x}(1-\bar{x})}{n&#125;&#125;]$</p>
+</li>
+<li><p><strong>两个正态总体下的置信区间</strong></p>
+<ul>
+<li><p><strong>$\mu_1-\mu_2$ 置信区间</strong></p>
+<ul>
+<li><strong>$\sigma^2_1$ $\sigma^2_2$ 知时</strong>：$[\bar{x}-\bar{y}-u_{1-\alpha&#x2F;2}\sqrt{\frac{\sigma^2_1}{m}+\frac{\sigma^2_2}{n&#125;&#125;,\quad \bar{x}-\bar{y}+u_{1-\alpha&#x2F;2}\sqrt{\frac{\sigma^2_1}{m}+\frac{\sigma^2_2}{n&#125;&#125;]$</li>
+<li><strong>$\sigma^2_1&#x3D;\sigma^2_2&#x3D;\sigma^2$ 知时</strong>：$[\bar{x}-\bar{y}-\sqrt{\frac{m+n}{mn&#125;&#125;s_wt_{1-\alpha&#x2F;2}(m+n-2),\quad \bar{x}-\bar{y}+\sqrt{\frac{m+n}{mn&#125;&#125;s_wt_{1-\alpha&#x2F;2}(m+n-2)]$</li>
+<li><strong>$\sigma^2_2&#x2F;\sigma^2_1&#x3D;c$ 知时</strong>：$[\bar{x}-\bar{y}-\sqrt{\frac{mc+n}{mn&#125;&#125;s_wt_{1-\alpha&#x2F;2}(m+n-2),\quad \bar{x}-\bar{y}+\sqrt{\frac{mc+n}{mn&#125;&#125;s_wt_{1-\alpha&#x2F;2}(m+n-2)]$</li>
+<li><strong>当m和n都很大时的近似置信区间</strong>：$[\bar{x}-\bar{y}-u_{1-\alpha&#x2F;2}\sqrt{\frac{s^2_x}{m}+\frac{s^2_y}{n&#125;&#125;,\quad \bar{x}-\bar{y}+u_{1-\alpha&#x2F;2}\sqrt{\frac{s^2_x}{m}+\frac{s^2_y}{n&#125;&#125;]$</li>
+<li><strong>一般情况下的近似置信区间</strong>：$[\bar{x}-\bar{y}-s_0t_{1-\alpha&#x2F;2}(l),\quad \bar{x}-\bar{y}+s_0t_{1-\alpha&#x2F;2}(l)]$</li>
+</ul>
+</li>
+<li><p><strong>$\sigma^2_1&#x2F;\sigma^2_2$ 置信区间</strong>：$[\frac{s_x^2}{s_y^2}\cdot\frac{1}{F_{1-\alpha&#x2F;2(m-1,n-1)&#125;&#125;,\quad \frac{s_x^2}{s_y^2}\cdot\frac{1}{F_{\alpha&#x2F;2(m-1,n-1)&#125;&#125;]$</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="最大似然估计"><a href="#最大似然估计" class="headerlink" title="最大似然估计"></a>最大似然估计</h2><blockquote>
+<p>Maximum Likelihood Estimation</p>
+</blockquote>
+<p>最大似然估计原理：利用已知的样本，找出最有可能生成该样本的参数。</p>
+<h3 id="基本假设"><a href="#基本假设" class="headerlink" title="基本假设"></a>基本假设</h3><ul>
+<li>参数$\theta$ 确定（非随机） 的而未知的量</li>
+<li>按类别把样本集分开， $R_j$ 中的每个样本都是独立地从概率密度为$p(x|w_j)$ 总体中独立地抽取出来的 – <strong>独立同分布</strong></li>
+<li>类条件概率密度$p(x|w_j)$ 已知分布， 参数向量未知</li>
+<li>假设$R_j$ 不包含关于$\theta_j(j\neq i)$ 信息， 即不同类别的参数在函数上是独立的</li>
+</ul>
+<h3 id="似然函数"><a href="#似然函数" class="headerlink" title="似然函数"></a>似然函数</h3><p>　　似然性（likelihood）与概率（possibility）同样可以表示事件发生的可能性大小，但是二者有着很大的区别：</p>
+<ul>
+<li>概率$p(x\mid\theta)$ 是在已知参数$\theta$  的情况下，发生观测结果$x$ 可能性大小；</li>
+<li>似然性$L(\theta\mid x) $  则是从观测结果$x$ 出发，分布函数的参数为$\theta$ 的可能性大小；</li>
+</ul>
+<p>　　可能听着不是那么好理解。我们再详细说明下，似然函数如下：<br>$$<br>L(\theta\mid x)&#x3D;p(x\mid\theta)<br>$$<br>其中$x$ 知，$\theta$ 未知。若对于两个参数 $\theta_1$  $\theta_2$ ，有<br>$$<br>L(\theta_1\mid x)&#x3D;p(x\mid\theta_1) &gt; p(x\mid\theta_2)&#x3D;L(\theta_2\mid x)<br>$$<br>那么意味着 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta=%5Ctheta_1" alt="[公式]"> 时，随机变量 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=X" alt="[公式]"> 生成 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x" alt="[公式]"> 的概率大于当参数 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta=%5Ctheta_2" alt="[公式]"> 时。这也正是似然的意义所在，若观测数据为 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x" alt="[公式]"> ，那么 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta_1" alt="[公式]"> 是比 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta_2" alt="[公式]"> 更有可能为分布函数的参数。</p>
+<p>　　在不同的时候， <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=p(x%7C%5Ctheta)" alt="[公式]"> 可以表示概率也可以用于计算似然，这里给出个人的理解，整理如下：</p>
+<ul>
+<li>在 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta" alt="[公式]"> 已知，<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x" alt="[公式]"> 为变量的情况下，<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=p(x%7C%5Ctheta)" alt="[公式]"> 为概率，表示通过已知的分布函数与参数，随机生成出 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x" alt="[公式]"> 的概率；</li>
+<li>在 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta" alt="[公式]"> 为变量，<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x" alt="[公式]"> 已知的情况下，<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=p(x%7C%5Ctheta)" alt="[公式]"> 为似然函数，它表示对于不同的 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta" alt="[公式]"> ，出现 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x" alt="[公式]"> 的概率是多少。此时可写成 $L(\theta\mid x)&#x3D;p(x\mid\theta)$，更严格地，我们也可写成 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=L(%5Ctheta%7Cx)=p(x;%5Ctheta)" alt="[公式]"> 。</li>
+</ul>
+<h3 id="最大似然估计-1"><a href="#最大似然估计-1" class="headerlink" title="最大似然估计"></a>最大似然估计</h3><p>　　搞清楚了似然函数，就可以进阶到最大似然估计了。</p>
+<p>　　最大似然估计的思想在于，对于给定的观测数据 $x$，我们希望能从所有的参数 $\theta_1, \theta_2, \cdots, \theta_n $ 中找出能最大概率生成观测数据的参数 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta%5E*" alt="[公式]"> 作为估计结果。</p>
+<p>　　回到前面所说的似然函数，被估计出的参数 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta%5E*" alt="[公式]"> 应该满足：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=L(%5Ctheta%5E*%7Cx)=p(x%7C%5Ctheta%5E*)%5Cge+p(x%7C%5Ctheta)=L(%5Ctheta%7Cx),%5Ctheta=%5Ctheta_1%5Ccdots,%5Ctheta_n%5C" alt="[公式]"></p>
+<p>那么在实际运算中，我们将待估计的参数 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta" alt="[公式]"> 看成是变量，计算得到生成观测数据 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x" alt="[公式]"> 的概率函数 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=p(x%7C%5Ctheta)" alt="[公式]"> ，并找到能最大化概率函数的参数即可：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta%5E*=arg%5Cmax_%7B%5Ctheta%7Dp(x%7C%5Ctheta)%5C" alt="[公式]"></p>
+<p>而这最大化的步骤通过求导等于0来解得。</p>
+<p>　　给出维基百科的例子来加深理解：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209222015537.jpg" alt="img"></p>
+<h3 id="离散型随机变量的最大似然估计"><a href="#离散型随机变量的最大似然估计" class="headerlink" title="离散型随机变量的最大似然估计"></a>离散型随机变量的最大似然估计</h3><p>　　离散型随机变量 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=X" alt="[公式]"> 的分布律为 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=P%7BX=x%7D=p(x;%5Ctheta)" alt="[公式]"> ，设 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=X_1,%E2%8B%AF,X_n" alt="[公式]"> 为来自 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=X" alt="[公式]"> 的样本，<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x_1,%E2%8B%AF,x_n" alt="[公式]"> 为相应的观察值，<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta" alt="[公式]"> 为待估参数。</p>
+<p>　　在参数 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta" alt="[公式]"> 下，分布函数随机取到<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x_1,%E2%8B%AF,x_n" alt="[公式]"> 的概率为</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=p(x%7C%5Ctheta)=%5Cprod_%7Bi=1%7D%5E%7Bn%7Dp(x_%7Bi%7D;%5Ctheta)%5C" alt="[公式]"></p>
+<p>构造似然函数：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/Users/geeks_z/Documents/OneDrive/Library/Application%252520Support/typora-user-images/image-20211218160315830.png" alt="image-20211218160315830"></p>
+<p>可知似然函数是一个关于 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta" alt="[公式]"> 的函数，要找到最大概率生成 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x" alt="[公式]"> 的参数，即找到当 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=L(%5Ctheta%7Cx)" alt="[公式]"> 取最大值时的 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta" alt="[公式]"> 。</p>
+<p>　　求解出最大值，通常的方法就是求导&#x3D;0：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Cfrac%7Bd%7D%7Bd%5Ctheta%7DL(%5Ctheta%7Cx)=0%5C" alt="[公式]"></p>
+<p>由于式子通常是累乘的形式，我们借助对数函数来简化问题：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Cfrac%7Bd%7D%7Bd%5Ctheta%7DlnL(%5Ctheta%7Cx)=0%5C" alt="[公式]"></p>
+<p>上式也通常被称作<strong>对数似然方程</strong>。如果 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%CE%B8" alt="[公式]"> 包含多个参数 $\theta_1, \theta_2, \cdots, \theta_k$，可对多个参数分别求偏导来连立方程组。下面举一个例子：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209222015588.jpg" alt="img"></p>
+<h3 id="连续型随机变量的最大似然估计"><a href="#连续型随机变量的最大似然估计" class="headerlink" title="连续型随机变量的最大似然估计"></a>连续型随机变量的最大似然估计</h3><p>　　连续型随机变量 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=X" alt="[公式]"> 的概率密度为 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=f(x;%5Ctheta)" alt="[公式]"> ，设 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=X_1,%E2%8B%AF,X_n" alt="[公式]"> 为来自 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=X" alt="[公式]"> 的样本，<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x_1,%E2%8B%AF,x_n" alt="[公式]">为相应的观察值，同样地，<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=%5Ctheta" alt="[公式]"> 为待估参数。</p>
+<p>　　概率密度的图像与横轴所围成的面积大小代表了概率的大小，当随机变量$X$ 到了某一个值 $x_1$，可看做是选取到了 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=f(x_1;%5Ctheta)" alt="[公式]"> 与 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=dx" alt="[公式]"> 所围成的小矩形。如图所示：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209222015604.jpg" alt="img"></p>
+<p>接着与离散型随机变量类似，随机取到观察值 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=x" alt="[公式]"> 的概率为：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=p(x;%5Ctheta)=%5Cprod_%7Bi=1%7D%5E%7Bn%7Df(x_%7Bi%7D;%5Ctheta)dx%5C" alt="[公式]"></p>
+<p>构造似然函数：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=L(%5Ctheta%7Cx)=%5Cprod_%7Bi=1%7D%5E%7Bn%7Df(x_%7Bi%7D;%5Ctheta)dx%5C" alt="[公式]"></p>
+<p>由于<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209222015626.png" alt="image-20211218160651232">不随参数变化，故我们选择忽略，似然函数变为：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://www.zhihu.com/equation?tex=L(%5Ctheta%7Cx)=%5Cprod_%7Bi=1%7D%5E%7Bn%7Df(x_%7Bi%7D;%5Ctheta)%5C" alt="[公式]"></p>
+<p>接着计算步骤和离散型类似，取对数求导等于0。例如：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209222015294.jpg" alt="img"></p>
+<p>Reference </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/55791843">https://zhuanlan.zhihu.com/p/55791843</a></li>
+<li>《概率论与数理统计》第四版</li>
+<li><a href="https://link.zhihu.com/?target=https://zh.wikipedia.org/wiki/%E4%BC%BC%E7%84%B6%E5%87%BD%E6%95%B0">维基百科-似然性</a></li>
+<li><a href="https://link.zhihu.com/?target=https://www.cnblogs.com/shixisheng/p/7136890.html">最大似然估计和最大后验估计（转） - 段子手实习生 - 博客园</a></li>
+<li><a href="https://link.zhihu.com/?target=https://blog.csdn.net/u011508640/article/details/72815981">详解最大似然估计（MLE）、最大后验概率估计（MAP），以及贝叶斯公式的理解 - nebulaf91的博客 - CSDN博客</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/54082000/answer/145495695">如何理解似然函数?</a></li>
+</ul>
+<h2 id="贝叶斯估计"><a href="#贝叶斯估计" class="headerlink" title="贝叶斯估计"></a>贝叶斯估计</h2><blockquote>
+<p>Bayesian Estimation</p>
+</blockquote>
+<p>贝叶斯估计实质： 贝叶斯决策来决策参数的取值。与最大似然估计同为概率密度估计中的主要参数估计方法，结果多数情况下与最大似然估计相同</p>
+<p>区别：</p>
+<ul>
+<li>最大似然估计把待估计的参数当作未知但固定的量</li>
+<li>贝叶斯估计把待估计的参数也看为随机变量</li>
+</ul>
+<p>$R(\hat{\theta}|x )$ 给定$x$ 件下估计量$\hat{\theta}$ 期望损失，称为条件风险。 如果$\theta$ 估计量$\hat{\theta}$ 得条件风险最小，则称$\hat{\theta}$ ${\theta}$ 贝叶斯估计量</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/02.%E5%8F%82%E6%95%B0%E4%BC%B0%E8%AE%A1/">https://hongwei-zhao.github.io/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/02.%E5%8F%82%E6%95%B0%E4%BC%B0%E8%AE%A1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/%E6%95%B0%E5%AD%A6/">数学</a><a class="post-meta__tags" href="/blog/tags/%E5%88%86%E5%B8%83/">分布</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/03.%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C/" title="假设检验"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">假设检验</div></div><div class="info-2"><div class="info-item-1">六、假设检验6.1 假设检验的基本思想和概念 基本思想 以“女士品茶”为例，对于该女士有没有品茶的能力，有两种假设：该女士没有品茶能力和该女士有品茶能力。在统计上这两个非空不相交参数集合称作统计假设，简称假设。通过样本对一个假设作出对与不对的判断，则称为该假设的一个检验。若检验结果否定该命题，则称拒绝这个假设，否则就**接受（不拒绝）**这个假设。 假设可分为两种：1. 参数假设检验，即已经知道数据的分布，针对总体的某个参数进行假设检验；2. 非参数假设检验，即数据分布未知，针对该分布进行假设检验。  假设检验的基本步骤 建立假设—&gt;选择检验统计量，给出拒绝域形式—&gt;选择显著...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/01.%E7%BB%9F%E8%AE%A1%E9%87%8F%E5%8F%8A%E5%85%B6%E5%88%86%E5%B8%83/" title="统计量及其分布"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">统计量及其分布</div></div><div class="info-2"><div class="info-item-1">统计量及其分布总体与样本 总体 &emsp;&emsp;在一个统计问题里，研究对象的全体叫做总体，构成总体的每个成员称为个体。根据个体的数量指标数量，定义总体的维度，如每个个体只有一个数量指标，总体就是一维的，同理，个体有两个数量指标，总体就是二维的。总体就是一个分布，数量指标就是服从这个分布的随机变量。&emsp;&emsp;总体根据个体数分为有限总体和无限总体，当有限总体的个体数充分大时，其可以看为无限总体。  样本  定义：  &emsp;&emsp;从总体中随机抽取的部分个体组成的集合称为样本，样本个数称为样本容量。  性质：  二重性：抽取前随机，是随机变量；抽取后确定，是一组...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/15.%E6%9C%80%E4%BC%98%E4%BC%A0%E8%BE%93%E4%B9%8B%E7%94%9F%E6%88%90%E6%A8%A1%E5%9E%8B/" title="最优传输之生成模型"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">最优传输之生成模型</div></div><div class="info-2"><div class="info-item-1">WGAN假设 $F$ 的形式为： $$F &#x3D; \left[ \begin{array}{c} f_1\ f_2 \ \vdots \ f_n \ \hline g_1 \ g_2 \ \vdots \ g_n \ \end{array} \right]  &#x3D; \left[ \begin{array}{c} f(x_1) \ f(x_2) \ \vdots \ f(x_n) \ \hline g(y_1) \ g(y_2) \ \vdots \ g(y_n) \ \end{array} \right]\tag{2.1}$$为什么这样设？第一个等号说明， $F$ 的形状跟...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/16.%E6%9C%80%E4%BC%98%E4%BC%A0%E8%BE%93%E4%B9%8B%E6%A2%AF%E5%BA%A6%E6%B5%81/" title="最优传输之梯度流"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">最优传输之梯度流</div></div><div class="info-2"><div class="info-item-1">梯度流欧式空间如果我们想要求解 $f(x)$ 的最小值，使用梯度下降法可知： $$x_{t+1}&#x3D;x_t-\alpha\nabla_{x_t} f(x_t)\tag{3.1}$$其中 $\alpha$ 为学习率。如果使学习率趋向于0并记为 $\Delta t$ ， $x_{t+1}$ 记为 $x_{t+\Delta t}$ ，那么有： $$\frac{dx}{dt}&#x3D;-\nabla_{x}f(x)\tag{3.2}$$则（3.2）式称为梯度流。将（3.2）写成逆向Euler形式（ODE前向和逆向是相等的），有： $$\begin{array}{c} x_{t+1}&#...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/05.%E5%88%86%E5%B8%83%E5%BA%A6%E9%87%8F/" title="分布度量"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">分布度量</div></div><div class="info-2"><div class="info-item-1">信息量假设 $X$​ 是一个离散型随机变量，其取值集合为$\chi$​，概率分布函数为$p(x)&#x3D;Pr(X&#x3D;x),x∈\chi$​，我们定义事件$X&#x3D;x_0$​ 的信息量为： $$I(x_0)&#x3D;−log(p(x_0))$$ 可以理解为，一个事件发生的概率越大，则它所携带的信息量就越小，而当$p(x_0)&#x3D;1$​ 时，熵将等于 0，也就是说该事件的发生不会导致任何信息量的增加。 举个例子，小明平时不爱学习，考试经常不及格，而小王是个勤奋学习的好学生，经常得满分，所以我们可以做如下假设：事件 A：小明考试及格，对应的概率$P(x_A)&#x3...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/13.Wasserstein%E8%B7%9D%E7%A6%BB/" title="Wasserstein距离"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Wasserstein距离</div></div><div class="info-2"><div class="info-item-1">推土机距离问题（Earth Mover’s Distance）假设地面上有 $m$ 个土堆，第 $i$ 个土堆有 $r_i$ 数量的土；同时另一边有 $n$ 个坑，第 $j$ 个坑可以容纳 $c_j$ 数量的土。假设所有的土能刚好被所有的坑填满，那么就有关系： $$\sum_i{r_i}&#x3D;\sum_j{c_j}\tag{1.1}$$我们现在要把土从 $m$ 搬到 $n$ ，传输方案就可以用一个 $m\times n$ 的矩阵 $Y&#x3D;[\gamma_{i,j}]{m\times n}$ 表示，其中 $\gamma{i,j}$ 表示从第 $i$ 个土堆搬到第 $j$ 个坑...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/06.%E4%BA%A4%E5%8F%89%E7%86%B5/" title="交叉熵"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">交叉熵</div></div><div class="info-2"><div class="info-item-1">交叉熵假设有两个分布$p，q$​，则它们在给定样本集上的交叉熵定义如下： $$CEH(p,q)&#x3D;E_p[−logq]&#x3D;−\sum_{x\in\chi}p(x)logq(x)&#x3D;H(p)+D_{KL}(p\parallel q)$$ 可以看出，交叉熵与相对熵仅相差了$H(p)$​，​ 当$p$​​ 已知时，可以把$H(p)$​​ 看做一个常数，此时交叉熵与 KL 距离在行为上是等价的，都反映了分布$p，q$​​ 的相似程度。最小化交叉熵等于最小化 KL 距离。它们都将在$p&#x3D;q$​​ 时取得最小值$H(p)$​​（$p&#x3D;q$​​​ 时 KL ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/%E6%95%B0%E5%AD%A6/05.%E5%88%86%E5%B8%83/03.%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C/" title="假设检验"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">假设检验</div></div><div class="info-2"><div class="info-item-1">六、假设检验6.1 假设检验的基本思想和概念 基本思想 以“女士品茶”为例，对于该女士有没有品茶的能力，有两种假设：该女士没有品茶能力和该女士有品茶能力。在统计上这两个非空不相交参数集合称作统计假设，简称假设。通过样本对一个假设作出对与不对的判断，则称为该假设的一个检验。若检验结果否定该命题，则称拒绝这个假设，否则就**接受（不拒绝）**这个假设。 假设可分为两种：1. 参数假设检验，即已经知道数据的分布，针对总体的某个参数进行假设检验；2. 非参数假设检验，即数据分布未知，针对该分布进行假设检验。  假设检验的基本步骤 建立假设—&gt;选择检验统计量，给出拒绝域形式—&gt;选择显著...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%82%B9%E4%BC%B0%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">点估计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%82%B9%E4%BC%B0%E8%AE%A1%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">2.1.</span> <span class="toc-text">点估计的概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%82%B9%E4%BC%B0%E8%AE%A1%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">2.2.</span> <span class="toc-text">点估计的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%82%B9%E4%BC%B0%E8%AE%A1%E7%9A%84%E4%BC%98%E8%89%AF%E6%80%A7%E5%87%86%E5%88%99"><span class="toc-number">2.3.</span> <span class="toc-text">点估计的优良性准则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%BA%E9%97%B4%E4%BC%B0%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">区间估计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%BA%E9%97%B4%E4%BC%B0%E8%AE%A1%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">3.1.</span> <span class="toc-text">区间估计的概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%BA%E9%97%B4%E4%BC%B0%E8%AE%A1%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">区间估计的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E5%8C%BA%E9%97%B4%E4%BC%B0%E8%AE%A1"><span class="toc-number">3.3.</span> <span class="toc-text">一些情况下的区间估计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1"><span class="toc-number">4.</span> <span class="toc-text">最大似然估计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%81%87%E8%AE%BE"><span class="toc-number">4.1.</span> <span class="toc-text">基本假设</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%BC%E7%84%B6%E5%87%BD%E6%95%B0"><span class="toc-number">4.2.</span> <span class="toc-text">似然函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1-1"><span class="toc-number">4.3.</span> <span class="toc-text">最大似然估计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A6%BB%E6%95%A3%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1"><span class="toc-number">4.4.</span> <span class="toc-text">离散型随机变量的最大似然估计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E7%BB%AD%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1"><span class="toc-number">4.5.</span> <span class="toc-text">连续型随机变量的最大似然估计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%BC%B0%E8%AE%A1"><span class="toc-number">5.</span> <span class="toc-text">贝叶斯估计</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>CLIP-CIL | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ChatGPT全文翻译 :arrow_down:0. 摘要持续学习旨在随着时间的推移学习新任务而不遗忘之前的任务。文献中报告了多项重大努力，以在有限或无法访问以前任务数据的情况下解决这一问题。在这些努力中，典型的解决方案提供了复杂的技术，包括记忆重放、知识蒸馏、模型正则化和动态网络扩展。由此产生的方法在每个学习任务中都有重新训练的成本、专用的内存需求和特定设置的设计选择。在这项工作中，我们展示了一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CLIP-CIL">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/03.CLIP-CIL/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="ChatGPT全文翻译 :arrow_down:0. 摘要持续学习旨在随着时间的推移学习新任务而不遗忘之前的任务。文献中报告了多项重大努力，以在有限或无法访问以前任务数据的情况下解决这一问题。在这些努力中，典型的解决方案提供了复杂的技术，包括记忆重放、知识蒸馏、模型正则化和动态网络扩展。由此产生的方法在每个学习任务中都有重新训练的成本、专用的内存需求和特定设置的设计选择。在这项工作中，我们展示了一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.347Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="多模态增量学习MMCL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CLIP-CIL",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/03.CLIP-CIL/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.347Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/03.CLIP-CIL/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CLIP-CIL',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">CLIP-CIL</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">CLIP-CIL</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.347Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/">多模态增量学习MMCL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="ChatGPT全文翻译-arrow-down"><a href="#ChatGPT全文翻译-arrow-down" class="headerlink" title="ChatGPT全文翻译 :arrow_down:"></a>ChatGPT全文翻译 :arrow_down:</h2><h2 id="0-摘要"><a href="#0-摘要" class="headerlink" title="0. 摘要"></a>0. 摘要</h2><p>持续学习旨在随着时间的推移学习新任务而不遗忘之前的任务。文献中报告了多项重大努力，以在有限或无法访问以前任务数据的情况下解决这一问题。在这些努力中，典型的解决方案提供了复杂的技术，包括记忆重放、知识蒸馏、模型正则化和动态网络扩展。由此产生的方法在每个学习任务中都有重新训练的成本、专用的内存需求和特定设置的设计选择。在这项工作中，我们展示了一个冻结的 CLIP（对比语言 - 图像预训练）模型在不进行任何微调（零样本评估）的情况下，提供了惊人的持续学习性能。我们在包括类增量、域增量和任务无关增量学习的各种设置下，在五个流行基准（ImageNet-100 &amp; 1K、CORe50、CIFAR-100 和 TinyImageNet）上评估了 CLIP。在没有任何额外技巧的情况下，CLIP 模型在大多数设置中都优于最新的持续学习方法。我们展示了通过简单的提示模板来改变文本输入对 CLIP 模型性能的影响。据我们所知，这是首次在持续学习环境中报告 CLIP 零样本性能的工作。我们提倡在未来的持续学习任务比较中使用这种强大而又令人尴尬的简单基线。代码可在 <a target="_blank" rel="noopener" href="https://github.com/vgthengane/Continual-CLIP">https://github.com/vgthengane/Continual-CLIP</a> 获取。</p>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p>传统上，以监督方式训练在包含所有感兴趣类别的训练集上的深度神经网络（DNN）表现出了优异的结果。这类模型可以在一次训练过程中假设学习到数据集中所有相关特征。然而，在现实世界中，并不是所有的数据样本都可以一次性获得。为了应对这种情况，持续学习提供了一个有前途的范式，因为它使得学习可以应对数据分布随时间的变化。然而，在这种增量数据流上训练的 DNN 会遭遇灾难性遗忘问题，因为之前任务的数据无法完全访问【31】。</p>
+<p>文献中存在四种流行的持续学习协议：任务增量学习（TIL）使用任务特定的神经网络，其中在推理时假设任务标识符已知。类增量学习（CIL）设置中，类别按顺序添加，推理时任务标识符未知。在域增量学习（DIL）中，类别数量保持不变，但数据域随着时间推移发生变化。任务无关（或任务无标识）持续学习（TFCL）是一种更通用的设置，没有显式的任务边界，数据可以自由地在持续学习阶段中出现【21】。这些方法面临的主要挑战是在更新新数据时避免遗忘以前学到的知识。</p>
+<p>在持续学习文献中，已经开发了几种专门的方法来减少灾难性遗忘。其中，典型的解决方案提供了复杂的技术，包括记忆重放【17，27，12】、知识蒸馏【5，13】、模型正则化【14，3】、参数隔离【22，7】以及动态网络扩展【6，8，20】。这些方法在每个学习任务中都有重新训练的成本，需要专门的内存来存储样本或过去的模型，并且涉及复杂的超参数调整，这限制了它们的实际应用。此外，上述持续学习协议通常是单独处理的，现有方法涉及特定设置的设计选择，使它们无法在不同的持续学习设置之间转移。</p>
+<p>在这项工作中，我们旨在测试目前为止在实现真正的持续学习系统方面取得的进展。我们的主要问题是探索是否可以用一种不需要为每个增量步骤训练的简单通用方法取代当前最先进的狭窄模型，无需示例记忆存储，并且可以在所有现有增量学习协议中工作，且无需或仅需极少的超参数调整。为此，我们展示了一个冻结的 CLIP 模型【19】由于其可泛化的表示和无需任何参数调整的零样本行为，展示了巨大的潜力。我们称在各种持续学习设置下评估的 CLIP 为 Continual-CLIP。图 1 概述了传统的持续学习方法和冻结 CLIP 在持续学习系统中的应用。</p>
+<p>我们在四种不同的设置（TIL、CIL、DIL 和 TFCL）和七个数据集（ImageNet-100 &amp; 1K【9】，CLEAR【10】，CIFAR-100【18】，TinyImageNet【26】，CoRe50【28】和高斯计划 CIFAR-100【24】）中的广泛评估表明，CLIP 在所有这些 CL 设置中都具有竞争力。这种泛化行为是由于视觉 - 语言模型如 CLIP 在 400M 图文对上进行对比训练目标的过程中进行了大规模预训练。在预训练期间，CLIP 学习了一系列多样化的高级表示，这些表示可以传递到多个下游任务，包括增量任务。我们还展示了如何通过简单的提示工程来改变文本输入，从而影响 CLIP 在 CL 中的性能。</p>
+<p>总之，这项工作为基于预训练视觉 - 语言模型的未来持续学习方向奠定了基线。我们在各种流行的图像识别基准上评估了预训练的冻结 CLIP 模型在不同持续学习设置下的表现，并与当前最先进的方法进行比较，显示出开箱即用的 CLIP 表示在所有情况下都表现出竞争力。我们的结果旨在整合持续学习领域中分散的努力，这些努力专注于特定的设置，并强调了需要能够在多个设置中工作的通用方法。</p>
+<h2 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2. 相关工作"></a>2. 相关工作</h2><p>持续学习：现有的持续学习方法主要采用以下方案之一：（1）模型正则化，（2）记忆重放，（3）动态网络扩展。基于正则化的方法【14，3，13，5】通过限制对先前任务重要的模型参数的可塑性来避免灾难性遗忘。尽管这些方法不需要记忆重放，但它们仅被证明在简化的任务增量设置（假设在推理时任务标识符已知）和较小的数据集上有效【29】。基于记忆重放的方法使用存储在内存中的样本或使用生成技术合成样本，并在更具挑战性的设置和数据集上表现出色【17，25，11，15】。然而，当内存较小时，它们的性能会下降【15】，并且存储这些样本可能引发安全和隐私问题【23】。架构驱动的 CL 方法要么动态扩展网络【8，16，30，31】要么划分为子网络以适应新任务【31，32】。这种方法缺乏可扩展性，因为网络容量随着任务的增加而增长。</p>
+<p>视觉 - 语言模型：训练一个联合视觉 - 语言嵌入空间可以促进文本和图像数据之间的交互，这对于解决零样本学习、视觉定位和图像字幕等问题至关重要。尽管最初的视觉 - 语言模型是单流的，并将视觉和文本数据的连接输入作为一个输入集进行处理【30，4】最近的方法，如对比语言 - 图像预训练（CLIP）【19】是双流的，分别为图像和文本输入提供专用编码器。两个编码器的表示被投射到一个统一的嵌入空间中，并使用对比学习目标来最小化匹配图文对之间的距离，并最大化不匹配的图文嵌入对之间的距离。随后的工作表明，CLIP 是可扩展的，并且其能力在训练了大规模噪声数据 1B 未整理样本【33】时有所提高。已经证明，CLIP 学习的表示在众多下游任务中具有良好的泛化能力，包括图文检索，具有出色的零样本转移能力【35】。CLIP 还可以灵活地适应视频【34，36】，并捕捉对象级交互【31，35，37】。然而，CLIP 表示在 CL 中的适用性尚未被探讨。</p>
+<p>随着视觉 Transformer【4】和 NLP 中基于提示的微调的最新进展【6】，Wang 等人已经展示了通过提示学习与 ImageNet 预训练模型交互是一种有前途的持续学习方法【32，33】。一小组可学习参数，称为提示，附加到输入上，使得冻结的 ImageNet 预训练模型能够快速适应新的流任务。在我们的分析中，我们展示了直接利用预训练的视觉 - 语言模型，而不引入任何可学习参数，是一种简单但有前途的持续学习方法。我们认为，适应联合视觉 - 语言模型如 CLIP【19】以进行持续学习具有多个优势。它使得在没有明确任务标识符和边界的实际场景中，可以动态适应流数据的任务无关方式中操作。使用 CLIP 模型不需要为新任务进行计算密集的训练或微</p>
+<p>调。此外，与当前最先进的方法需要存储来自以前任务的训练样本的记忆缓冲区相比，Continual-CLIP 方法不需要重放，更适合在存储训练样本可能存在实际隐私和安全问题或存储限制的场景中使用【23】。相反，Continual-CLIP 方法在所有学习阶段中需要的内存是固定的。总之，Continual-CLIP 方法是无内存的，不需要测试时的任务标识信息，可以灵活、轻松地适应任意数量的类别，而无需额外的可学习参数。</p>
+<h2 id="3-方法"><a href="#3-方法" class="headerlink" title="3. 方法"></a>3. 方法</h2><p>在本节中，我们首先简要讨论不同的持续学习设置。接下来，我们介绍对比语言 - 图像预训练（CLIP，Radford 等人【19】），并解释如何在零样本的情况下使用手工制作的提示将其应用于不同的下游持续学习任务。</p>
+<h3 id="3-1-持续学习表述"><a href="#3-1-持续学习表述" class="headerlink" title="3.1 持续学习表述"></a>3.1 持续学习表述</h3><p>不同的持续学习（CL）问题集中于在非平稳数据中从连续任务中训练模型，同时减少对旧任务的遗忘。考虑一个任务序列 $D &#x3D; {D_1, D_2, \ldots, D_T}$，其中第 $t$ 个任务 $D_t &#x3D; {(x_{i,t}, y_{i,t})}<em>{i&#x3D;1}^{N</em>{D_t&#125;&#125;$ 包含输入样本的元组 $x_{i,t} \in X$ 及其对应的标签 $y_{i,t} \in Y$。目标是优化参数为 $\theta$ 的模型 $f_\theta : X \rightarrow Y$，使其能够预测任意任务的未见测试样本 $x$ 的标签 $y &#x3D; f_\theta(x) \in Y$。在任务 $t$ 期间，来自先前分布 $D_{t-1}$ 的数据不可用或受限。</p>
+<p>基于任务 $t$ 的输入分布 $P(X^{(t)})$ 和输出分布 $P(Y^{(t)})$，其中 $P(X^{(t)}) \neq P(X^{(t+1)})$，持续学习可以分为四种流行的设置，每种设置都有略微不同的假设，即任务增量、类增量、域增量和任务无关 CL。常见的任务、类、域增量设置假设任务数据 $D_t$ 按序列到达，使得 $t &#x3D; {1, 2, \ldots, T}$。在任务 $t$ 中，类增量设置定义了所有观察到的类别标签的输出空间 $Y^{(t)} \subset Y^{(t+1)}$ 且 $P(Y^{(t)}) \neq P(Y^{(t+1)})$。与类增量设置不同，任务增量设置定义了 $Y^{(t)} \neq Y^{(t+1)}$，且 $P(Y^{(t)}) \neq P(Y^{(t+1)})$ 需要任务标签 $t$ 来表示隔离的输出头 $Y^{(t)}$。与每个任务有不同类别的任务和类增量设置不同，域增量设置定义为 $Y^{(t)} &#x3D; Y^{(t+1)}$ 且 $P(Y^{(t)}) &#x3D; P(Y^{(t+1)})$ 及 $P(X^{(t)}) \neq P(X^{(t+1)})$，表明它包含来自不同域的图像集，但每个任务都有相同的类别集。更具挑战性的是任务无关（或任务无标识）设置，其中任务数据 $D_t$ 平滑变化，且任务标识 $t$ 未知【21】。在这项工作中，我们进行了广泛的实验，以展示基于 CLIP 的方法在类增量、域增量和 CL 中任务无关设置中的有效性。</p>
+<h3 id="3-2-Continual-CLIP"><a href="#3-2-Continual-CLIP" class="headerlink" title="3.2 Continual-CLIP"></a>3.2 Continual-CLIP</h3><p>对比语言 - 图像预训练（CLIP，Radford 等人【19】）由两个并行的编码器组成，一个用于文本，另一个用于图像。文本编码器基于 Transformer【34】架构，为基于文本的语言输入生成嵌入表示。另一方面，图像编码器架构可以基于 CNN（如 ResNet-50【16】）或视觉 Transformer（ViT）模型【8】将高维输入图像转换为紧凑的嵌入空间。文本和图像编码器的嵌入特征维度相同，从而使两个模态的表示学习在一个共享和统一的表示空间中。</p>
+<p>CLIP 模型使用对比损失进行训练，该损失增强了属于同一图文对的图像和文本嵌入之间的相似性，使它们在联合特征空间中对齐。给定一批图文对，CLIP 的目标是最大化匹配对之间的余弦相似度，同时最小化不匹配图文嵌入对之间的相似度。使用这一学习目标，模型在一个包含 400M 图文对的大规模数据集上进行训练，学习到具有高度可转移性的图像和文本数据表示，显示了令人印象深刻的零样本泛化能力。</p>
+<p>设 CLIP 模型为 $F &#x3D; {E_{\text{visual&#125;&#125;, E_{\text{text&#125;&#125;}$，其中 $E_{\text{visual&#125;&#125;$ 和 $E_{\text{text&#125;&#125;$ 分别是图像和文本编码器。考虑一个 $K$ 类分类问题，其中单个测试图像 $x_{\text{test&#125;&#125; \in \mathbb{R}^{C \times H \times W}$ 属于类别 $y \in \mathbb{R}^K$。在传统的零样本分类场景中，每个 $y_i \in Y &#x3D; {y_1, y_2, \ldots, y_K}$ 被预先附加了一个手工制作的提示模板 $p$，例如“a photo of a {category}”，以形成类别特定的文本输入 ${p; y_i}$。然后将该文本输入送入文本编码器以获得文本嵌入 ${t_1, t_2, \ldots, t_K}$，其中 $t_i &#x3D; E_{\text{text&#125;&#125;({p; y_i})$。图像输入 $x_{\text{test&#125;&#125;$ 被送入 $E_{\text{visual&#125;&#125;$ 以获得相应的图像嵌入 $v &#x3D; E_{\text{visual&#125;&#125;(x_{\text{test&#125;&#125;)$。然后将文本和图像嵌入进行匹配以计算相似度得分 $s_i &#x3D; \text{sim}(t_i \cdot v)$，其中 $\text{sim}(·, ·)$ 表示余弦相似度。测试样本 $x_{\text{test&#125;&#125;$ 的预测概率可以表示为<br>$$<br>    p(y_i | x_{\text{test&#125;&#125;) &#x3D; \frac{\exp(\text{sim}(t_i \cdot v))}{\sum_{i&#x3D;1}^{K} \exp(\text{sim}(t_i \cdot v))}<br>$$<br>传统的分类器学习闭集的视觉概念，而视觉 - 语言预训练模型如 CLIP 通过高容量的文本编码器学习开放集的视觉概念。这导致了一个更广泛的语义空间，使得学习到的表示更易于转移到下游任务。预训练的视觉 - 语言 CLIP 模型因此提供了令人印象深刻的零样本能力。我们在持续学习设置下利用冻结的 CLIP 模型进行图像识别，而无需进行任何训练，以严格的零样本方式进行。在评估过程中，我们首先初始化两个 CLIP 编码器并冻结权重。与传统评估不同的是，在持续评估中，我们假设模型正在学习当前任务 $t$，并仅在已观察到的任务上进行评估。</p>
+<h2 id="4-实验"><a href="#4-实验" class="headerlink" title="4. 实验"></a>4. 实验</h2><h3 id="4-1-实验协议"><a href="#4-1-实验协议" class="headerlink" title="4.1 实验协议"></a>4.1 实验协议</h3><p>数据集：我们在七个不同的数据集和 13 个不同的学习任务配置中评估了 Continual-CLIP。在类增量设置中，我们在 CIFAR-100、ImageNet-100 &amp; 1K、TinyImageNet 下的不同类分割中评估 Continual-CLIP。（a）在 CIFAR-100 中，我们比较了在 10 个步骤（每个步骤 10 个新类）、20 个步骤（每个步骤 5 个新类）和 50 个步骤（每个步骤 2 个新类）下的性能【6，8】。（b）在 ImageNet-100 中，我们考虑了两种评估设置；ImageNet-100-B0 在所有步骤中具有相同数量的类（即每步 10 个类），ImageNet-100-B50 在第一步包含 50 个类，其余 50 个类在接下来的 10 步中逐步观察（每步 5 个类）【8】。（c）我们将 ImageNet-1K 分为 10 个增量步骤（每步 100 个类）【</p>
+<p>8】。（d）在 TinyImageNet 中，我们在第一步保留了 100 个类，然后与 ImageNet-100 类似，在三种不同的步骤数量（即 5 步（每步 20 个类）、10 步（每步 10 个类）和 20 步（每步 5 个类））中逐步添加剩余的类【26】。请注意，我们没有在推理时已知任务 ID 的任务增量设置下进行评估，因为这是持续学习设置中最简单的一种。</p>
+<p>我们在域增量设置下使用 CORe50 和 CLEAR-10 &amp; 100 数据集评估 Continual-CLIP。CORe50 有 11 个不同的场景和 10 个类。由于我们不训练（或微调）模型，只考虑了 3 个域进行评估，遵循【28】中的指南。在 CLEAR-10 &amp; 100 实验中，我们使用了 Avalanche【32】的预构建方法来获取评估场景。</p>
+<p>我们在任务无关（或任务无标识）设置下使用高斯计划 CIFAR-100 进行评估。我们使用与【24】中相同的设置来检查 Continual-CLIP 方法在任务无标识设置中的有效性。对于评估，【24】将评估数据集置于一旁，并在每个任务后对整个数据集进行评估。由于 Continual-CLIP 模型是冻结的，我们报告了最终的测试准确率以进行比较。</p>
+<p>评估指标：在类增量设置中，我们通过“Avg”准确率（在每个时间步骤获得的所有准确率值的平均值）和“Last”准确率（学习所有任务后的最终准确率）与其他基线方法比较 Continual-CLIP。在域增量设置中，我们使用“In-domain”、“Next-domain”、“Forward transfer”、“Backward transfer”和“Overall accuracy”来比较 Continual-CLIP。请注意，对于 CORe50 数据集，只有一个测试集可用，因此我们报告了该测试集的准确率。同样，对于任务无标识设置，我们仅报告测试准确率。</p>
+<p>实现细节：我们在零样本评估设置中使用了官方的 CLIP【19】实现。为了构建类增量设置的持续场景，我们大量使用了 Continuum【32】，并遵循了【6】中的相同评估设置。在 CORe50 和 CLEAR 数据集上的域增量场景中，我们使用了 Avalanche 库【32】。由于 CIFAR100 和 TinyImageNet 数据集包含低分辨率图像，我们使用了“a bad photo of a {category}”提示模板。ImageNet-100 和 1K 等数据集具有高分辨率图像，因此我们在所有实验中使用了“a good photo of a {category}”提示模板来评估 Continual-CLIP。</p>
+<p>在评估中，我们使用了【19】中定义的数据预处理技术，包括双三次插值、中心裁剪和归一化。</p>
+<h3 id="4-2-结果"><a href="#4-2-结果" class="headerlink" title="4.2 结果"></a>4.2 结果</h3><p>类增量设置。表 1 中的结果将 Continual-CLIP 与其他基线方法在 CIFAR-100 数据集上的三种不同设置（10、20 和 50 个步骤）进行了比较。在 10 个步骤设置中，即使没有任何训练或微调，Continual-CLIP 在平均准确率和最后准确率方面也达到了与最近的最先进方法（如 DyTox【6】和 DER【8】）相当的竞争力。特别是，在 20 个步骤设置中，Continual-CLIP 达到了 75.95% 的“Avg”准确率，而在 50 个步骤设置中达到了 76.49% 的“Avg”准确率。最后的准确率在所有情况下相同（因为这是零样本评估）。结果表明，Continual-CLIP 在大多数情况下始终优于大多数比较方法，并且有显著的差距。这一趋势在较大数量任务上尤为显著，这是 CL 中更具挑战性的案例（图 2）。</p>
+<p>ImageNet-100 &amp; 1K 数据集上的结果如表 2 所示。在标准设置（即所有步骤中的类数相同；参见第 2-5 列）中，Continual-CLIP 在 ImageNet-100 上显示出 7.84% 的改进，在 ImageNet-1K 数据集上显示出 4.63% 的改进，均为“Avg”准确率相比第二好的方法。同样，在“Last”准确率上，ImageNet-100 上显示了 7.71% 的显著改进，而 ImageNet-1K 上显示了 7.70% 的显著改进。在具有 50 个基础类的其他设置（即 ImageNet-100-B50）中，Continual-CLIP 显示的结果优于最近的方法。</p>
+<p>在表 3 中报告的结果中，我们观察到在 TinyImageNet 数据集上，Continual-CLIP 在所有 3 个设置中都显示了持续的改进。Continual-CLIP 相比于第二好的方法 DyTox 在平均准确率方面平均提高了 20.30%，在最后的准确率方面也显示了显著的增益。</p>
+<p>域增量设置。表 4 显示了 Continual-CLIP 方法与 CVPR 2022 CLEAR 挑战赛榜单上获胜团队的比较【10】。这些值是根据【28】中的评估协议在测试集上报告的。对于 CLEAR-10 &amp; 100，Continual-CLIP 在整体表现上与表现最好的团队竞争。</p>
+<p>任务无标识设置。这是一种通用设置，其中没有任务、类别或域的约束，被认为相当具有挑战性。这种设置在文献中相对较少探索。在表 6 中，我们展示了 Continual-CLIP 与先前最佳方法（即 Encoders and Ensemble【24】）的比较。Continual-CLIP 以大幅度超越了比较方法，且无需任何训练或模型集成。</p>
+<p>总之，我们的广泛经验评估和比较提供了证据表明，Continual-CLIP 在所有持续学习设置中始终表现出令人印象深刻的结果，无需任何微调（或训练）、过去样本的专用内存或模型副本、复杂的超参数调整、动态模型扩展或更改分类头。</p>
+<h3 id="4-3-文本提示分析"><a href="#4-3-文本提示分析" class="headerlink" title="4.3 文本提示分析"></a>4.3 文本提示分析</h3><p>在本节中，我们研究了不同类别名称用作文本提示的一部分对 Continual-CLIP 准确率的影响。我们找到了 ImageNet-1K 数据集类的不同命名约定，并使用它们来评估 Continual-CLIP 性能。具体来说，我们使用了来自三个不同来源的三个名称：（a）ImageNet 原始标签，其中每个 1000 个 ImageNet 类【9】对应于一个 WordNet 同义词集（synset），（b）原始 ImageNet 标签具有重叠含义（例如“nail”，CLIP 模型将其理解为“fingernail”，因此它被更改为“metal nail”），因此 Radford 等人【19】对默认标签进行了整理以克服这种混淆，以及（c）每个同义词集的第一个同义词标签。表 7 显示了不同类名约定对模型性能的影响。使用类名类型（b）时，模型比其他两种类名类型显示出更好的结果，这是因为类名类型（b）以清晰的边界和不同类别名之间的区分进行了整理，而其他两种类型可能具有重叠的类含义。</p>
+<p>我们进一步探索了 Continual-CLIP 在提示工程中的有效性。为此，我们使用了不同的提示，并分析了 ImageNet-100 数据集上的结果。在表 8 中，我们报告了两种不同提示技术的零样本持续 CLIP 结果。（p1）基于决策的池化（计算每个提示的分数，然后进行平均池化），（p2）基于嵌入的池化（我们首先通过文本编码器传递每个提示以计算文本嵌入，然后通过堆叠所有嵌入创建一个单一分类头）。表 8 中的结果显示了基于嵌入和基于决策池化之间的权衡。相比于 Continual-CLIP 主结果，嵌入和基于决策的池化需要收集多个提示模板并进行额外的计算以获得每个提示的文本嵌入。此外，使用基于决策和嵌入的池化，我们需要领域专家知识来进行提示工程，并在多个试验中重复该过程，直到找到最佳提示。</p>
+<h2 id="5-结论"><a href="#5-结论" class="headerlink" title="5. 结论"></a>5. 结论</h2><p>在这项工作中，我们评估了一个简单但有效的基线，在三种不同的增量学习设置中始终取得了良好的结果：（1）类增量，（2）域增量和（3）任务无标识增量学习。Continual-CLIP 是一个标准的 CLIP 模型，在持续学习场景中进行了评估。在不同基准上的实验结果显示，在具有挑战性的配置下，Continual-CLIP 在持续学习中优于当前最先进的方法，无需进行任何微调、重放缓冲或内存开销。Continual-CLIP 模型可以在任何持续学习设置中使用，且几乎不需要修改。ImageNet-1k（类增量）和 CORe50（域增量）等大数据集上的最先进性能</p>
+<p>表明，Continual-CLIP 具有良好的可扩展性。</p>
+<p>尽管 Continual-CLIP 在持续学习设置中表现出色，但存在潜在的信息泄漏可能性，例如 CLIP 可能在预训练阶段已经遇到过评估下游数据集中的某些类。此外，还出现了新的问题，例如从混淆矩阵中可以看出（图 4 左侧：CIFAR100），当类名语义上接近时，模型会出现混淆：类索引“50”的类名为“mouse”，而模型将其预测为“74”，即“shrew”。</p>
+<p>在未来的工作中，这种建立在 CLIP 零样本转移能力之上的简单基线方法可以通过快速适应方法扩展到下游持续任务中。当前的工作为持续学习领域的发展奠定了基础，利用了视觉 - 语言基础模型。我们的工作还激励了对持续学习问题所取得的进展的重新思考，其中最新的方法带来了诸多限制，并鼓励寻找超越狭隘设置和繁琐内存及计算需求的通用解决方案。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/03.CLIP-CIL/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/03.CLIP-CIL/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/">多模态增量学习MMCL</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/01.PROOF/" title="PROOF"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">PROOF</div></div><div class="info-2"><div class="info-item-1"> Paper   0. 摘要类别增量学习（Class-Incremental Learning, CIL）或持续学习是一种在现实世界中非常需要的能力，它要求学习系统在适应新任务的同时，不遗忘先前的任务。虽然传统的 CIL 方法侧重于通过视觉信息来掌握核心特征，但近年来，视觉语言模型（Vision-Language Models, VLM）的进展展示了在文本信息帮助下学习通用表示的潜力。然而，当持续地引入新类别进行训练时，VLM 往往会遭遇对先前知识的灾难性遗忘。将 VLM 应用于 CIL 提出了两个主要挑战：1）如何在不遗忘的情况下适应模型；2）如何充分利用多模态信息。为此，我们提出了 ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/02.GMM/" title="GMM"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">GMM</div></div><div class="info-2"><div class="info-item-1"> Paper | Code | CVPR 2024  ChatGPT全文翻译 :arrow_down:0. 摘要在类别增量学习（CIL）场景中，由于分类器对当前任务的偏倚而导致的灾难性遗忘现象一直是一个重大挑战。这主要是由判别模型的特性引起的。随着生成多模态模型的流行，我们探索用生成模型替代判别模型来应对 CIL。然而，从判别模型过渡到生成模型需要解决两个关键挑战。主要挑战在于将生成的文本信息转化为不同类别的分类任务。此外，还需要在生成框架内制定 CIL 任务。为此，我们提出了一种新颖的用于类别增量学习的生成多模态模型（GMM）框架。我们的方法直接使用经过调整的生成模型为图像生成标签。在...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related no-desc" href="/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/00.Survey/02.Recent%20Advances%20of%20Multimodal%20Continual%20Learning%20A%20Comprehensive%20Survey/" title="Recent Advances of Multimodal Continual Learning A Comprehensive Survey"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Recent Advances of Multimodal Continual Learning A Comprehensive Survey</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/01.PROOF/" title="PROOF"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">PROOF</div></div><div class="info-2"><div class="info-item-1"> Paper   0. 摘要类别增量学习（Class-Incremental Learning, CIL）或持续学习是一种在现实世界中非常需要的能力，它要求学习系统在适应新任务的同时，不遗忘先前的任务。虽然传统的 CIL 方法侧重于通过视觉信息来掌握核心特征，但近年来，视觉语言模型（Vision-Language Models, VLM）的进展展示了在文本信息帮助下学习通用表示的潜力。然而，当持续地引入新类别进行训练时，VLM 往往会遭遇对先前知识的灾难性遗忘。将 VLM 应用于 CIL 提出了两个主要挑战：1）如何在不遗忘的情况下适应模型；2）如何充分利用多模态信息。为此，我们提出了 ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/06.CLAP4CLIP/" title="CLAP4CLIP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">CLAP4CLIP</div></div><div class="info-2"><div class="info-item-1">0. 摘要持续学习（Continual Learning, CL）旨在帮助深度神经网络在学习新知识的同时保留已学知识。由于其强大的泛化能力，预训练的视觉 - 语言模型（如对比语言 - 图像预训练模型，CLIP）最近作为实用的 CL 候选者受到了广泛关注。然而，预训练与下游 CL 任务之间的领域不匹配通常需要对 CLIP 进行微调。现有的微调方法大多具有确定性，这使得它们忽略了输入模态之间的多种可能交互，并且在需要可靠不确定性估计的高风险任务中显得不安全。为了解决这些问题，我们提出了持续学习与概率微调（CLAP）——一个在每项任务的视觉引导文本特征上进行概率建模的框架，从而提供更校准的 C...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/02.GMM/" title="GMM"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">GMM</div></div><div class="info-2"><div class="info-item-1"> Paper | Code | CVPR 2024  ChatGPT全文翻译 :arrow_down:0. 摘要在类别增量学习（CIL）场景中，由于分类器对当前任务的偏倚而导致的灾难性遗忘现象一直是一个重大挑战。这主要是由判别模型的特性引起的。随着生成多模态模型的流行，我们探索用生成模型替代判别模型来应对 CIL。然而，从判别模型过渡到生成模型需要解决两个关键挑战。主要挑战在于将生成的文本信息转化为不同类别的分类任务。此外，还需要在生成框架内制定 CIL 任务。为此，我们提出了一种新颖的用于类别增量学习的生成多模态模型（GMM）框架。我们的方法直接使用经过调整的生成模型为图像生成标签。在...</div></div></div></a><a class="pagination-related no-desc" href="/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/00.Survey/01.When%20Continue%20Learning%20Meets%20Multimodal%20Large%20Language%20Model%20A%20Survey/" title="When Continue Learning Meets Multimodal Large Language Model A Survey"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">When Continue Learning Meets Multimodal Large Language Model A Survey</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/43.%E5%A4%9A%E6%A8%A1%E6%80%81%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0MMCL/12.MoE-Adapters4CL/" title="MoE-Adapters4CL"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">MoE-Adapters4CL</div></div><div class="info-2"><div class="info-item-1">Boosting Continual Learning of Vision-Language Models via Mixture-of-Experts Adapters0. 摘要连续学习可以使视觉 - 语言模型不断地获取新知识，无需访问整个历史数据集。然而，由于（i）终身学习过程中参数的偏移和（ii）与全模型调整相关的重大计算负担，减轻大规模模型中的性能退化并非易事。在这项工作中，我们提出了一个参数高效的持续学习框架，以缓解增量学习中视觉 - 语言模型的长期遗忘问题。我们的方法涉及通过集成 Mixture-of-Experts (MoE) 适配器来响应新任务，动态扩展预训练的 CLIP...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ChatGPT%E5%85%A8%E6%96%87%E7%BF%BB%E8%AF%91-arrow-down"><span class="toc-number">1.</span> <span class="toc-text">ChatGPT全文翻译 :arrow_down:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E6%91%98%E8%A6%81"><span class="toc-number">2.</span> <span class="toc-text">0. 摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-number">3.</span> <span class="toc-text">1. 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text">2. 相关工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%96%B9%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">3. 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%8C%81%E7%BB%AD%E5%AD%A6%E4%B9%A0%E8%A1%A8%E8%BF%B0"><span class="toc-number">5.1.</span> <span class="toc-text">3.1 持续学习表述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Continual-CLIP"><span class="toc-number">5.2.</span> <span class="toc-text">3.2 Continual-CLIP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%AE%9E%E9%AA%8C"><span class="toc-number">6.</span> <span class="toc-text">4. 实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%AE%9E%E9%AA%8C%E5%8D%8F%E8%AE%AE"><span class="toc-number">6.1.</span> <span class="toc-text">4.1 实验协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E7%BB%93%E6%9E%9C"><span class="toc-number">6.2.</span> <span class="toc-text">4.2 结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E6%96%87%E6%9C%AC%E6%8F%90%E7%A4%BA%E5%88%86%E6%9E%90"><span class="toc-number">6.3.</span> <span class="toc-text">4.3 文本提示分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%BB%93%E8%AE%BA"><span class="toc-number">7.</span> <span class="toc-text">5. 结论</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>LSTM解读及实战 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文章结构在RNN详解及其实战中，我们简单讨论了为什么需要RNN这类模型、RNN的具体思路、RNN的简单实现等问题。同时，在文章结尾部分我们提到了RNN存在的梯度消失问题，及之后的一个解决方案**：LSTM**。因此，本篇文章主要结构如下：  LSTM 理解及简单实现 LSTM 实战 经典 RNN 与 LSTM 对比 关于梯度消失  LSTM 理解其实，我们将 LSTM 与 RNN 说成两个并不可取">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LSTM解读及实战">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/03.LSTM%E8%A7%A3%E8%AF%BB%E5%8F%8A%E5%AE%9E%E6%88%98/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="文章结构在RNN详解及其实战中，我们简单讨论了为什么需要RNN这类模型、RNN的具体思路、RNN的简单实现等问题。同时，在文章结尾部分我们提到了RNN存在的梯度消失问题，及之后的一个解决方案**：LSTM**。因此，本篇文章主要结构如下：  LSTM 理解及简单实现 LSTM 实战 经典 RNN 与 LSTM 对比 关于梯度消失  LSTM 理解其实，我们将 LSTM 与 RNN 说成两个并不可取">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.351Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="PyTorch">
+<meta property="article:tag" content="实战">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "LSTM解读及实战",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/03.LSTM%E8%A7%A3%E8%AF%BB%E5%8F%8A%E5%AE%9E%E6%88%98/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.351Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/03.LSTM%E8%A7%A3%E8%AF%BB%E5%8F%8A%E5%AE%9E%E6%88%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LSTM解读及实战',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">LSTM解读及实战</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">LSTM解读及实战</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.351Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PyTorch/">PyTorch</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PyTorch/%E5%AE%9E%E6%88%98/">实战</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="文章结构"><a href="#文章结构" class="headerlink" title="文章结构"></a>文章结构</h1><p>在<a href="./RNN%E8%AF%A6%E8%A7%A3%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0.md">RNN详解及其实战</a>中，我们简单讨论了为什么需要RNN这类模型、RNN的具体思路、RNN的简单实现等问题。同时，在文章结尾部分我们提到了RNN存在的梯度消失问题，及之后的一个解决方案**：LSTM**。因此，本篇文章主要结构如下：</p>
+<ol>
+<li>LSTM 理解及简单实现</li>
+<li>LSTM 实战</li>
+<li>经典 RNN 与 LSTM 对比</li>
+<li>关于梯度消失</li>
+</ol>
+<h1 id="LSTM-理解"><a href="#LSTM-理解" class="headerlink" title="LSTM 理解"></a>LSTM 理解</h1><p>其实，我们将 LSTM 与 RNN 说成两个并不可取， LSTM 依然归属于 RNN 之下，相比于使用线性回归方式来处理序列问题， LSTM 其实是设计了一个模块来取代线性回归算法。</p>
+<p>LSTM(Long Short-Term Memory)，翻译过来是长短期记忆法，其核心思想可以说非常的简单：既然 RNN 只能保存短期的记忆，那我增加一个长期记忆，不就可以解决这个问题了名？因此，LSTM提出了长期记忆和短期记忆，通过调整长期记忆和短期记忆之间的比例，来维持长期记忆的可靠，降低 RNN 的梯度消失问题。可以看到下方结构图中，模型输入由两个升级到三个，分别是当前节点状态 $\mathbf{X}<em>{t}$，长期记忆：$\mathbf{C}</em>{t-1}$，短期记忆 $\mathbf{H}<em>{t-1}$。输出状态依然是两个：节点当前状态 $\mathbf{C}</em>{t}$，和节点当前隐藏状态 $\mathbf{H}_{t}$。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202403231023098.jpg" alt="LSTM结构图"></p>
+<p>那么问题来了， LSTM 是如何实现对长短记忆的控制呢？<br>这就不得不提众人所知的三个门：</p>
+<ul>
+<li>遗忘门：控制保留多少上一时刻的单元节点到当前节点</li>
+<li>记忆门：控制将当前时刻的多少信息记忆到节点中</li>
+<li>输出门：控制输出多少信息给当前输出</li>
+</ul>
+<p>我们在分析三个门之前，我们先了解 <strong>门</strong> 这一概念。</p>
+<h2 id="门"><a href="#门" class="headerlink" title="门"></a>门</h2><p>从简化图中可以看到， <strong>门</strong>的感觉类似于电路中的一个开关，当开关按下，信息通过，而开关抬起，信息不再通过。实际也如此类似，<strong>门</strong>是一个全连接层，输入为一个向量，输出为一个位于 [0,1] 之间的值。<br>我们来设计一个非常简单的遗忘门：每次学习状态之后，都遗忘一定的已学习内容，注意，这里的遗忘门与 LSTM 的遗忘门无关，单纯理解 <strong>门</strong> 这一概念。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 一个线性层 用来计算遗忘多少</span><br>gate_linear = nn.Linear(hidden_size, <span class="hljs-number">1</span>)<br><span class="hljs-comment"># 一个线性层 用来学习</span><br>study_linear = nn.Linear(hidden_size, hidden_size)<br><span class="hljs-comment"># 此刻 h_t 是上一时刻状态</span><br><span class="hljs-comment"># 输出为 0 - 1 的值</span><br>gate = gate_linear(h_t)<br><span class="hljs-comment"># h_t 经过 study_linear 进行学习</span><br>_h_t = study_linear(h_t)<br><span class="hljs-comment"># 在输出结果之前，经过 gate 导致内容受损，遗忘了一定的学习内容</span><br>h_t = gate * （_h_t）<br></code></pre></td></tr></table></figure>
+<p>可以看到，如果 $gate$ 值为 0，则历史信息均会被遗忘，而如果值为1，则历史信息则会被完全保留，而 <code>gate_linear</code> 网络中的超参数会不断的学习，因此一个可以学习的开关门就出现了。</p>
+<p>但是，$gate$ 作为一个浮点型的数据，对于 临时结果矩阵变量 $_h_t$ 而言，其遗忘控制是全局的，也就是，当 $gate$ 为 0 时， 其最终结果 $h_t$ 为全 0 矩阵。因此我们应该注意： LSTM 中并不采用这样的大闸门，而是采用对每个变量进行分别控制的小水龙头(神经网络激活函数 <code>nn.Sigmode</code> )</p>
+<p>而在 LSTM 中，门主要使用 $Sigmod$ 神经网络(<strong>再次注意，并非是激活函数，而是 Sigmod 神经网络</strong>)来完成。</p>
+<p>下方是一个示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python">hidden_size = <span class="hljs-number">5</span><br>sigmoid = nn.Sigmoid()<br><span class="hljs-comment"># 隐藏状态 为了方便计算，假定全 1</span><br>hidden_emb = torch.ones(hidden_size, hidden_size)<br><span class="hljs-comment"># 中间某一层神经网络</span><br>model = nn.Linear(hidden_size，hidden_size)<br><span class="hljs-comment"># 获取该层输出,此时尚未被门限制</span><br>mid_out = model(hidden_emb)<br><span class="hljs-comment"># 获取一个门 -- 注意：并非一定由该变量所控制</span><br><span class="hljs-comment"># 比如：也可以由上一时刻的隐藏状态控制</span><br><span class="hljs-comment"># 代码为： gate = sigmoid(hidden_emb)</span><br>gate = sigmoid(mid_out) <br><span class="hljs-comment"># 得到最终输出</span><br>final_out = gate * mid_out<br></code></pre></td></tr></table></figure>
+
+<p>在有了对门的基础知识后，接下来对遗忘门、记忆门、输出门进行分别分析。</p>
+<h2 id="遗忘门"><a href="#遗忘门" class="headerlink" title="遗忘门"></a>遗忘门</h2><p>遗忘门涉及部分如下图所示：<br> <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202403231023099.jpg" alt="LSTM-遗忘门"></p>
+<p>其中，下方蓝色表示三个门共用的输入部分，均为 [$\mathbf{h}<em>{t-1}$,$\mathbf{X}</em>{t}$],需要注意，这里由于三个门之间并不共享权重参数，因此公示虽然接近，但是一共计算了三次，遗忘门被标记为 $f_t$, 列出遗忘门公式为：<br>$$<br>f_t &#x3D; \sigma(\mathbf{W_f} * [\mathbf{h}<em>{t-1},\mathbf{X}</em>{t}]  + \mathbf{b_f})<br>$$<br>输出结果为取值范围为 [ 0, 1 ] 的矩阵，主要功能是控制与之相乘的矩阵的<strong>遗忘程度</strong>。<br>将 $f_t$ 与输入的上一长期状态 $C_{t-1}$ 相乘：<br>$$<br>C_t’ &#x3D; f_t * C_{t-1}<br>$$</p>
+<p>一部分的 $C_{t-1}$ 就这样被遗忘了。</p>
+<h2 id="记忆门"><a href="#记忆门" class="headerlink" title="记忆门"></a>记忆门</h2><p>记忆门涉及部分如下所示：<br><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202403231023100.jpg" alt="LSTM记忆门"></p>
+<p>从图中可以看到，记忆门中相乘的两个部分均由 $\mathbf{h}<em>{t-1}$ 与 $\mathbf{X}</em>{t}$ 得到，<br>其中，左侧控制记忆多少的部分，与遗忘门公式基本一致：<br>$$<br>i_t &#x3D; \sigma(\mathbf{W_i} * [\mathbf{h}<em>{t-1},\mathbf{X}</em>{t}]  + \mathbf{b_i})<br>$$<br>与遗忘门相通，输出结果为取值范围为 [ 0, 1 ] 的矩阵，主要功能是控制与之相乘的矩阵的<strong>记忆程度</strong>。<br>而右侧，则更换了激活函数，由 $sigmoid$ 变成了 $tanh$：<br>$$<br>\tilde{C_t} &#x3D; \tanh(\mathbf{W_c} * [\mathbf{h}<em>{t-1},\mathbf{X}</em>{t}]  + \mathbf{b_c})<br>$$<br>该公式负责的部分可以看做负责<strong>短期隐藏状态</strong>的更新，取值范围为 [ -1, 1 ]。</p>
+<p>最终记忆门更新公式如下:<br>$$<br>\tilde{C_t’}&#x3D;  i_t * \tilde{C_t}<br>$$</p>
+<p>我们可以说  $\tilde{C_t’}$ 是保留了一定内容的短期状态</p>
+<h2 id="状态更新"><a href="#状态更新" class="headerlink" title="状态更新"></a>状态更新</h2><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202403231023101.jpg" alt="LSTM-状态更新"></p>
+<p>在通过遗忘门获取到了被遗忘一定内容的长期状态 $C_t’$ 和 保留了一定内容的短期状态 $\tilde{C_t’}$ 之后，可以通过加法直接结合</p>
+<p>$$<br>C_t &#x3D;  C_t’ + \tilde{C_t’}<br>$$</p>
+<h2 id="输出门"><a href="#输出门" class="headerlink" title="输出门"></a>输出门</h2><p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202403231023102.jpg" alt="LSTM输出门"></p>
+<p>输出门是三个门中最后一个门，当数据到达这里的时候，我们主要控制将长期状态中的内容 $C_t$ 保存一定内容到 $h_t$ 中，这里不再赘述<br>$$<br>o_t &#x3D; \sigma(\mathbf{W_o} * [\mathbf{h}<em>{t-1},\mathbf{X}</em>{t}]  + \mathbf{b_o})<br>$$</p>
+<p>$$<br>h_t &#x3D; o_t * \tanh(C_t)<br>$$</p>
+<h2 id="模型总结"><a href="#模型总结" class="headerlink" title="模型总结"></a>模型总结</h2><p>可以看到，所有公式的核心部分都是如此的相似：<br>$$<br>\mathbf{W_c} * [\mathbf{h}<em>{t-1},\mathbf{X}</em>{t}]  + \mathbf{b_c}<br>$$<br>而这部分其实又只是简单的线性函数，所以 LSTM 比 RNN 高级的地方其实并不在于某一条公式，而是它调整了数据之间的流动，按照一定的比例进行融合，弱化了长距离下的梯度消失问题。</p>
+<p>最后总的来看，LSTM 其实就是一个升级版本的的 RNN，他额外初始化了一个状态 $C$， 用来保存长期的记忆，控制远距离上的参数权重。而输出也基本类似于此。</p>
+<h1 id="LSTM-实战"><a href="#LSTM-实战" class="headerlink" title="LSTM 实战"></a>LSTM 实战</h1><h2 id="实验说明"><a href="#实验说明" class="headerlink" title="实验说明"></a>实验说明</h2><p>完整代码实现可以点击<a href="../../notebook/%E7%AC%AC%E5%8D%81%E7%AB%A0%20%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%A0%81%E7%9A%84%E8%A7%A3%E8%AF%BB/LSTM%E5%AE%9E%E6%88%98.ipynb">这里</a>下载。在完整代码中，我们共计使用了三个模型并对比了他们的效果，三个模型分别是：由我完全使用 <code>nn.Linear</code> 实现的 LSTM 模型、 使用 <code>nn.LSTM</code> 为基础的 LSTM 模型和使用 <code>nn.RNN</code> 为基础实现的 RNN 模型。</p>
+<p>实验数据集采用 <a target="_blank" rel="noopener" href="http://ai.stanford.edu/~amaas/data/sentiment/">IMDB 数据集</a>。主要由电影评论构成，长度不均，<strong>但是长度在 1000 左右的数据属于常见数据</strong>。数据集样本均衡，数共计 50000 个样本，训练和测试各有 25000 个样本，同时训练和测试的正负比例均为 1:1。</p>
+<p>根据我们对 RNN 的了解，这样的长度是很难学习到有效的知识的，所以很适合比较 RNN 与 LSTM 之间的区别。</p>
+<p>为了方便代码复现，在实现中借助了 <code>torchtext</code> 来完成数据下载及加载。</p>
+<p>为了证明模型真的有学习到一定的内容，所以对比实验中部分参数可能存在部分区别，可以在本地调整到同一参数进行细致的对比实验。</p>
+<h2 id="模型实现"><a href="#模型实现" class="headerlink" title="模型实现"></a>模型实现</h2><p>我们在这里分析一下由我实现的 LSTM 模型，并以此了解 LSTM 模型。(ps:个人能力有限,没能实现 <code>num_layers</code> 和 <code>Bi-LSTM</code> 两个特点，此外可能实现存在其他问题，欢迎给予反馈)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 定义基础模型</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">LSTM</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, input_size, hidden_size, num_classes</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        args:</span><br><span class="hljs-string">            input_size: 输入大小</span><br><span class="hljs-string">            hidden_size: 隐藏层大小</span><br><span class="hljs-string">            num_classes: 最后输出的类别，在这个示例中，输出应该是 0 或者 1</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-built_in">super</span>(LSTM, <span class="hljs-variable language_">self</span>).__init__()<br>        <span class="hljs-variable language_">self</span>.input_size = input_size<br>        <span class="hljs-variable language_">self</span>.hidden_size = hidden_size<br>        <span class="hljs-variable language_">self</span>.num_layers = num_layers<br>        <span class="hljs-variable language_">self</span>.fc_i = nn.Linear(input_size + hidden_size, hidden_size)<br>        <span class="hljs-variable language_">self</span>.fc_f = nn.Linear(input_size + hidden_size, hidden_size)<br>        <span class="hljs-variable language_">self</span>.fc_g = nn.Linear(input_size + hidden_size, hidden_size)<br>        <span class="hljs-variable language_">self</span>.fc_o = nn.Linear(input_size + hidden_size, hidden_size)<br>        <span class="hljs-variable language_">self</span>.sigmoid = nn.Sigmoid()<br>        <span class="hljs-variable language_">self</span>.tanh = nn.Tanh()<br>        <span class="hljs-variable language_">self</span>.fc_out = nn.Linear(hidden_size, num_classes)<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-comment"># 初始化隐藏状态 -- 短期记忆</span><br>        h_t = torch.zeros(x.size(<span class="hljs-number">0</span>), x.size(<span class="hljs-number">1</span>), <span class="hljs-variable language_">self</span>.hidden_size).to(x.device)<br>        <span class="hljs-comment"># 初始化隐藏状态 -- 长期记忆</span><br>        c_t = torch.zeros(x.size(<span class="hljs-number">0</span>), x.size(<span class="hljs-number">1</span>), <span class="hljs-variable language_">self</span>.hidden_size).to(x.device)<br>        <span class="hljs-comment"># 输入与短期记忆相拼接</span><br>        combined = torch.cat((x, h_t), dim=<span class="hljs-number">2</span>)<br>        <span class="hljs-comment"># 记忆门 -- 输出矩阵内容为 0-1 之间的数字</span><br>        i_t = <span class="hljs-variable language_">self</span>.sigmoid(<span class="hljs-variable language_">self</span>.fc_i(combined))<br>        <span class="hljs-comment"># 遗忘门 -- 输出矩阵内容为 0-1 之间的数字</span><br>        f_t = <span class="hljs-variable language_">self</span>.sigmoid(<span class="hljs-variable language_">self</span>.fc_f(combined))<br>        <span class="hljs-comment">#</span><br>        g_t = <span class="hljs-variable language_">self</span>.tanh(<span class="hljs-variable language_">self</span>.fc_g(combined))<br>        <span class="hljs-comment">#  输出门 -- 输出矩阵内容为 0-1 之间的数字</span><br>        o_t = <span class="hljs-variable language_">self</span>.sigmoid(<span class="hljs-variable language_">self</span>.fc_o(combined))<br>        <span class="hljs-comment"># 长期状态 =  遗忘门 * 上一时刻的长期状态 + 记忆门* 当前记忆状态</span><br>        c_t = f_t * c_t + i_t * g_t<br>        <span class="hljs-comment"># 隐藏状态 = 输出门 * 长期状态</span><br>        h_t = o_t * <span class="hljs-variable language_">self</span>.tanh(c_t)<br>        <span class="hljs-comment"># 降维操作 </span><br>        h_t = F.avg_pool2d(h_t, (h_t.shape[<span class="hljs-number">1</span>],<span class="hljs-number">1</span>)).squeeze()<br>        <span class="hljs-comment"># </span><br>        out = <span class="hljs-variable language_">self</span>.fc_out(h_t)<br>        <span class="hljs-keyword">return</span> out <br></code></pre></td></tr></table></figure>
+
+
+<h2 id="超参数及参数说明"><a href="#超参数及参数说明" class="headerlink" title="超参数及参数说明"></a>超参数及参数说明</h2><h3 id="MyLSTM-与-nn-LSTM"><a href="#MyLSTM-与-nn-LSTM" class="headerlink" title="MyLSTM 与 nn.LSTM"></a>MyLSTM 与 nn.LSTM</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>learning_rate</td>
+<td>0.001</td>
+</tr>
+<tr>
+<td>batch_size</td>
+<td>32</td>
+</tr>
+<tr>
+<td>epoch</td>
+<td>6(3)</td>
+</tr>
+<tr>
+<td>input_size</td>
+<td>64</td>
+</tr>
+<tr>
+<td>hidden_size</td>
+<td>128</td>
+</tr>
+<tr>
+<td>num_classes</td>
+<td>2</td>
+</tr>
+</tbody></table>
+<p>此时：<br>MyLSTM 参数量: 99074<br>nn.LSTM 参数量: 99328</p>
+<p>由于我实现的 MyLSTM 与 nn.LSTM 有 254 的参数差，我本人并没能分析出来差别。 <code>nn.LSTM</code> 在实验时大概率比我的 MyLSTM 迭代更快，所以容易较早的过拟合，所以将其训练 epoch 砍半，也就是说 MyLSTM 使用 6 epoch 进行训练，而 <code>nn.LSTM</code> 使用 3 epoch 进行训练。两者可以达到基本相近的效果</p>
+<p>另外在代码实现中 <code>nn.LSTM</code> 后面加了一个 <code>nn.Linear</code> 来实现二分类，参数量为 258， 所以 MyLSTM 和 LSTM 相差参数总量为 512。</p>
+<h3 id="nn-RNN"><a href="#nn-RNN" class="headerlink" title="nn.RNN"></a>nn.RNN</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>learning_rate</td>
+<td><strong>0.0001</strong></td>
+</tr>
+<tr>
+<td>batch_size</td>
+<td>32</td>
+</tr>
+<tr>
+<td>epoch</td>
+<td><strong>12-18</strong></td>
+</tr>
+<tr>
+<td>input_size</td>
+<td>64</td>
+</tr>
+<tr>
+<td>hidden_size</td>
+<td>128</td>
+</tr>
+<tr>
+<td>num_classes</td>
+<td>2</td>
+</tr>
+</tbody></table>
+<p>此时：<br>nn.RNN 参数量: 25090</p>
+<p>由于实验样本长度在 1000 上下， RNN 显示出来了极大的不稳定性，其中， 相较于 LSTM 更容易梯度爆炸、训练 epoch 更多、学习率需要调低等等问题，尽管如此依然不能保证稳定的良好结果。</p>
+<p>举例来说，某学生学习阅读理解，要求根据文章内容回答文章的情感倾向，但是学生只喜欢看最后一句话，每次都根据最后一句话来回答问题，那么他基本上是等于瞎猜的，只能学到一点浅薄的知识。</p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><table>
+<thead>
+<tr>
+<th>MyLSTM</th>
+<th>nn.LSTM</th>
+<th>nn.RNN</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.86</td>
+<td>0.80</td>
+<td>0.67</td>
+</tr>
+</tbody></table>
+<h1 id="关于梯度问题"><a href="#关于梯度问题" class="headerlink" title="关于梯度问题"></a>关于梯度问题</h1><ul>
+<li><p>RNN问题中，<strong>总的梯度是不会消失的</strong>。即便梯度越传越弱，那也是远处的梯度逐渐消失，而近距离的梯度不会消失，因此，梯度总和不会消失。RNN 梯度消失的真正含义是：梯度被近距离梯度所主导，导致模型难以学到远距离的依赖关系。</p>
+</li>
+<li><p>LSTM 上有多条信息流路径，其中，<strong>元素相加的路径的梯度流是最稳定的</strong>，而其他路径上与基本的 RNN 相类似，依然存在反复相乘问题。</p>
+</li>
+<li><p>LSTM 刚刚提出时不存在遗忘门。这时候历史数据可以在这条路径上无损的传递，可以将其视为一条 <strong>高速公路</strong>，类似于 ResNet 中的残差连接。</p>
+</li>
+<li><p>但是其他路径上， LSTM 与 RNN 并无太多区别，依然会爆炸或者消失。由于<strong>总的远距离梯度 &#x3D; 各个路径的远距离梯度之和</strong>，因此只要有一条路的远距离梯度没有消失，总的远距离梯度就不会消失。可以说，LSTM 通过这一条路拯救了总的远距离梯度。</p>
+</li>
+<li><p>同样，<strong>总的远距离梯度 &#x3D; 各个路径的远距离梯度之和</strong>，虽然高速路上的梯度流比较稳定，但是其他路上依然存在梯度消失和梯度爆炸问题。因此，总的远距离梯度 &#x3D; 正常梯度 + 爆炸梯度 &#x3D; 爆炸梯度，因此 LSTM 依然存在梯度爆炸问题。 但是由于 LSTM 的道路相比经典 RNN 来说非常崎岖， 存在多次激活函数，因此 LSTM 发生梯度爆炸的概率要小得多。实践中通常通过梯度剪裁来优化问题。</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/03.LSTM%E8%A7%A3%E8%AF%BB%E5%8F%8A%E5%AE%9E%E6%88%98/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/03.LSTM%E8%A7%A3%E8%AF%BB%E5%8F%8A%E5%AE%9E%E6%88%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/PyTorch/">PyTorch</a><a class="post-meta__tags" href="/blog/tags/%E5%AE%9E%E6%88%98/">实战</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/01.ResNet%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" title="ResNet源码解读"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">ResNet源码解读</div></div><div class="info-2"><div class="info-item-1">ResNet源码解读本文对残差神经网络（ResNet）的源码进行解读。残差神经网络是由微软研究院的何恺明、张祥雨、任少卿、孙剑等人提出的。它的主要贡献是发现了在增加网络层数的过程中，‎随着训练精度(Training accuracy)‎逐渐趋于饱和，继续增加层数，training accuracy 就会出现下降的现象，而这种下降不是由过拟合造成的。他们将这一现象称之为“退化现象（Degradation）”，并针对退化现象发明了 “快捷连接（Shortcut connection）”，极大的消除了深度过大的神经网络训练困难问题。神经网络的“深度”首次突破了100层、最大的神经网络甚至超过了...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/02.RNN%E8%AF%A6%E8%A7%A3%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0/" title="RNN详解及其实现"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">RNN详解及其实现</div></div><div class="info-2"><div class="info-item-1">文章结构提及 RNN，绝大部分人都知道他是一个用于序列任务的神经网络，会提及他保存了时序信息，但是，为什么需要考虑时序的信息？为什么说 RNN 保存了时序的信息？RNN又存在哪些问题？ 本篇内容将按照以下顺序逐步带你摸清 RNN 的细节之处，并使用 PyTorch 来完成一个自己的文本分类模型。  为什么需要 RNN？ RNN 理解及其简单实现。 用 RNN 完成文本分类任务。 RNN 存在的问题。  为什么需要 RNN？在现实生活的世界中，有很多的内容是有着前后关系的，比如你所阅读的这段文字，他并不是毫无理由的随机组合，而是我构思之后按顺序写下的一个个文字。除了文字之外，例如人的发音、...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/06.ViT%E8%A7%A3%E8%AF%BB/" title="ViT解读"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">ViT解读</div></div><div class="info-2"><div class="info-item-1">ViT解读 [ViT] An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale.  Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, Jakob Uszkoreit, Neil Houlsby.  IC...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/02.RNN%E8%AF%A6%E8%A7%A3%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0/" title="RNN详解及其实现"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">RNN详解及其实现</div></div><div class="info-2"><div class="info-item-1">文章结构提及 RNN，绝大部分人都知道他是一个用于序列任务的神经网络，会提及他保存了时序信息，但是，为什么需要考虑时序的信息？为什么说 RNN 保存了时序的信息？RNN又存在哪些问题？ 本篇内容将按照以下顺序逐步带你摸清 RNN 的细节之处，并使用 PyTorch 来完成一个自己的文本分类模型。  为什么需要 RNN？ RNN 理解及其简单实现。 用 RNN 完成文本分类任务。 RNN 存在的问题。  为什么需要 RNN？在现实生活的世界中，有很多的内容是有着前后关系的，比如你所阅读的这段文字，他并不是毫无理由的随机组合，而是我构思之后按顺序写下的一个个文字。除了文字之外，例如人的发音、...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/04.Transformer%E8%A7%A3%E8%AF%BB/" title="Transformer解读"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Transformer解读</div></div><div class="info-2"><div class="info-item-1">Transformer 解读 [Transformer] Attention Is All You Need  Ashish Vaswani，Noam Shazeer，Niki Parmar，Jakob Uszkoreit，Llion Jones，Aidan N. Gomez，Łukasz Kaiser，Illia Polosukhin.  NIPS 2017. [paper] [tensorflow] [pytorch]   解读者：邹雨衡，对外经济贸易大学本科生，牛志康，西安电子科技大学本科生    前言Attention （注意力）机制及其变体已经成为自然语言处理任务的一种基本网络...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/05.Swin-Transformer%E8%A7%A3%E8%AF%BB/" title="Swin-Transformer解读"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Swin-Transformer解读</div></div><div class="info-2"><div class="info-item-1">Swin Transformer 解读 [Swin-T] Swin Transformer: Hierarchical Vision Transformer using Shifted Windows  Ze Liu, Yutong Lin, Yue Cao, Han Hu, Yixuan Wei, Zheng Zhang, Stephen Lin, Baining Guo.  ICCV 2021. [paper] [code]   解读者：沈豪，复旦大学博士，Datawhale成员    前言《Swin Transformer: Hierarchical Vision Transfor...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/08.%E5%AE%9E%E6%88%98/01.ResNet%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" title="ResNet源码解读"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">ResNet源码解读</div></div><div class="info-2"><div class="info-item-1">ResNet源码解读本文对残差神经网络（ResNet）的源码进行解读。残差神经网络是由微软研究院的何恺明、张祥雨、任少卿、孙剑等人提出的。它的主要贡献是发现了在增加网络层数的过程中，‎随着训练精度(Training accuracy)‎逐渐趋于饱和，继续增加层数，training accuracy 就会出现下降的现象，而这种下降不是由过拟合造成的。他们将这一现象称之为“退化现象（Degradation）”，并针对退化现象发明了 “快捷连接（Shortcut connection）”，极大的消除了深度过大的神经网络训练困难问题。神经网络的“深度”首次突破了100层、最大的神经网络甚至超过了...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/06.%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/06.Apex/" title="Apex"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Apex</div></div><div class="info-2"><div class="info-item-1">使用 Apex 再加速 Apex 是 NVIDIA 开源的用于混合精度训练和分布式训练库。Apex 对混合精度训练的过程进行了封装，改两三行配置就可以进行混合精度的训练，从而大幅度降低显存占用，节约运算时间。此外，Apex 也提供了对分布式训练的封装，针对 NVIDIA 的 NCCL 通信库进行了优化。  在混合精度训练上，Apex 的封装十分优雅。直接使用 amp.initialize 包装模型和优化器，apex 就会自动帮助我们管理模型参数和优化器的精度了，根据精度需求不同可以传入其他配置参数。 123from apex import ampmodel, optimizer = am...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E7%BB%93%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">文章结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LSTM-%E7%90%86%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">LSTM 理解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%A8"><span class="toc-number">2.1.</span> <span class="toc-text">门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%81%97%E5%BF%98%E9%97%A8"><span class="toc-number">2.2.</span> <span class="toc-text">遗忘门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E9%97%A8"><span class="toc-number">2.3.</span> <span class="toc-text">记忆门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E6%9B%B4%E6%96%B0"><span class="toc-number">2.4.</span> <span class="toc-text">状态更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E9%97%A8"><span class="toc-number">2.5.</span> <span class="toc-text">输出门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E6%80%BB%E7%BB%93"><span class="toc-number">2.6.</span> <span class="toc-text">模型总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LSTM-%E5%AE%9E%E6%88%98"><span class="toc-number">3.</span> <span class="toc-text">LSTM 实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AF%B4%E6%98%8E"><span class="toc-number">3.1.</span> <span class="toc-text">实验说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.2.</span> <span class="toc-text">模型实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%85%E5%8F%82%E6%95%B0%E5%8F%8A%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E"><span class="toc-number">3.3.</span> <span class="toc-text">超参数及参数说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MyLSTM-%E4%B8%8E-nn-LSTM"><span class="toc-number">3.3.1.</span> <span class="toc-text">MyLSTM 与 nn.LSTM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nn-RNN"><span class="toc-number">3.3.2.</span> <span class="toc-text">nn.RNN</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">3.4.</span> <span class="toc-text">实验结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%A2%AF%E5%BA%A6%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">关于梯度问题</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

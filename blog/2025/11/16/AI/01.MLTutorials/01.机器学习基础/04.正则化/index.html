@@ -1,0 +1,381 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>正则化 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="正则化正则化主要用于避免过拟合的产生和减少网络误差。 正则化一般具有如下形式： $$J(w,b)&#x3D; \frac{1}{m} \sum_{i&#x3D;1}^{m}L(f(x),y)+\lambda R(f)$$其中，第 1 项是经验风险，第 2 项是正则项， $λ≥0$ 为调整两者之间关系的系数。 第 1 项的经验风险较小的模型可能较复杂（有多个非零参数），这时第 2 项的模型复杂度会较">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则化">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/04.%E6%AD%A3%E5%88%99%E5%8C%96/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="正则化正则化主要用于避免过拟合的产生和减少网络误差。 正则化一般具有如下形式： $$J(w,b)&#x3D; \frac{1}{m} \sum_{i&#x3D;1}^{m}L(f(x),y)+\lambda R(f)$$其中，第 1 项是经验风险，第 2 项是正则项， $λ≥0$ 为调整两者之间关系的系数。 第 1 项的经验风险较小的模型可能较复杂（有多个非零参数），这时第 2 项的模型复杂度会较">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.356Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="MLTutorials">
+<meta property="article:tag" content="机器学习基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "正则化",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/04.%E6%AD%A3%E5%88%99%E5%8C%96/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.356Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/04.%E6%AD%A3%E5%88%99%E5%8C%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '正则化',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">正则化</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">正则化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.356Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/MLTutorials/">MLTutorials</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/MLTutorials/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/">机器学习基础</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h1><p><strong>正则化主要用于避免过拟合的产生和减少网络误差。</strong></p>
+<p>正则化一般具有如下形式：</p>
+<p>$$<br>J(w,b)&#x3D; \frac{1}{m} \sum_{i&#x3D;1}^{m}L(f(x),y)+\lambda R(f)<br>$$<br>其中，第 1 项是<strong>经验风险</strong>，第 2 项是<strong>正则项</strong>， $λ≥0$ 为调整两者之间关系的系数。</p>
+<p>第 1 项的经验风险较小的模型可能较复杂（有多个非零参数），这时第 2 项的模型复杂度会较大。</p>
+<p><strong>正则化的作用是选择经验风险与模型复杂度同时较小的模型</strong>。 </p>
+<p>常见的有正则项有 <strong>L1 正则</strong> 和 <strong>L2 正则</strong> 以及 <strong>Dropout</strong> ，其中 <strong>L2 正则</strong> 的控制过拟合的效果比 <strong>L1 正则</strong> 的好。</p>
+<hr>
+<h2 id="拟合问题"><a href="#拟合问题" class="headerlink" title="拟合问题"></a>拟合问题</h2><p>对于拟合的表现，可以分为三类情况：</p>
+<ul>
+<li><p><strong>欠拟合(Underfitting)</strong></p>
+<p>无法很好的拟合训练集中的数据，预测值和实际值的误差很大，这类情况被称为欠拟合。拟合模型比较简单（特征选少了）时易出现这类情况。类似于，你上课不好好听，啥都不会，下课也差不多啥都不会。</p>
+</li>
+<li><p><strong>优良的拟合(Just right)</strong></p>
+<p>不论是训练集数据还是不在训练集中的预测数据，都能给出较为正确的结果。类似于，学霸学神！</p>
+</li>
+<li><p><strong>过拟合(Overfitting)</strong></p>
+<p>能很好甚至完美拟合训练集中的数据，即 $J(\theta) \to 0$，但是对于不在训练集中的<strong>新数据</strong>，预测值和实际值的误差会很大，<strong>泛化能力弱</strong>，这类情况被称为过拟合。拟合模型过于复杂（特征选多了）时易出现这类情况。类似于，你上课跟着老师做题都会都听懂了，下课遇到新题就懵了不会拓展。</p>
+</li>
+</ul>
+<p>线性模型中的拟合情况(左图欠拟合，右图过拟合)：</p>
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202507031256337.png" style="zoom: 67%;" />
+
+<p>逻辑分类模型中的拟合情况：</p>
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161001297.png" style="zoom:67%;" />
+
+<p>为了度量拟合表现，引入：</p>
+<ul>
+<li><p>偏差(bias)</p>
+<p>指模型的预测值与真实值的<strong>偏离程度</strong>。偏差越大，预测值偏离真实值越厉害。偏差低意味着能较好地反应训练集中的数据情况。</p>
+</li>
+<li><p>方差(Variance)</p>
+<p>指模型预测值的<strong>离散程度或者变化范围</strong>。方差越大，数据的分布越分散，函数波动越大，泛化能力越差。方差低意味着拟合曲线的稳定性高，波动小。</p>
+</li>
+</ul>
+<p>据此，我们有对同一数据的各类拟合情况如下图：</p>
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161001103.png" style="zoom:67%;" />
+
+<p>据上图，高偏差意味着欠拟合，高方差意味着过拟合。</p>
+<p>我们应尽量使得拟合模型处于低方差（较好地拟合数据）状态且同时处于低偏差（较好地预测新值）的状态。</p>
+<p>避免过拟合的方法有：</p>
+<ul>
+<li>减少特征的数量<ul>
+<li>手动选取需保留的特征</li>
+<li>使用模型选择算法来选取合适的特征(如 PCA 算法)</li>
+<li>减少特征的方式易丢失有用的特征信息</li>
+</ul>
+</li>
+<li>正则化(Regularization)<ul>
+<li>可保留所有参数（许多有用的特征都能轻微影响结果）</li>
+<li>减少&#x2F;惩罚各参数大小(magnitude)，以减轻各参数对模型的影响程度</li>
+<li>当有很多参数对于模型只有轻微影响时，正则化方法的表现很好</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h2><p>很多时候由于特征数量过多，过拟合时我们很难选出要保留的特征，这时候应用正则化方法则是很好的选择。</p>
+<p>上文中，$\theta_0 + \theta_1x + \theta_2x^2 + \theta_3x^3 + \theta_4x^4$ 这样一个复杂的多项式较易过拟合，在不减少特征的情况下，<strong>如果能消除类似于 $\theta_3x^3$、$\theta_4x^4$ 等复杂部分，那复杂函数就变得简单了</strong>。</p>
+<p>为了保留各个参数的信息，不修改假设函数，改而修改代价函数：</p>
+<p>$$<br>min_\theta\ \dfrac{1}{2m}\sum_{i&#x3D;1}^m (h_\theta(x^{(i)}) - y^{(i)})^2 + 1000\cdot\theta_3^2 + 1000\cdot\theta_4^2<br>$$</p>
+<p>上式中，我们在代价函数中增加了 $\theta_3$、$\theta_4$ 的惩罚项(penalty term) $1000\cdot\theta_3^2 + 1000\cdot\theta_4^2$，如果要最小化代价函数，那么势必需要极大地<strong>减小 $\theta_3$、$\theta_4$</strong>，从而使得假设函数中的 $\theta_3x^3$、$\theta_4x^4$ 这两项的参数非常小，就相当于没有了，假设函数也就**“变得”简单**了，从而在保留各参数的情况下避免了过拟合问题。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161001210.png"></p>
+<p>根据上面的讨论，有时也无法决定要减少哪个参数，故统一惩罚除了 $\theta_0$ 外的所有参数。</p>
+<p>代价函数：</p>
+<p>$$<br>J\left( \theta  \right)&#x3D;\frac{1}{2m}[\sum\limits_{i&#x3D;1}^{m}&#123;&#123;{({h_\theta}(&#123;&#123;x}^{(i)&#125;&#125;)-&#123;&#123;y}^{(i)&#125;&#125;)}^{2&#125;&#125;+\lambda \sum\limits_{j&#x3D;1}^{n}{\theta_{j}^{2&#125;&#125;]}<br>$$</p>
+<blockquote>
+<p>$\lambda$: 正则化参数(Regularization Parameter)，$\lambda &gt; 0$</p>
+<p>$\sum\limits_{j&#x3D;1}^{n}$: 不惩罚基础参数 $\theta_0$</p>
+<p>$\lambda \sum\limits_{j&#x3D;1}^{n}{\theta_{j}^{2&#125;&#125;$: 正则化项</p>
+</blockquote>
+<p>$\lambda$ 正则化参数类似于学习速率，也需要我们自行对其选择一个合适的值。</p>
+<ul>
+<li>过大<ul>
+<li>导致模型欠拟合(假设可能会变成近乎 $x &#x3D; \theta_0$ 的直线 )</li>
+<li>无法正常去过拟问题</li>
+<li>梯度下降可能无法收敛</li>
+</ul>
+</li>
+<li>过小<ul>
+<li>无法避免过拟合（等于没有）</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>正则化符合奥卡姆剃刀(Occam’s razor)原理。在所有可能选择的模型中，能够很好地解释已知数据并且十分简单才是最好的模型，也就是应该选择的模型。从贝叶斯估计的角度来看，正则化项对应于模型的先验概率。可以假设复杂的模型有较大的先验概率，简单的模型有较小的先验概率。</p>
+</blockquote>
+<blockquote>
+<p>正则化是结构风险最小化策略的实现，是去过拟合问题的典型方法，虽然看起来多了个一参数多了一重麻烦，后文会介绍自动选取正则化参数的方法。模型越复杂，正则化参数值就越大。比如，正则化项可以是模型参数向量的范数。</p>
+</blockquote>
+<h3 id="正则化的线性回归"><a href="#正则化的线性回归" class="headerlink" title="正则化的线性回归"></a>正则化的线性回归</h3><p>应用正则化的线性回归梯度下降算法：</p>
+<p>$$<br>\begin{align*}<br>&amp; \text{Repeat}\ \lbrace \<br>&amp; \ \ \ \ \theta_0 :&#x3D; \theta_0 - \alpha\ \frac{1}{m}\ \sum_{i&#x3D;1}^m (h_\theta(x^{(i)}) - y^{(i)})x_0^{(i)} \<br>&amp; \ \ \ \ \theta_j :&#x3D; \theta_j - \alpha\ \left[ \left( \frac{1}{m}\ \sum_{i&#x3D;1}^m (h_\theta(x^{(i)}) - y^{(i)})x_j^{(i)} \right) + \frac{\lambda}{m}\theta_j \right], \ \ \ j \in \lbrace 1,2…n\rbrace\<br>&amp; \rbrace<br>\end{align*}<br>$$</p>
+<p>也可以移项得到更新表达式的另一种表示形式</p>
+<p>$$<br>\theta_j :&#x3D; \theta_j(1 - \alpha\frac{\lambda}{m}) - \alpha\frac{1}{m}\sum_{i&#x3D;1}^m(h_\theta(x^{(i)}) - y^{(i)})x_j^{(i)}<br>$$</p>
+<blockquote>
+<p>$\frac{\lambda}{m}\theta_j$: 正则化项</p>
+</blockquote>
+<p>应用正则化的正规方程法：</p>
+<p>$$<br>\begin{align*}<br>&amp; \theta &#x3D; \left( X^TX + \lambda \cdot L \right)^{-1} X^Ty \<br>&amp; \text{where}\ \ L &#x3D; \begin{bmatrix} 0 &amp; &amp; &amp; &amp; \<br>&amp; 1 &amp; &amp; &amp; \<br>&amp; &amp; 1 &amp; &amp; \<br>&amp; &amp; &amp; \ddots &amp; \<br>&amp; &amp; &amp; &amp; 1 \ \end{bmatrix}<br>\end{align*}<br>$$</p>
+<blockquote>
+<p>$\lambda\cdot L$: 正则化项</p>
+<p>$L$: 第一行第一列为 $0$ 的 $n+1$ 维单位矩阵</p>
+</blockquote>
+<p>前文提到正则化可以解决正规方程法中不可逆的问题，即增加了 $\lambda \cdot L$ 正则化项后，可以保证 $X^TX + \lambda \cdot L$ 可逆(invertible)，即便 $X^TX$ 不可逆(non-invertible)。</p>
+<h3 id="正则化的逻辑回归"><a href="#正则化的逻辑回归" class="headerlink" title="正则化的逻辑回归"></a>正则化的逻辑回归</h3><p>为逻辑回归的代价函数添加正则化项：</p>
+<p>$$<br>J(\theta) &#x3D; - \frac{1}{m} \sum_{i&#x3D;1}^m \large[ y^{(i)}\ \log (h_\theta (x^{(i)})) + (1 - y^{(i)})\ \log (1 - h_\theta(x^{(i)}))\large] + \frac{\lambda}{2m}\sum_{j&#x3D;1}^n \theta_j^2<br>$$</p>
+<p>前文已经证明过逻辑回归和线性回归的代价函数的求导结果是一样的，此处通过给正则化项添加常数 $\frac{1}{2}$，则其求导结果也就一样了。</p>
+<p>从而有应用正则化的逻辑回归梯度下降算法：</p>
+<p>$$<br>\begin{align*}<br>&amp; \text{Repeat}\ \lbrace \<br>&amp; \ \ \ \ \theta_0 :&#x3D; \theta_0 - \alpha\ \frac{1}{m}\ \sum_{i&#x3D;1}^m (h_\theta(x^{(i)}) - y^{(i)})x_0^{(i)} \<br>&amp; \ \ \ \ \theta_j :&#x3D; \theta_j - \alpha\ \left[ \left( \frac{1}{m}\ \sum_{i&#x3D;1}^m (h_\theta(x^{(i)}) - y^{(i)})x_j^{(i)} \right) + \frac{\lambda}{m}\theta_j \right], \ \ \ j \in \lbrace 1,2…n\rbrace\<br>&amp; \rbrace \end{align*}<br>$$</p>
+<p>我们用逻辑回归来实现这些设想，求成本函数$J$ 最小值，它是我们定义的成本函数，参数包含一些训练数据和不同数据中个体预测的损失，$w$ $b$ 逻辑回归的两个参数，$w$ 一个多维度参数矢量，$b$ 一个实数。在逻辑回归函数中加入正则化，只需添加参数 $\lambda$，也就是正则化参数。</p>
+<h2 id="正则化方法"><a href="#正则化方法" class="headerlink" title="正则化方法"></a>正则化方法</h2><h3 id="Lp范数"><a href="#Lp范数" class="headerlink" title="Lp范数"></a>Lp范数</h3><p> $L_{p}$ 正则的 $L$ 是指 $L_{p}$ 范数，其定义为：</p>
+<p>$L_{0}$ 范数： $\left | w \right |<em>{0} &#x3D; #(i)\ with \ x</em>{i} \neq 0$ <em>（非零元素的个数）</em></p>
+<p>$L_{1}$ 范数： $\left | w \right |<em>{1} &#x3D; \sum</em>{i &#x3D; 1}^{d}\lvert x_i\rvert$ <em>（每个元素绝对值之和）</em></p>
+<p>$L_{2}$ 范数： $\left | w \right |<em>{2} &#x3D; \Bigl(\sum</em>{i &#x3D; 1}^{d} x_i^2\Bigr)^{1&#x2F;2}$ <em>（欧氏距离）</em></p>
+<p>$L_{p}$ 范数： $\left | w \right |<em>{p} &#x3D; \Bigl(\sum</em>{i &#x3D; 1}^{d} x_i^p\Bigr)^{1&#x2F;p}$ </p>
+<p>在机器学习中，若使用了 $\lVert w\rVert_p$ 作为正则项，我们则说该机器学习任务<strong>引入了</strong> $L_{p}$ <strong>正则项</strong>。</p>
+  <div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202410091228949.jpg"/></div>
+
+<p><em>上图来自周志华老师的《机器学习》插图</em></p>
+<h3 id="L1-正则"><a href="#L1-正则" class="headerlink" title="L1 正则"></a>L1 正则</h3><p>$$<br>J(w,b)&#x3D;\frac{1}{m} \sum_{i&#x3D;1}^{m}L(\hat{y},y)+\frac{\lambda }{m}\left | w \right |_{1}​<br>$$</p>
+<ul>
+<li>凸函数，不是处处可微分</li>
+<li>得到的是稀疏解（最优解常出现在顶点上，且顶点上的 $w$ 只有很少的元素是非零的）</li>
+</ul>
+<p>如果用的是$L1$ 则化，$w$ 最终会是稀疏的，也就是说$w$ 量中有很多 0，有人说这样有利于压缩模型，因为集合中参数均为 0，存储模型所占用的内存更少。实际上，虽然$L1$ 则化使模型变得稀疏，却没有降低太多存储内存，所以我认为这并不是$L1$ 正则化的目的，至少不是为了压缩模型，人们在训练网络时，越来越倾向于使用$L2$ 正则化。</p>
+<h3 id="L2-正则-Weight-Decay"><a href="#L2-正则-Weight-Decay" class="headerlink" title="L2 正则&#x2F; Weight Decay"></a>L2 正则&#x2F; Weight Decay</h3><p>$$<br>J(w,b)&#x3D;\frac{1}{m} \sum_{i&#x3D;1}^{m}L(\hat{y},y)+\frac{\lambda }{2m}\left | w \right |^{2}_{2}​<br>$$</p>
+<ul>
+<li>凸函数，处处可微分</li>
+<li>易于优化</li>
+</ul>
+<blockquote>
+<p>L2 regularization和Weight decay只在SGD优化的情况下是等价的。<br>1.weight decay<br>Weight decay是在每次更新的梯度基础上减去一个梯度（ $\boldsymbol{\theta}$ 为模型参数向量， $\nabla f_{t}\left(\boldsymbol{\theta}<em>{t}\right)$ 为 $t$ 时刻loss函数的梯度， $\alpha$ 为学习率）:<br>$\boldsymbol{\theta}</em>{t+1}&#x3D;(1-\lambda) \boldsymbol{\theta}<em>{t}-\alpha \nabla f</em>{t}\left(\boldsymbol{\theta}<em>{t}\right)\$<br>2.L2 regularization<br>L2 regularization是给参数加上一个L2惩罚( $f</em>{t}(\boldsymbol{\theta})$ 为loss函数)：<br>$f_{t}^{r e g}(\boldsymbol{\theta})&#x3D;f_{t}(\boldsymbol{\theta})+\frac{\lambda^{\prime&#125;&#125;{2}|\boldsymbol{\theta}|_{2}^{2}\$<br>(当 $\lambda^{\prime}&#x3D;\frac{\lambda}{\alpha}$ ​时，与weight decay等价，仅在使用标准SGD优化时成立)</p>
+</blockquote>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><p><strong>Dropout 主要用于神经网络，其原理是使神经网络中的某些神经元随机失活，让模型不过度依赖某一神经元，达到增强模型鲁棒性以及控制过拟合的效果。</strong></p>
+<p>除了$L2$ 则化，还有一个非常实用的正则化方法——“<strong>Dropout</strong>（随机失活）”，我们来看看它的工作原理。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161001654.png"></p>
+<p>假设你在训练上图这样的神经网络，它存在过拟合，这就是<strong>dropout</strong>所要处理的，我们复制这个神经网络，<strong>dropout</strong>会遍历网络的每一层，并设置消除神经网络中节点的概率。假设网络中的每一层，每个节点都以抛硬币的方式设置概率，每个节点得以保留和消除的概率都是 0.5，设置完节点概率，我们会消除一些节点，然后删除掉从该节点进出的连线，最后得到一个节点更少，规模更小的网络，然后用<strong>backprop</strong>方法进行训练。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161001206.png"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161001641.png"></p>
+<p>这是网络节点精简后的一个样本，对于其它样本，我们照旧以抛硬币的方式设置概率，保留一类节点集合，删除其它类型的节点集合。对于每个训练样本，我们都将采用一个精简后神经网络来训练它，这种方法似乎有点怪，单纯遍历节点，编码也是随机的，可它真的有效。不过可想而知，我们针对每个训练样本训练规模小得多的网络，最后你可能会认识到为什么要正则化网络，因为我们在训练规模小得多的网络。</p>
+<h3 id="其他方法"><a href="#其他方法" class="headerlink" title="其他方法"></a>其他方法</h3><ol>
+<li>数据扩增</li>
+<li><strong>early stopping</strong></li>
+</ol>
+<hr>
+<h2 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h2><ol>
+<li><p>为什么只正则化参数$w$？为什么不再加上参数 $b$ 呢？</p>
+<p>你可以这么做，只是我习惯省略不写，因为$w$ 常是一个高维参数矢量，已经可以表达高偏差问题，$w$ 能包含有很多参数，我们不可能拟合所有参数，而 $b$ 是单个数字，所以 $w$ 乎涵盖所有参数，而不是$b$，如果加了参数$b$，其实也没太大影响，因为$b$ 是众多参数中的一个，所以我通常省略不计，如果你想加上这个参数，完全没问题。</p>
+</li>
+<li><p>为什么正则化有利于预防过拟合？</p>
+<p>为什么正则化有利于预防过拟合呢？为什么它可以减少方差问题？我们通过两个例子来直观体会一下。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161001189.png"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161001673.png"></p>
+<p>左图是高偏差，右图是高方差，中间是<strong>Just Right</strong>。</p>
+<p>直观上理解就是如果正则化$\lambda$ 设置得足够大，权重矩阵$W$ 设置为接近于 0 的值，直观理解就是把多隐藏单元的权重设为 0，于是基本上消除了这些隐藏单元的许多影响。如果是这种情况，这个被大大简化了的神经网络会变成一个很小的网络，小到如同一个逻辑回归单元，可是深度却很大，它会使这个网络从过度拟合的状态更接近左图的高偏差状态。$\lambda$ 存在一个中间值，会有一个接近“<strong>Just Right</strong>”的中间状态。</p>
+<p>直观理解就是$\lambda$ 加到足够大，$W$ 接近于 0，实际上是不会发生这种情况的，我们尝试消除或至少减少许多隐藏单元的影响，最终这个网络会变得更简单，这个神经网络越来越接近逻辑回归，我们直觉上认为大量隐藏单元被完全消除了，其实不然，实际上是该神经网络的所有隐藏单元依然存在，但是它们的影响变得更小了。神经网络变得更简单了，貌似这样更不容易发生过拟合，因此我不确定这个直觉经验是否有用，不过在编程中执行正则化时，你实际看到一些方差减少的结果。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161001696.png"></p>
+</li>
+</ol>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] LeCun, Y., Bottou, L., Orr, G., and Muller, K. Efficient backprop. In Orr, G. and K., Muller (eds.), Neural Net-works: Tricks of the trade. Springer, 1998b.</p>
+<p>[2] Sergey Ioffe, Christian Szegedy, “Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift”, arXiv preprint arXiv:1502.03167, 2015.</p>
+<p>[3] 李航. 统计方法学 P13-14</p>
+<p>[4] 聊聊机器学习中的损失函数 [<a target="_blank" rel="noopener" href="http://kubicode.me/2016/04/11/Machine">http://kubicode.me/2016/04/11/Machine</a> Learning&#x2F;Say-About-Loss-Function&#x2F;](<a target="_blank" rel="noopener" href="http://kubicode.me/2016/04/11/Machine">http://kubicode.me/2016/04/11/Machine</a> Learning&#x2F;Say-About-Loss-Function&#x2F;)</p>
+<p>[5] Nitish Srivastava, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever and Ruslan Salakhutdinov, “Dropout: A Simple Way to Prevent Neural Networks from<br>Overfitting”,</p>
+<p>[6] <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/29957294">ML 入门：归一化、标准化和正则化</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/04.%E6%AD%A3%E5%88%99%E5%8C%96/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/04.%E6%AD%A3%E5%88%99%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/MLTutorials/">MLTutorials</a><a class="post-meta__tags" href="/blog/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/">机器学习基础</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/05.%E5%A4%9A%E5%8F%98%E9%87%8F%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" title="多变量线性回归"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">多变量线性回归</div></div><div class="info-2"><div class="info-item-1">多变量线性回归(Linear Regression with Multiple Variables)多特征(Multiple Features)对于一个要度量的对象，一般来说会有不同维度的多个特征。比如之前的房屋价格预测例子中，除了房屋的面积大小，可能还有房屋的年限、房屋的层数等等其他特征：  这里由于特征不再只有一个，引入一些新的记号  $n$: 特征的总数  ${x}^{\left( i \right)}$: 代表样本矩阵中第 $i$ 行，也就是第 $i$ 个训练实例。 ${x}_{j}^{\left( i \right)}$: 代表样本矩阵中第 $i$ 行的第 $j$ 列，也就是第...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/03.%E5%BD%92%E4%B8%80%E5%8C%96%E5%92%8C%E6%A0%87%E5%87%86%E5%8C%96/" title="归一化和标准化"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">归一化和标准化</div></div><div class="info-2"><div class="info-item-1">归一化 Normalization归一化一般是将数据映射到指定的范围，用于去除不同维度数据的量纲以及量纲单位。 常见的映射范围有 [0, 1] 和 [-1, 1] ，最常见的归一化方法就是 Min-Max 归一化： Min-Max 归一化$$x_{new}&#x3D;\frac{x-x_{min&#125;&#125;{x_{max}-x_{min&#125;&#125;$$ 举个例子，我们判断一个人的身体状况是否健康，那么我们会采集人体的很多指标，比如说：身高、体重、红细胞数量、白细胞数量等。 一个人身高 180cm，体重 70kg，白细胞计数 $7.50×10^{9}&#x2F;L$...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/07.%E8%AE%AD%E7%BB%83%E8%B0%83%E8%AF%95%E7%AD%96%E7%95%A5/" title="训练调试策略"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">训练调试策略</div></div><div class="info-2"><div class="info-item-1">训练策略 Model bias 模型过于简单，需要重新设计一个 model,给你的 model 更大的弹性。  增加输入的 features  Optimization Issue gradient descent 这一个演算法,没办法帮我们找出,这个 loss 低的 function Gaining the insights from comparison 看到一个你从来没有做过的问题,也许你可以先跑一些比较小的,比较浅的 network,或甚至用一些,不是 deep learning 的方法,比如说 linear model,比如说 support vector machine,su...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/10.GCN/" title="GCN"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">GCN</div></div><div class="info-2"><div class="info-item-1">Graph Convolutional NetworkOverview 在CNN、RNN如此强大的模型之后，为什么出现GCN？CNN：针对图像（二维数据结构，矩阵形式。Eucliden Structure），它的核心在于其kernel，一个滑动窗口，通过卷积来提取特征。因为图像具有平移不变性：滑动窗口无论移动到图片的哪一个位置，其内部的结构都是一模一样的，因此CNN可以实现参数共享。这就是CNN的精髓所在。 RNN：针对自然语言（序列信息，一维结构），通过各种门的操作，使得序列前后的信息互相影响，从而很好地捕捉序列的特征。 GCN：针对图结构，即Non Eucliden Structur...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/21.%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" title="强化学习"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">强化学习</div></div><div class="info-2"><div class="info-item-1">Reinforcement Learning 基于李宏毅老师2021年课程的精简版  Supervised Learning→RL 在 RL 里面，我们遇到的问题是这样子的，机器当我们给它一个输入的时候，我们不知道最佳的输出应该是什么 举例来说，假设你要叫机器学习下围棋  下一步应该落子的位置到底应该在哪里呢，哪一个是最好的下一步呢，哪一步是神之一手呢，可能人类根本就不知道在这个你不知道正确答案是什么的情况下，往往就是 RL 可以派上用场的时候，所以当你今天，你发现你要收集有标注的资料很困难的时候，正确答案人类也不知道是什么的时候，也许就是你可以考虑使用 RL 的时候 但是 RL 在学习...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/104.%E7%BB%8F%E5%85%B8%E7%BD%91%E7%BB%9C/" title="经典网络"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">经典网络</div></div><div class="info-2"><div class="info-item-1">LeNet-5LeNet-5的网络结构，假设你有一张32×32×1的图片，LeNet-5可以识别图中的手写数字，比如像这样手写数字7。LeNet-5是针对灰度图片训练的，所以图片的大小只有32×32×1。实际上LeNet-5的结构和我们上周讲的最后一个范例非常相似，使用6个5×5的过滤器，步幅为1。由于使用了6个过滤器，步幅为1，padding为0，输出结果为28×28×6，图像尺寸从32×32缩小到28×28。然后进行池化操作，在这篇论文写成的那个年代，人们更喜欢使用平均池化，而现在我们可能用最大池化更多一些。在这个例子中，我们进行平均池化，过滤器的宽度为2，步幅为2，图像的尺寸，高度...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/11.GAT/" title="GAT"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">GAT</div></div><div class="info-2"><div class="info-item-1">GAT（Graph Attention Network）1 基础概念1.1 Graph数据结构的两种“特征”当我们说起graph或者network的数据结构，通常是包含着顶点和边的关系。研究目标聚焦在顶点之上，边诉说着顶点之间的关系。 对于任意一个顶点$i$，它在图上邻居$N_i$​  ,构成第一种特征，即图的结构关系。  ​																												图1 **当然，除了图的结构之外，每个顶点还有自己的特征$h_i$（通常是一个高维向量)。**它可以是社交网络中每个用户的个体属性；可以是生物网络中，每个蛋白质的性质；还可以使交通路网中，每个交叉口的车流量。 ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/01.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/100.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E9%9B%86%E9%94%A6%E4%BB%8E%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%88%B0%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%8F%8A%E5%90%84%E8%87%AA%E4%BC%98%E7%BC%BA%E7%82%B9/" title="机器学习算法集锦从贝叶斯到深度学习及各自优缺点"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">机器学习算法集锦从贝叶斯到深度学习及各自优缺点</div></div><div class="info-2"><div class="info-item-1"> 机器学习算法集锦：从贝叶斯到深度学习及各自优缺点   在我们日常生活中所用到的推荐系统、智能图片美化应用和聊天机器人等应用中，各种各样的机器学习和数据处理算法正尽职尽责地发挥着自己的功效。本文筛选并简单介绍了一些最常见算法类别，还为每一个类别列出了一些实际的算法并简单介绍了它们的优缺点。     https:&#x2F;&#x2F; 目录  正则化算法（Regularization Algorithms） 集成算法（Ensemble Algorithms） 决策树算法（Decision Tree Algorithm） 回归（Regression） 人工神经网络（Artificial N...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">正则化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%9F%E5%90%88%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">拟合问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">代价函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E7%9A%84%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="toc-number">1.2.1.</span> <span class="toc-text">正则化的线性回归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E7%9A%84%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92"><span class="toc-number">1.2.2.</span> <span class="toc-text">正则化的逻辑回归</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">正则化方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Lp%E8%8C%83%E6%95%B0"><span class="toc-number">1.3.1.</span> <span class="toc-text">Lp范数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#L1-%E6%AD%A3%E5%88%99"><span class="toc-number">1.3.2.</span> <span class="toc-text">L1 正则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#L2-%E6%AD%A3%E5%88%99-Weight-Decay"><span class="toc-number">1.3.3.</span> <span class="toc-text">L2 正则&#x2F; Weight Decay</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dropout"><span class="toc-number">1.3.4.</span> <span class="toc-text">Dropout</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.5.</span> <span class="toc-text">其他方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#QA"><span class="toc-number">1.4.</span> <span class="toc-text">QA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">1.5.</span> <span class="toc-text">Reference</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

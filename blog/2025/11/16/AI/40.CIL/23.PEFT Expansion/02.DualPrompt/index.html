@@ -1,0 +1,511 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>DualPrompt | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="DualPrompt: Complementary Prompting for Rehearsal-free Continual Learning Code |  ECCV 2022  大模型译 :arrow_down:0. 摘要连续学习的目标是使单个模型能够无需灾难性遗忘地学习一系列任务。顶尖的方法通常需要一个复习缓冲区来存储过去的原始样本以进行经验重放，然而，由于隐私和内存限制，这限制了它们的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DualPrompt">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/02.DualPrompt/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="DualPrompt: Complementary Prompting for Rehearsal-free Continual Learning Code |  ECCV 2022  大模型译 :arrow_down:0. 摘要连续学习的目标是使单个模型能够无需灾难性遗忘地学习一系列任务。顶尖的方法通常需要一个复习缓冲区来存储过去的原始样本以进行经验重放，然而，由于隐私和内存限制，这限制了它们的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.348Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="CIL">
+<meta property="article:tag" content="PEFT Expansion">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "DualPrompt",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/02.DualPrompt/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.348Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/02.DualPrompt/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'DualPrompt',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">DualPrompt</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">DualPrompt</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.348Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/CIL/">CIL</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/CIL/PEFT-Expansion/">PEFT Expansion</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="DualPrompt-Complementary-Prompting-for-Rehearsal-free-Continual-Learning"><a href="#DualPrompt-Complementary-Prompting-for-Rehearsal-free-Continual-Learning" class="headerlink" title="DualPrompt: Complementary Prompting for Rehearsal-free Continual Learning"></a><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2204.04799">DualPrompt: Complementary Prompting for Rehearsal-free Continual Learning</a></h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/google-research/l2p">Code</a> |  ECCV 2022</p>
+</blockquote>
+<h2 id="大模型译-arrow-down"><a href="#大模型译-arrow-down" class="headerlink" title="大模型译 :arrow_down:"></a>大模型译 :arrow_down:</h2><h2 id="0-摘要"><a href="#0-摘要" class="headerlink" title="0. 摘要"></a>0. 摘要</h2><p>连续学习的目标是使单个模型能够无需灾难性遗忘地学习一系列任务。顶尖的方法通常需要一个复习缓冲区来存储过去的原始样本以进行经验重放，然而，由于隐私和内存限制，这限制了它们的实际价值。在这项工作中，我们提出了一个简单而有效的框架，DualPrompt，它学习一组微小的参数，称为提示（prompts），以正确指导预训练模型顺序学习任务，而不需要缓冲过去的样本。DualPrompt 提出了一种新的方法，将补充提示附加到预训练的主干上，并将目标制定为学习任务不变和任务特定的“指令”。通过广泛的实验验证，DualPrompt 在具有挑战性的类增量设置下持续设定了最先进的性能。特别是，DualPrompt 超越了最近具有相对较大缓冲区的先进连续学习方法。我们还引入了一个更具挑战性的基准，Split ImageNet-R，以帮助推广无复习的连续学习研究。源代码可在 <a target="_blank" rel="noopener" href="https://github.com/google-research/l2p">https://github.com/google-research/l2p</a> 上找到。</p>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p>连续学习（CL）的核心目标是使用单个模型学习一系列任务，而不会因灾难性遗忘 [40]——在先前看到的数据上性能显著恶化。许多现有方法旨在在连续学习过程中保留和扩展所获得的知识 [13,35]。基于架构的方法分配孤立的参数来编码不同任务学到的知识 [27,32,37,54,59]。然而，它们通常引入了大量的额外参数，有时涉及简化的假设，如已知的测试时间任务身份 [12,37,36]，这属于任务增量学习的设置。然而，任务增量设置通常被认为是过于简化的 [4,35,38]，因为在现实世界中测试时任务身份是未知的。我们的工作集中在更困难的类增量设置上，测试时任务身份未知。另一类工作，复习型 CL 方法，通过在复习缓冲区中保留先前任务的数据直接保留过去知识 [4,5,45]。由于它们的概念简单性、对各种设置的泛化能力以及减轻灾难性遗忘的优越能力，复习型方法已被广泛认为是在具有挑战性的类增量设置中的最先进的 [6,4]。尽管如此，对复习缓冲区的依赖一直受到社区的批评 [54,13,47,31]。虽然这些方法的性能对缓冲区的大小很敏感，GDumb[47] 认为直接在相对较大的缓冲区上进行监督训练已经超过了大多数最近的 CL 方法。至关重要的是，这些方法不能用于有隐私担忧的应用 [55] 或者当内存预算高度受限 [56] 时。因此，开发一种节俭的、无需复习的连续学习方法，能够达到类似或更高的性能水平是可取的。</p>
+<p>最近的方法，Learning to Prompt (L2P)[60]，从全新的视角解决这个问题——它提出利用可学习的提示参数以比缓冲区更简洁的方式（即提示池）编码知识，因此不再需要复习缓冲区。提示技术最初在自然语言处理（NLP）中引入，用于通过附加固定或可学习的“指令”对大规模预训练模型进行任务适应 [29]，因为提示旨在指导模型适当地重用已学习的表示，而不是从头开始学习新的表示。L2P 成功地将学习新任务的问题制定为训练附加到预训练冻结模型的小提示参数。L2P 朝着无复习连续学习迈出了激动人心的一步，尽管性能仍然低于基于复习的方法。在 L2P 中，设计了一个单一的提示池，以在不同任务之间转移知识，而没有区分所有任务之间的共同特征与每个任务独有的特征。我们认为，从补充学习系统（CLS）的理论角度来看，这种设计可能是次优的 [39,23]，许多最近的先进 CL 方法都是基于此 [8,45,4,2]。CLS 表明，人类通过两个学习系统之间的协同作用不断学习：海马体专注于学习特定经验上的模式分离表示，而新皮层专注于从过去经验序列中学习更通用和可转移的表示。因此，它们能够在不干扰的情况下分别学习任务特定知识，同时利用任务不变知识以更大的学习能力更好地学习未来任务。然而，以前的基于 CLS 的方法仍然解耦或扩展主干参数来学习这两种知识 [12,45,46]。因此，它们仍然依赖于构建复习缓冲区来巩固解耦的知识，以防止灾难性遗忘。在本文中，我们提出了 DualPrompt，这是一种无需复习的连续学习方法，明确学习两组不相交的提示空间，G(eneral)-Prompt 和 E(xpert)-Prompt，分别编码任务不变和任务特定的指令。DualPrompt 直接解耦了更高层次的提示空间，结果证明比传统方法更有效、更节省内存，传统方法侧重于低层次的潜在表示空间。我们进一步探索在哪里以及如何附加这两种类型的提示至关重要，以指导主干模型学习，减少遗忘，并实现有效的知识共享，从而显著提高连续学习的有效性。此外，我们引入了一个新的 CL 基准，Split ImageNet-R，以帮助验证该方法。DualPrompt 在多个基准测试中设定了新的最先进性能，并在具有挑战性的类增量设置下击败了具有相对较大缓冲区的复习型方法。</p>
+<h2 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2. 相关工作"></a>2. 相关工作</h2><p>连续学习。我们讨论了三类相关的连续学习方法：基于正则化的方法、基于复习的方法和基于架构的方法。基于正则化的方法 [20,67,28,1] 通过为学习任务的重要参数制定规则来解决灾难性遗忘。尽管这些方法在更简单的任务增量设置下减轻了遗忘 [35]，但在更具挑战性的类增量设置 [35] 或更复杂的数据集 [62] 下的性能并不令人满意。基于架构的方法为每个任务分配孤立的参数。这些方法可以进一步细分为扩展模型 [53,65,27,32,69] 或划分模型 [37,54,59,18,12]。然而，大部分工作限于任务增量设置 [54,37,36,18]，而其他工作只考虑特定的卷积架构 [61,46,12]。然而，DualPrompt 旨在更具挑战性的类增量设置，并专注于预训练的基于变换器的模型。此外，基于架构的方法通常需要大量的额外参数来协助模型分离 [59,18,64]。相反，DualPrompt 要轻量得多，只需要微不足道的参数（0.2% - 0.6% 的完整模型大小）。基于复习的方法在复习缓冲区中保存已学习任务的数据以与当前任务一起训练。尽管这些方法共享一个相当简单的概念，但它们即使在类增量设置中也非常有效。几个先进的基于复习的方法实现了最先进的性能 [4,5]。然而，当缓冲区大小 [5] 减小时，基于复习的方法会恶化，并且最终不适用于数据隐私敏感的场景 [55]。一些最近的方法是受到补充学习系统（CLS）的启发。然而，ACL[12] 限于任务增量设置，DualNet[45] 需要特定的架构设计，这两种方法仍然依赖于复习缓冲区才能很好地工作。DualPrompt 从无需复习的角度解决连续学习，站在明智利用预训练模型的基础上，因此摆脱了基于复习方法的缺点。基于提示的学习。作为一种新兴的自然语言处理（NLP）中的迁移学习技术，基于提示的学习（或提示）应用固定函数来调节模型，以便语言模型获得额外的指令以执行下游任务。然而，提示函数的设计具有挑战性，需要启发式方法。为此，最近的工作提出将提示作为可学习的参数，以在迁移学习中取得出色的性能 [25,26]。提示使用比其竞争对手更小的额外参数捕获任务特定知识，例如 Adapter[58,44] 和 LoRA[17]。如上所述，L2P[60] 是唯一将提示和连续学习联系起来的工作。不同地，DualPrompt 从 CLS 中汲取灵感，提出了一种不同的方法来附加补充提示到预训练的主干上，以学习任务不变和任务特定的指令。我们展示了 DualPrompt 在各个方面都优于 L2P。</p>
+<h2 id="3-先决条件"><a href="#3-先决条件" class="headerlink" title="3. 先决条件"></a>3. 先决条件</h2><h3 id="3-1-连续学习问题设置"><a href="#3-1-连续学习问题设置" class="headerlink" title="3.1 连续学习问题设置"></a>3.1 连续学习问题设置</h3><p>连续学习被定义为在一系列任务的数据连续体上训练机器学习模型。我们将任务序列表示为 $D &#x3D; {D_1, \cdots, D_T}$，其中第 $t$ 个任务 $D_t &#x3D; {(x_{i,t}, y_{i,t})}^{n_t}<em>{i&#x3D;1}$ 包含输入样本 $x</em>{i,t} \in X$ 及其相应的标签 $y_{i,t} \in Y$ 的元组。模型 $f_{\theta} : X \rightarrow Y$ 由 $\theta$ 参数化，以便它预测给定来自任意任务的未见过的测试样本 $x$ 的标签 $y &#x3D; f_{\theta}(x) \in Y$。在训练未来任务时，之前任务的数据不可用。我们使用广泛采用的假设，即任务边界是清晰的，并且任务切换在训练时间是突然的 [7,45]。此外，我们考虑更具挑战性的类增量学习 [7] 设置，即测试时每个样本的任务身份未知。同样，遵循先前工作 [60] 的设置，我们假设有一个预训练的序列模型，例如，基于 ImageNet 的视觉变换器（ViT）[10]，在计算机视觉社区的最新文献中广泛使用的假设。与许多基于复习的方法 [8,4] 不同，我们不假设任何形式的复习缓冲区作为先决条件。</p>
+<h3 id="3-2-基于提示的学习"><a href="#3-2-基于提示的学习" class="headerlink" title="3.2 基于提示的学习"></a>3.2 基于提示的学习</h3><p>基于提示的学习（或提示）最初在 NLP 中提出，用于迁移学习。提示的主要思想是为预训练模型添加额外的指令以有条件地执行下游任务 [29]。提示调整 [25]，最近出现的一项技术，提出将一组提示参数附加到冻结的基于变换器的语言模型上，以执行下游 NLP 任务。提示通常被添加到输入序列中以指导模型预测。我们简要说明提示调整的想法如下。由于我们主要关注与视觉相关的连续学习设置，这里我们使用基于视觉变换器（ViT）的序列模型 [11,57] 来介绍提示调整的定义。在 ViT 中，输入嵌入层将输入图像转换为类似序列的输出特征 $h \in R^{L \times D}$，其中 $L$ 是序列长度，$D$ 是嵌入维度。在解决下游任务时，保持预训练的主干冻结作为通用特征提取器，并将提示参数 $p \in R^{L_p \times D}$ 与序列长度 $L_p$ 和嵌入维度 $D$ 一起添加到嵌入特征沿序列长度维度形成扩展嵌入特征。最后，将扩展特征发送到模型的其余部分以执行分类任务。提示作为轻量级模块，编码高级指令以指导主干利用预训练表示进行下游任务。</p>
+<h2 id="4-DualPrompt"><a href="#4-DualPrompt" class="headerlink" title="4. DualPrompt"></a>4. DualPrompt</h2><p>我们提出的方法 DualPrompt 在图 2 中进行了说明。我们首先在第 4.1 节中介绍补充学习组件 G- 和 E-Prompt，通过展示它们如何与单个多头自注意力（MSA）层一起工作。然后我们在第 4.2 节中探索将提示附加到主干的设计选择。最后，我们在第 4.3 节中提出了 DualPrompt 的总体目标。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250122152523.png" style="zoom: 80%;" /></div>
+
+<h3 id="4-1-互为补充的-G-Prompt和-E-Prompt"><a href="#4-1-互为补充的-G-Prompt和-E-Prompt" class="headerlink" title="4.1 互为补充的 G-Prompt和 E-Prompt"></a>4.1 互为补充的 G-Prompt和 E-Prompt</h3><p>给定一个预训练的 ViT $f$，具有 $N$ 个连续的 MSA 层，我们进一步扩展了 3.2 节中引入的符号，将第 $i$ 个 MSA 层的输入嵌入特征表示为 $h^{(i)}$，$i &#x3D; 1, 2, \cdots, N$。G-Prompt：$g \in R^{L_g \times D}$，具有序列长度 $L_g$ 和嵌入维度 $D$，是所有任务的共享参数。假设我们希望将 G-Prompt附加到第 $i$ 个 MSA 层，G-Prompt通过提示函数转换 $h^{(i)}$：<br>$$<br>    h^{(i)}<em>g &#x3D; f</em>{\text{prompt&#125;&#125;(g, h^{(i)})<br>$$<br>其中 $f_{\text{prompt&#125;&#125;$ 定义了如何将提示附加到隐藏嵌入的方法。第 4.2 节讨论了细节。E-Prompt：$E &#x3D; {e_t}^T_{t&#x3D;1}$ 是一组任务依赖参数，其中 $e_t \in R^{L_e \times D}$ 具有序列长度 $L_e$ 和与 G-Prompt相同的嵌入维度 $D$，$T$ 是任务的总数。与共享的 G-Prompt不同，每个 $e_t$ 与特定于任务的键 $k_t \in R^D$ 相关联，这也是一个旨在捕获任务代表性特征的可学习参数。对于来自第 $t$ 个任务的输入样本，要将 E-Prompt附加到第 $j$ 个 MSA 层，我们以类似的方式应用提示函数：<br>$$<br>    h^{(j)}<em>e &#x3D; f</em>{\text{prompt&#125;&#125;(e_t, h^{(j)})<br>$$<br>此外，我们通过匹配损失 $L_{\text{match&#125;&#125;$ 更新相应的 $k_t$ 以匹配输入实例的特征，使得 $k_t$ 比其它键更“接近”第 $t$ 个任务的样本。在测试时，受到 [60] 中提出策略的启发，我们提出采用测试样本上的查询函数 $q$ 来寻找最佳匹配的任务键，并选择相应的 E-Prompt使用。尽管设计各种匹配和查询策略很有趣，通过引入额外的组件，这实际上违反了连续学习中的节俭原则 [13,59]。幸运的是，正如 [60] 所建议的，我们可以直接使用整个预训练模型作为查询函数：$q(x) &#x3D; f(x)[0]$（对应于 [class] 标记 [11] 的特征向量），并使用余弦相似度作为 $\gamma$。因此，匹配损失采取以下形式：<br>$$<br>    L_{\text{match&#125;&#125;(x, k_t) &#x3D; \gamma(q(x), k_t), x \in D_t<br>$$<br>对于测试样本 $x$，我们简单地通过 $\arg\min_t \gamma(q(x), k_t)$ 选择最佳匹配的任务键索引。我们在附录 I 中展示了查询准确性与最终性能之间的关系。我们的经验发现，这种匹配损失和相应的查询机制对所有基准测试都相当有效。</p>
+<h3 id="4-2-提示附加：在哪里和如何附加？"><a href="#4-2-提示附加：在哪里和如何附加？" class="headerlink" title="4.2 提示附加：在哪里和如何附加？"></a>4.2 提示附加：在哪里和如何附加？</h3><p>G- 和 E-Prompt在训练期间与主干一起编码各自的指令，并在推理期间合作指导模型进行预测。我们已经展示了如何在第 4.1 节中将它们附加到单个 MSA 层。大多数现有的与提示相关的工作简单地将提示仅放置在第一个 MSA[60,25]，或在每个 MSA 层 [26,30]。然而，我们认为，探索在哪里以及如何附加这两种类型的提示至关重要。</p>
+<p>在哪里：解耦的提示位置。直观地说，主干的不同层具有不同级别的特征抽象 [49]。因此，在学习任务序列时，某些层的表示可能对任务特定知识有更高的响应，反之亦然，对于任务不变的知识。这激发了我们给予这两种类型的提示更多的灵活性，以以解耦的方式附加到最合适的位置，从而使不同的指令能够更有效地与相应的表示进行交互。</p>
+<p>稍微滥用符号，我们引入了两种类型的提示的多层扩展：$g &#x3D; {g^{(l)}}^{end_g}_{start_g}$，其中 $g^{(l)} \in R^{L_g \times D}$ 是附加到第 $l$ 个 MSA 层的 G-Prompt。我们也类似地定义 $e_t &#x3D; {e^{(l)}<em>t}^{end_e}</em>{start_e}$。通过这种方式，我们能够从第 $start_g$ 个到第 $end_g$ 个 MSA 层附加 G-Prompt $g^{(l)}$，并且从第 $start_e$ 个到第 $end_e$ 个 MSA 层附加 E-Prompt $e^{(l)}_t$。最重要的是，$(start_g, end_g)$ 和 $(start_e, end_e)$ 可能完全不同或不重叠。在我们的实验中，我们通过在验证集上进行启发式搜索，发现一组特定的 $start_g, end_g, start_e, end_e$ 在不同的基准测试中表现一致良好。请注意，我们做出了一个简化的假设，即选择的 MSA 层索引以附加提示是连续的，这已经在我们的经验评估中实现了最先进的性能。然而，可能存在更先进的方法来自动生成搜索配置，我们将其视为未来工作的价值。</p>
+<p>如何：可配置的提示函数。提示函数 $f_{\text{prompt&#125;&#125;$ 控制我们如何将提示与嵌入特征组合的方式。从另一个角度来看，$f_{\text{prompt&#125;&#125;$ 直接影响提示中的高级指令与低级表示的交互。因此，我们相信一个设计良好的提示函数对于整体连续学习性能至关重要。尽管 DualPrompt 与各种提示函数兼容，但这里我们举例并研究了 NLP 社区中的两种主流实现——提示调整（Pro-T）[25] 和前缀调整（Pre-T）[26]。</p>
+<p>具体来说，应用提示函数可以被视为修改 MSA 层的输入 [57]。设 MSA 层的输入为 $h \in R^{L \times D}$，我们进一步将 MSA 层的输入查询、键和值表示为 $h_Q, h_K, h_V$，分别。回想一下，MSA 层是由 [57] 提出的：<br>$$<br>    MSA(h_Q, h_K, h_V) &#x3D; Concat(h_1, \cdots, h_m) W^O \<br>    h_i &#x3D; \text{Attention}(h_Q W^Q_i, h_K W^K_i, h_V W^V_i)<br>$$<br>其中 ，$W^O, W^Q_i, W^K_i, W^V_i$ 是投影矩阵。$m$ 是头的数量。在 ViT 中，$h_Q &#x3D; h_K &#x3D; h_V$。为了简化，我们定义一个统一的提示参数 $p \in R^{L_p \times D}$（$p$ 可以是单层 G 或 E-Prompt）。提示调整（Pro-T）将提示附加到输入令牌，这相当于将相同的提示参数 $p$ 连接到 $h_Q, h_K, h_V$：<br>$$<br>    f_{\text{prompt&#125;&#125;^\text&#123;&#123;Pro-T&#125;&#125;(p, h) &#x3D; MSA([p; h_Q], [p; h_K], [p; h_V])<br>$$<br>其中 $[\cdot; \cdot]$ 定义了沿序列长度维度的连接操作。输出长度增加，导致输出维度为 $R^{(L+L_p) \times D}$。操作等同于在第一个 MSA 层添加 [class] 的方式 [11]。前缀调整（Pre-T）将 $p$ 分成 $p_K, p_V \in R^{L_p&#x2F;2 \times D}$，并分别将它们附加到 $h_K$ 和 $h_V$，同时保持 $h_Q$ 不变：<br>$$<br>    f_{\text{prompt&#125;&#125;^\text&#123;&#123;Pre-T&#125;&#125;(p, h) &#x3D; MSA(h_Q, [p_K; h_K], [p_V; h_V])<br>$$<br>与 Pro-T 相比，输出序列长度保持与输入 $h \in R^{L \times D}$ 相同。第 5.4 节将从连续学习的角度实证研究两个版本，并讨论它们性能差异背后的直觉。</p>
+<h3 id="4-3-DualPrompt-的总体目标"><a href="#4-3-DualPrompt-的总体目标" class="headerlink" title="4.3 DualPrompt 的总体目标"></a>4.3 DualPrompt 的总体目标</h3><p>DualPrompt 在训练和测试时的全貌分别在附录 A 中的算法 1 和算法 2 中描述。按照第 4.2 节中讨论的设计模式，我们将附加提示的架构表示为 $f_{g,e}$。然后我们通过 $f_{g,e}$ 转换输入 $x$ 从第 $t$ 个任务，并将其发送到参数化为 $\phi$ 的分类头部 $f_{\phi}$ 进行预测。最后，我们以端到端的方式训练两种类型的提示、任务键以及新初始化的分类头部：<br>$$<br>    \min_{g,e,k,\phi} L(f_{\phi}(f_{g,e}(x)), y) + \lambda L_{\text{match&#125;&#125;(x, k), x \in D_t<br>$$<br>其中 $L$ 是交叉熵损失，$L_{\text{match&#125;&#125;$ 是在方程 3 中定义的匹配损失，$\lambda$ 是平衡因子。</p>
+<h2 id="5-实验"><a href="#5-实验" class="headerlink" title="5. 实验"></a>5. 实验</h2><h3 id="5-1-评估基准"><a href="#5-1-评估基准" class="headerlink" title="5.1 评估基准"></a>5.1 评估基准</h3><p><strong>Split ImageNet-R</strong>。Split ImageNet-R 基准是基于 ImageNet-R[16] 构建的，通过将 200 个类别随机分成 10 个任务，每个任务有 20 个类别。我们将数据集分为训练集和测试集，分别为 24,000 和 6,000 张图像。我们进一步从训练集中抽取 20% 作为验证数据，用于提示附加设计搜索。原始的 ImageNet-R 包括收集到的不同风格的新数据，如卡通、涂鸦和折纸，以及标准模型，例如 ResNet[15]，无法分类的困难样本。我们认为 Split ImageNet-R 对连续学习社区至关重要，原因如下：1）Split ImageNet-R 包含具有不同风格的类别，这更接近复杂的现实世界问题。2）显著的类内多样性（见附录 E）对基于复习的方法提出了巨大挑战，即使缓冲区很小（见图 1），也能有效工作，从而鼓励开发更实用、无需复习的方法。3）预训练的视觉模型在许多领域 [52,21] 中都很有用，包括连续学习。然而，它们的训练集通常包括 ImageNet。因此，Split ImageNet-R 作为一个相对公平且具有挑战性的基准，并且是使用预训练模型的连续学习基准 [51,62] 的替代品。</p>
+<p><strong>Split CIFAR-100</strong>。Split CIFAR-100 是连续学习文献中广泛使用的基准。它将原始的 CIFAR-100[22] 分成 10 个不相交的任务，每个任务有 10 个类别。尽管在 i.i.d.设置下的图像分类任务相对简单，但它足以使先进的 CL 方法在类增量学习中暴露出大量的遗忘率。</p>
+<p>我们使用 Split ImageNet-R 和 Split CIFAR-100 在第 5.2 节中展示我们的主要结果，并在附录 H 中对 5 个数据集进行额外的实验以完整展示。</p>
+<h3 id="5-2-与最先进方法的比较"><a href="#5-2-与最先进方法的比较" class="headerlink" title="5.2 与最先进方法的比较"></a>5.2 与最先进方法的比较</h3><p>我们将 DualPrompt 与代表性的基线和最先进方法进行比较。有关实验细节，请参阅附录 B。我们使用广泛使用的评估指标：平均准确率（越高越好）和遗忘（越低越好）[33,7,35]。这两个指标的定义在附录 C 中。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250122161903.png" style="zoom: 80%;" /></div>
+
+<p>为了进行公平和精确的比较，我们首先将 DualPrompt 与基于变换器的模型兼容的正则化、复习和基于提示的方法进行比较，如表 1 所示。然后我们将 DualPrompt 与基于架构的方法进行比较，这些方法大多与 ConvNets 兼容，使用不同的协议，如表 2 所示。</p>
+<ul>
+<li><p>比较方法。我们选择了 EWC[20]、LwF[28]、ER[8,14]、GDumb[47]、BiC[62]、DER++[4] 和 Co2L[5] 等代表性方法，涵盖所有类别。请参见附录 D 了解更多细节。</p>
+</li>
+<li><p>朴素基线。为了更好地展示所有方法的相对有效性，我们还包括了：FT-seq，朴素顺序训练，和 Upper-bound，通常在 i.i.d.数据上进行监督微调。</p>
+</li>
+</ul>
+<p>表 1 报告了所有比较方法在 Split CIFAR100 和 Split ImageNet-R 上的性能。我们提出的方法 DualPrompt 一致地超越了所有方法，包括非复习型方法和具有大缓冲区的复习型方法。当缓冲区大小为 5000（CIFAR100 训练集的 10% 和 ImageNet-R 训练集的&gt;20%）时，所有基于复习的方法都与 GDumb 相当，表明执行基于复习的连续学习可能不会比 GDumb 在缓冲数据上进行监督训练获得性能提升。DualPrompt 在没有任何缓冲数据的情况下实现了更好的性能。此外，从表 1 和图 1 我们可以观察到，当缓冲区尺寸缩小时，基于预演的方法的性能急剧下降。这再次表明了 DualPrompt 作为一种无需复习的方法的明显优势。对于非复习型方法，只有 L2P 的性能接近我们的方法。然而，DualPrompt 仍然在平均准确率上显著超越 L2P，差距在 3%-7% 之间，这得益于我们新颖的两种补充提示的设计，成功减少了灾难性遗忘。</p>
+<p>基于架构的方法。我们与代表性的类增量学习方法进行比较，包括 DualNet[45]、SupSup[61]、DynaER[64] 和 RPSNet[50]。请参见附录 D 了解更多细节。</p>
+<p>以前的基于架构的方法，基于 ConvNet，不容易迁移到基于变换器的模型。此外，不同的基于架构的方法通常添加不同数量的额外参数。为了使这些方法之间的比较相对公平，我们引入了一个指标来衡量某种方法的性能与给定架构的上界性能有多接近，即在 i.i.d.设置下训练。表 2 显示了 Split-CIFAR100 上的结果。DualPrompt 实现了最佳准确性，与上界的差异仅为 4.34%，并且额外参数最少，不需要缓冲区。最强大的竞争对手 DynaER 在 ResNet 上，相比之下，需要 2,000 个图像的缓冲区，并包含 43.8% 的额外参数。</p>
+<p>表 2：与基于架构的方法在 Split CIFAR-100 上的比较。我们使用 Diff &#x3D; Upper-Bound Acc - Method Acc（越低越好），来衡量性能与所使用的主干的上界性能有多接近。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250123091202.png" style="zoom: 80%;" /></div>
+
+<p>†由原始论文报告。‡使用他们原始的代码库复制。</p>
+<h3 id="5-3-更强大的主干是否简单地提高了CL？"><a href="#5-3-更强大的主干是否简单地提高了CL？" class="headerlink" title="5.3 更强大的主干是否简单地提高了CL？"></a>5.3 更强大的主干是否简单地提高了CL？</h3><p>我们的方法建立在比许多先前方法更先进但更大的主干之上。我们认为理解这个问题对于公平比较和未来研究非常重要。尽管预训练的 ViT 是比普通 ConvNets 更强大的主干，但这并不一定转化为连续学习性能。我们在这里展示的观察结果与最近一项关于大型架构如何帮助连续学习的研究 [42] 相似。首先，这个事实可以从表 1 中看到，其中众所周知的通用方法仍然在给定这个主干的情况下遭受大量的遗忘。我们尝试使用 ImageNet 预训练的 ResNet 与表 2 中的比较方法竞争，但没有改善表 2 中报告的数字。这进一步表明，没有被适当利用，预训练模型不是连续学习的“灵丹妙药”。我们还为表现最好的 DynaER[64] 配备了 ImageNet 预训练的 ResNet152（60M 参数），其上界性能接近 ViT-B&#x2F;16（86M）。DynaER 学习权重掩码，这是基于架构的方法中流行的策略 [61]，以动态扩展架构。然而，表 2 中的结果表明性能更差（我们扫掠了他们建议的超参数以报告最佳性能），在他们原始论文中，当将 DynaER 扩展到 ResNet32 时，也展示了类似的观察结果。也就是说，如何有效地利用大型模型在传统的基于架构的方法下仍然是一个开放的问题。DualPrompt 在明智地利用最先进的视觉主干来解决连续学习的挑战方面是新颖的。</p>
+<h3 id="5-4-探索在哪里和如何附加提示"><a href="#5-4-探索在哪里和如何附加提示" class="headerlink" title="5.4 探索在哪里和如何附加提示"></a>5.4 探索在哪里和如何附加提示</h3><p>我们已经在第 5.2 节中展示了 DualPrompt 的最佳性能模型。在这一节中，我们探索了在哪里和如何附加提示，并增强了它们对整体性能的影响。我们还提出了关键的实证观察，这些观察导致了有趣的未来研究。</p>
+<p><strong>提示的位置</strong>。为了探索插入 G-Prompt和 E-Prompt最合适的位置，我们使用启发式搜索策略在 Split ImageNet-R 的验证集上。我们首先设置 $start_e &#x3D; end_e$，即，只在单个 MSA 层插入 E-Prompt。图 3 的下线显示，在第 5 个 MSA 层放置 E-Prompt可以获得最佳性能。然后我们扩展 E-Prompt到多层，并发现 $start_e &#x3D; 3, end_e &#x3D; 5$ 表现最佳（见附录 F）。</p>
+<p>有趣的是，图 3 的上线显示，在第 2 个 MSA 层放置 G-Prompt可以获得最佳性能。我们也将其扩展到多层，并进行搜索实验，发现最佳选择是 $start_g &#x3D; 1, end_g &#x3D; 2$（见附录 F）。有趣的是，我们观察到最佳深度是不同的，并且附加 G-Prompt和 E-Prompt的最终层是不重叠的。特别是，$start_g &gt; start_e$，这表明 G-Prompt在较浅层更好地捕获任务不变的知识，而 E-Prompt在较深层更好地捕获任务特定的知识。这一观察也符合不同层的深度学习模型捕获不同类型的知识的直觉 [49,66]，因此自然适合不同的提示。这也证明了将 G-Prompt和 E-Prompt的位置解耦是一个合理的选择。此外，当将它们附加到顶层时，E-Prompt和 G-Prompt都表现出最差的性能。我们推测提示需要被附加到较浅层，以便为预训练模型的更多层提供条件，并因此提供有效的指令。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250123092223.png" style="zoom: 80%;" /></div>
+
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250123092515.png" style="zoom: 80%;" /></div>
+
+<p><strong>提示函数：提示与前缀</strong>。我们进一步研究了提示函数在 Split CIFAR-100 和 Split ImageNet-R 上的作用。在先前的基于提示的 CL 工作中，L2P 只应用了 Pro-T，没有进一步的调查。在表 3 中，我们观察到 Pre-T 版本在两个数据集上都取得了更好的性能。除了它的经验性更好性能外，Pre-T 实际上在附加到多层时更可扩展和高效，因为它导致不变的序列长度。然而，提示函数是我们方法的灵活组件，设计更好的提示函数也是开放的研究问题，因此我们可以轻松地将任何新提出的提示函数插入 DualPrompt 并评估其在给定连续学习任务上的有效性。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250123093751.png" style="zoom: 80%;" /></div>
+
+<h3 id="5-5-消融研究"><a href="#5-5-消融研究" class="headerlink" title="5.5 消融研究"></a>5.5 消融研究</h3><p>基于上一节中搜索到的最佳参数，我们在表 4 中展示了消融研究结果，以显示 DualPrompt 的每个组件在 Split ImageNet-R 上的重要性。请注意，G-P（G-Prompt）和 E-P（E-Prompt）单独表示每种类型的提示的最佳单层版本（$start_g &#x3D; end_g &#x3D; 2, start_e &#x3D; end_e &#x3D; 5$），而 ML 表示最佳多层版本（$start_g &#x3D; 1, end_g &#x3D; 2, start_e &#x3D; 3, end_e &#x3D; 5$）。当所有组件都不存在时，我们简单地有一个冻结预训练主干和可训练分类头部的朴素基线。总的来说，所有组件都对最终性能做出了贡献。有趣的是，仅添加单层 G-Prompt就比基线带来了显著的改进，表明 G-Prompt获得的任务不变的知识在任务间泛化得很好。然而，简单地在不同任务之间共享知识引入了不可避免的遗忘，因为任务特定的知识没有被适当地解耦。因此，E-Prompt单独一致地优于 G-Prompt单独，因为 E-Prompt通过分离不同任务学到的知识来减轻遗忘。然而，仅应用 E-Prompt忽略了帮助学习未来任务的任务不变的知识。因此，当将 G-Prompt和 E-Prompt一起添加到主干时，它通过选择性地将任务不变的知识解耦到 G-Prompt和任务特定的知识解耦到 E-Prompt中，进一步增强了整体性能。我们还观察到，将两种提示扩展到其多层对应物在所有情况下都有所帮助，因为通过不同层添加更多的提示参数提供了更多的表示能力。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250123093906.png" style="zoom: 80%;" /></div>
+
+<h3 id="5-6-G-和-E-Prompt的可视化"><a href="#5-6-G-和-E-Prompt的可视化" class="headerlink" title="5.6 G- 和 E-Prompt的可视化"></a>5.6 G- 和 E-Prompt的可视化</h3><p>为了进一步理解 G- 和 E-Prompt中学到的不同类型的指令，我们使用 t-SNE[34] 在图 4 中对这两种类型的提示进行了可视化。对于形状为 $L×D$ 的提示，我们将其视为 $L$ 个维度为 $D$ 的提示。E-Prompt取自训练了所有任务的最终模型，而 G-Prompt取自每个任务训练后的不同模型快照。我们可以观察到 E-Prompt很好地分离，表明它们正在学习任务特定的知识。与此同时，G-Prompt相当集中，并且在任务之间只有轻微的差异，这表明它们正在学习任务不变的知识。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250123094641.png" style="zoom: 80%;" /></div>
+
+<h2 id="6-结论"><a href="#6-结论" class="headerlink" title="6. 结论"></a>6. 结论</h2><p>在这篇论文中，我们提出了一种新的方法 DualPrompt，它在具有挑战性的类增量设置下实现了无需复习的连续学习。DualPrompt 提出了一种新的方法来附加补充提示到预训练模型以学习解耦的知识。为了全面验证所提出的方法，我们提出了一个新的连续学习基准 Split ImageNet-R，并在广泛使用的基准上进行了研究。DualPrompt 在所有指标上设定了最先进的性能，并且与以前的基于架构和基于复习的方法相比，需要的额外内存少得多。进行了实证调查以了解内部工作。由于大规模预训练模型在实践中因其出色的表示能力而被广泛使用，我们认为 DualPrompt 为现实世界中无需复习的连续学习系统提供了一个起点。此外，我们推荐 DualPrompt 作为一个统一的框架，用于未来的基于提示的连续学习研究，因为它的简单性、灵活性和强大的性能。</p>
+<h3 id="A-算法：DualPrompt"><a href="#A-算法：DualPrompt" class="headerlink" title="A 算法：DualPrompt"></a>A 算法：DualPrompt</h3><p>这部分提供了 DualPrompt 算法在训练和测试时的具体步骤。</p>
+<p>算法 1：训练时的 DualPrompt</p>
+<p>算法 2：测试时的 DualPrompt</p>
+<p>以上是 DualPrompt 算法在训练和测试阶段的具体步骤，这些步骤详细说明了如何使用 G-Prompt和 E-Prompt来指导模型在连续学习任务中的表现。通过这种方法，DualPrompt 能够有效地在没有额外复习数据的情况下学习新任务，同时保留以前任务的知识。</p>
+<h3 id="B-实验细节"><a href="#B-实验细节" class="headerlink" title="B 实验细节"></a>B 实验细节</h3><p>对于我们的方法 DualPrompt，我们使用恒定的学习率 0.005，使用 Adam[19] 优化器，其中 $\beta_1 &#x3D; 0.9$ 和 $\beta_2 &#x3D; 0.999$，所有基准测试的批量大小为 128。对于使用 ViT 架构的方法，所有输入图像都被调整到 224×224 大小并归一化到 [0, 1]。否则，我们遵循他们论文中的原始实现。我们在方程 6 中设置平衡因子 $\lambda &#x3D; 1$。我们训练 Split CIFAR-100 和 5-datasets 每个任务 5 个周期，Split ImageNet-R 每个任务 50 个周期，以确保模型正确收敛，从而将遗忘问题与可能的欠拟合区分开来 [4]。我们进一步从 Split ImageNet-R 的训练集中抽取 20% 作为验证集，用于搜索最优的 $start_g, end_g, start_e, end_e$，并经验性地设置 $start_g &#x3D; 1, end_g &#x3D; 2, start_e &#x3D; 3, end_e &#x3D; 5$ 对所有设置，因为我们发现它们对所有数据集都表现一致良好。根据 [60] 中的提示长度建议，我们为所有数据集设置 $L_g &#x3D; 5$ 和 $L_e &#x3D; 20$，我们进一步在附录 G 中验证了这个选择的正确性。请注意，为了公平比较，我们设置了 M &#x3D; 30, $L_p &#x3D; 20$, N &#x3D; 5 对于 L2P，这导致与 DualPrompt 相似的额外参数量。为了确保公平比较，每个前述方法都从同一个 ImageNet 预训练的 ViT-B&#x2F;16[10] 开始，遵循 [60] 中的设置。我们仔细重新实现了这些方法，并使用参考他们原始源代码的超参数。此外，我们使预训练模型对所有方法（除了 L2P 和 DualPrompt）完全可训练，因为我们经验性地观察到由于学习容量有限，它们无法很好地学习。</p>
+<h3 id="C-评估指标"><a href="#C-评估指标" class="headerlink" title="C 评估指标"></a>C 评估指标</h3><p>设 $S_{t,\tau}$ 为评估分数，例如在训练第 $t$ 个任务后对第 $\tau$ 个任务的分类准确率。在模型完成第 $t$ 个任务的训练后，我们按如下方式计算平均准确率 ($A_t$) 和遗忘 ($F_t$)：<br>$$<br>    A_t &#x3D; \frac{1}{t} \sum_{\tau&#x3D;1}^{t} S_{t,\tau}<br>$$</p>
+<p>$$<br>    F_t &#x3D; \frac{1}{t-1} \sum_{\tau&#x3D;1}^{t-1} \max_{\tau’ \in {1, \cdots, t-1&amp;#125;&#125; (S_{\tau’,\tau} - S_{t,\tau})<br>$$<br>注意，平均准确率是连续学习的整体评估指标，包括两个方面：更大的学习能力和更少的灾难性遗忘，而遗忘仅作为灾难性遗忘的度量。</p>
+<h3 id="D-比较方法的细节"><a href="#D-比较方法的细节" class="headerlink" title="D 比较方法的细节"></a>D 比较方法的细节</h3><ul>
+<li><strong>基于正则化的方法</strong>：EWC[20] 和 LwF[28] 是广泛比较的代表性基于正则化的方法。</li>
+<li><strong>基于复习的方法</strong>：ER[8,14]、GDumb[47]、BiC[62]、DER++[4] 和 Co2L[5]。作为早期的方法，ER 和 GDumb 不仅在他们自己的工作中表现出色，而且在后来的文献 [35,4] 中也表现出色。BiC 也是类增量学习设置中的一个强大的方法。DER++ 和 Co2L 是最新的 SOTA 方法。我们为这些基于复习的方法选择了中等和大的缓冲区大小，基于先前工作的推荐 [4,41,5,60]。</li>
+<li><strong>基于提示的方法</strong>：L2P[60] 是当前最先进的基于提示的方法，我们配置 DualPrompt 以拥有与 L2P 相似的额外参数量，以便进行公平比较。</li>
+<li><strong>基于架构的方法</strong>：所有这些方法都基于 ResNet-18，正如原始工作所建议的。我们要么直接采用他们原始工作中报告的结果，要么严格遵循这些方法的原始实现和超参数设置来重现结果。其他一些知名的方法 [18,12,46] 没有在这里比较，因为它们要么已经被我们比较的方法超越，要么只在更简单的任务增量设置中得到验证。</li>
+</ul>
+<h3 id="E-Split-ImageNet-R：大类内多样性"><a href="#E-Split-ImageNet-R：大类内多样性" class="headerlink" title="E Split ImageNet-R：大类内多样性"></a>E Split ImageNet-R：大类内多样性</h3><p>图 5 显示了 Split ImageNet-R 中三个不同类别的一些代表性示例。我们可以观察到，尽管同一行的图像共享相同的标签，但实际上它们之间差异很大。这一观察结果与图 1 和表 1 中的结果一致，即由于 Split ImageNet-R 中大的类内多样性，基于复习的方法需要大的缓冲区才能表现良好。</p>
+<h3 id="F-搜索多层提示"><a href="#F-搜索多层提示" class="headerlink" title="F 搜索多层提示"></a>F 搜索多层提示</h3><p>基于 4.2 节中的策略，我们首先在 Split ImageNet-R 的验证集上搜索多层 E-Prompt。由于搜索空间很大，我们做了一个简化的假设，即附加提示的 MSA 层应该是连续的。此外，由于 $start_e &#x3D; end_e &#x3D; 5$ 是在单层情况下的最佳选择，很自然地在搜索多层 E-Prompt时包含第 5 层。然而，我们也包括了几个不包含第 5 层的情况以供完整性。</p>
+<p>表 5：多层 E-Prompt的搜索结果。</p>
+<table>
+<thead>
+<tr>
+<th>$i_g$</th>
+<th>$j_g$</th>
+<th>平均准确率</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5</td>
+<td>5</td>
+<td>65.55</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>65.76</td>
+</tr>
+<tr>
+<td>4</td>
+<td>5</td>
+<td>66.59</td>
+</tr>
+<tr>
+<td>5</td>
+<td>6</td>
+<td>66.12</td>
+</tr>
+<tr>
+<td>3</td>
+<td>5</td>
+<td>67.12</td>
+</tr>
+<tr>
+<td>4</td>
+<td>6</td>
+<td>66.41</td>
+</tr>
+<tr>
+<td>5</td>
+<td>7</td>
+<td>64.53</td>
+</tr>
+<tr>
+<td>1</td>
+<td>12</td>
+<td>67.09</td>
+</tr>
+</tbody></table>
+<p>表 6：多层 G-Prompt的搜索结果。</p>
+<table>
+<thead>
+<tr>
+<th>$i_e$</th>
+<th>$j_e$</th>
+<th>平均准确率</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2</td>
+<td>2</td>
+<td>67.70</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>68.46</td>
+</tr>
+<tr>
+<td>1</td>
+<td>3</td>
+<td>67.79</td>
+</tr>
+<tr>
+<td>1</td>
+<td>5</td>
+<td>67.73</td>
+</tr>
+<tr>
+<td>6</td>
+<td>8</td>
+<td>65.10</td>
+</tr>
+<tr>
+<td>1</td>
+<td>12</td>
+<td>63.13</td>
+</tr>
+</tbody></table>
+<p>我们发现 $start_e &#x3D; 3, end_e &#x3D; 5$ 在平均准确率方面表现最佳。注意，当我们将 E-Prompt附加到每个 MSA 层 ($start_e &#x3D; 1, end_e &#x3D; 12$) 时，它实际上导致了相当准确的结果。然而，我们仍然选择 $start_e &#x3D; 3, end_e &#x3D; 5$，因为它有更少的额外参数。然后我们固定 $start_e &#x3D; 3, end_e &#x3D; 5$，并搜索多层 G-Prompt，鉴于我们有 $start_g &#x3D; end_g &#x3D; 2$ 作为单层 E-Prompt的最佳表现。我们进行了类似的搜索过程，并倾向于包含第 2 层。搜索结果如表 6 所示。我们发现 $start_g &#x3D; 1, end_g &#x3D; 2$ 带来了最佳平均准确率。此外，简单地共享所有 MSA 层对准确率有总体负面影响。尽管我们的搜索策略不是穷尽的，我们发现 $start_g &#x3D; 1, end_g &#x3D; 2, start_e &#x3D; 3, end_e &#x3D; 5$ 的组合对所有基准数据集都相当有效。</p>
+<h3 id="G-搜索提示长度"><a href="#G-搜索提示长度" class="headerlink" title="G 搜索提示长度"></a>G 搜索提示长度</h3><p>根据 [60] 中的提示，我们将提示的基础长度设置为 5，并在 ${5, 10, 20, 40} \times {5, 10, 20, 40}$ 上对 G-Prompt和 E-Prompt的长度进行网格搜索，基于之前步骤中获得的最优位置。如图 6 所示，我们确实验证了 $L_g &#x3D; 5, L_e &#x3D; 20$ 是在 Split ImageNet-R 验证集上的最佳选择。我们也经验性地观察到这种配置在其他数据集上同样有效，因此我们使用这种提示长度组合进行主要文本中展示的实验。</p>
+<p>图 6：提示长度的网格搜索。</p>
+<table>
+<thead>
+<tr>
+<th>G-Prompt长度</th>
+<th>5</th>
+<th>10</th>
+<th>20</th>
+<th>40</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5</td>
+<td>67.68</td>
+<td>67.38</td>
+<td>67.54</td>
+<td>67.41</td>
+</tr>
+<tr>
+<td>10</td>
+<td>67.67</td>
+<td>67.67</td>
+<td>67.47</td>
+<td>67.38</td>
+</tr>
+<tr>
+<td>20</td>
+<td>68.23</td>
+<td>67.82</td>
+<td>67.46</td>
+<td>67.43</td>
+</tr>
+<tr>
+<td>40</td>
+<td>67.96</td>
+<td>67.99</td>
+<td>68.03</td>
+<td>67.69</td>
+</tr>
+</tbody></table>
+<h2 id="H-5-datasets-上的额外结果"><a href="#H-5-datasets-上的额外结果" class="headerlink" title="H 5-datasets 上的额外结果"></a>H 5-datasets 上的额外结果</h2><p>为了完整性，我们还在 5-datasets[12] 上展示了我们方法的有效性，这是五个不同图像分类数据集的集合，包括 CIFAR-10[22]、MNIST[24]、Fashion-MNIST[63]、SVHN[43] 和 notMNIST[3]。</p>
+<p>表 7：5-datasets[12] 上的额外结果。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>缓冲区大小</th>
+<th>5-datasets</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>平均准确率（↑）</td>
+<td>遗忘（↓）</td>
+<td></td>
+</tr>
+<tr>
+<td>ER</td>
+<td>250</td>
+<td>80.32±0.55</td>
+</tr>
+<tr>
+<td>BiC</td>
+<td></td>
+<td>78.74±1.41</td>
+</tr>
+<tr>
+<td>DER++</td>
+<td></td>
+<td>80.81±0.07</td>
+</tr>
+<tr>
+<td>Co2L</td>
+<td></td>
+<td>82.25±1.17</td>
+</tr>
+<tr>
+<td>ER</td>
+<td>500</td>
+<td>84.26±0.84</td>
+</tr>
+<tr>
+<td>BiC</td>
+<td></td>
+<td>85.53±2.06</td>
+</tr>
+<tr>
+<td>DER++</td>
+<td></td>
+<td>84.88±0.57</td>
+</tr>
+<tr>
+<td>Co2L</td>
+<td></td>
+<td>86.05±1.03</td>
+</tr>
+<tr>
+<td>FT-seq</td>
+<td>0</td>
+<td>20.12±0.42</td>
+</tr>
+<tr>
+<td>EWC</td>
+<td></td>
+<td>50.93±0.09</td>
+</tr>
+<tr>
+<td>LwF</td>
+<td></td>
+<td>47.91±0.33</td>
+</tr>
+<tr>
+<td>L2P</td>
+<td></td>
+<td>81.14±0.93</td>
+</tr>
+<tr>
+<td>DualPrompt</td>
+<td></td>
+<td>88.08±0.36</td>
+</tr>
+<tr>
+<td>上限</td>
+<td></td>
+<td>93.93±0.18</td>
+</tr>
+</tbody></table>
+<p>尽管 5-datasets 中的每个任务相对简单，但该基准模仿了任务多样性大的真实世界设置，因此为 CL 方法提供了更全面的评估。由于 5-datasets 中的每个任务比 Split CIFAR-100 和 ImageNet-R 的任务相对容易，基于复习的方法通常需要较小的缓冲区大小就能表现良好。然而，500 的缓冲区大小已经被认为是 5-datasets 的大尺寸 [12,41]。尽管 DualPrompt 仍然一致地超越了竞争方法，我们认为在现实世界连续学习场景中，任务过于多样化的情况是罕见的：例如，我们不期望一个数字分类器连续学习对动物进行分类。因此，我们仅将 5-datasets 上的表现作为概念验证，展示了我们的方法在任务多样性大时的有效性。</p>
+<h3 id="I-查询准确率与性能之间的关系"><a href="#I-查询准确率与性能之间的关系" class="headerlink" title="I 查询准确率与性能之间的关系"></a>I 查询准确率与性能之间的关系</h3><p>为了展示查询准确率与性能之间的关系，我们将第 4.1 节中引入的查询策略的 DualPrompt 与已知测试时任务身份的 DualPrompt（完美匹配）进行比较。结果如表 8 所示。有趣的是，尽管匹配准确率不是很高，DualPrompt 对它相当鲁棒，并且仍然实现了非常接近完美匹配的准确性。我们将其鲁棒性归因于我们方法的设计。首先，G-Prompt中捕获的任务不变的指令即使 E-Prompt有噪声，对预测仍然有用。其次，查询策略基于输入特征，因此隐含地考虑了任务相似性。即使发生不匹配，我们的方法也倾向于从最相似的任务中选择 E-Prompt。我们还注意到，即使使用真实的任务身份来选择相应的任务特定 E-Prompt，也仍然存在遗忘。这部分遗忘来自于最终 softmax 分类头部的偏差 [35,47,68]，这是类增量学习中常见的问题，可以并行缓解。</p>
+<p>表 8：Split ImageNet-R 上使用查询策略的 DualPrompt 与完美匹配的 DualPrompt 的比较。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/02.DualPrompt/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/02.DualPrompt/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/CIL/">CIL</a><a class="post-meta__tags" href="/blog/tags/PEFT-Expansion/">PEFT Expansion</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/04.CODA-Prompt/" title="CODA-Prompt"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">CODA-Prompt</div></div><div class="info-2"><div class="info-item-1">0. 摘要计算机视觉模型在学习不断变化的训练数据中的新概念时，会遭受一种称为灾难性遗忘的现象。这种持续学习问题的典型解决方案需要广泛复习以前见过的数据，这增加了内存成本，并且可能违反数据隐私。最近，大规模预训练视觉变换器模型的出现使得提示方法成为数据复述的替代方案。这些方法依赖于关键 - 查询机制来生成提示，并且被发现在免复习的持续学习设置中高度抵抗灾难性遗忘。然而，这些方法的关键机制并没有与任务序列一起端到端训练。我们的实验表明，这导致它们的可塑性降低，因此牺牲了新任务的准确性，并且无法从扩展的参数容量中受益。我们提出学习一组提示组件，这些组件用输入条件权重组装，产生输入条件提示，从而...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/01.l2p/" title="l2p"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">l2p</div></div><div class="info-2"><div class="info-item-1">Learning to Prompt for Continual Learning Code |  CVPR 2022  大模型译 :arrow_down:0. 摘要在持续学习的背后主流范式是适应模型参数以适应非平稳数据分布，其中灾难性遗忘是核心挑战。典型方法依赖于复现缓冲区或在测试时已知的任务身份来检索学到的知识和解决遗忘问题，而这项工作提出了一种新的持续学习范式，旨在训练一个更简洁的内存系统，在测试时不访问任务身份。我们的方法学会动态提示（L2P）预训练模型，顺序地在不同任务转换下学习任务。在我们的提议框架中，提示是小的可学习参数，它们被维护在内存空间中。目标是优化提示以指导模型预测...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/07.CPP/" title="CPP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">CPP</div></div><div class="info-2"><div class="info-item-1"> Steering Prototypes with Prompt-tuning for Rehearsal-free Continual Learning  0. 摘要原型（prototype）作为类嵌入的表示，已被探索用于减少内存占用或缓解持续学习场景中的遗忘问题。然而，基于原型的方法仍然会因语义漂移和原型干扰而导致性能急剧下降。在本研究中，我们提出了对比原型提示（Contrastive Prototypical Prompt, CPP），并展示了任务特定的提示调优（prompt-tuning）在对比学习目标的优化下，能够有效解决这两个障碍，并显著提升原型的效力。我们的实验表明，CPP...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/01.l2p/" title="l2p"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">l2p</div></div><div class="info-2"><div class="info-item-1">Learning to Prompt for Continual Learning Code |  CVPR 2022  大模型译 :arrow_down:0. 摘要在持续学习的背后主流范式是适应模型参数以适应非平稳数据分布，其中灾难性遗忘是核心挑战。典型方法依赖于复现缓冲区或在测试时已知的任务身份来检索学到的知识和解决遗忘问题，而这项工作提出了一种新的持续学习范式，旨在训练一个更简洁的内存系统，在测试时不访问任务身份。我们的方法学会动态提示（L2P）预训练模型，顺序地在不同任务转换下学习任务。在我们的提议框架中，提示是小的可学习参数，它们被维护在内存空间中。目标是优化提示以指导模型预测...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/04.CODA-Prompt/" title="CODA-Prompt"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">CODA-Prompt</div></div><div class="info-2"><div class="info-item-1">0. 摘要计算机视觉模型在学习不断变化的训练数据中的新概念时，会遭受一种称为灾难性遗忘的现象。这种持续学习问题的典型解决方案需要广泛复习以前见过的数据，这增加了内存成本，并且可能违反数据隐私。最近，大规模预训练视觉变换器模型的出现使得提示方法成为数据复述的替代方案。这些方法依赖于关键 - 查询机制来生成提示，并且被发现在免复习的持续学习设置中高度抵抗灾难性遗忘。然而，这些方法的关键机制并没有与任务序列一起端到端训练。我们的实验表明，这导致它们的可塑性降低，因此牺牲了新任务的准确性，并且无法从扩展的参数容量中受益。我们提出学习一组提示组件，这些组件用输入条件权重组装，产生输入条件提示，从而...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/15.LAE/" title="LAE"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LAE</div></div><div class="info-2"><div class="info-item-1">0. 摘要“预训练 → 下游适应”为持续学习（Continual Learning, CL）带来了新的机遇和挑战。尽管最近的最先进 CL 方法通过参数高效调优（Parameter-Efficient-Tuning, PET）适应范式取得了成功，但仅探索了提示（prompt）方法，限制了其仅适用于 Transformer 模型。本文将提示视为 PET 的一种实例，并提出了一种通用的 PET 持续学习框架，称为学习 - 积累 - 集成（Learning-Accumulation-Ensemble, LAE）。PET（例如使用 Adapter、LoRA 或 Prefix）可以用更少的参数和资源...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/14.MOS/" title="MOS"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">MOS</div></div><div class="info-2"><div class="info-item-1"> MOS: Model Surgery for Pre-Trained Model-Based Class-Incremental Learning  0. 摘要类增量学习（CIL）要求模型在不断获取新类别知识的同时，不忘记旧知识。尽管预训练模型（PTMs）在 CIL 中表现出色，但在学习新概念时仍会发生灾难性遗忘。现有工作试图利用轻量级组件来调整 PTM，但遗忘现象仍然来自参数和检索级别。具体来说，模型的迭代更新导致参数漂移，而错误检索不相关的模块导致推理期间的不匹配。为此，我们提出了模型手术（MOS），以挽救模型免于忘记先前的知识。通过训练任务特定的适配器，我们不断调整 PTM 以适...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/06.PromptFusion/" title="PromptFusion"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">PromptFusion</div></div><div class="info-2"><div class="info-item-1">PromptFusion: Decoupling Stability and Plasticity for Continual Learning0. 摘要连续学习指的是从数据流中持续学习的能力。当前研究主要集中在缓解灾难性遗忘上，而大部分的成功都是以限制新任务的性能为代价的。这种权衡被称为稳定性 - 可塑性困境，对连续学习来说是一个更普遍和更具挑战性的问题。然而，这两个概念之间固有的冲突使得似乎不可能同时对它们两个都找到一个令人满意的解决方案。因此，我们提出一个问题：“是否可能将它们分成两个问题来独立征服？”为此，我们提出了一种基于提示调整的方法，称为 PromptFusion，以实现稳...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DualPrompt-Complementary-Prompting-for-Rehearsal-free-Continual-Learning"><span class="toc-number">1.</span> <span class="toc-text">DualPrompt: Complementary Prompting for Rehearsal-free Continual Learning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AF%91-arrow-down"><span class="toc-number">2.</span> <span class="toc-text">大模型译 :arrow_down:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E6%91%98%E8%A6%81"><span class="toc-number">3.</span> <span class="toc-text">0. 摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-number">4.</span> <span class="toc-text">1. 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">5.</span> <span class="toc-text">2. 相关工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%85%88%E5%86%B3%E6%9D%A1%E4%BB%B6"><span class="toc-number">6.</span> <span class="toc-text">3. 先决条件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E8%BF%9E%E7%BB%AD%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98%E8%AE%BE%E7%BD%AE"><span class="toc-number">6.1.</span> <span class="toc-text">3.1 连续学习问题设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%9F%BA%E4%BA%8E%E6%8F%90%E7%A4%BA%E7%9A%84%E5%AD%A6%E4%B9%A0"><span class="toc-number">6.2.</span> <span class="toc-text">3.2 基于提示的学习</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-DualPrompt"><span class="toc-number">7.</span> <span class="toc-text">4. DualPrompt</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E4%BA%92%E4%B8%BA%E8%A1%A5%E5%85%85%E7%9A%84-G-Prompt%E5%92%8C-E-Prompt"><span class="toc-number">7.1.</span> <span class="toc-text">4.1 互为补充的 G-Prompt和 E-Prompt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%8F%90%E7%A4%BA%E9%99%84%E5%8A%A0%EF%BC%9A%E5%9C%A8%E5%93%AA%E9%87%8C%E5%92%8C%E5%A6%82%E4%BD%95%E9%99%84%E5%8A%A0%EF%BC%9F"><span class="toc-number">7.2.</span> <span class="toc-text">4.2 提示附加：在哪里和如何附加？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-DualPrompt-%E7%9A%84%E6%80%BB%E4%BD%93%E7%9B%AE%E6%A0%87"><span class="toc-number">7.3.</span> <span class="toc-text">4.3 DualPrompt 的总体目标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%AE%9E%E9%AA%8C"><span class="toc-number">8.</span> <span class="toc-text">5. 实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E8%AF%84%E4%BC%B0%E5%9F%BA%E5%87%86"><span class="toc-number">8.1.</span> <span class="toc-text">5.1 评估基准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%8E%E6%9C%80%E5%85%88%E8%BF%9B%E6%96%B9%E6%B3%95%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">8.2.</span> <span class="toc-text">5.2 与最先进方法的比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E6%9B%B4%E5%BC%BA%E5%A4%A7%E7%9A%84%E4%B8%BB%E5%B9%B2%E6%98%AF%E5%90%A6%E7%AE%80%E5%8D%95%E5%9C%B0%E6%8F%90%E9%AB%98%E4%BA%86CL%EF%BC%9F"><span class="toc-number">8.3.</span> <span class="toc-text">5.3 更强大的主干是否简单地提高了CL？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E6%8E%A2%E7%B4%A2%E5%9C%A8%E5%93%AA%E9%87%8C%E5%92%8C%E5%A6%82%E4%BD%95%E9%99%84%E5%8A%A0%E6%8F%90%E7%A4%BA"><span class="toc-number">8.4.</span> <span class="toc-text">5.4 探索在哪里和如何附加提示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6"><span class="toc-number">8.5.</span> <span class="toc-text">5.5 消融研究</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6-G-%E5%92%8C-E-Prompt%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-number">8.6.</span> <span class="toc-text">5.6 G- 和 E-Prompt的可视化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E7%BB%93%E8%AE%BA"><span class="toc-number">9.</span> <span class="toc-text">6. 结论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-%E7%AE%97%E6%B3%95%EF%BC%9ADualPrompt"><span class="toc-number">9.1.</span> <span class="toc-text">A 算法：DualPrompt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B-%E5%AE%9E%E9%AA%8C%E7%BB%86%E8%8A%82"><span class="toc-number">9.2.</span> <span class="toc-text">B 实验细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87"><span class="toc-number">9.3.</span> <span class="toc-text">C 评估指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#D-%E6%AF%94%E8%BE%83%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%86%E8%8A%82"><span class="toc-number">9.4.</span> <span class="toc-text">D 比较方法的细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#E-Split-ImageNet-R%EF%BC%9A%E5%A4%A7%E7%B1%BB%E5%86%85%E5%A4%9A%E6%A0%B7%E6%80%A7"><span class="toc-number">9.5.</span> <span class="toc-text">E Split ImageNet-R：大类内多样性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#F-%E6%90%9C%E7%B4%A2%E5%A4%9A%E5%B1%82%E6%8F%90%E7%A4%BA"><span class="toc-number">9.6.</span> <span class="toc-text">F 搜索多层提示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#G-%E6%90%9C%E7%B4%A2%E6%8F%90%E7%A4%BA%E9%95%BF%E5%BA%A6"><span class="toc-number">9.7.</span> <span class="toc-text">G 搜索提示长度</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#H-5-datasets-%E4%B8%8A%E7%9A%84%E9%A2%9D%E5%A4%96%E7%BB%93%E6%9E%9C"><span class="toc-number">10.</span> <span class="toc-text">H 5-datasets 上的额外结果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#I-%E6%9F%A5%E8%AF%A2%E5%87%86%E7%A1%AE%E7%8E%87%E4%B8%8E%E6%80%A7%E8%83%BD%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">10.1.</span> <span class="toc-text">I 查询准确率与性能之间的关系</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

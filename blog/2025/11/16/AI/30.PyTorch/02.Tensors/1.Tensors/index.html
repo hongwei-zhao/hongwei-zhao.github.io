@@ -1,0 +1,469 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Tensors | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="TensorsTensor 中文为张量。张量的意思是一个多维数组，它是标量、向量、矩阵的高维扩展。 标量可以称为 0 维张量，向量可以称为 1 维张量，矩阵可以称为 2 维张量，RGB 图像可以表示 3 维张量。你可以把张量看作多维数组。   Tensor 与 Variable在 PyTorch 0.4.0 之前，torch.autograd 包中存在 Variable 这种数据类型，主要是用于封">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tensors">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/02.Tensors/1.Tensors/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="TensorsTensor 中文为张量。张量的意思是一个多维数组，它是标量、向量、矩阵的高维扩展。 标量可以称为 0 维张量，向量可以称为 1 维张量，矩阵可以称为 2 维张量，RGB 图像可以表示 3 维张量。你可以把张量看作多维数组。   Tensor 与 Variable在 PyTorch 0.4.0 之前，torch.autograd 包中存在 Variable 这种数据类型，主要是用于封">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.352Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="PyTorch">
+<meta property="article:tag" content="Tensors">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Tensors",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/02.Tensors/1.Tensors/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.352Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/02.Tensors/1.Tensors/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Tensors',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">Tensors</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Tensors</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.352Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PyTorch/">PyTorch</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PyTorch/Tensors/">Tensors</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Tensors"><a href="#Tensors" class="headerlink" title="Tensors"></a><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/torch.html#tensors">Tensors</a></h2><p>Tensor 中文为张量。张量的意思是一个多维数组，它是标量、向量、矩阵的高维扩展。</p>
+<p>标量可以称为 0 维张量，向量可以称为 1 维张量，矩阵可以称为 2 维张量，RGB 图像可以表示 3 维张量。你可以把张量看作多维数组。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209121805265.png"/></div>
+
+<h2 id="Tensor-与-Variable"><a href="#Tensor-与-Variable" class="headerlink" title="Tensor 与 Variable"></a>Tensor 与 Variable</h2><p>在 PyTorch 0.4.0 之前，torch.autograd 包中存在 Variable 这种数据类型，主要是用于封装 Tensor，进行自动求导。Variable 主要包含下面几种属性。</p>
+<p>data: 被包装的 Tensor。</p>
+<p>grad: data 的梯度。</p>
+<p>grad_fn: 创建 Tensor 所使用的 Function，是自动求导的关键，因为根据所记录的函数才能计算出导数。</p>
+<p>requires_grad: 指示是否需要梯度，并不是所有的张量都需要计算梯度。</p>
+<p>is_leaf: 指示是否叶子节点(张量)，叶子节点的概念在计算图中会用到，后面详细介绍。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209121806485.png"/></div>
+
+<p>在 PyTorch 0.4.0 之后，Variable 并入了 Tensor。在之后版本的 Tensor 中，除了具有上面 Variable 的 5 个属性，还有另外 3 个属性。</p>
+<ul>
+<li>dtype: 张量的数据类型，如 torch.FloatTensor，torch.cuda.FloatTensor。</li>
+<li>shape: 张量的形状。如 (64, 3, 224, 224)</li>
+<li>device: 张量所在设备 (CPU&#x2F;GPU)，GPU 是加速计算的关键</li>
+</ul>
+<div align="center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209121806841.png" alt="image"></div>
+
+<p>关于 dtype，PyTorch 提供了 9 种数据类型，共分为 3 大类：float (16-bit, 32-bit, 64-bit)、integer (unsigned-8-bit ,8-bit, 16-bit, 32-bit, 64-bit)、Boolean。模型参数和数据用的最多的类型是 float-32-bit。label 常用的类型是 integer-64-bit。</p>
+<div align="center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209121806634.png"/></div>
+
+<h2 id="tensor-创建方法"><a href="#tensor-创建方法" class="headerlink" title="tensor 创建方法"></a>tensor 创建方法</h2><table>
+<thead>
+<tr>
+<th align="right">函数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">Tensor(sizes)</td>
+<td>基础构造函数</td>
+</tr>
+<tr>
+<td align="right">tensor(data)</td>
+<td>类似于 np.array</td>
+</tr>
+<tr>
+<td align="right">ones(sizes)</td>
+<td>全 1</td>
+</tr>
+<tr>
+<td align="right">zeros(sizes)</td>
+<td>全 0</td>
+</tr>
+<tr>
+<td align="right">eye(sizes)</td>
+<td>对角为 1，其余为 0</td>
+</tr>
+<tr>
+<td align="right">arange(s,e,step)</td>
+<td>从 s 到 e，步长为 step</td>
+</tr>
+<tr>
+<td align="right">linspace(s,e,steps)</td>
+<td>从 s 到 e，均匀分成 step 份</td>
+</tr>
+<tr>
+<td align="right">rand&#x2F;randn(sizes)</td>
+<td>rand 是[0,1)均匀分布；randn 是服从 N(0，1)的正态分布</td>
+</tr>
+<tr>
+<td align="right">normal(mean,std)</td>
+<td>正态分布(均值为 mean，标准差是 std)</td>
+</tr>
+<tr>
+<td align="right">randperm(m)</td>
+<td>随机排列</td>
+</tr>
+</tbody></table>
+<h3 id="直接创建"><a href="#直接创建" class="headerlink" title="直接创建"></a>直接创建</h3><p><code>torch.tensor()</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.tensor(data, dtype=<span class="hljs-literal">None</span>, device=<span class="hljs-literal">None</span>, requires_grad=<span class="hljs-literal">False</span>, pin_memory=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p><code>data:</code> 数据，可以是 list，numpy</p>
+<p><code>dtype:</code> 数据类型，默认与 data 的一致</p>
+<p><code>device:</code> 所在设备，cuda&#x2F;cpu</p>
+<p><code>requires_grad:</code> 是否需要梯度</p>
+<p><code>pin_memory:</code> 是否存于锁页内存</p>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">ndarray = np.ones((<span class="hljs-number">3</span>, <span class="hljs-number">3</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;ndarray的数据类型：&quot;</span>, ndarray.dtype)<br><span class="hljs-comment"># 创建存放在 GPU 的数据</span><br><span class="hljs-comment"># t = torch.tensor(ndarray, device=&#x27;cuda&#x27;)</span><br>t= torch.tensor(ndarray)<br><span class="hljs-built_in">print</span>(t)<br></code></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">ndarray的数据类型： float64<br>tensor([[<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>],<br>        [<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>],<br>        [<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>]], device=<span class="hljs-string">&#x27;cuda:0&#x27;</span>, dtype=torch.float64)<br></code></pre></td></tr></table></figure>
+
+<h3 id="指定类型函数随机创建"><a href="#指定类型函数随机创建" class="headerlink" title="指定类型函数随机创建"></a>指定类型函数随机创建</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">out_a = torch.FloatTensor(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)<br>out_b = torch.IntTensor(<span class="hljs-number">2</span>)<br>out_c = torch.IntTensor([<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>])<br><span class="hljs-built_in">print</span>(out_a,<span class="hljs-string">&#x27;\n&#x27;</span>,out_b,<span class="hljs-string">&#x27;\n&#x27;</span>,out_c)<br></code></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">tensor([[<span class="hljs-number">1.9964e-16</span>, <span class="hljs-number">4.5898e-41</span>, <span class="hljs-number">2.0081e-32</span>],<br>        [<span class="hljs-number">0.0000e+00</span>, <span class="hljs-number">0.0000e+00</span>, <span class="hljs-number">0.0000e+00</span>]])<br> tensor([<span class="hljs-number">627453024</span>,     <span class="hljs-number">32754</span>], dtype=torch.int32)<br> tensor([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>], dtype=torch.int32)<br></code></pre></td></tr></table></figure>
+
+<h3 id="tensor-和-numpy-array-之间的相互转换"><a href="#tensor-和-numpy-array-之间的相互转换" class="headerlink" title="tensor 和 numpy array 之间的相互转换"></a>tensor 和 numpy array 之间的相互转换</h3><p><code>torch.from_numpy(ndarray)</code></p>
+<p>从 numpy 创建 tensor。利用这个方法创建的 tensor 和原来的 ndarray 共享内存，当修改其中一个数据，另外一个也会被改动。</p>
+<div align="center">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202209121806362.png" alt="image-20220912180657326">
+</div>
+
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python">arr = np.array([[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]])<br>t = torch.from_numpy(arr)<br><br><span class="hljs-comment"># 修改 array，tensor 也会被修改</span><br><span class="hljs-comment"># print(&quot;\n修改arr&quot;)</span><br><span class="hljs-comment"># arr[0, 0] = 0</span><br><span class="hljs-comment"># print(&quot;numpy array: &quot;, arr)</span><br><span class="hljs-comment"># print(&quot;tensor : &quot;, t)</span><br><br><span class="hljs-comment"># 修改 tensor，array 也会被修改</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n修改tensor&quot;</span>)<br>t[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>] = -<span class="hljs-number">1</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;numpy array: &quot;</span>, arr)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;tensor : &quot;</span>, t)<br></code></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">修改tensor<br>numpy array:  [[-<span class="hljs-number">1</span>  <span class="hljs-number">2</span>  <span class="hljs-number">3</span>]<br> [ <span class="hljs-number">4</span>  <span class="hljs-number">5</span>  <span class="hljs-number">6</span>]]<br>tensor :  tensor([[-<span class="hljs-number">1</span>,  <span class="hljs-number">2</span>,  <span class="hljs-number">3</span>],<br>        [ <span class="hljs-number">4</span>,  <span class="hljs-number">5</span>,  <span class="hljs-number">6</span>]], dtype=torch.int32)<br></code></pre></td></tr></table></figure>
+
+<h3 id="根据数值创建"><a href="#根据数值创建" class="headerlink" title="根据数值创建"></a>根据数值创建</h3><h4 id="torch-zeros"><a href="#torch-zeros" class="headerlink" title="torch.zeros()"></a>torch.zeros()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.zeros(*size, out=<span class="hljs-literal">None</span>, dtype=<span class="hljs-literal">None</span>, layout=torch.strided, device=<span class="hljs-literal">None</span>, requires_grad=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p>功能：根据 size 创建全 0 张量</p>
+<ul>
+<li>size: 张量的形状</li>
+<li>out: 输出的张量，如果指定了 out，那么<code>torch.zeros()</code>返回的张量和 out 指向的是同一个地址</li>
+<li>layout: 内存中布局形式，有 strided，sparse_coo 等。当是稀疏矩阵时，设置为 sparse_coo 可以减少内存占用。</li>
+<li>device: 所在设备，cuda&#x2F;cpu</li>
+<li>requires_grad: 是否需要梯度</li>
+</ul>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">out_t = torch.tensor([<span class="hljs-number">1</span>])<br><span class="hljs-comment"># 这里制定了 out</span><br>t = torch.zeros((<span class="hljs-number">3</span>, <span class="hljs-number">3</span>), out=out_t)<br><span class="hljs-built_in">print</span>(t, <span class="hljs-string">&#x27;\n&#x27;</span>, out_t)<br><span class="hljs-comment"># id 是取内存地址。最终 t 和 out_t 是同一个内存地址</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">id</span>(t), <span class="hljs-built_in">id</span>(out_t), <span class="hljs-built_in">id</span>(t) == <span class="hljs-built_in">id</span>(out_t))<br></code></pre></td></tr></table></figure>
+
+<p>输出是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">tensor([[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],<br>        [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],<br>        [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>]])<br> tensor([[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],<br>        [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],<br>        [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>]])<br><span class="hljs-number">2984903203072</span> <span class="hljs-number">2984903203072</span> <span class="hljs-literal">True</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="torch-zeros-like"><a href="#torch-zeros-like" class="headerlink" title="torch.zeros_like()"></a>torch.zeros_like()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.zeros_like(<span class="hljs-built_in">input</span>, dtype=<span class="hljs-literal">None</span>, layout=<span class="hljs-literal">None</span>, device=<span class="hljs-literal">None</span>, requires_grad=<span class="hljs-literal">False</span>, memory_format=torch.preserve_format)<br></code></pre></td></tr></table></figure>
+
+<p>功能：根据 input 形状创建全 0 张量</p>
+<ul>
+<li>input: 创建与 input 同形状的全 0 张量</li>
+<li>dtype: 数据类型</li>
+<li>layout: 内存中布局形式，有 strided，sparse_coo 等。当是稀疏矩阵时，设置为 sparse_coo 可以减少内存占用。</li>
+</ul>
+<p>同理还有全 1 张量的创建方法：<code>torch.ones()</code>，<code>torch.ones_like()</code>。</p>
+<h4 id="torch-full-torch-full-like"><a href="#torch-full-torch-full-like" class="headerlink" title="torch.full() | torch.full_like()"></a>torch.full() | torch.full_like()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.full(size, fill_value, out=<span class="hljs-literal">None</span>, dtype=<span class="hljs-literal">None</span>, layout=torch.strided, device=<span class="hljs-literal">None</span>, requires_grad=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p>功能：创建自定义数值的张量</p>
+<ul>
+<li>size: 张量的形状，如 (3,3)</li>
+<li>fill_value: 张量中每一个元素的值</li>
+</ul>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">t = torch.full((<span class="hljs-number">3</span>, <span class="hljs-number">3</span>), <span class="hljs-number">1</span>)<br><span class="hljs-built_in">print</span>(t)<br></code></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">tensor([[<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>],<br>        [<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>],<br>        [<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>]])<br></code></pre></td></tr></table></figure>
+
+<h4 id="torch-arange"><a href="#torch-arange" class="headerlink" title="torch.arange()"></a>torch.arange()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.arange(start=<span class="hljs-number">0</span>, end, step=<span class="hljs-number">1</span>, out=<span class="hljs-literal">None</span>, dtype=<span class="hljs-literal">None</span>, layout=torch.strided, device=<span class="hljs-literal">None</span>, requires_grad=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p>功能：创建等差的 1 维张量。注意区间为[start, end)。</p>
+<ul>
+<li>start: 数列起始值</li>
+<li>end: 数列结束值，开区间，取不到结束值</li>
+<li>step: 数列公差，默认为 1</li>
+</ul>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">t = torch.arange(<span class="hljs-number">2</span>, <span class="hljs-number">10</span>, <span class="hljs-number">2</span>)<br><span class="hljs-built_in">print</span>(t)<br></code></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">tensor([<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">8</span>])<br></code></pre></td></tr></table></figure>
+
+<h4 id="torch-rand"><a href="#torch-rand" class="headerlink" title="torch.rand()"></a>torch.rand()</h4><blockquote>
+<p><code>torch.rand</code> 是 PyTorch 中用于生成具有均匀分布随机数的函数。这个函数返回一个填充了从区间 [0, 1) 中均匀抽取的随机数的张量。</p>
+</blockquote>
+<p><code>torch.rand(*size, *, generator=None, out=None, dtype=None, layout=torch.strided, device=None, requires_grad=False, pin_memory=False) → Tensor</code></p>
+<p><code>torch.rand</code> 的参数说明如下：</p>
+<ul>
+<li><strong>sizes (int…)</strong>: 这是一个整数序列，用于定义输出张量的形状。例如，<code>torch.rand(3, 4)</code> 会返回一个形状为 3x4 的张量，其中每个元素都是 [0, 1) 区间内的随机数。</li>
+<li><strong>out (Tensor, optional)</strong>: 如果提供了这个参数，那么生成的随机数会被存放在提供的张量 <code>out</code> 中。如果 <code>out</code> 已有内容，则会被新生成的随机数覆盖。</li>
+<li><strong>dtype (torch.dtype, optional)</strong>: 期望的输出张量的数据类型。如果没有提供，则使用默认的浮点数据类型（通常是 <code>torch.float32</code>）。</li>
+<li><strong>layout (torch.layout, optional)</strong>: 期望的输出张量的内存布局。默认是 <code>torch.strided</code>。</li>
+<li><strong>device (torch.device, optional)</strong>: 期望的输出张量所在的设备。可以是 CPU 或 GPU。如果没有提供，则使用当前默认的张量设备。</li>
+<li><strong>requires_grad (bool, optional)</strong>: 如果设置为 <code>True</code>，则生成的张量将需要计算梯度，这在自动微分中是必要的。默认为 <code>False</code>。</li>
+</ul>
+<p>下面是一个简单的示例，演示了如何使用 <code>torch.rand</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br><span class="hljs-comment"># 生成一个形状为 (2, 3) 的张量，其中的元素是从 [0, 1) 区间内均匀抽取的随机数</span><br>tensor = torch.rand(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>)<br><span class="hljs-built_in">print</span>(tensor)<br></code></pre></td></tr></table></figure>
+
+<p>输出可能类似于：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs lua">tensor(<span class="hljs-string">[[0.1234, 0.5678, 0.9012],</span><br><span class="hljs-string">        [0.3456, 0.7890, 0.2345]]</span>)<br></code></pre></td></tr></table></figure>
+
+<p>每次调用 <code>torch.rand</code> 时，即使使用相同的形状和参数，得到的张量中的值也可能会有所不同，因为这些值是随机生成的。</p>
+<h4 id="torch-linspace"><a href="#torch-linspace" class="headerlink" title="torch.linspace()"></a>torch.linspace()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.linspace(start, end, steps=<span class="hljs-number">100</span>, out=<span class="hljs-literal">None</span>, dtype=<span class="hljs-literal">None</span>, layout=torch.strided, device=<span class="hljs-literal">None</span>, requires_grad=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p>功能：创建均分的 1 维张量。数值区间为 [start, end]</p>
+<ul>
+<li>start: 数列起始值</li>
+<li>end: 数列结束值</li>
+<li>steps: 数列长度 (元素个数)</li>
+</ul>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># t = torch.linspace(2, 10, 5)</span><br>t = torch.linspace(<span class="hljs-number">2</span>, <span class="hljs-number">10</span>, <span class="hljs-number">6</span>)<br><span class="hljs-built_in">print</span>(t)<br></code></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">tensor([ <span class="hljs-number">2.0000</span>,  <span class="hljs-number">3.6000</span>,  <span class="hljs-number">5.2000</span>,  <span class="hljs-number">6.8000</span>,  <span class="hljs-number">8.4000</span>, <span class="hljs-number">10.0000</span>])<br></code></pre></td></tr></table></figure>
+
+<h4 id="torch-logspace"><a href="#torch-logspace" class="headerlink" title="torch.logspace()"></a>torch.logspace()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.logspace(start, end, steps=<span class="hljs-number">100</span>, base=<span class="hljs-number">10.0</span>, out=<span class="hljs-literal">None</span>, dtype=<span class="hljs-literal">None</span>, layout=torch.strided, device=<span class="hljs-literal">None</span>, requires_grad=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p>功能：创建对数均分的 1 维张量。数值区间为 [start, end]，底为 base。</p>
+<ul>
+<li>start: 数列起始值</li>
+<li>end: 数列结束值</li>
+<li>steps: 数列长度 (元素个数)</li>
+<li>base: 对数函数的底，默认为 10</li>
+</ul>
+<p>代码示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># t = torch.logspace(2, 10, 5)</span><br>t = torch.logspace(<span class="hljs-number">2</span>, <span class="hljs-number">10</span>, <span class="hljs-number">6</span>)<br><span class="hljs-built_in">print</span>(t)<br></code></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">tensor([ <span class="hljs-number">2.0000</span>,  <span class="hljs-number">3.6000</span>,  <span class="hljs-number">5.2000</span>,  <span class="hljs-number">6.8000</span>,  <span class="hljs-number">8.4000</span>, <span class="hljs-number">10.0000</span>])<br></code></pre></td></tr></table></figure>
+
+<h4 id="torch-eye"><a href="#torch-eye" class="headerlink" title="torch.eye()"></a>torch.eye()</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.eye(n, m=<span class="hljs-literal">None</span>, out=<span class="hljs-literal">None</span>, dtype=<span class="hljs-literal">None</span>, layout=torch.strided, device=<span class="hljs-literal">None</span>, requires_grad=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p>功能：创建单位对角矩阵( 2 维张量)，默认为方阵</p>
+<ul>
+<li>n: 矩阵行数。通常只设置 n，为方阵。</li>
+<li>m: 矩阵列数</li>
+</ul>
+<h3 id="根据概率创建"><a href="#根据概率创建" class="headerlink" title="根据概率创建"></a>根据概率创建</h3><h4 id="torch-randn"><a href="#torch-randn" class="headerlink" title="torch.randn"></a>torch.randn</h4><p><code>torch.randn([3,4])</code> 创建 3 行 4 列的<strong>随机数</strong>的 tensor，随机值的分布式均值为 0，方差为 1</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.randn(*size, *, out=<span class="hljs-literal">None</span>, dtype=<span class="hljs-literal">None</span>, layout=torch.strided, device=<span class="hljs-literal">None</span>, requires_grad=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p>返回一个张量，包含了从标准正态分布(均值为 0，方差为 1，即高斯白噪声)中抽取一组随机数，形状由可变参数<code>sizes</code>定义。 参数:</p>
+<ul>
+<li>sizes (int…) – 整数序列，定义了输出形状</li>
+<li>out (<em><a target="_blank" rel="noopener" href="http://pytorch.org/docs/tensors.html#torch.Tensor">Tensor</a></em>, <em>optinal</em>) - 结果张量</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>torch.randn(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>)<br><br> <span class="hljs-number">1.4339</span>  <span class="hljs-number">0.3351</span> -<span class="hljs-number">1.0999</span><br> <span class="hljs-number">1.5458</span> -<span class="hljs-number">0.9643</span> -<span class="hljs-number">0.3558</span><br>[torch.FloatTensor of size 2x3]<br></code></pre></td></tr></table></figure>
+
+<h2 id="PyTorch-中-tensor-的常用方法"><a href="#PyTorch-中-tensor-的常用方法" class="headerlink" title="PyTorch 中 tensor 的常用方法"></a>PyTorch 中 tensor 的常用方法</h2><h3 id="查看-tensor-维度信息"><a href="#查看-tensor-维度信息" class="headerlink" title="查看 tensor 维度信息"></a>查看 tensor 维度信息</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">out = torch.randn(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>)<br><span class="hljs-built_in">print</span>(out.size())<br><span class="hljs-built_in">print</span>(out.shape)<br></code></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.Size([<span class="hljs-number">2</span>, <span class="hljs-number">3</span>])<br>torch.Size([<span class="hljs-number">2</span>, <span class="hljs-number">3</span>])<br></code></pre></td></tr></table></figure>
+
+<p>tensor.size()</p>
+<h3 id="广播机制"><a href="#广播机制" class="headerlink" title="广播机制"></a>广播机制</h3><p>当对两个形状不同的 Tensor 按元素运算时，可能会触发广播(broadcasting)机制：先适当复制元素使这两个 Tensor 形状相同后再按元素运算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">x = torch.arange(<span class="hljs-number">1</span>, <span class="hljs-number">3</span>).view(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br><span class="hljs-built_in">print</span>(x)<br>y = torch.arange(<span class="hljs-number">1</span>, <span class="hljs-number">4</span>).view(<span class="hljs-number">3</span>, <span class="hljs-number">1</span>)<br><span class="hljs-built_in">print</span>(y)<br><span class="hljs-built_in">print</span>(x + y)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">tensor([[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]])<br>tensor([[<span class="hljs-number">1</span>],<br>        [<span class="hljs-number">2</span>],<br>        [<span class="hljs-number">3</span>]])<br>tensor([[<span class="hljs-number">2</span>, <span class="hljs-number">3</span>],<br>        [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>],<br>        [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>]])<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">tensor([[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]])<br>tensor([[<span class="hljs-number">1</span>],<br>        [<span class="hljs-number">2</span>],<br>        [<span class="hljs-number">3</span>]])<br>tensor([[<span class="hljs-number">2</span>, <span class="hljs-number">3</span>],<br>        [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>],<br>        [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>]])<br></code></pre></td></tr></table></figure>
+
+<p>由于 x 和 y 分别是 1 行 2 列和 3 行 1 列的矩阵，如果要计算 x+y，那么 x 中第一行的 2 个元素被广播 (复制)到了第二行和第三行，⽽ y 中第⼀列的 3 个元素被广播(复制)到了第二列。如此，就可以对 2 个 3 行 2 列的矩阵按元素相加。</p>
+<h3 id="CUDA-中的-tensor"><a href="#CUDA-中的-tensor" class="headerlink" title="CUDA 中的 tensor"></a>CUDA 中的 tensor</h3><p>CUDA（Compute Unified Device Architecture），是 NVIDIA 推出的运算平台。 CUDA™ 是一种由 NVIDIA 推出的通用并行计算架构，该架构使 GPU 能够解决复杂的计算问题。</p>
+<p><code>torch.cuda</code>这个模块增加了对 CUDA tensor 的支持，能够在 cpu 和 gpu 上使用相同的方法操作 tensor</p>
+<p>通过<code>.to</code>方法能够把一个 tensor 转移到另外一个设备(比如从 CPU 转到 GPU)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python">x = torch.randn(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>)<br><span class="hljs-keyword">if</span> torch.cuda.is_available():<br>    device = torch.device(<span class="hljs-string">&quot;cuda&quot;</span>)          <span class="hljs-comment"># cuda device对象</span><br>    y = torch.ones_like(x, device=device)  <span class="hljs-comment"># 创建一个在cuda上的tensor</span><br>    x = x.to(device)                       <span class="hljs-comment"># 使用方法把x转为cuda 的tensor</span><br>    z = x + y<br>    <span class="hljs-built_in">print</span>(z)<br>    <span class="hljs-built_in">print</span>(z.to(<span class="hljs-string">&quot;cpu&quot;</span>, torch.double))        <span class="hljs-comment"># .to方法也能够同时设置类型</span><br></code></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">tensor([[ <span class="hljs-number">1.9796</span>, -<span class="hljs-number">0.8879</span>]], device=<span class="hljs-string">&#x27;cuda:0&#x27;</span>)<br>tensor([[ <span class="hljs-number">1.9796</span>, -<span class="hljs-number">0.8879</span>]], dtype=torch.float64)<br></code></pre></td></tr></table></figure>
+
+<h3 id="torch-numel"><a href="#torch-numel" class="headerlink" title="torch.numel()"></a>torch.numel()</h3><p><code>torch.numel()</code> 是 PyTorch 中用于计算张量（tensor）中元素总数的函数。它不接受任何参数，因为它直接作用于调用它的张量。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br><span class="hljs-comment"># 创建一个张量</span><br>tensor = torch.tensor([[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]])<br><br><span class="hljs-comment"># 使用 torch.numel() 计算张量中的元素总数</span><br>num_elements = tensor.numel()<br><br><span class="hljs-built_in">print</span>(num_elements)  <span class="hljs-comment"># 输出：6</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>注意事项</strong></p>
+<ul>
+<li><code>torch.numel()</code> 是张量的一个方法，而不是一个独立的函数。因此，你需要先有一个张量对象，然后才能调用这个方法。</li>
+<li><code>torch.numel()</code> 返回一个整数，表示张量中的元素总数。</li>
+<li>与 <code>torch.size()</code> 或 <code>tensor.shape</code> 不同，<code>torch.numel()</code> 返回的是张量中所有维度的元素总数，而不是各维度的大小。例如，对于一个形状为 <code>[a, b, c]</code> 的三维张量，<code>torch.numel()</code> 将返回 <code>a * b * c</code>。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/02.Tensors/1.Tensors/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/02.Tensors/1.Tensors/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/PyTorch/">PyTorch</a><a class="post-meta__tags" href="/blog/tags/Tensors/">Tensors</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/02.Tensors/4.AI%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F%E8%AE%BE%E5%A4%87/" title="AI硬件加速设备"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">AI硬件加速设备</div></div><div class="info-2"><div class="info-item-1">AI硬件加速设备在进行模型部署和训练时，我们有时会受限于CPU和GPU的性能。这时，专用的AI芯片就显得尤为重要。在正式开始本节内容之前，我们先了解一下什么是CPU和GPU。 CPU即Central Processing Unit，中文名为中央处理器，是我们电脑中的核心配件。它的功能主要是处理指令、执行操作、控制时间、处理数据。 在现代计算机体系结构中，CPU 对计算机的所有硬件资源（如存储器、输入输出单元） 进行控制调配、执行通用运算的核心硬件单元。CPU 是计算机的运算和控制核心。计算机系统中所有软件层的操作，最终都将通过指令集映射为CPU的操作。 GPU即Graphics Proc...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/06.%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/01.%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%AE%80%E4%BB%8B/" title="并行计算简介"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">并行计算简介</div></div><div class="info-2"><div class="info-item-1">Network partitioning网络结构分布到不同的设备中(Network partitioning)，在刚开始做模型并行的时候，这个方案使用的比较多。其中主要的思路是，将一个模型的各个部分拆分，然后将不同的部分放入到 GPU 来做不同任务的计算。其架构如下：   这里遇到的问题就是，不同模型组件在不同的 GPU 上时，GPU 之间的传输就很重要，对于 GPU 之间的通信是一个考验。但是 GPU 的通信在这种密集任务中很难办到，所以这个方式慢慢淡出了视野。 Layer-wise partitioning同一层的任务分布到不同数据中(Layer-wise partitioning)...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/02.Tensors/05.tensor%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" title="tensor类型转换"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">tensor类型转换</div></div><div class="info-2"><div class="info-item-1">int -&gt; float torch.tensor(x, dtype&#x3D;数据格式)  12345678910import torcha = [1, 2, 3, 4]a1 = torch.tensor(a)a_float = torch.tensor(a1, dtype=torch.float32)a_int64 = torch.tensor(a1, dtype=torch.int64)print(a1.dtype)print(a_float.dtype)print(a_int64.dtype)  123torch.int64torch.float32torch.int64 ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/02.Tensors/08.tensor%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B8%BA%E5%9B%BE%E7%89%87/" title="tensor可视化为图片"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">tensor可视化为图片</div></div><div class="info-2"><div class="info-item-1">matplotlib123456789import numpy as npimport matplotlib.pyplot as plt  # 转换为[H, W, C]tensor_numpy = inputs[0].cpu().permute(2, 1, 0).numpy() * 255tensor_numpy = tensor_numpy.astype(np.uint8)  # 转换为无符号8位整型plt.imshow(tensor_numpy)plt.axis(&#x27;off&#x27;)  # 不显示坐标轴plt.show()  transform1234567891011i...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/02.Tensors/07.%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0/" title="常见函数"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">常见函数</div></div><div class="info-2"><div class="info-item-1">torch.topk() 作用取一个 tensor 的 topk 元素，返回值为降序后的前 k 个大小的元素值及索引 使用方法   dim&#x3D;0 表示按照列求 topn dim&#x3D;1 表示按照行求 topn 默认情况下，dim&#x3D;1   示例 12345&gt;&gt;&gt; x = torch.arange(1., 6.)&gt;&gt;&gt; xtensor([ 1.,  2.,  3.,  4.,  5.])&gt;&gt;&gt; torch.topk(x, 3)torch.return_types.topk(values=tensor([5., 4....</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/02.Tensors/2.%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC/" title="自动求导"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">自动求导</div></div><div class="info-2"><div class="info-item-1">自动求导PyTorch 中，所有神经网络的核心是autograd包。autograd 包为张量上的所有操作提供了自动求导机制。它是一个在运行时定义 ( define-by-run ）的框架，这意味着反向传播是根据代码如何运行来决定的，并且每次迭代可以是不同的。 Autograd 简介torch.Tensor是这个包的核心类。如果设置它的属性.requires_grad为True，那么它将会追踪对于该张量的所有操作。当完成计算后可以通过调用.backward()，来自动计算所有的梯度。这个张量的所有梯度将会自动累加到.grad属性。 注意：在 y.backward() 时，如果 y 是标量...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/02.Tensors/4.AI%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F%E8%AE%BE%E5%A4%87/" title="AI硬件加速设备"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">AI硬件加速设备</div></div><div class="info-2"><div class="info-item-1">AI硬件加速设备在进行模型部署和训练时，我们有时会受限于CPU和GPU的性能。这时，专用的AI芯片就显得尤为重要。在正式开始本节内容之前，我们先了解一下什么是CPU和GPU。 CPU即Central Processing Unit，中文名为中央处理器，是我们电脑中的核心配件。它的功能主要是处理指令、执行操作、控制时间、处理数据。 在现代计算机体系结构中，CPU 对计算机的所有硬件资源（如存储器、输入输出单元） 进行控制调配、执行通用运算的核心硬件单元。CPU 是计算机的运算和控制核心。计算机系统中所有软件层的操作，最终都将通过指令集映射为CPU的操作。 GPU即Graphics Proc...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/02.Tensors/06.tensor%E7%BB%B4%E5%BA%A6%E8%BD%AC%E6%8D%A2/" title="tensor维度转换"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">tensor维度转换</div></div><div class="info-2"><div class="info-item-1">view() 转换维度 torch.view 是 PyTorch 中用于重新塑形张量（tensor）的函数，它返回一个新的张量，这个张量与原始张量具有相同的数据但不同的形状。它不会改变张量中的数据，只是改变数据的视图方式。  Tensor.view(*shape) → Tensor  shape (torch.Size or int…): 期望的新张量的形状。可以是一个 torch.Size 对象，也可以是一个整数序列。这个形状描述了新张量的各个维度的大小。  torch.view 的使用有一些重要的注意事项：  元素总数必须保持不变：重新塑形后的张量必须包含与原始张量相同数量的元素。换...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Tensors"><span class="toc-number">1.</span> <span class="toc-text">Tensors</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tensor-%E4%B8%8E-Variable"><span class="toc-number">2.</span> <span class="toc-text">Tensor 与 Variable</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tensor-%E5%88%9B%E5%BB%BA%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">tensor 创建方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E5%88%9B%E5%BB%BA"><span class="toc-number">3.1.</span> <span class="toc-text">直接创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E7%B1%BB%E5%9E%8B%E5%87%BD%E6%95%B0%E9%9A%8F%E6%9C%BA%E5%88%9B%E5%BB%BA"><span class="toc-number">3.2.</span> <span class="toc-text">指定类型函数随机创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tensor-%E5%92%8C-numpy-array-%E4%B9%8B%E9%97%B4%E7%9A%84%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2"><span class="toc-number">3.3.</span> <span class="toc-text">tensor 和 numpy array 之间的相互转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%95%B0%E5%80%BC%E5%88%9B%E5%BB%BA"><span class="toc-number">3.4.</span> <span class="toc-text">根据数值创建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#torch-zeros"><span class="toc-number">3.4.1.</span> <span class="toc-text">torch.zeros()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#torch-zeros-like"><span class="toc-number">3.4.2.</span> <span class="toc-text">torch.zeros_like()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#torch-full-torch-full-like"><span class="toc-number">3.4.3.</span> <span class="toc-text">torch.full() | torch.full_like()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#torch-arange"><span class="toc-number">3.4.4.</span> <span class="toc-text">torch.arange()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#torch-rand"><span class="toc-number">3.4.5.</span> <span class="toc-text">torch.rand()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#torch-linspace"><span class="toc-number">3.4.6.</span> <span class="toc-text">torch.linspace()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#torch-logspace"><span class="toc-number">3.4.7.</span> <span class="toc-text">torch.logspace()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#torch-eye"><span class="toc-number">3.4.8.</span> <span class="toc-text">torch.eye()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%A6%82%E7%8E%87%E5%88%9B%E5%BB%BA"><span class="toc-number">3.5.</span> <span class="toc-text">根据概率创建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#torch-randn"><span class="toc-number">3.5.1.</span> <span class="toc-text">torch.randn</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PyTorch-%E4%B8%AD-tensor-%E7%9A%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">PyTorch 中 tensor 的常用方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B-tensor-%E7%BB%B4%E5%BA%A6%E4%BF%A1%E6%81%AF"><span class="toc-number">4.1.</span> <span class="toc-text">查看 tensor 维度信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%BF%E6%92%AD%E6%9C%BA%E5%88%B6"><span class="toc-number">4.2.</span> <span class="toc-text">广播机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CUDA-%E4%B8%AD%E7%9A%84-tensor"><span class="toc-number">4.3.</span> <span class="toc-text">CUDA 中的 tensor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#torch-numel"><span class="toc-number">4.4.</span> <span class="toc-text">torch.numel()</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>LoRA-Pro | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="解读来源：对齐全量微调！这是我看过最精彩的LoRA改进（二） 文章：LoRA-Pro: Are Low-Rank Adapters Properly Optimized?   文章解读“LoRA-GA”通过梯度SVD来改进LoRA的初始化，从而实现LoRA与全量微调的对齐。当然，从理论上来讲，这样做也只能尽量对齐第一步更新后的$W_1$，LoRA-Pro同样是想着对齐全量微调，但它对齐的是每一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LoRA-Pro">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/14.PEFT/01.LoRA/04.LoRA-Pro/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="解读来源：对齐全量微调！这是我看过最精彩的LoRA改进（二） 文章：LoRA-Pro: Are Low-Rank Adapters Properly Optimized?   文章解读“LoRA-GA”通过梯度SVD来改进LoRA的初始化，从而实现LoRA与全量微调的对齐。当然，从理论上来讲，这样做也只能尽量对齐第一步更新后的$W_1$，LoRA-Pro同样是想着对齐全量微调，但它对齐的是每一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.352Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="LoRA">
+<meta property="article:tag" content="PEFT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "LoRA-Pro",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/14.PEFT/01.LoRA/04.LoRA-Pro/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.352Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/14.PEFT/01.LoRA/04.LoRA-Pro/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LoRA-Pro',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">LoRA-Pro</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">LoRA-Pro</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.352Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PEFT/">PEFT</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PEFT/LoRA/">LoRA</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<ul>
+<li>解读来源：<a target="_blank" rel="noopener" href="https://kexue.fm/archives/10266">对齐全量微调！这是我看过最精彩的LoRA改进（二）</a></li>
+<li>文章：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2407.18242">LoRA-Pro: Are Low-Rank Adapters Properly Optimized?</a></li>
+</ul>
+</blockquote>
+<h2 id="文章解读"><a href="#文章解读" class="headerlink" title="文章解读"></a>文章解读</h2><p>“LoRA-GA”通过梯度SVD来改进LoRA的初始化，从而实现LoRA与全量微调的对齐。当然，从理论上来讲，这样做也只能尽量对齐第一步更新后的$W_1$，LoRA-Pro同样是想着对齐全量微调，但它对齐的是每一步梯度，从而对齐整条优化轨迹，这正好是跟LoRA-GA互补的改进点。</p>
+<h3 id="对齐全量"><a href="#对齐全量" class="headerlink" title="对齐全量"></a>对齐全量</h3><p>LoRA的参数化方式是</p>
+<p>$$W &#x3D; (W_0 - A_0 B_0) + AB\tag{1}$$<br>其中$W_0 \in \mathbb{R}^{n\times m}$ 预训练权重，$A\in\mathbb{R}^{n\times r},B\in\mathbb{R}^{r\times m}$ 新引入的训练参数，$A_0,B_0$ 它们的初始化值。 上一节我们说到，全量微调很多时候效果都优于LoRA，所以全量微调就是LoRA最应该对齐的方向。为了定量描述这一点，我们分别写出全量微调和LoRA微调在SGD下的优化公式，结果分别是 </p>
+<p>$$ W_{t+1} &#x3D; W_t - \eta G_t\tag{2}$$</p>
+<p>和</p>
+<p>$$\begin{gathered}  A_{t+1} &#x3D; A_t - \eta G_{A,t} &#x3D; A_t - \eta G_t B_t^{\top},\quad B_{t+1} &#x3D; B_t - \eta G_{B,t} &#x3D; B_t - \eta A_t^{\top}G_t \[8pt]  W_{t+1} &#x3D; W_t - A_t B_t + A_{t+1} B_{t+1} \approx W_t - \eta(A_t A_t^{\top}G_t + G_tB_t^{\top} B_t)  \end{gathered}\tag{3}$$</p>
+<p>其中$\mathcal{L}$ 损失函数，$\eta$ 学习率，还有$G_t&#x3D;\frac{\partial \mathcal{L&#125;&#125;{\partial W_t}$、$G_{A,t}&#x3D;\frac{\partial \mathcal{L&#125;&#125;{\partial A_t}&#x3D;\frac{\partial \mathcal{L&#125;&#125;{\partial W_t} B_t^{\top}&#x3D;G_t B_t^{\top}$ 及$G_{B,t}&#x3D;\frac{\partial \mathcal{L&#125;&#125;{\partial B_t}&#x3D;A_t^{\top}\frac{\partial \mathcal{L&#125;&#125;{\partial W_t} &#x3D;A_t^{\top}G_t$。</p>
+<p>LoRA-GA的想法是，我们至少要让全量微调和LoRA的$W_1$ 可能相近，于是它最小化目标</p>
+<p>$$\mathop{\text{argmin&#125;&#125;_{A_0,B_0}\left\Vert A_0 A_0^{\top}G_0 + G_0 B_0^{\top} B_0 - G_0\right\Vert_F^2 \tag{4}$$</p>
+<p>其最优解可以通过对$G_0$ 行SVD求得，这样我们就可以求出最优的$A_0,B_0$ 为$A,B$ 初始化。</p>
+<h3 id="逐步对齐"><a href="#逐步对齐" class="headerlink" title="逐步对齐"></a>逐步对齐</h3><p>LoRA-Pro的想法更彻底，它希望对齐全量微调和LoRA的每一个$W_t$。可是要怎样才能做到这一点呢？难道每一步都要最小化$\left\Vert A_t A_t^{\top}G_t + G_t B_t^{\top} B_t - G_t\right\Vert_F^2$ ? 这显然是不对的，因为$A_t,B_t$ 由优化器根据$A_{t-1},B_{t-1}$ 它们的梯度确定的，并不是可自由调节的参数。</p>
+<p>看上去已经没有能够让我们修改的地方了？不，LoRA-Pro非常机智地想到：既然“$A_t,B_t$ 由优化器根据$A_{t-1},B_{t-1}$ 它们的梯度确定的”，后面的$A_{t-1},B_{t-1}$ 梯度我们都没法改，那我们还可以改优化器呀！具体来说，我们将$A_t,B_t$ 更新规则改为：</p>
+<p>$$\begin{gathered}  A_{t+1} &#x3D; A_t - \eta H_{A,t} \ B_{t+1} &#x3D; B_t - \eta H_{B,t} \end{gathered}\tag{5}$$</p>
+<p>其中$H_{A,t},H_{B,t}$ 定，但它们的形状跟$A,B$ 致。现在可以写出</p>
+<p>$$W_{t+1} &#x3D; W_t - A_t B_t + A_{t+1} B_{t+1} \approx W_t - \eta(H_{A,t} B_t + A_t H_{B,t})  \tag{6}$$</p>
+<p>这时候我们就可以调整$H_{A,t},H_{B,t}$，让这个$W_{t+1}$ SGD的$W_{t+1}$ 可能相近了：</p>
+<p>$$\mathop{\text{argmin&#125;&#125;<em>{H</em>{A,t},H_{B,t&#125;&#125;\left\Vert H_{A,t} B_t + A_t H_{B,t} - G_t\right\Vert_F^2 \tag{7}$$</p>
+<p>下面我们来求解这个优化问题。简单起见，在求解过程中我们省略下标$t$，即考虑</p>
+<p>$$\mathop{\text{argmin&#125;&#125;_{H_A,H_B}\left\Vert H_A B + A H_B - G\right\Vert_F^2\tag{8}$$</p>
+<h3 id="简化目标"><a href="#简化目标" class="headerlink" title="简化目标"></a>简化目标</h3><p>由于$H_A,H_B$ 间没有约束，所以$H_A,H_B$ 优化是独立的，因此我们可以采取先优化$H_A$ 优化$H_B$ 策略（当然反过来也可以）。当我们优化$H_A$ ，$H_B$ 相当于是常数，为此，我们可以先考虑如下简化的等价命题</p>
+<p>$$\mathop{\text{argmin&#125;&#125;_H\left\Vert H B - X\right\Vert_F^2 \tag{9}$$</p>
+<p>其中$H\in\mathbb{R}^{n\times r},B\in\mathbb{R}^{r\times m},X\in\mathbb{R}^{n\times m}$。如果$r&#x3D;m$ $B$ 逆，那么我们直接可以变为解方程组$HB&#x3D;X$，即$H&#x3D;XB^{-1}$。当$r &lt; m$ ，我们就要诉诸优化手段，注意到$HB-X$ 于$H$ 线性的，所以这实质就是线性回归的最小二乘问题，它是有解析解的，答案是</p>
+<p>$$H &#x3D; XB^{\top}(B B^{\top})^{-1} \tag{10}$$</p>
+<p>其中$B^{\top}(B B^{\top})^{-1}$ 是矩阵$B$ “<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse">伪逆</a>”。不了解这个答案也不要紧，我们现场推一下。首先，记$\mathcal{l}&#x3D;\left\Vert H B - X\right\Vert_F^2$，直接求$H$ 导数得到</p>
+<p>$$\frac{\partial l}{\partial H} &#x3D; 2(HB - X)B^{\top} &#x3D; 2(HBB^{\top} - XB^{\top}) \tag{11}$$</p>
+<p>然后让它等于零就可以解出式$(10)$。可能有些读者不大了解矩阵求导法则，其实根据求导的链式法则，我们就不难想到$\frac{\partial l}{\partial H}$ $2(HB - X)$ $B$ 某种方式相乘起来，然后我们约定$\frac{\partial l}{\partial H}$ 形状跟$H$ 样，即$n\times r$，那么由$2(HB - X)$ $B$ 乘来凑出一个$n\times r$ 结果，也只有$2(HB - X)B^{\top}$ 。</p>
+<p>同理，$\left\Vert AH - X\right\Vert_F^2$ $H$ 导数就是$2A^{\top}(AH - X)$，由此可以得到</p>
+<p>$$\mathop{\text{argmin&#125;&#125;_H\left\Vert AH - X\right\Vert_F^2\quad\Rightarrow\quad H &#x3D; (A^{\top} A)^{-1}A^{\top}X \tag{12}$$</p>
+<h3 id="完整结果"><a href="#完整结果" class="headerlink" title="完整结果"></a>完整结果</h3><p>有了结论$(10)$ $(12)$，我们就可以着手求解$(8)$ 。首先我们固定$H_B$，那么根据式$(10)$ 到</p>
+<p>$$H_A &#x3D; (G - A H_B) B^{\top}(B B^{\top})^{-1}\tag{13}$$</p>
+<p>注意式$(8)$ 目标函数具有一个不变性：</p>
+<p>$$\left\Vert H_A B + A H_B - G\right\Vert_F^2 &#x3D; \left\Vert (H_A + AC) B + A (H_B - CB) - G\right\Vert_F^2 \tag{14}$$</p>
+<p>其中$C$ 任意$r\times r$ 矩阵。也就是说，$H_A$ 解可以加&#x2F;减任意具有$AC$ 式的矩阵，只需要$H_B$ &#x2F;加对应的$CB$ 行。根据该性质，我们可以将式$(13)$ $H_A$ 化成</p>
+<p>$$H_A &#x3D; G B^{\top}(B B^{\top})^{-1} \tag{15}$$</p>
+<p>代回目标函数得</p>
+<p>$$\mathop{\text{argmin&#125;&#125;_{H_B}\left\Vert A H_B - G(I - B^{\top}(B B^{\top})^{-1}B)\right\Vert_F^2 \tag{16}$$</p>
+<p>根据式$(12)$ </p>
+<p>$$H_B &#x3D; (A^{\top} A)^{-1}A^{\top}G(I - B^{\top}(B B^{\top})^{-1}B) \tag{17}$$</p>
+<p>留意到$G B^{\top},A^{\top}G$ 好分别是$A,B$ 梯度$G_A,G_B$，以及再次利用前述不变性，我们可以写出完整的解</p>
+<p>$$\left{\begin{aligned} H_A &#x3D;&amp;, G_A (B B^{\top})^{-1} + AC \ H_B &#x3D;&amp;, (A^{\top} A)^{-1}G_B(I - B^{\top}(B B^{\top})^{-1}B) - CB \end{aligned}\right.\tag{18}$$</p>
+<h3 id="最优参数"><a href="#最优参数" class="headerlink" title="最优参数"></a>最优参数</h3><p>至此，我们求解出了$H_A,H_B$ 形式，但解不是唯一的，它有一个可以自由选择的参数矩阵$C$。我们可以选择适当的$C$，来使得最终的$H_A,H_B$ 备一些我们所期望的特性。</p>
+<p>比如，现在$H_A,H_B$ 不大对称的，$H_B$ 了$-(A^{\top} A)^{-1}G_B B^{\top}(B B^{\top})^{-1}B$ 一项，我们可以将它平均分配到$H_A,H_B$ ，使得它们更对称一些，这等价于选择$C &#x3D; -\frac{1}{2}(A^{\top} A)^{-1}G_B B^{\top}(B B^{\top})^{-1}$：</p>
+<p>$$\left{\begin{aligned} H_A &#x3D;&amp;, \left[I - \frac{1}{2}A(A^{\top}A)^{-1}A^{\top}\right]G_A (B B^{\top})^{-1} \ H_B &#x3D;&amp;, (A^{\top} A)^{-1}G_B\left[I - \frac{1}{2}B^{\top}(B B^{\top})^{-1}B\right]  \end{aligned}\right.\tag{19}$$</p>
+<p>这个$C$ 是如下两个优化问题的解：<br>$$\begin{align} \mathop{\text{argmin&#125;&#125;_C \Vert H_A B  - A H_B\Vert_F^2\end{align} \tag{20}$$<br>$$ \begin{align}\mathop{\text{argmin&#125;&#125;_C \Vert H_A B - G\Vert_F^2 + \Vert A H_B - G\Vert_F^2 \ \end{align}\tag{21}$$<br>第一个优化目标可以理解为让$A,B$ 最终效果的贡献尽可能一样，这跟<a target="_blank" rel="noopener" href="https://kexue.fm/archives/10001">《配置不同的学习率，LoRA还能再涨一点？》</a>的假设有一定异曲同工之处，第二个优化目标则是让$H_A B$、$A H_B$ 尽可能逼近完整的梯度$G$。以$l&#x3D;\Vert H_A B  - A H_B\Vert_F^2$ 例，直接求导得</p>
+<p>$$\frac{\partial l}{\partial C} &#x3D; 4A^{\top}(H_A B  - A H_B)B^{\top}&#x3D;4A^{\top}\left[G_A (BB^{\top})^{-1}B + 2ACB\right]B^{\top} \tag{22}$$</p>
+<p>令它等于零我们就可以解出同样的$C$，化简过程比较关键的两步是$[I - B^{\top}(B B^{\top})^{-1}B]B^{\top} &#x3D; 0$ 及$A^{\top}G_A &#x3D; G_B B^{\top}$。</p>
+<p>LoRA-Pro选择的$C$ 有不同，它是如下目标函数的最优解</p>
+<p>$$\mathop{\text{argmin&#125;&#125;_C \Vert H_A - G_A\Vert_F^2 + \Vert H_B - G_B\Vert_F^2 \tag{23}$$</p>
+<p>这样做的意图也很明显：$H_A,H_B$ 用来取代$G_A,G_B$ ，如果在能达到相同效果的前提下，相比$G_A,G_B$ 改动尽可能小，不失为一个合理的选择。同样求$C$ 导数并让其等于零，化简可得</p>
+<p>$$A^{\top}A C + C B B^{\top} &#x3D; -A^{\top} G_A (BB^{\top})^{-1} \tag{24}$$</p>
+<p>现在我们得到关于$C$ 一个方程，该类型的方程叫做“<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Sylvester_equation">Sylvester方程</a>”，可以通过外积符号写出$C$ 解析解，但没有必要，因为直接数值求解的复杂度比解析解的复杂度要低，所以直接数值求解即可。总的来说，这些$C$ 选择方案，都是在让$H_A,H_B$ 某种视角下更加对称一些，虽然笔者没有亲自做过对比实验，但笔者认为这些不同的选择之间不会有太明显的区别。</p>
+<h3 id="一般讨论"><a href="#一般讨论" class="headerlink" title="一般讨论"></a>一般讨论</h3><p>我们来捋一捋到目前为止我们所得到的结果。我们的模型还是常规的LoRA，目标则是希望每一步更新都能逼近全量微调的结果。为此，我们假设优化器是SGD，然后对比了同样$W_t$ 全量微调和LoRA所得的$W_{t+1}$，发现要实现这个目标，需要把更新过程中$A,B$ 梯度$G_A, G_B$ 成上面求出的$H_A,H_B$。</p>
+<p>接下来就又回到优化分析中老生常谈的问题：前面的分析都是基于SGD优化器的，但实践中我们更常用的是Adam，此时要怎么改呢？如果对Adam优化器重复前面的推导，结果就是$H_A,H_B$ 的梯度$G$ 换成全量微调下Adam的更新方向$U$。然而，$U$ 要用全量微调的梯度$G$ 照Adam的更新规则计算而来，而我们的场景是LoRA，无法获得全量微调的梯度，只有$A,B$ 梯度$G_A,G_B$。</p>
+<p>不过我们也可以考虑一个近似的方案，前述$H_A B + A H_B$ 优化目标就是在逼近$G$，所以我们可以用它来作为$G$ 近似来执行Adam，这样一来整个流程就可以走通了。于是我们可以写出如下更新规则</p>
+<p>$$\begin{array}{l} \begin{array}{l}G_A &#x3D; \frac{\partial\mathcal{L&#125;&#125;{\partial A_{t-1&#125;&#125;,,,G_B &#x3D; \frac{\partial\mathcal{L&#125;&#125;{\partial B_{t-1&#125;&#125;\end{array} \ \color{green}{\left.\begin{array}{l}H_A &#x3D; G_A (B B^{\top})^{-1} \ H_B &#x3D; (A^{\top} A)^{-1}G_B(I - B^{\top}(B B^{\top})^{-1}B) \ \tilde{G} &#x3D; H_A B + A H_B \end{array}\quad\right} \text{估计梯度&#125;&#125; \ \color{red}{\left.\begin{array}{l}M_t &#x3D; \beta_1 M_{t-1} + (1 - \beta_1) \tilde{G} \ V_t &#x3D; \beta_2 V_{t-1} + (1 - \beta_2) \tilde{G}^2 \ \hat{M}_t &#x3D; \frac{M_t}{1-\beta_1^t},,,\hat{V}_t &#x3D; \frac{V_t}{1-\beta_2^t},,,U &#x3D; \frac{\hat{M}_t}{\sqrt{\hat{V}_t + \epsilon&#125;&#125;\end{array}\quad\right} \text{Adam更新&#125;&#125; \ \color{purple}{\left.\begin{array}{l}U_A &#x3D; UB^{\top},,, U_B &#x3D; A^{\top} U \ \tilde{H}_A &#x3D; U_A (B B^{\top})^{-1} + AC \ \tilde{H}<em>B &#x3D; (A^{\top} A)^{-1}U_B(I - B^{\top}(B B^{\top})^{-1}B) - CB \end{array}\quad\right} \text{投影到}A,B} \ \begin{array}{l}A_t &#x3D; A</em>{t-1} - \eta \tilde{H}<em>A \ B_t &#x3D; B</em>{t-1} - \eta \tilde{H}_B \ \end{array} \ \end{array}\tag{25}$$</p>
+<p>这也是LoRA-Pro最终所用的更新算法（更准确地说，LoRA-Pro用的是AdamW，结果稍复杂一些，但并无实质不同）。然而，且不说如此改动引入的额外复杂度如何，这个算法最大的问题就是它里边的滑动更新变量$M,V$ 全量微调一样都是满秩的，也就是说它的优化器相比全量微调并不省显存，仅仅是通过低秩分解节省了参数和梯度的部分显存，这相比常规LoRA的显存消耗还是会有明显增加的。</p>
+<p>一个比较简单的方案（但笔者没有实验过）就是直接用$H_A,H_B$ 代$G_A,G_B$，然后按照常规LoRA的Adam更新规则来计算，这样$M,V$ 形状就跟相应的$A,B$ 致了，节省的显存达到了最大化。不过此时的Adam理论基础不如LoRA-Pro的Adam，更多的是跟<a target="_blank" rel="noopener" href="https://kexue.fm/archives/10226">《对齐全量微调！这是我看过最精彩的LoRA（一）》</a>一样，靠“SGD的结论可以平行应用到Adam”的信仰来支撑。</p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p>LoRA-Pro在GLUE上的实验结果更加惊艳，超过了全量微调的结果： </p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/202409012044234.jpg">  </p>
+<p>不过论文也就只有这个实验了。看上去LoRA-Pro成文比较仓促，可能是看到LoRA-GA后觉得“撞车”感太明显，所以先赶出来占个坑吧。笔者刚刷到LoRA-Pro时，第一反应也是跟LoRA-GA撞车了，但仔细阅读之下才发现，它跟LoRA-GA实际上是同一思想下互补的结果。</p>
+<p>从LoRA-Pro的结果来看，它包含了$A^{\top} A$ $B B^{\top}$ 求逆，所以很明显$A,B$ 一就不能用全零初始化了，比较符合直觉的正交初始化，即让初始的$A^{\top} A,B B^{\top}$ 单位阵（的若干倍）。刚好从<a target="_blank" rel="noopener" href="https://kexue.fm/archives/10226">《对齐全量微调！这是我看过最精彩的LoRA（一）》</a>我们可以看到，LoRA-GA给出的初始化正好是正交初始化，所以LoRA-Pro跟LoRA-GA可谓是“最佳搭档”了。</p>
+<h3 id="文章小结"><a href="#文章小结" class="headerlink" title="文章小结"></a>文章小结</h3><p>本文介绍了另一个对齐全量微调的工作LoRA-Pro，它跟上一篇的LoRA-GA正好是互补的两个结果，LoRA-GA试图通过改进初始化来使得LoRA跟全量微调对齐，LoRA-Pro则更彻底一些，它通过修改优化器的更新规则来使得LoRA的每一步更新都尽量跟全量微调对齐，两者都是非常精彩的LoRA改进，都是让人赏心悦目之作。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/14.PEFT/01.LoRA/04.LoRA-Pro/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/14.PEFT/01.LoRA/04.LoRA-Pro/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/PEFT/">PEFT</a><a class="post-meta__tags" href="/blog/tags/LoRA/">LoRA</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/06.MoSLoRA/" title="MoSLoRA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">MoSLoRA</div></div><div class="info-2"><div class="info-item-1">Kimi全文翻译 :arrow_down:0. 摘要在本文中，我们介绍了一种受子空间启发的低秩适应（LoRA）方法，该方法计算效率高，易于实现，并且可以轻松应用于大型语言、多模态和扩散模型。最初，我们将 LoRA 的权重等价地分解为两个子空间，并发现简单地混合它们可以增强性能。为了研究这种现象，我们通过细粒度的子空间视角重新审视它，表明这种修改等同于使用固定混合器融合子空间。为了更加灵活，我们与原始 LoRA 权重一起学习混合器，并称之为子空间混合 LoRA（MoSLoRA）。MoSLoRA 在不同模态的任务上一致性地优于 LoRA，包括常识推理、视觉指令调整和主题驱动的文本到图像生成，...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/05.LoRAPlus/" title="LoRAPlus"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">LoRAPlus</div></div><div class="info-2"><div class="info-item-1"> 《LoRA+: Efficient Low Rank Adaptation of Large Models》   解读来源：配置不同的学习率，LoRA还能再涨一点？  为了使LoRA的效果尽可能接近最优，权重$B$ 学习率应该要大于权重$A$ 学习率$$\frac{\eta_B}{\eta_A} &#x3D; \mathscr{O}(\sqrt{n}) $$ 论文解读给LoRA的两个矩阵分配不同的学习率，LoRA的效果还能进一步提升。该结论出自论文《LoRA+: Efficient Low Rank Adaptation of Large Models》（下称“LoRA+”）。咋看之下...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/10.LoRAMoE/03.MOLE/" title="MOLE"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">MOLE</div></div><div class="info-2"><div class="info-item-1">Mixture of LoRA Experts引言LoRA模块化架构让研究人员们开始探索组合多个LoRA方法，旨在实现学习特征的联合生成，增强各种任务的性能。当前线性算术组合和参数调优组合都存在一定的缺陷，为了能够动态、高效地组合多个训练后的 LoRA，本文作者提出了LoRA专家混合方法：MOLE，不仅在LoRA组合中提升了性能，还节约了计算开销，保证了LoRA的灵活性。 背景介绍随着大模型的发展，其已经应用至各个领域，例如教育、医疗、金融等。一开始为了能够让大模型适应下游任务，通常需要基于下游数据集进行微调，但是随着不断增加的模型参数量，对模型进行全微调越来越困难（时间长、成本高、迭代...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/06.MoSLoRA/" title="MoSLoRA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">MoSLoRA</div></div><div class="info-2"><div class="info-item-1">Kimi全文翻译 :arrow_down:0. 摘要在本文中，我们介绍了一种受子空间启发的低秩适应（LoRA）方法，该方法计算效率高，易于实现，并且可以轻松应用于大型语言、多模态和扩散模型。最初，我们将 LoRA 的权重等价地分解为两个子空间，并发现简单地混合它们可以增强性能。为了研究这种现象，我们通过细粒度的子空间视角重新审视它，表明这种修改等同于使用固定混合器融合子空间。为了更加灵活，我们与原始 LoRA 权重一起学习混合器，并称之为子空间混合 LoRA（MoSLoRA）。MoSLoRA 在不同模态的任务上一致性地优于 LoRA，包括常识推理、视觉指令调整和主题驱动的文本到图像生成，...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/08.AM-LoRA/" title="AM-LoRA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">AM-LoRA</div></div><div class="info-2"><div class="info-item-1">Learning Attentional Mixture ofLoRAs for Language Model Continual Learning微调大语言模型（LLMs）使用低秩适应（LoRA）被广泛认为是持续学习新任务的有效方法。然而，在处理多个任务连续时，它往往会导致灾难性遗忘。为此，作者提出了一种持续学习方法AttentionalMixture of LoRAs（AM-LoRA），专门针对LLMs。具体而言，AM-LoRA学习一系列任务的一系列LoRA，以持续学习来自不同任务的知识。AM-LoRA的关键在于设计了一个注意力机制作为知识混合模块，以适应地集成每个LoRA的信息。通...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/01.LoRA/" title="LoRA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LoRA</div></div><div class="info-2"><div class="info-item-1">一、全参数微调  我们知道，微调的含义，就是把已经训练好的模型（pretrained model）拿来，给它吃特定的下游任务数据，使得模型在预训练权重上继续训练，直至满足下游任务性能标准。预训练模型就像一个特征提取器，能够基于先前训练数据中学到的经验，为我们提取有效的特征，大大提升下游任务的训练效果和收敛速度。   全量微调指的是，在下游任务的训练中，对预训练模型的每一个参数都做更新。例如图中，给出了Transformer的Q&#x2F;K&#x2F;V矩阵的全量微调示例，对每个矩阵来说，在微调时，其d*d个参数，都必须参与更新。   全量微调的显著缺点是，训练代价昂贵。同时，由于模型在...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/03.LoRA-GA/" title="LoRA-GA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LoRA-GA</div></div><div class="info-2"><div class="info-item-1"> 来源：对齐全量微调！这是我看过最精彩的LoRA改进（一）  众所周知，LoRA是一种常见的参数高效的微调方法。LoRA利用低秩分解来降低微调参数量，节省微调显存，同时训练好的权重可以合并到原始权重上，推理架构不需要作出改变，是一种训练和推理都比较友好的微调方案。此外，https://kexue.fm/archives/10001还讨论过LoRA的不对称性，指出给$A,B$ 置不同的学习率能取得更好的效果，该结论被称为“LoRA+”。 基础回顾首先我们再来温习一下LoRA。假设预训练参数为$W_0 \in \mathbb{R}^{n\times m}$，那么全量微调时的更新量自然也是一个...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/14.PEFT/01.LoRA/02.AdaLoRA/" title="AdaLoRA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">AdaLoRA</div></div><div class="info-2"><div class="info-item-1">一、AdaLoRA在做一件什么事1.1 LoRA是怎么做微调的 假设原始参数为 $W$ ，全参数微调后对原始参数的改变量为 $\Delta W$ 。在LoRA中，我们用两个矩阵的乘积 $BA$ 来近似$\Delta W$做SVD分解后的结果，则模型的输出结果满足：$$h &#x3D; Wx + \Delta W x&#x3D;Wx + \frac{\alpha}{r}BAx$$ 其中，$r$ 就是我们设定的矩阵的秩**，在微调过程中，所有做LoRA适配器的module，它们的 $r$ 都是一致的，且在训练过程中不会改变**（对秩的含义不理解的，可参见这篇文章的4.1。对 $\frac{\...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E8%A7%A3%E8%AF%BB"><span class="toc-number">1.</span> <span class="toc-text">文章解读</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E9%BD%90%E5%85%A8%E9%87%8F"><span class="toc-number">1.1.</span> <span class="toc-text">对齐全量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%90%E6%AD%A5%E5%AF%B9%E9%BD%90"><span class="toc-number">1.2.</span> <span class="toc-text">逐步对齐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8C%96%E7%9B%AE%E6%A0%87"><span class="toc-number">1.3.</span> <span class="toc-text">简化目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E7%BB%93%E6%9E%9C"><span class="toc-number">1.4.</span> <span class="toc-text">完整结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E4%BC%98%E5%8F%82%E6%95%B0"><span class="toc-number">1.5.</span> <span class="toc-text">最优参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E8%88%AC%E8%AE%A8%E8%AE%BA"><span class="toc-number">1.6.</span> <span class="toc-text">一般讨论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">1.7.</span> <span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E5%B0%8F%E7%BB%93"><span class="toc-number">1.8.</span> <span class="toc-text">文章小结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

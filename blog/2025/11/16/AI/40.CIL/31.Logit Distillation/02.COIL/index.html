@@ -1,0 +1,312 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>COIL | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="0. 摘要传统的学习系统在封闭世界中针对固定数量的类别进行训练，并且需要预先收集数据集。然而，在现实世界的应用中，新的类别经常出现并且需要增量学习。例如，在电子商务中，每天都会出现新的产品类型；在社交媒体社区中，新的话题频繁出现。在这种情况下，增量模型应能够一次性学习多个新类别而不忘记旧类别。我们发现增量学习中旧类别和新类别之间存在强相关性，这种相关性可以用于关联和促进不同学习阶段的相互学习。因此">
+<meta property="og:type" content="article">
+<meta property="og:title" content="COIL">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/31.Logit%20Distillation/02.COIL/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="0. 摘要传统的学习系统在封闭世界中针对固定数量的类别进行训练，并且需要预先收集数据集。然而，在现实世界的应用中，新的类别经常出现并且需要增量学习。例如，在电子商务中，每天都会出现新的产品类型；在社交媒体社区中，新的话题频繁出现。在这种情况下，增量模型应能够一次性学习多个新类别而不忘记旧类别。我们发现增量学习中旧类别和新类别之间存在强相关性，这种相关性可以用于关联和促进不同学习阶段的相互学习。因此">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.348Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="CIL">
+<meta property="article:tag" content="Logit Distillation">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "COIL",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/31.Logit%20Distillation/02.COIL/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.348Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/31.Logit%20Distillation/02.COIL/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'COIL',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">COIL</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">COIL</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.348Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/CIL/">CIL</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/CIL/Logit-Distillation/">Logit Distillation</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="0-摘要"><a href="#0-摘要" class="headerlink" title="0. 摘要"></a>0. 摘要</h2><p>传统的学习系统在封闭世界中针对固定数量的类别进行训练，并且需要预先收集数据集。然而，在现实世界的应用中，新的类别经常出现并且需要增量学习。例如，在电子商务中，每天都会出现新的产品类型；在社交媒体社区中，新的话题频繁出现。在这种情况下，增量模型应能够一次性学习多个新类别而不忘记旧类别。我们发现增量学习中旧类别和新类别之间存在强相关性，这种相关性可以用于关联和促进不同学习阶段的相互学习。因此，我们提出了<strong>类增量学习的协同传输</strong>（COIL），它通过学习类别间的语义关系来关联增量任务。具体来说，协同传输包括两个方面：<strong>前瞻性传输</strong>试图通过最优传输的知识增强旧分类器以实现快速模型适应；<strong>回顾性传输</strong>旨在将新类别的分类器反向传输为旧分类器以克服遗忘问题。通过这些传输，COIL 能够高效适应新任务，并稳定地抵抗遗忘。在基准和现实世界的多媒体数据集上的实验验证了我们提出方法的有效性。</p>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p>随着深度学习的发展，当前的深度模型能够以高性能学习固定数量的类别。然而，在不断变化的世界中，数据通常来自开放环境，可能以流的形式出现 [11] 或由于隐私问题而暂时可用 [9]。为了解决这一问题，分类器应能够增量学习新类别，而不是重新启动训练过程 [24]。一个直接的方法是在新数据上微调模型，但这种方法会遭受<strong>灾难性遗忘</strong>现象 [29]：由于缺乏先前数据，对旧类别的预测急剧下降。类增量学习（CIL）[35] 旨在仅通过新类别扩展已有知识。例如，在在线舆情监测中，随着新闻的发生，新话题经常出现 [28]；在电子商务平台上，每天都会出现新的产品类型 [27,49]。在现实世界的人脸识别系统中，随着时间推移，人脸类别不断增加，模型需要增量学习以分类更多类别 [64]。图 1 展示了 CIL 的设置。在第一个任务中，模型需要分类鸟类和狗；之后，模型通过两个新类别（老虎和鱼）进行增量更新，并且需要分类两个旧类别（鸟类和狗）和两个新类别（老虎和鱼）。新类别逐步到达，模型需要在不遗忘旧类别的情况下分类更多类别。</p>
+<p>根据是否保存旧类别的实例，CIL 算法可以分为两类。在不保存任何实例的情况下，[1,19,22,61] 通过对重要参数进行正则化以防止遗忘。它们的区别在于参数重要性计算的方式，例如通过 Fisher 信息矩阵或基于损失的重要性权重估计。其他工作选择性地保存旧类别的样本，并在学习新任务时进行回放 [16,35,48]。在增量学习中，模型应具有可转移性，即先前学习的知识应减少学习新类别的难度。相应地，新学习的类别应巩固先前的知识。然而，这些方法仅使用旧模型来防止遗忘，而忽略了促进新类别学习过程。</p>
+<p>相应地，我们发现旧类别和新类别之间存在相关性，即<strong>语义关系</strong>，受益于此，旧类别的线性分类器可以轻松地传输为新类别的分类器。图 2 展示了类间视觉相似性表明其对应的线性分类器之间的关系，并通过最优传输 [18,41] 进行传输。我们考虑两个不同的空间，即特征空间和分类器空间。我们在特征空间中测量类别的相关性，并使用类别间的关系来指导分类器空间中的分类器合成。通过跨类别的传输知识，旧类别的训练过程可以促进新类别的学习，反之亦然。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250318152940.png" style="zoom: 80%;" /></div>
+
+<p>受语义关系有助于知识转移的启发，我们提出了<strong>类增量学习的协同传输</strong>（COIL），它通过学习类别间的语义关系来关联增量任务。具体来说，传输发生在两个阶段。面对新类别的到来，模型应快速调整并描述它们。我们提出了<strong>前瞻性传输</strong>，将旧分类器传输为新类别的初始化，这也有助于在新类别训练中保持内部类别关系。此外，为了消除灾难性遗忘，新分类器应被反向传输为旧分类器，作为蒸馏目标。因此，我们提出了<strong>回顾性传输</strong>，利用反向传输的知识，防止旧类别的遗忘。<strong>前瞻性传输</strong>和<strong>回顾性传输</strong>构成了协同传输框架，并在多个增量类别批次之间传输知识。我们在基准和现实世界的多媒体数据集上进行了广泛的实验，验证了 COIL 的有效性。</p>
+<p>我们首先回顾相关工作，接着介绍 COIL 和实验结果，最后总结本文。</p>
+<h2 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2. 相关工作"></a>2. 相关工作</h2><p>类增量学习（CIL）目前是机器学习社区中的一个热门话题 [6,9,15,25,39,47,62,68,70]。CIL 主要有两种方法：基于记忆的方法保存旧类别的样本以克服遗忘，而非基于记忆的方法则利用正则化项或考虑动态模型扩展。</p>
+<p><strong>非基于记忆的 CIL</strong>：一些方法期望在训练新任务时网络输出不会急剧漂移，从而保留先前的知识。EWC[19] 通过 Fisher 信息矩阵衡量参数对任务的重要性，期望重要参数发生小的变化，并正则化它们不要偏移太多。SI[61] 和 MAS[1] 遵循 EWC，通过不同的估计方法对重要参数进行正则化。然而，面对长序列的增量任务，不同阶段的重要性矩阵可能会冲突，导致这些算法表现不佳。另一类工作通过改变网络结构来满足新任务的需求。[50,59] 为新任务重新训练并扩展网络。然而，大多数方法需要一个预言机制来指导在测试过程中激活哪个子网络。此外，随着任务的出现，网络会不断扩展，面对长增量序列时，参数数量会变得非常庞大。</p>
+<p><strong>基于记忆的 CIL</strong>：这类工作保存先前任务的原型&#x2F;样本实例或原型表示。在学习新任务时，将通过这些保存的项进行回放。iCaRL[35] 选择样本进行回放，并利用旧模型的知识蒸馏来防止遗忘。[16] 提出选择特征而不是图像，从而减少存储成本。此外，生成模型可以被视为另一种存储样本的方式。在 [48] 中，旧类别的实例被合成以在新任务训练时进行回放，增量训练过程可以转化为离线训练过程。最近的工作集中在补偿增量模型的漂移。[46] 利用样本来构建额外的验证集，并通过该验证集训练额外的偏差校正层。[14] 提出使用不带偏差的余弦线性层来克服遗忘。[5,63] 简单地通过权重裁剪归一化线性层，以保持新旧类别之间的公平性。[60] 通过新类别实例估计旧类别中心的语义漂移。COIL 遵循基于记忆的方法，并利用不同增量阶段之间的类别语义关系来重用旧模型，这是先前方法所忽略的。</p>
+<p><strong>多媒体的 CIL</strong>：在现实世界的应用中，新类别的出现很常见 [26,32,44,52,53,55,58,65–67]。因此，CIL 在许多多媒体领域中被发现是有用的，例如电子商务产品搜索 [43]、视频动作识别 [54]、自然语言生成 [30]、多媒体检索 [40] 和社交媒体话题挖掘 [49]。</p>
+<p><strong>最优传输（OT）</strong>：OT[34,41] 最初被提出来研究最优运输和资源分配问题 [18,31]。通过地面成本，OT 可以找到两个分布之间的耦合，这可以被视为两个集合之间的映射 [20,41]。原始的 OT 计算涉及线性规划的求解，成本高昂，难以实现。然而，通过熵正则化项的光滑性，OT 可以通过 Sinkhorn 算法 [8,38] 更快地求解。OT 现在被广泛应用于机器学习和计算机视觉领域，例如模型融合 [37]、域适应 [7]、目标检测 [10]、模型重用 [56,57] 和生成模型 [2,4]。</p>
+<h2 id="3-从旧类别到新类别"><a href="#3-从旧类别到新类别" class="headerlink" title="3. 从旧类别到新类别"></a>3. 从旧类别到新类别</h2><p>在本节中，我们首先介绍 CIL 的定义，然后介绍典型的基于记忆的方法。接着，我们讨论当前模型的不足。</p>
+<h3 id="3-1-类增量学习"><a href="#3-1-类增量学习" class="headerlink" title="3.1 类增量学习"></a>3.1 类增量学习</h3><p>类增量学习旨在从不同类别中增量学习数据流 [35]。假设有一系列训练任务 ${D_1,D_2,…,D_B}$，这些任务之间没有重叠的类别，其中 $D_b&#x3D;{(x_b^i,y_b^i)}<em>{i&#x3D;1}^{n_b}$ 是第 $b$ 个增量步骤，包含 $n_b$ 个实例。此外，$x_b^i \in \mathbb{R}^D$ 是类别 $y_i \in Y_b$ 的训练实例，$Y_b$ 是任务 $b$ 的标签空间，其中 $Y_b \cap Y</em>{b’}&#x3D;\emptyset$，$b \neq b’$。在任务 $b$ 的训练过程中，我们只能访问 $D_b$ 中的数据。CIL 在每个步骤的目标不仅是获取当前任务 $D_b$ 的知识，还要保留先前任务的知识。在每个任务之后，训练好的模型将在所有已见类别 $Y_b&#x3D;Y_1 \cup … Y_b$ 上进行评估。</p>
+<p>每次新任务 $D_b$ 到达时，模型应学会分类其中的新类别。假设当前模型 $f(x)$ 在 $D_{b-1}$ 上训练，由两部分组成：嵌入函数 $\phi(\cdot): \mathbb{R}^D \rightarrow \mathbb{R}^d$ 和线性分类器 $W_{old} \in \mathbb{R}^{d \times |Y_{b-1}|}$，即 $f(x)&#x3D;W_{old}^T \phi(x)$。我们将 softmax 运算符表示为 $S(\cdot)$，类别 $k$ 的预测概率为 $S_k(W_{old}^T \phi(x))$。增量模型将首先扩展线性分类器：$W_b&#x3D;[W_{old}, W_{new}]$，其中 $W_{new} \in \mathbb{R}^{d \times |Y_b|}$ 是新类别的随机初始化。然后，模型学习在所有 $|Y_b|$ 类别上进行预测。</p>
+<h3 id="3-2-通过知识蒸馏的-CIL"><a href="#3-2-通过知识蒸馏的-CIL" class="headerlink" title="3.2 通过知识蒸馏的 CIL"></a>3.2 通过知识蒸馏的 CIL</h3><p>如前所述，基于记忆的方法利用旧类别样本的<strong>小</strong>子集来防止遗忘，记为 $E_{b-1}$，它是从 $|Y_{b-1}|$ 中选择的。利用这些样本的一个直接方法是回放并计算交叉熵：<br>$$<br>    L_{CE}(x,y) &#x3D; \sum_{k&#x3D;1}^{|Y_b|} - \mathbb{I}(y&#x3D;k) \log S_k(W_b^T \phi(x)) \tag{1}<br>$$<br>其中 $\mathbb{I}(\cdot)$ 是指示函数。公式 1 在所有样本和新实例上优化交叉熵，从而获得知识并同时抵抗遗忘。然而，$L_{CE}$ 不足以抵抗遗忘，因为样本数量远少于新实例，即 $|E_{b-1}| \ll |D_b|$。因此，我们需要通过知识蒸馏 [13] 对齐旧模型和新模型的预测：<br>$$<br>    L_{KD}(x) &#x3D; \sum_{k&#x3D;1}^{|Y_{b-1}|} - S_k(\overline{W}<em>{old}^T \overline{\phi}(x)) \log S_k(W_b^T \phi(x)) \tag{2}<br>$$<br>其中 $\overline{W}</em>{old}$ 和 $\overline{\phi}$ 对应于学习 $D_b$ 之前的冻结分类器和嵌入。KD 损失将当前模型的输出映射到旧模型在所有旧类别上的输出。对齐的概率使当前模型具有与旧模型相同的判别能力，从而限制先前知识不被遗忘。总体损失是 $L_{CE}$ 和 $L_{KD}$ 的组合：<br>$$<br>    L(x,y) &#x3D; (1-\lambda) L_{CE}(x,y) + \lambda L_{KD}(x) \tag{3}<br>$$<br>其中 $\lambda$ 是平衡新旧类别重要性的权衡参数，设置为 $|Y_{b-1}| &#x2F; |Y_b|$[46]。</p>
+<h3 id="3-3-对语义关系的忽视"><a href="#3-3-对语义关系的忽视" class="headerlink" title="3.3 对语义关系的忽视"></a>3.3 对语义关系的忽视</h3><p>公式 3 描述了通过回放和知识蒸馏利用样本进行 CIL 的方法。然而，在学习过程中忽略了一些辅助信息。首先，面对新类别，线性分类器 $W_b&#x3D;[W_{old}, W_{new}]$ 是一个简单的扩展，其中 $W_{new}$ 是随机初始化的，这可能会对当前模型产生负面影响。相应地，旧类别和新类别之间存在映射关系，即<strong>语义关系</strong>。由于旧模型和新模型在类别上相关，我们不应忽视当前模型，而应利用类别间的相似性来辅助 CIL。随着旧类别的增加，新类别与旧类别相关的概率也增加，使得传输更容易。此外，当前方法仅在知识流的单方向上进行传输，即从旧模型到新模型。利用语义信息作为进一步指导并回顾性地传输知识，从而保留旧知识，这是非常有前景的。</p>
+<h2 id="4-通过最优传输的协同传输"><a href="#4-通过最优传输的协同传输" class="headerlink" title="4. 通过最优传输的协同传输"></a>4. 通过最优传输的协同传输</h2><p>受信息丰富的<strong>语义关系</strong>启发，我们寻求通过模型重用关联旧类别和新类别。此外，嵌入模块 $\phi(\cdot)$ 具有通用性，捕捉输入的共同特征并通过学习的度量对它们进行聚类，因此与类别无关。相比之下，线性层 $W$ 与类别直接相关。因此，我们应根据当前嵌入传输和重用线性层。假设我们已经提取了类别之间的语义关系，我们提出了一个语义映射 $T$，它将线性分类器从源类别传输到目标类别。$T$ 将源分类器作为输入，并生成适合目标类别的分类器。通过语义映射，我们可以在新类别到达时将旧分类器传输为新类别。生成的分类器不会受到随机初始化的负面影响，而是作为新类别的良好起点。对称地，我们可以在学习新任务时将新分类器传输为旧分类器，并通过传输的分类器鼓励知识保留。因此，模型中的知识在两个方向上传输，即前瞻性和回顾性，该框架因此被称为协同传输。</p>
+<p>假设我们已经知道 $T$ 的表达式，我们首先介绍协同传输框架，最后通过最优传输获得变换 $T$。</p>
+<h3 id="4-1-前瞻性传输（PT）"><a href="#4-1-前瞻性传输（PT）" class="headerlink" title="4.1 前瞻性传输（PT）"></a>4.1 前瞻性传输（PT）</h3><p>面对新任务，模型应快速适应新类别。PT 通过旧类别和新类别之间的语义映射 $T$ 解决模型适应问题。例如，假设我们有经过良好训练的权重来预测旧类别中的“猫”，我们可以几乎完全重用相同的分类器来确定“老虎”类别。因此，我们通过重用旧分类器 $W_{old}$ 构建新分类器 $W_{new}$，并由语义映射 $T$ 引导：<br>$$<br>    \overline{W}<em>{new} &#x3D; T(W</em>{old}) \tag{4}<br>$$<br>PT 引导的分类器在两个方面有助于学习新类别：</p>
+<p><strong>快速初始化</strong>：与随机生成的新分类器相比，传输的 $\overline{W}<em>{new}$ 充分利用了旧分类器，同时保留了类别间的语义关系。由于语义映射捕捉了类别间的关系，旧类别和新类别之间的校准得以保持。因此，传输的分类器即使在没有训练新类别的情况下也能区分新类别。$\overline{W}</em>{new}$ 作为新类别的良好初始化，避免了随机初始化的负面影响。</p>
+<p><strong>PT 损失</strong>：由于 $\overline{W}<em>{new}$ 保留了类别间的关系，它有助于在开始时调整预测概率，使其与传输的模型一致。我们通过知识蒸馏对模型施加额外的限制来实现这一目标：<br>$$<br>    L</em>{PT}(x) &#x3D; \sum_{k&#x3D;1}^{|Y_b|} - S_k([\overline{W}<em>{old}, \overline{W}</em>{new}]^T \overline{\phi}(x)) \log S_k(W_b^T \phi(x)) \tag{5}<br>$$<br>其中 $\overline{W}_{new}$ 是初始化的值。公式 5 强制当前更新模型像传输的模型一样进行预测，并帮助更新模型以监督方式适应新类别。</p>
+<p><strong>PT 的效果</strong>：考虑到类别间的语义关系，PT 重用旧分类器来构建新分类器，避免随机初始化的负面影响。PT 旨在为参数提供更好的初始化。与 [3] 类似，良好的初始化有助于学习更好的嵌入，从而保留先前的知识并抵抗灾难性遗忘。当旧类别和新类别之间存在语义关系时，传输的分类器可以将新类别纳入并校准到当前分类器中。即使旧类别和新类别无关，这种弱初始化也不会比随机初始化的分类器表现更差。快速初始化即使在没有训练新类别的情况下也能正确预测（见第 5.4 节）。在实现中，我们在开始时（例如前五个 epoch）使用 PT 损失进行类别校准。</p>
+<h3 id="4-2-回顾性传输（RT）"><a href="#4-2-回顾性传输（RT）" class="headerlink" title="4.2 回顾性传输（RT）"></a>4.2 回顾性传输（RT）</h3><p>除了前瞻性传输（通过重用旧分类器来构建新分类器）外，我们提出更新模型中包含的语义关系可以回顾性地传输。新分类器也可以通过新到旧的映射传输为旧分类器，即 $\hat{W}<em>{old} &#x3D; T(W</em>{new})$。语义映射现在作为构建旧类别知识正则化的元素。</p>
+<p><strong>RT 损失</strong>：类似于 PT 损失，我们通过转换后的分类器构建 RT 损失以防止遗忘：<br>$$<br>    L_{RT}(x) &#x3D; \sum_{k&#x3D;1}^{|Y_{b-1}|} - S_k(\overline{W}<em>{old}^T \overline{\phi}(x)) \log S_k(\hat{W}</em>{old}^T \phi(x)) \tag{6}<br>$$<br>其中 $\hat{W}<em>{old}$ 是转换后的分类器。公式 6 强制转换后的模型像旧模型一样进行预测，并保持判别能力。RT 损失构建了一个映射，以保留旧类别上的先前知识。与公式 2 相比，区别在于蒸馏学生变为转换后的模型 $\hat{W}</em>{old}^T \phi(x)$。变换映射 $T$ 通过语义关系引导保留过程。</p>
+<p><strong>回顾性传输的效果</strong>：RT 利用语义映射将新分类器转换为旧分类器，并通过知识蒸馏限制类别间的关系。因此，对模型施加了更强的正则化，防止遗忘。需要注意的是，当前方法仅在单方向上进行知识传输，而 RT 使两个分类器能够相互监督并进行双向传输。在实现中，我们随着 epoch 的增加逐步增加 RT 损失的权重。</p>
+<p><strong>协同传输总结</strong>：图 3 展示了 COIL 框架。面对新类别的到来，我们提取类别间的关系并传输知识 $W_{old} \rightarrow \overline{W}<em>{new}$，这有助于模型通过旧类别进行适应。在新类别的学习过程中，我们提取语义关系并传输知识 $W</em>{new} \rightarrow \hat{W}_{old}$，这有助于克服遗忘。这两种传输在知识流的两个方向上相互协作，从而促进类增量学习。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250318150014.png" style="zoom: 80%;" /></div>
+
+<h3 id="4-3-通过最优传输的语义映射"><a href="#4-3-通过最优传输的语义映射" class="headerlink" title="4.3 通过最优传输的语义映射"></a>4.3 通过最优传输的语义映射</h3><p>到目前为止，我们已经提出了协同传输框架。剩下的最大问题是：如何将一个分类器转换为另一个分类器，即如何获得语义映射 $T$？$T$ 应捕捉类别集之间的相关性，并能够将原始分类器 $W_o$ 转换为目标分类器 $W_g$。线性层的系数揭示了特征与类别之间的正&#x2F;负关系，预测 $W^T \phi(x)$ 是所有特征上类别特定加权和的向量。因此，我们可以通过线性映射 $T \in \mathbb{R}^{\alpha \times \beta}$ 重新加权转换后的预测。$T$ 编码了原始任务中大小为 $\alpha$ 的类别集与目标任务中大小为 $\beta$ 的类别集之间的类别语义相关性。两个类别越相关，$T$ 中对应的值越大。由于相关类别依赖于相似的特征来确定标签，我们可以重用原始任务中相似类别的权重来在目标任务中获得良好的预测。例如，预测“猫”的重要特征也有助于预测目标任务中的“老虎”，反之亦然。通过 $T$，我们可以在不同类别集之间传输类别间的关系。接下来我们介绍如何计算映射 $T$。</p>
+<p><strong>传输映射</strong>：设 $\mu_1 \in \Delta_\alpha$，$\mu_2 \in \Delta_\beta$，其中 $\Delta_d &#x3D; {\mu: \mu \in \mathbb{R}^d_+, \mu^T \mathbf{1} &#x3D; 1}$ 是 $d$ 维单纯形。$\mu_1$ 和 $\mu_2$ 是归一化的边际概率，表示每个类别的重要性，在没有信息先验的情况下设置为均匀分布。引入成本矩阵 $C \in \mathbb{R}^{\alpha \times \beta}<em>+$ 来描述类别变化并指导转换，其元素指出将原始任务的一个类别链接到目标任务对应类别时应支付的代价。因此，我们可以将 $T$ 视为两个分布的耦合，它通过最低的传输成本将任务之间的类别关联起来，可以通过最小化以下公式进行优化：<br>$$<br>    \min</em>{T} \langle T, C \rangle \quad \text{s.t.} \quad T \mathbf{1} &#x3D; \mu_1, \quad T^T \mathbf{1} &#x3D; \mu_2, \quad T \geq 0 \tag{7}<br>$$<br>公式 7 是 OT 的 Kantorovich 公式，其中 $T$ 显示了如何将一个集合与另一个集合对齐。一个类别的概率质量将被移动到具有较小成本的相似类别。考虑到新类别的到来，$\mu_1 \in \Delta_{|Y_{b-1}|}$，$\mu_2 \in \Delta_{|Y_b|}$。公式 7 将输出一个排列映射 $T$，其中两个类别集之间具有正确的对齐关系。通过对模型应用类别对齐，我们可以将先前任务中训练良好的分类器转换到当前任务中。公式 7 是一个中间函数，不是一个优化项。</p>
+<p><strong>传输成本</strong>：在公式 7 中，给定的 $C$ 描述了原始任务和目标任务中两个不同类别集之间的关系。我们提出了一种通用的方法来编码类别之间的不变关系，而不是手工设计 $C$ 的值。我们首先将所有类别编码为相同的形式。</p>
+<p>特别是，我们从新任务中获得新类别，并从样本集 $E_{b-1}$ 中获得旧类别。每个类别的类别中心可以通过当前嵌入计算得出：<br>$$<br>    v_n &#x3D; \frac{\sum_{i&#x3D;1}^{|E_b|} \mathbb{I}(y_i &#x3D; n) \phi(x_i)}{\sum_{i&#x3D;1}^{|E_b|} \mathbb{I}(y_i &#x3D; n)} \tag{8}<br>$$<br>为了简化，我们从所有已见类别中提取 $E_b$。如果两个类别相关，它们对应的类别表示也会彼此接近。我们使用成对的欧几里得距离来衡量类别之间的成本 $C$：<br>$$<br>    C_{n,m} &#x3D; |v_n - v_m|<em>2^2 \tag{9}<br>$$<br>距离越大，两个类别之间的相似性越低。因此，重用先前训练良好的模型的特定系数的难度也越大。将公式 9 代入公式 7，学习到的传输计划 $T \in \mathbb{R}^{\alpha \times \beta}</em>+$ 指导如何以最低成本将原始任务的类别传输到目标任务领域。我们通过 Sinkhorn 算法 [8] 求解 OT 问题。</p>
+<h3 id="4-4-实施指南"><a href="#4-4-实施指南" class="headerlink" title="4.4 实施指南"></a>4.4 实施指南</h3><p>我们在算法 1 中展示了 COIL 的实施指南。总体损失是公式 3 与协同传输损失的组合：<br>$$<br>    L_{COIL}(x,y) &#x3D; \sum_{x \in D_b \cup E_{b-1&#125;&#125; L(x,y) + L_{PT}(x) + \gamma L_{RT}(x) \tag{10}<br>$$<br>其中 $\gamma$ 作为累积学习调节器：$\gamma &#x3D; (t &#x2F; T_{max})^2$，$t$ 和 $T_{max}$ 分别表示当前 epoch 索引和总 epoch 数。$L_{PT}$ 仅在前五个 epoch 中用于快速模型初始化。需要注意的是，OT 是一个中间函数，不是优化项，PT 损失和 RT 损失同时优化。我们使用余弦分类器，即线性层的权重和特征在相乘之前都进行归一化：$f(x) &#x3D; \left(\frac{W}{|W|_2}\right)^T \left(\frac{\phi(x)}{|\phi(x)|_2}\right)$。因此，我们不需要关心新旧类别之间的校准。更多细节请参见补充材料。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250318150222.png" style="zoom: 80%;" /></div>
+
+<h2 id="5-实验"><a href="#5-实验" class="headerlink" title="5. 实验"></a>5. 实验</h2><p>在本节中，我们将 COIL 与 SOTA 方法在基准和现实世界的增量数据集上进行比较。此外，可视化了前瞻性传输的效果。我们还进行了消融实验，以验证 COIL 中每个部分的改进。我们还将回顾性传输与其他方法结合，并在补充材料中报告结果。</p>
+<h3 id="5-1-实验设置"><a href="#5-1-实验设置" class="headerlink" title="5.1 实验设置"></a>5.1 实验设置</h3><p><strong>数据集</strong>：按照 [35,46,60] 中定义的协议，我们在 CIFAR-100[21]、CUB200-2011[42] 和 ImageNet ILSVRC2012[36] 上评估相关方法的性能。我们还在现实世界的多媒体面部表情识别任务 RAF-DB[23] 上进行了实验。它们列示如下：</p>
+<ul>
+<li><strong>CIFAR-100</strong>：包含 50,000 张训练图像和 10,000 张测试图像，共有 100 个类别。</li>
+<li><strong>CUB-200 和 CUB-100</strong>：一个细粒度图像数据集，包含 200 种鸟类，共 11,788 张图像。我们还根据 [60] 从 CUB 中随机抽取 100 个类别形成 CUB-100。</li>
+<li><strong>ImageNet-1000 和 ImageNet-100</strong>：ImageNet 是一个大规模数据集，包含 1,000 个类别，训练集约 1.28 百万张图像，验证集 50,000 张图像。我们还根据 [46] 从原始 ImageNet-1000 中随机选择 100 个类别形成 ImageNet-100。</li>
+<li><strong>RAF-DB</strong>：包含 15,339 张现实世界的面部图像，标注为七种表情之一。按照 [17,51,69]，我们选择六种基本表情（不包括中性）作为实验数据。</li>
+</ul>
+<p>根据类增量学习的常见设置 [35]，所有数据集均使用 NumPy 随机种子 1993 进行打乱。对于子集数据集（如 CUB-100 和 ImageNet-100），子采样类别是在类别打乱后的前 100 个类别 [46,60]。有两种增量设置 [35,60]。第一种设置从总类别的一半开始，其余类别在不同的阶段到达 [14,60]，而另一种设置将第一个任务的类别数与后续任务相同 [35,63]。在本文中，我们使用这两种设置进行实验，并验证 COIL 的通用性能改进。</p>
+<p><strong>比较方法</strong>：在本节中，我们将 COIL 与 SOTA 方法进行比较，包括 iCaRL[35]、BiC[46]、WA[63]。我们还在结果中报告了离线模型，即 Oracle。</p>
+<ul>
+<li><strong>Finetune</strong>：使用交叉熵微调增量模型。Finetune 不考虑克服遗忘，面临遗忘现象。</li>
+<li><strong>iCaRL[35]</strong>：使用最近中心均值作为分类器，并应用知识蒸馏 [13] 来防止遗忘。iCaRL 的损失函数对应于公式 3。</li>
+<li><strong>BiC[46]</strong>：训练一个额外的偏差校正层以消除线性层的偏差。BiC 从样本中分离出一个验证集，验证集不用于训练。</li>
+<li><strong>WA[63]</strong>：通过 $L_2$ 范数归一化全连接层，使得在学习新类别时该层不会变得不平衡。</li>
+<li><strong>Oracle</strong>：以离线方式联合训练所有类别，可以视为 CIL 方法的上限。</li>
+</ul>
+<p><strong>实现细节</strong>：所有模型均使用 PyTorch[33] 实现。对于 CIFAR-100，我们采用 32 层 ResNet[12] 并训练 160 个 epoch。学习率从 0.1 开始，在 80 和 120 个 epoch 时衰减 0.1。对于 ImageNet、CUB 和 RAF-DB，我们采用 18 层 ResNet，总共训练 90 个 epoch。学习率从 0.1 开始，每 30 个 epoch 衰减 0.1。模型通过 SGD 优化，批量大小为 128，温度 $\tau$ 设置为 2。为了求解 OT 问题，我们使用 Sinkhorn 算法 [8,38]，并将熵正则化项 $\alpha$ 设置为 0.45。</p>
+<h3 id="5-2-与-SOTA-方法的比较"><a href="#5-2-与-SOTA-方法的比较" class="headerlink" title="5.2 与 SOTA 方法的比较"></a>5.2 与 SOTA 方法的比较</h3><p>我们首先报告每个任务类别数相等的实验结果。对于 CIFAR-100，100 个类别被打乱并分为 2、5、10 和 20 个增量任务。对于 ImageNet 和 CUB，总类别被分为 10 个增量任务。由于所有比较方法都是基于样本的，我们为每个方法固定相同数量的样本，即 CIFAR-100 和 ImageNet-100 为 2,000 个样本，ImageNet-1000 为 20,000 个样本。因此，每个类别选择的样本数为 20，这对于每个类别来说是<strong>充足的</strong>。相应地，我们还在 CUB-100&#x2F;200 上进行了<strong>稀少</strong>样本的实验，即每个类别仅保存三个样本。样本通过 herding 算法 [45] 选择。</p>
+<p>性能曲线如图 4 所示，平均准确率如表 1 所示。我们报告 ImageNet 的 top-5 准确率和 CIFAR 及 CUB 的 top-1 准确率。从结果中可以推断，我们提出的 COIL 在最终增量准确率和平均增量准确率方面优于当前的 SOTA 方法。除了 ImageNet-100 外，三个数据集的趋势一致。BiC 在充足样本的情况下表现良好，尤其是在 ImageNet-100 数据集上。然而，它需要构建一个验证集来调整额外的层。对于 CUB-100&#x2F;200 的稀少样本，每个类别只能保留一个样本用于验证，BiC 的性能因容易过拟合而下降。然而，COIL 在稀少样本的情况下优于它 20%。实验结果表明，我们提出的方法能够很好地处理小规模图像和大规模图像的增量学习，无论是充足样本还是稀少样本。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250318153017.png" style="zoom: 80%;" /></div>
+
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250318153154.png" style="zoom: 80%;" /></div>
+
+<h3 id="5-3-具有大量基础类别的实验"><a href="#5-3-具有大量基础类别的实验" class="headerlink" title="5.3 具有大量基础类别的实验"></a>5.3 具有大量基础类别的实验</h3><p>在现实世界的应用中，如产品分类或人脸识别，增量学习通常从在预收集数据集上训练的模型开始。为了模拟这一点，我们从训练了总类别的一半的模型开始 [14,60]，其余类别在不同的阶段到达。对于 CIFAR-100，总共有 100 个类别，我们使其中 50 个类别作为第一个任务的基础类别，其余 50 个类别分别在 2、5 和 10 个任务中出现。</p>
+<p>结果如图 5 所示，平均准确率性能在补充材料中报告。从图中可以推断，我们提出的 COIL 在最终增量准确率和平均增量准确率方面优于当前的 SOTA 方法。此外，由于前瞻性传输利用旧类别和新类别之间的语义关系来初始化新分类器，生成的新分类器的性能与旧类别和新类别之间的关系相关。随着基础类别的增加，我们可以从旧类别中提取更多的语义关系，从而促进新类别的学习，并期望前瞻性传输的更强性能。相应地，我们发现图 5 中相比于第二名方法的性能提升略大于图 4 中的 CIFAR 任务，这种改进与我们的假设一致。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250318153047.png" style="zoom: 80%;" /></div>
+
+<h3 id="5-4-传输分类器的可视化"><a href="#5-4-传输分类器的可视化" class="headerlink" title="5.4 传输分类器的可视化"></a>5.4 传输分类器的可视化</h3><p>在本部分中，我们在 CIFAR-100 数据集上可视化学习到的决策边界。通过将嵌入模块 $\phi(\cdot): \mathbb{R}^D \rightarrow \mathbb{R}^2$ 学习为 2D，我们展示实例，即在 CNN 上附加一个额外的线性层作为嵌入模块。需要注意的是，我们采用余弦分类器，并且可视化的特征已归一化。在第一个任务中，我们为三个类别（道路、棕榈树和蛇）训练一个分类器。在第二个任务中，出现了两个新类别（自行车和云）。然后，我们使用算法 2 中的分类器传输算法将旧分类器 $W_{old}$ 传输为新分类器 $W_{new}$ 作为初始化。我们展示了五个类别（包括旧类别和新类别）上增强分类器的决策边界。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250318153214.png" style="zoom: 80%;" /></div>
+
+<p>我们在图 6 中绘制了可视化结果。在每个图中，点表示实例，阴影区域表示模型的分类边界。可以推断，最优传输的分类器很好地捕捉了类别间的关系，并且即使在没有训练新类别的情况下也能描绘和区分旧类别和新类别。它还展示了前瞻性传输的强大能力，传输的分类器可以作为新分类器的良好初始化，避免了随机初始化的负面影响。此外，在这次试验中，旧类别与新类别几乎无关，初始化的分类器也能够描绘旧类别和新类别之间的差异，这比随机初始化表现更好。可以推断，当旧类别和新类别之间的相关性更强时，初始化的分类器会更强大。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250318153059.png" style="zoom: 80%;" /></div>
+
+<h3 id="5-5-现实世界的面部表情识别"><a href="#5-5-现实世界的面部表情识别" class="headerlink" title="5.5 现实世界的面部表情识别"></a>5.5 现实世界的面部表情识别</h3><p>在现实世界的面部表情识别问题中，表情类别变得越来越细粒度和增量。我们还在一个现实世界的多媒体数据集 RAF-DB 上进行了实验。RAF-DB 是一个包含六种类别的面部表情识别数据集，我们将它们分为两个和三个任务以形成一个增量流。类似于 [69]，我们将面部图像调整为 100×100 像素，并为每个类别保留 60 个样本。</p>
+<p>性能曲线如图 7 所示。Finetuning 在没有先前学习知识限制的情况下学习新的面部图像，随着新类别的加入，性能急剧下降。iCaRL 利用知识蒸馏的力量将新模型与旧模型映射，并保留从灾难性遗忘中学到的知识。WA 和 BiC 通过更多的限制扩展了 iCaRL，即权重归一化和额外的偏差校正层，结果优于普通的 iCaRL。然而，面部表情具有很强的相关性，COIL 善于利用这种关系，并利用最优传输的知识获得最佳性能。结果验证了在现实世界的增量学习场景中，COIL 仍然具有竞争力。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250318153111.png" style="zoom: 80%;" /></div>
+
+<h3 id="5-6-消融研究"><a href="#5-6-消融研究" class="headerlink" title="5.6 消融研究"></a>5.6 消融研究</h3><p>在本节中，我们提供了 COIL 中各个组件的消融研究。更多的消融实验在补充材料中报告。</p>
+<p><strong>前瞻性传输的影响</strong>：除了决策边界的可视化外，我们还进行了实验，定量地测量前瞻性传输对模型适应的帮助。为了评估这一点，我们比较了不同的分类器扩展策略：</p>
+<ul>
+<li><strong>PT</strong>：初始化 $W_{new} &#x3D; T W_{old}$，其中 $T$ 通过解决公式 6 中的 OT 问题获得。</li>
+<li><strong>NCM</strong>：丢弃线性分类器，通过最近中心均值 [35] 对新实例进行分类。</li>
+<li><strong>Random</strong>：随机初始化 $W_{new}$。</li>
+</ul>
+<p>我们在 CIFAR-100 上进行十个任务的测试。使用这三种策略，当面对新的增量任务时，我们直接在新类别上进行测试，并在图 8(a) 中报告准确率。与随机分类器相比，随机分类器在新类别上的准确率为 10%，NCM 构建新类别的类别均值，并通过最近类别中心分配标签，表现更好。然而，由于嵌入模块未适应新类别，NCM 无法提取最合适的类别均值。相比之下，PT 利用类别间的关系构建最优传输映射，并通过旧分类器初始化一个良好的分类器，表现最佳。我们还注意到，随着已知类别的增加，测试性能也提高，这与我们的意识一致，即我们知道的类别越多，越容易找到相关类别并进行传输。</p>
+<p><strong>语义传输的消融</strong>：我们进行了实验以验证 COIL 中每个部分的有效性。比较中包含四种变体：</p>
+<ul>
+<li><strong>变体 1</strong>：使用交叉熵训练（公式 1）。</li>
+<li><strong>变体 2</strong>：使用交叉熵和蒸馏损失训练（公式 3）。</li>
+<li><strong>变体 3</strong>：在变体 2 的基础上增加前瞻性传输。</li>
+<li><strong>变体 4</strong>：在变体 2 的基础上增加回顾性传输。</li>
+</ul>
+<p>实验在 CIFAR-100 的五个任务上进行。图 8(b) 报告了结果。由于变体 1 仅学习新概念而没有先前知识的约束，它很快遗忘知识并遭受灾难性遗忘。变体 2 利用蒸馏损失来克服遗忘，并在性能上迈出了一小步。变体 3 和变体 4 在变体 2 的基础上增加了额外的传输步骤，并且都比变体 2 获得了更多的改进。需要注意的是，前瞻性传输在任务的开始时起作用，其效果更多地体现在模型适应上。相比之下，回顾性传输在整个训练过程中起作用，推动模型远离遗忘，并显示出比变体 3 更强的效果。然而，将它们结合起来，我们带来了 COIL，它比每个单独的部分都表现更好。COIL 显著优于基线方法。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20250318153128.png" style="zoom: 80%;" /></div>
+
+<h2 id="6-结论"><a href="#6-结论" class="headerlink" title="6. 结论"></a>6. 结论</h2><p>在现实世界的应用中，学习系统经常面临新类别的实例。为了在不遗忘旧类别的情况下增量学习所有已见类别的分类器，类增量学习因此被提出。然而，当前方法忽略了旧类别和新类别之间的强相关性，而我们发现它可以帮助促进增量学习过程。在本文中，我们提出了 COIL 以利用类别间的语义关系。一方面，将旧类别的知识传输到新类别有助于快速适应新类别，并避免随机权重初始化的负面影响。另一方面，将新分类器传输为旧分类器可以对增量模型施加额外的正则化项，从而很好地防止灾难性遗忘现象。提出的 COIL 能够高效适应新类别，并在学习新类别时保留旧知识。如何进一步探索类别之间的边际概率和传输成本是有趣的未来工作。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/31.Logit%20Distillation/02.COIL/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/40.CIL/31.Logit%20Distillation/02.COIL/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/CIL/">CIL</a><a class="post-meta__tags" href="/blog/tags/Logit-Distillation/">Logit Distillation</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/41.Feature%20Rectify/01.FCS/" title="FCS"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">FCS</div></div><div class="info-2"><div class="info-item-1">FCS: Feature Calibration and Separation for Non-Exemplar Class Incremental Learning  CVPR 2024 | Code  Kimi全文翻译 :arrow_down:0. 摘要非范例类增量学习（NECIL）涉及在没有之前遇到的旧类别样本的情况下，对一系列数据进行分类模型的学习。这样的严格约束总是会导致对所学知识的灾难性遗忘。目前，现有方法要么采用知识蒸馏技术，要么保留类别原型来维持先前的知识。然而，仍然存在两个关键问题。一方面，随着模型的不断更新，旧类别保留的原型将不可避免地从新模型的特征空间中的合适位置漂...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/31.Logit%20Distillation/01.LwF/" title="LwF"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">LwF</div></div><div class="info-2"><div class="info-item-1">Learning without ForgettingLwF算法是基于深度学习的增量学习的里程碑之作，在介绍LwF算法之前，我们先了解一些最简单的增量学习方法。    上图展示了一个具有多头网络结构的模型学习新任务的不同策略，其中(a)为已经训练好的基于CNN的原始模型，$\theta_s$ 示不同任务共享的CNN参数，$\theta_o$ 示与原始任务相关的MLP参数【旧任务的分类器】，当加入一个新的分类任务时，我们可以增加一个随机初始化的MLP参数$\theta_n$【新任务分类器】。基于$\theta_s,\theta_o$ 学习$\theta_n$ 方法包括如下几类：  微调(F...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/31.Logit%20Distillation/01.LwF/" title="LwF"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LwF</div></div><div class="info-2"><div class="info-item-1">Learning without ForgettingLwF算法是基于深度学习的增量学习的里程碑之作，在介绍LwF算法之前，我们先了解一些最简单的增量学习方法。    上图展示了一个具有多头网络结构的模型学习新任务的不同策略，其中(a)为已经训练好的基于CNN的原始模型，$\theta_s$ 示不同任务共享的CNN参数，$\theta_o$ 示与原始任务相关的MLP参数【旧任务的分类器】，当加入一个新的分类任务时，我们可以增加一个随机初始化的MLP参数$\theta_n$【新任务分类器】。基于$\theta_s,\theta_o$ 学习$\theta_n$ 方法包括如下几类：  微调(F...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/41.Feature%20Rectify/04.FA/" title="FA"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">FA</div></div><div class="info-2"><div class="info-item-1">Memory-Efficient Incremental Learning Through Feature Adaptation0. 摘要我们提出了一种增量学习的方法，该方法保存了来自先前学习类别的训练图像的特征描述符，而非图像本身，这与大多数现有方法不同。通过保存低维的特征嵌入，可以显著减少内存占用。假设模型会随着新的类别逐步更新，每次仅有新数据可用。这需要在无法访问相应原始训练图像的情况下，将先前存储的特征向量适配到更新后的特征空间。特征适配是通过多层感知机（MLP）学习的，该模型以训练图像上原始网络与更新网络的输出特征对作为训练数据。实验验证表明，这种变换对先前类别的特征具有良好的...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/41.Feature%20Rectify/01.FCS/" title="FCS"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">FCS</div></div><div class="info-2"><div class="info-item-1">FCS: Feature Calibration and Separation for Non-Exemplar Class Incremental Learning  CVPR 2024 | Code  Kimi全文翻译 :arrow_down:0. 摘要非范例类增量学习（NECIL）涉及在没有之前遇到的旧类别样本的情况下，对一系列数据进行分类模型的学习。这样的严格约束总是会导致对所学知识的灾难性遗忘。目前，现有方法要么采用知识蒸馏技术，要么保留类别原型来维持先前的知识。然而，仍然存在两个关键问题。一方面，随着模型的不断更新，旧类别保留的原型将不可避免地从新模型的特征空间中的合适位置漂...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/23.PEFT%20Expansion/09.APER/" title="APER"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">APER</div></div><div class="info-2"><div class="info-item-1">Revisiting Class-Incremental Learning with Pre-Trained Models Generalizability and Adaptivity are All You Need摘要类增量学习（CIL）旨在适应新出现的类而不遗忘旧类。传统的CIL模型从零开始训练，以不断获取知识。最近，预训练取得了显著进展，使得大量预训练模型（PTM）可用于CIL。与传统方法相反，PTM具有通用的嵌入，可以轻松转移到CIL。在这项工作中，我们重新审视了使用PTM的CIL，并提出CIL的核心因素是模型更新的适应性和知识转移的普适性。1）我们首先揭示了冻结的PTM已经...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/45.Energy/03.ESN/" title="ESN"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">ESN</div></div><div class="info-2"><div class="info-item-1">0. 摘要本文关注增量学习阶段中普遍存在的性能不平衡问题。为了避免明显的阶段学习瓶颈，我们提出了一种全新的基于阶段隔离的增量学习框架，该框架利用一系列阶段隔离的分类器来执行每个阶段的学习任务，而不受其他阶段的干扰。具体而言，为了公正地聚合多个阶段分类器为一个统一的分类器，我们首先引入了一种温度控制的能量度量来指示阶段分类器的置信度水平。接着，我们提出了一种基于锚点的能量自归一化策略，以确保阶段分类器在相同的能量水平上工作。最后，我们设计了一种基于投票的推理增强策略来实现鲁棒的推理。所提出的方法无需记忆缓冲区，并且可以适用于几乎所有的持续学习场景。我们在四个大型基准数据集上评估了该方法，大...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/40.CIL/32.Feature%20Distillation/01.LUCIR/" title="LUCIR"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">LUCIR</div></div><div class="info-2"><div class="info-item-1">Learning a unified classifier incrementally via rebalancing</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">0. 摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-number">2.</span> <span class="toc-text">1. 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">2. 相关工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BB%8E%E6%97%A7%E7%B1%BB%E5%88%AB%E5%88%B0%E6%96%B0%E7%B1%BB%E5%88%AB"><span class="toc-number">4.</span> <span class="toc-text">3. 从旧类别到新类别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E7%B1%BB%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 类增量学习</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E9%80%9A%E8%BF%87%E7%9F%A5%E8%AF%86%E8%92%B8%E9%A6%8F%E7%9A%84-CIL"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 通过知识蒸馏的 CIL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%AF%B9%E8%AF%AD%E4%B9%89%E5%85%B3%E7%B3%BB%E7%9A%84%E5%BF%BD%E8%A7%86"><span class="toc-number">4.3.</span> <span class="toc-text">3.3 对语义关系的忽视</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E9%80%9A%E8%BF%87%E6%9C%80%E4%BC%98%E4%BC%A0%E8%BE%93%E7%9A%84%E5%8D%8F%E5%90%8C%E4%BC%A0%E8%BE%93"><span class="toc-number">5.</span> <span class="toc-text">4. 通过最优传输的协同传输</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%89%8D%E7%9E%BB%E6%80%A7%E4%BC%A0%E8%BE%93%EF%BC%88PT%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 前瞻性传输（PT）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%9B%9E%E9%A1%BE%E6%80%A7%E4%BC%A0%E8%BE%93%EF%BC%88RT%EF%BC%89"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 回顾性传输（RT）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E9%80%9A%E8%BF%87%E6%9C%80%E4%BC%98%E4%BC%A0%E8%BE%93%E7%9A%84%E8%AF%AD%E4%B9%89%E6%98%A0%E5%B0%84"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 通过最优传输的语义映射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E5%AE%9E%E6%96%BD%E6%8C%87%E5%8D%97"><span class="toc-number">5.4.</span> <span class="toc-text">4.4 实施指南</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%AE%9E%E9%AA%8C"><span class="toc-number">6.</span> <span class="toc-text">5. 实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 实验设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%8E-SOTA-%E6%96%B9%E6%B3%95%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 与 SOTA 方法的比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E5%85%B7%E6%9C%89%E5%A4%A7%E9%87%8F%E5%9F%BA%E7%A1%80%E7%B1%BB%E5%88%AB%E7%9A%84%E5%AE%9E%E9%AA%8C"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 具有大量基础类别的实验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E4%BC%A0%E8%BE%93%E5%88%86%E7%B1%BB%E5%99%A8%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-number">6.4.</span> <span class="toc-text">5.4 传输分类器的可视化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-%E7%8E%B0%E5%AE%9E%E4%B8%96%E7%95%8C%E7%9A%84%E9%9D%A2%E9%83%A8%E8%A1%A8%E6%83%85%E8%AF%86%E5%88%AB"><span class="toc-number">6.5.</span> <span class="toc-text">5.5 现实世界的面部表情识别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6-%E6%B6%88%E8%9E%8D%E7%A0%94%E7%A9%B6"><span class="toc-number">6.6.</span> <span class="toc-text">5.6 消融研究</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E7%BB%93%E8%AE%BA"><span class="toc-number">7.</span> <span class="toc-text">6. 结论</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

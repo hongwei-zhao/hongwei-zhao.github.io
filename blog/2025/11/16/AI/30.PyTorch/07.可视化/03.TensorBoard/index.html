@@ -1,0 +1,399 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>TensorBoard | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="TensorBoard 安装在已安装 PyTorch 的环境下使用 pip 安装即可： 1pip install tensorboardX  也可以使用 PyTorch 自带的 tensorboard 工具，此时不需要额外安装 tensorboard。 TensorBoard 可视化的基本逻辑我们可以将 TensorBoard 看做一个记录员，它可以记录我们指定的数据，包括模型每一层的 featu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorBoard">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/03.TensorBoard/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="TensorBoard 安装在已安装 PyTorch 的环境下使用 pip 安装即可： 1pip install tensorboardX  也可以使用 PyTorch 自带的 tensorboard 工具，此时不需要额外安装 tensorboard。 TensorBoard 可视化的基本逻辑我们可以将 TensorBoard 看做一个记录员，它可以记录我们指定的数据，包括模型每一层的 featu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.350Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="PyTorch">
+<meta property="article:tag" content="可视化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "TensorBoard",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/03.TensorBoard/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.350Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/03.TensorBoard/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'TensorBoard',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">TensorBoard</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">TensorBoard</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.350Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PyTorch/">PyTorch</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/PyTorch/%E5%8F%AF%E8%A7%86%E5%8C%96/">可视化</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="TensorBoard-安装"><a href="#TensorBoard-安装" class="headerlink" title="TensorBoard 安装"></a>TensorBoard 安装</h2><p>在已安装 PyTorch 的环境下使用 pip 安装即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install tensorboardX<br></code></pre></td></tr></table></figure>
+
+<p>也可以使用 PyTorch 自带的 tensorboard 工具，此时不需要额外安装 tensorboard。</p>
+<h2 id="TensorBoard-可视化的基本逻辑"><a href="#TensorBoard-可视化的基本逻辑" class="headerlink" title="TensorBoard 可视化的基本逻辑"></a>TensorBoard 可视化的基本逻辑</h2><p>我们可以将 TensorBoard 看做一个记录员，它可以记录我们指定的数据，包括模型每一层的 feature map，权重，以及训练 loss 等等。TensorBoard 将记录下来的内容保存在一个用户指定的文件夹里，程序不断运行中 TensorBoard 会不断记录。记录下的内容可以通过网页的形式加以可视化。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20240530153509.png"/ style="zoom:30%"></div>
+
+<h2 id="TensorBoard-的配置与启动"><a href="#TensorBoard-的配置与启动" class="headerlink" title="TensorBoard 的配置与启动"></a>TensorBoard 的配置与启动</h2><p>在使用 TensorBoard 前，我们需要先指定一个文件夹供 TensorBoard 保存记录下来的数据。然后调用 tensorboard 中的 SummaryWriter 作为上述“记录员”</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&#x27;&#x27;&#x27;SummaryWriter类&#x27;&#x27;&#x27;</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SummaryWriter</span>(<span class="hljs-title class_ inherited__">object</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, log_dir=<span class="hljs-literal">None</span>, comment=<span class="hljs-string">&#x27;&#x27;</span>, purge_step=<span class="hljs-literal">None</span>, max_queue=<span class="hljs-number">10</span>,</span><br><span class="hljs-params">                 flush_secs=<span class="hljs-number">120</span>, filename_suffix=<span class="hljs-string">&#x27;&#x27;</span></span>):<br><br><span class="hljs-comment"># 参数如下：</span><br>      <span class="hljs-comment"># log_dir：eventfile输出文件夹地址</span><br>      <span class="hljs-comment"># comment：当不指定log_dir时，该参数为文件夹的后缀</span><br>      <span class="hljs-comment"># filename_suffix：eventfile文件名的后缀</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> tensorboardX <span class="hljs-keyword">import</span> SummaryWriter<br><br>writer = SummaryWriter(<span class="hljs-string">&#x27;./runs&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>上面的操作实例化 SummaryWritter 为变量 writer，并指定 writer 的输出目录为当前目录下的”runs”目录。也就是说，之后 tensorboard 记录下来的内容都会保存在 runs。</p>
+<p>如果使用 PyTorch 自带的 tensorboard，则采用如下方式 import：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torch.utils.tensorboard <span class="hljs-keyword">import</span> SummaryWriter<br></code></pre></td></tr></table></figure>
+
+<p>启动 tensorboard 也很简单，在命令行中输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">tensorboard --logdir=/path/to/logs/ --port=xxxx<br></code></pre></td></tr></table></figure>
+
+<p>其中“path&#x2F;to&#x2F;logs&#x2F;“是指定的保存 tensorboard 记录结果的文件路径（等价于上面的“.&#x2F;runs”，port 是外部访问 TensorBoard 的端口号，可以通过访问 ip:port 访问 tensorboard，这一操作和 jupyter notebook 的使用类似。如果不是在服务器远程使用的话则不需要配置 port。</p>
+<p>有时，为了 tensorboard 能够不断地在后台运行，也可以使用 nohup 命令或者 tmux 工具来运行 tensorboard。</p>
+<h2 id="TensorBoard-模型结构可视化"><a href="#TensorBoard-模型结构可视化" class="headerlink" title="TensorBoard 模型结构可视化"></a>TensorBoard 模型结构可视化</h2><p>首先定义模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Net</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(Net, <span class="hljs-variable language_">self</span>).__init__()<br>        <span class="hljs-variable language_">self</span>.conv1 = nn.Conv2d(in_channels=<span class="hljs-number">3</span>,out_channels=<span class="hljs-number">32</span>,kernel_size = <span class="hljs-number">3</span>)<br>        <span class="hljs-variable language_">self</span>.pool = nn.MaxPool2d(kernel_size = <span class="hljs-number">2</span>,stride = <span class="hljs-number">2</span>)<br>        <span class="hljs-variable language_">self</span>.conv2 = nn.Conv2d(in_channels=<span class="hljs-number">32</span>,out_channels=<span class="hljs-number">64</span>,kernel_size = <span class="hljs-number">5</span>)<br>        <span class="hljs-variable language_">self</span>.adaptive_pool = nn.AdaptiveMaxPool2d((<span class="hljs-number">1</span>,<span class="hljs-number">1</span>))<br>        <span class="hljs-variable language_">self</span>.flatten = nn.Flatten()<br>        <span class="hljs-variable language_">self</span>.linear1 = nn.Linear(<span class="hljs-number">64</span>,<span class="hljs-number">32</span>)<br>        <span class="hljs-variable language_">self</span>.relu = nn.ReLU()<br>        <span class="hljs-variable language_">self</span>.linear2 = nn.Linear(<span class="hljs-number">32</span>,<span class="hljs-number">1</span>)<br>        <span class="hljs-variable language_">self</span>.sigmoid = nn.Sigmoid()<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self,x</span>):<br>        x = <span class="hljs-variable language_">self</span>.conv1(x)<br>        x = <span class="hljs-variable language_">self</span>.pool(x)<br>        x = <span class="hljs-variable language_">self</span>.conv2(x)<br>        x = <span class="hljs-variable language_">self</span>.pool(x)<br>        x = <span class="hljs-variable language_">self</span>.adaptive_pool(x)<br>        x = <span class="hljs-variable language_">self</span>.flatten(x)<br>        x = <span class="hljs-variable language_">self</span>.linear1(x)<br>        x = <span class="hljs-variable language_">self</span>.relu(x)<br>        x = <span class="hljs-variable language_">self</span>.linear2(x)<br>        y = <span class="hljs-variable language_">self</span>.sigmoid(x)<br>        <span class="hljs-keyword">return</span> y<br><br>model = Net()<br><span class="hljs-built_in">print</span>(model)<br></code></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs routeros">Net(<br>  (conv1): Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1))<br>  (pool): MaxPool2d(<span class="hljs-attribute">kernel_size</span>=2, <span class="hljs-attribute">stride</span>=2, <span class="hljs-attribute">padding</span>=0, <span class="hljs-attribute">dilation</span>=1, <span class="hljs-attribute">ceil_mode</span>=<span class="hljs-literal">False</span>)<br>  (conv2): Conv2d(32, 64, kernel_size=(5, 5), stride=(1, 1))<br>  (adaptive_pool): AdaptiveMaxPool2d(output_size=(1, 1))<br>  (flatten): Flatten(<span class="hljs-attribute">start_dim</span>=1, <span class="hljs-attribute">end_dim</span>=-1)<br>  (linear1): Linear(<span class="hljs-attribute">in_features</span>=64, <span class="hljs-attribute">out_features</span>=32, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">True</span>)<br>  (relu): ReLU()<br>  (linear2): Linear(<span class="hljs-attribute">in_features</span>=32, <span class="hljs-attribute">out_features</span>=1, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">True</span>)<br>  (sigmoid): Sigmoid()<br>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">writer.add_graph(model, input_to_model = torch.rand(<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">224</span>, <span class="hljs-number">224</span>))<br>writer.close()<br></code></pre></td></tr></table></figure>
+
+<p>展示结果如下（其中框内部分初始会显示为“Net”，需要双击后才会展开）：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202404091258453.png" alt="tb_model"></p>
+<h2 id="TensorBoard-图像可视化"><a href="#TensorBoard-图像可视化" class="headerlink" title="TensorBoard 图像可视化"></a>TensorBoard 图像可视化</h2><p>当我们做图像相关的任务时，可以方便地将所处理的图片在 tensorboard 中进行可视化展示。</p>
+<ul>
+<li>对于单张图片的显示使用 add_image</li>
+<li>对于多张图片的显示使用 add_images</li>
+<li>有时需要使用 torchvision.utils.make_grid 将多张图片拼成一张图片后，用 writer.add_image 显示</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">make_grid</span>(<span class="hljs-params">tensor, nrow=<span class="hljs-number">8</span>, padding=<span class="hljs-number">2</span>,</span><br><span class="hljs-params">              normalize=<span class="hljs-literal">False</span>, <span class="hljs-built_in">range</span>=<span class="hljs-literal">None</span>, scale_each=<span class="hljs-literal">False</span>, pad_value=<span class="hljs-number">0</span></span>):<br><br><span class="hljs-comment"># 参数：</span><br>      <span class="hljs-comment"># tensor：必须是B*C*H*W形式</span><br>      <span class="hljs-comment"># nrow：指定行数</span><br>      <span class="hljs-comment"># padding：图像与图像之间的间隔多少个像素单位pad_value</span><br>      <span class="hljs-comment"># normalize：是否将像素值标准化到（0~255）</span><br>      <span class="hljs-comment"># range：指定标准化范围，先将像素值规范到该range，然后再进行（0~255）转换</span><br>      <span class="hljs-comment"># scale_each：是否对单张图像进行range</span><br>      <span class="hljs-comment"># pad_value：指定padding的大小（黑色0、白色255等等）</span><br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&#x27;&#x27;&#x27;当然也可以直接调用add_image或add_images&#x27;&#x27;&#x27;</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">add_image</span>(<span class="hljs-params">self, tag, img_tensor, global_step=<span class="hljs-literal">None</span>, walltime=<span class="hljs-literal">None</span>, dataformats=<span class="hljs-string">&#x27;CHW&#x27;</span></span>):<br><span class="hljs-comment"># 参数：</span><br>      <span class="hljs-comment"># 非常不方便，只能查看一个图像！！！！</span><br>      <span class="hljs-comment"># 当像素值为【0,1】，则乘以255，缩放回【0,255】；若像素值不在【0,1】之间，默认是0~255范围内。</span><br>      <span class="hljs-comment"># tag：图像的标签名</span><br>      <span class="hljs-comment"># img_tensor:注意shape，可以是3HW、HW3、HW、1HW，但不能是四维的，即有batch！！！！！！！（可以通过add_images解决或torchvision.utils.make_grid()）</span><br>      <span class="hljs-comment"># global_step：x轴</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">add_images</span>(<span class="hljs-params">self, tag, img_tensor, global_step=<span class="hljs-literal">None</span>, walltime=<span class="hljs-literal">None</span>, dataformats=<span class="hljs-string">&#x27;NCHW&#x27;</span></span>):<br><span class="hljs-comment"># 参数：</span><br>      <span class="hljs-comment"># 无法指定行数！！！！！</span><br>      <span class="hljs-comment"># tag：图像的标签名</span><br>      <span class="hljs-comment"># img_tensor:注意shape，可以是NCHW or NHWC，但是，这里Channel在后续处理的时候只能为1或者3！！！！！</span><br>      <span class="hljs-comment"># global_step：x轴</span><br></code></pre></td></tr></table></figure>
+
+<p>这里我们使用 torchvision 的 CIFAR10 数据集为例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torchvision<br><span class="hljs-keyword">from</span> torchvision <span class="hljs-keyword">import</span> datasets, transforms<br><span class="hljs-keyword">from</span> torch.utils.data <span class="hljs-keyword">import</span> DataLoader<br><br>transform_train = transforms.Compose(<br>    [transforms.ToTensor()])<br>transform_test = transforms.Compose(<br>    [transforms.ToTensor()])<br><br>train_data = datasets.CIFAR10(<span class="hljs-string">&quot;.&quot;</span>, train=<span class="hljs-literal">True</span>, download=<span class="hljs-literal">True</span>, transform=transform_train)<br>test_data = datasets.CIFAR10(<span class="hljs-string">&quot;.&quot;</span>, train=<span class="hljs-literal">False</span>, download=<span class="hljs-literal">True</span>, transform=transform_test)<br>train_loader = DataLoader(train_data, batch_size=<span class="hljs-number">64</span>, shuffle=<span class="hljs-literal">True</span>)<br>test_loader = DataLoader(test_data, batch_size=<span class="hljs-number">64</span>)<br><br>images, labels = <span class="hljs-built_in">next</span>(<span class="hljs-built_in">iter</span>(train_loader))<br><br><span class="hljs-comment"># 仅查看一张图片</span><br>writer = SummaryWriter(<span class="hljs-string">&#x27;./pytorch_tb&#x27;</span>)<br>writer.add_image(<span class="hljs-string">&#x27;images[0]&#x27;</span>, images[<span class="hljs-number">0</span>])<br>writer.close()<br><br><span class="hljs-comment"># 将多张图片拼接成一张图片，中间用黑色网格分割</span><br><span class="hljs-comment"># create grid of images</span><br>writer = SummaryWriter(<span class="hljs-string">&#x27;./pytorch_tb&#x27;</span>)<br>img_grid = torchvision.utils.make_grid(images)<br>writer.add_image(<span class="hljs-string">&#x27;image_grid&#x27;</span>, img_grid)<br>writer.close()<br><br><span class="hljs-comment"># 将多张图片直接写入</span><br>writer = SummaryWriter(<span class="hljs-string">&#x27;./pytorch_tb&#x27;</span>)<br>writer.add_images(<span class="hljs-string">&quot;images&quot;</span>,images,global_step = <span class="hljs-number">0</span>)<br>writer.close()<br></code></pre></td></tr></table></figure>
+
+<p>依次运行上面三组可视化（注意不要同时在 notebook 的一个单元格内运行），得到的可视化结果如下（最后运行的结果在最上面）：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202404091258454.png" alt="tb_images"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202404091258455.png" alt="tb_image_gird"></p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202404091258456.png" alt="tb_image"></p>
+<p>另外注意上方 menu 部分，刚刚只有“GRAPHS”栏对应模型的可视化，现在则多出了”IMAGES“栏对应图像的可视化。左侧的滑动按钮可以调整图像的亮度和对比度。</p>
+<p>此外，除了可视化原始图像，TensorBoard 提供的可视化方案自然也适用于我们在 Python 中用 matplotlib 等工具绘制的其他图像，用于展示分析结果等内容。</p>
+<h2 id="TensorBoard-连续变量可视化"><a href="#TensorBoard-连续变量可视化" class="headerlink" title="TensorBoard 连续变量可视化"></a>TensorBoard 连续变量可视化</h2><p>TensorBoard 可以用来可视化连续变量（或时序变量）的变化过程，通过 add_scalar 实现：</p>
+<h3 id="writer-add-scalar"><a href="#writer-add-scalar" class="headerlink" title="writer.add_scalar()"></a>writer.add_scalar()</h3><ul>
+<li>功能：将标量添加到 summary</li>
+<li>参数：<ul>
+<li>tag (string)：数据标识符</li>
+<li>scalar_value (float or string&#x2F;blobname)：要保存的数值</li>
+<li>global_step (int)：全局步值</li>
+<li>walltime (float)：可选参数，用于记录发生的时间，默认为 time.time()</li>
+</ul>
+</li>
+</ul>
+<h3 id="writer-add-scalars"><a href="#writer-add-scalars" class="headerlink" title="writer.add_scalars()"></a>writer.add_scalars()</h3><ul>
+<li>功能：添加多个标量数据到 summary 中</li>
+<li>参数：<ul>
+<li>main_tag (string)：tag 的父级名称</li>
+<li>tag_scalar_dict (dict)：保存 tag 及相应的值的键值对</li>
+<li>global_step (int)：全局步值</li>
+<li>walltime (float) 可选参数，可选参数，用于记录发生的时间，默认为 time.time()</li>
+</ul>
+</li>
+</ul>
+<h3 id="两者区别"><a href="#两者区别" class="headerlink" title="两者区别"></a>两者区别</h3><ul>
+<li>writer.add_scalar() 添加一个标量到 summary</li>
+<li>writer.add_scalars() 可以同时添加多个标量到 summary 中，多个标量需要使用键值对的形式输入</li>
+</ul>
+<h3 id="两种共同点"><a href="#两种共同点" class="headerlink" title="两种共同点"></a>两种共同点</h3><ul>
+<li>第一个参数可简单理解为保存到 tensorboard 日志文件中的标量图像的名称</li>
+<li>第二个参数可简单理解为图像的 y 轴数据</li>
+<li>第三个参数可简单理解为图像的 x 轴数据</li>
+<li>第四个参数都是可选参数，用于记录发生的时间，默认为 time.time()</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">writer = SummaryWriter(<span class="hljs-string">&#x27;./runs&#x27;</span>)<br><span class="hljs-keyword">for</span> _, epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(prog_bar):<br>    ……<br>    writer.add_scalars(<span class="hljs-string">&#x27;Loss/Accuracy&#x27;</span>, &#123;<span class="hljs-string">&#x27;train_loss&#x27;</span>: losses / <span class="hljs-built_in">len</span>(train_loader),<span class="hljs-string">&#x27;train_acc&#x27;</span>: train_acc&#125;, epoch+<span class="hljs-number">1</span>)<br>    writer.flush()  <span class="hljs-comment"># 及时刷新，否则无法同时观看到训练和验证</span><br>writer.close()<br></code></pre></td></tr></table></figure>
+
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20240601104026.png"/></div>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">writer = SummaryWriter(<span class="hljs-string">&#x27;./pytorch_tb&#x27;</span>)<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">500</span>):<br>    x = i<br>    y = x**<span class="hljs-number">2</span><br>    writer.add_scalar(<span class="hljs-string">&quot;x&quot;</span>, x, i) <span class="hljs-comment">#日志中记录x在第step i 的值</span><br>    writer.add_scalar(<span class="hljs-string">&quot;y&quot;</span>, y, i) <span class="hljs-comment">#日志中记录y在第step i 的值</span><br>writer.close()<br></code></pre></td></tr></table></figure>
+
+<p>可视化结果如下：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202404091258457.png" alt="tb_scalar"></p>
+<p>如果想在同一张图中显示多个曲线，则需要分别建立存放子路径（使用 SummaryWriter 指定路径即可自动创建，但需要在 tensorboard 运行目录下），同时在 add_scalar 中修改曲线的标签使其一致即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">writer1 = SummaryWriter(<span class="hljs-string">&#x27;./pytorch_tb/x&#x27;</span>)<br>writer2 = SummaryWriter(<span class="hljs-string">&#x27;./pytorch_tb/y&#x27;</span>)<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">500</span>):<br>    x = i<br>    y = x*<span class="hljs-number">2</span><br>    writer1.add_scalar(<span class="hljs-string">&quot;same&quot;</span>, x, i) <span class="hljs-comment">#日志中记录x在第step i 的值</span><br>    writer2.add_scalar(<span class="hljs-string">&quot;same&quot;</span>, y, i) <span class="hljs-comment">#日志中记录y在第step i 的值</span><br>writer1.close()<br>writer2.close()<br></code></pre></td></tr></table></figure>
+
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202404091258458.png" alt="tb_scalar_twolines"></p>
+<p>这里也可以用一个 writer，但 for 循环中不断创建 SummaryWriter 不是一个好选项。此时左下角的 Runs 部分出现了勾选项，我们可以选择我们想要可视化的曲线。曲线名称对应存放子路径的名称（这里是 x 和 y）。</p>
+<p>这部分功能非常适合损失函数的可视化，可以帮助我们更加直观地了解模型的训练情况，从而确定最佳的 checkpoint。左侧的 Smoothing 滑动按钮可以调整曲线的平滑度，当损失函数震荡较大时，将 Smoothing 调大有助于观察 loss 的整体变化趋势。</p>
+<h2 id="TensorBoard-参数分布可视化"><a href="#TensorBoard-参数分布可视化" class="headerlink" title="TensorBoard 参数分布可视化"></a>TensorBoard 参数分布可视化</h2><blockquote>
+<p>查看权重、梯度，判断是否梯度消失或发散</p>
+</blockquote>
+<p>当我们需要对参数（或向量）的变化，或者对其分布进行研究时，可以方便地用 TensorBoard 来进行可视化，通过 add_histogram 实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">add_histogram</span>(<span class="hljs-params">self, tag, values, global_step=<span class="hljs-literal">None</span>, bins=<span class="hljs-string">&#x27;tensorflow&#x27;</span>, walltime=<span class="hljs-literal">None</span>, max_bins=<span class="hljs-literal">None</span></span>):<br><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>参数</p>
+<ul>
+<li>tag：图像的标签名</li>
+<li>values：要统计的参数</li>
+<li>global_step：y 轴</li>
+<li>注意：values 传入的是多维数组（Tensor 或者 array）而不是标量，如果传入的是高维数组，会将其先扁平到一维，再分桶统计成直方图。统计方法与 numpy.histogram 类似。</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br><span class="hljs-comment"># 创建正态分布的张量模拟参数矩阵</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">norm</span>(<span class="hljs-params">mean, std</span>):<br>    t = std * torch.randn((<span class="hljs-number">100</span>, <span class="hljs-number">20</span>)) + mean<br>    <span class="hljs-keyword">return</span> t<br><br>writer = SummaryWriter(<span class="hljs-string">&#x27;./pytorch_tb/&#x27;</span>)<br><span class="hljs-keyword">for</span> step, mean <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(<span class="hljs-built_in">range</span>(-<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-number">1</span>)):<br>    w = norm(mean, <span class="hljs-number">1</span>)<br>    writer.add_histogram(<span class="hljs-string">&quot;w&quot;</span>, w, step)<br>    writer.flush()<br>writer.close()<br></code></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202404091258459.png" alt="tb_hist"></p>
+<p>可以看到相比之前多了两个选项卡【HISTOGRAMS】和【DISTRIBUTIONS】，其实这两个都是用来查看 histogram 统计结果的，只不过前者以直方形式显示统计结果， 后者提供更为抽象的统计信息。</p>
+<p>在选项卡【HISTOGRAMS】中提供了两种显示模式：OVERLAY 和 OFFSET（左上角），可以看到在不同视角下的直方图分布情况。</p>
+<h3 id="HISTOGRAMS"><a href="#HISTOGRAMS" class="headerlink" title="HISTOGRAMS"></a>HISTOGRAMS</h3><p>在选项卡【HISTOGRAMS】中点开名为 <code>dec_embedding.feature_embedding.Embed.weight</code> 的图像窗口后，如下所示：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20240612102242.png"/></div>
+
+<p>可以看到这张图是展示了该网络层的梯度分布图像。梯度就是个向量，可以看成数组，在统计时会把所有的梯度扁平成一个一维数组，然后用直方图统计起来。</p>
+<p>横轴表示这些梯度中元素值的分布范围，纵轴表示第几轮。</p>
+<p>当把鼠标放在图上时，会出现的一条黑线和数字点，如上图这个黑线就表示第 30 轮的时候统计的直方图，这个黑色数字点表示第 30 轮时有 922 个梯度元素值等于 0.0000175。</p>
+<p>从上图可以得以下信息：</p>
+<ol>
+<li><p>大约在第 15 轮之后，梯度中元素值的分布就不再改变了，且都集中在 0 附近。</p>
+</li>
+<li><p>结合【SCALARS】中 loss 曲线一直保持不变，说明模型可能遇到了训练瓶颈或者鞍点，或者是网络退化？</p>
+</li>
+</ol>
+<h3 id="DISTRIBUTIONS"><a href="#DISTRIBUTIONS" class="headerlink" title="DISTRIBUTIONS"></a>DISTRIBUTIONS</h3><p>【DISTRIBUTIONS】的图和【HISTOGRAMS】图显示的数据源都是相同的，只是用不同的方式对相同的内容进行展示而已。<br>在选项卡【DISTRIBUTIONS】中点开名为<code>dec_embedding.feature_embedding.Embed.weight</code>的图像窗口后，如下图：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/20240612102952.png"/></div>
+
+<p>从上图可以看出以下信息：</p>
+<ol>
+<li><p>总体来看，梯度中元素值在 0 附近颜色普遍最深，也就是说在 0 附近这个区域权重值的取值频次最高。</p>
+</li>
+<li><p>在第 15 轮之后，梯度值出现频次不再改变且总体出现频次范围变大了，说明很有可能梯度的方向一直在来回改变，梯度的元素值不变，我觉得可能是小幅度的梯度震荡。</p>
+</li>
+<li><p>如有错误或者补充，望指出。</p>
+</li>
+</ol>
+<h2 id="服务器端使用-TensorBoard"><a href="#服务器端使用-TensorBoard" class="headerlink" title="服务器端使用 TensorBoard"></a>服务器端使用 TensorBoard</h2><p>一般情况下，我们会连接远程的服务器来对模型进行训练，但由于服务器端是没有浏览器的（纯命令模式），因此，我们需要进行相应的配置，才可以在本地浏览器，使用 tensorboard 查看服务器运行的训练过程。<br>本文提供以下几种方式进行，其中前两种方法都是建立 SSH 隧道，实现远程端口到本机端口的转发，最后一种方法适用于没有下载 Xshell 等 SSH 连接工具的用户</p>
+<ul>
+<li><p>MobaXterm</p>
+<ol>
+<li>在 MobaXterm 点击 Tunneling</li>
+<li>选择 New SSH tunnel，我们会出现以下界面。</li>
+</ol>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202404091258460.png" alt="ssh_tunnel"> 3. 对新建的 SSH 通道做以下设置，第一栏我们选择<code>Local port forwarding</code>，<code>&lt; Remote Server&gt;</code>我们填写<strong>localhost</strong>，<code>&lt; Remote port&gt;</code>填写 6006，tensorboard 默认会在 6006 端口进行显示，我们也可以根据 <strong>tensorboard –logdir&#x3D;&#x2F;path&#x2F;to&#x2F;logs&#x2F; –port&#x3D;xxxx</strong>的命令中的 port 进行修改，<code>&lt; SSH server&gt;</code> 填写我们连接服务器的 ip 地址，<code>&lt;SSH login&gt;</code>填写我们连接的服务器的用户名，<code>&lt;SSH port&gt;</code>填写端口号（通常为 22），<code>&lt; forwarded port&gt;</code>填写的是本地的一个端口号，以便我们后面可以对其进行访问。 4. 设定好之后，点击 Save，然后 Start。在启动 tensorboard，这样我们就可以在本地的浏览器输入<code>http://localhost:6006/</code>对其进行访问了</p>
+</li>
+<li><p>Xshell</p>
+<ol>
+<li>Xshell 的连接方法与 MobaXterm 的连接方式本质上是一样的，具体操作如下：</li>
+<li>连接上服务器后，打开当前会话属性，会出现下图，我们选择隧道，点击添加<br><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202404091258461.png" alt="xhell_ui"></li>
+<li>按照下方图进行选择，其中目标主机代表的是服务器，源主机代表的是本地，端口的选择根据实际情况而定。<br><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202404091258462.png" alt="xhell_set"></li>
+<li>启动 tensorboard，在本地 127.0.0.1:6006 或者 localhost:6006 进行访问。</li>
+</ol>
+</li>
+<li><p>SSH</p>
+<ol>
+<li>该方法是将服务器的 6006 端口重定向到自己机器上来，我们可以在本地的终端里输入以下代码：其中 16006 代表映射到本地的端口，6006 代表的是服务器上的端口。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ssh -L 16006:127.0.0.1:6006 username@remote_server_ip<br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>在服务上使用默认的 6006 端口正常启动 tensorboard</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tensorboard --logdir=xxx --port=6006<br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>在本地的浏览器输入地址</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">127.0.0.1:16006 或者 localhost:16006<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对于 TensorBoard 来说，它的功能是很强大的，可以记录的东西不只限于本节所介绍的范围。</p>
+<p>主要的实现方案是构建一个 SummaryWriter，然后通过<code>add_XXX()</code>函数来实现。</p>
+<p>其实 TensorBoard 的逻辑还是很简单的，它的<strong>基本逻辑就是文件的读写逻辑</strong>，写入想要可视化的数据，然后 TensorBoard 自己会读出来。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Python_Ai_Road/article/details/107704530">TensorBoard 可视化</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zpc1001/p/13322902.html#histogram%E7%9B%B4%E6%96%B9%E5%9B%BE%E6%9F%A5%E7%9C%8B%E6%9D%83%E9%87%8D%E6%A2%AF%E5%BA%A6%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E6%A2%AF%E5%BA%A6%E6%B6%88%E5%A4%B1%E6%88%96%E5%8F%91%E6%95%A3">Pytorch 框架学习—（5）调整学习率、可视化操作</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/sdnuwjw/article/details/107305358">PyTorch 使用 TensorBoard 中的 writer.add_scalar 与 writer.add_scalars 的区别</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38237214/article/details/121118459">【Pytorch】Tensorboard 用法：标量曲线图、直方图、模型结构图</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/03.TensorBoard/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/03.TensorBoard/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/PyTorch/">PyTorch</a><a class="post-meta__tags" href="/blog/tags/%E5%8F%AF%E8%A7%86%E5%8C%96/">可视化</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/05.wandb%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%A7%A3%E9%87%8A/" title="wandb相关参数解释"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">wandb相关参数解释</div></div><div class="info-2"><div class="info-item-1">Epoch与Global Step的关系 Epoch：表示完整遍历一次训练数据集的次数。 Global Step：表示模型已经处理过的batch数量（累计值）。例如：   若训练集有10,000样本，batch_size=32，则每个epoch包含 10,000/32 ≈ 313 个batch。 训练30个epoch后，global_step = 30 * 313 ≈ 9390。    指标记录方式PyTorch Lightning通过以下方式记录指标： (1) 训练指标 (train_loss, train_acc) train_loss：在training_step()中返回的损失值...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/04.%E4%BD%BF%E7%94%A8wandb%E5%8F%AF%E8%A7%86%E5%8C%96%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B/" title="使用wandb可视化训练过程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">使用wandb可视化训练过程</div></div><div class="info-2"><div class="info-item-1">使用 wandb 可视化训练过程Tensorboard 对数据的保存仅限于本地，也很难分析超参数不同对实验的影响。wandb 的出现很好的解决了这些问题。wandb 是 Weights &amp; Biases 的缩写，它能够自动记录模型训练过程中的超参数和输出指标，然后可视化和比较结果，并快速与其他人共享结果。目前它能够和 Jupyter、TensorFlow、Pytorch、Keras、Scikit、fast.ai、LightGBM、XGBoost 一起结合使用。 wandb 的安装wandb 的安装非常简单，我们只需要使用 pip 安装即可。 1pip install wandb ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/01.%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84/" title="可视化网络结构"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">可视化网络结构</div></div><div class="info-2"><div class="info-item-1">可视化网络结构随着深度神经网络做的的发展，网络的结构越来越复杂，我们也很难确定每一层的输入结构，输出结构以及参数等信息，这样导致我们很难在短时间内完成 debug。因此掌握一个可以用来可视化网络结构的工具是十分有必要的。类似的功能在另一个深度学习库 Keras 中可以调用一个叫做model.summary()的 API 来很方便地实现，调用后就会显示我们的模型参数，输入大小，输出大小，模型的整体参数等，但是在 PyTorch 中没有这样一种便利的工具帮助我们可视化我们的模型结构。 为了解决这个问题，人们开发了 torchinfo 工具包 ( torchinfo 是由 torchsumma...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/02.CNN%E5%8D%B7%E7%A7%AF%E5%B1%82%E5%8F%AF%E8%A7%86%E5%8C%96/" title="CNN卷积层可视化"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">CNN卷积层可视化</div></div><div class="info-2"><div class="info-item-1">CNN 可视化卷积神经网络（CNN）是深度学习中非常重要的模型结构，它广泛地用于图像处理，极大地提升了模型表现，推动了计算机视觉的发展和进步。但 CNN 是一个“黑盒模型”，人们并不知道 CNN 是如何获得较好表现的，由此带来了深度学习的可解释性问题。如果能理解 CNN 工作的方式，人们不仅能够解释所获得的结果，提升模型的鲁棒性，而且还能有针对性地改进 CNN 的结构以获得进一步的效果提升。 理解 CNN 的重要一步是可视化，包括可视化特征是如何提取的、提取到的特征的形式以及模型在输入数据上的关注点等。本节我们就从上述三个方面出发，介绍如何在 PyTorch 的框架下完成 CNN 模型的...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/04.%E4%BD%BF%E7%94%A8wandb%E5%8F%AF%E8%A7%86%E5%8C%96%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B/" title="使用wandb可视化训练过程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">使用wandb可视化训练过程</div></div><div class="info-2"><div class="info-item-1">使用 wandb 可视化训练过程Tensorboard 对数据的保存仅限于本地，也很难分析超参数不同对实验的影响。wandb 的出现很好的解决了这些问题。wandb 是 Weights &amp; Biases 的缩写，它能够自动记录模型训练过程中的超参数和输出指标，然后可视化和比较结果，并快速与其他人共享结果。目前它能够和 Jupyter、TensorFlow、Pytorch、Keras、Scikit、fast.ai、LightGBM、XGBoost 一起结合使用。 wandb 的安装wandb 的安装非常简单，我们只需要使用 pip 安装即可。 1pip install wandb ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/07.%E5%8F%AF%E8%A7%86%E5%8C%96/05.wandb%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0%E8%A7%A3%E9%87%8A/" title="wandb相关参数解释"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">wandb相关参数解释</div></div><div class="info-2"><div class="info-item-1">Epoch与Global Step的关系 Epoch：表示完整遍历一次训练数据集的次数。 Global Step：表示模型已经处理过的batch数量（累计值）。例如：   若训练集有10,000样本，batch_size=32，则每个epoch包含 10,000/32 ≈ 313 个batch。 训练30个epoch后，global_step = 30 * 313 ≈ 9390。    指标记录方式PyTorch Lightning通过以下方式记录指标： (1) 训练指标 (train_loss, train_acc) train_loss：在training_step()中返回的损失值...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/102.%E9%9D%A2%E7%BB%8F%E4%B8%8Ebug%E8%A7%A3%E5%86%B3/102.DDP/" title="DDP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">DDP</div></div><div class="info-2"><div class="info-item-1">ValueError: Error initializing torch.distributed using env:&#x2F;&#x2F; rendezvous: environment variable RANK expected, but not set本地pycharm debug报错，该如何修改 这个错误是因为在 本地 PyCharm 调试 分布式训练代码时，没有正确设置环境变量，导致 torch.distributed 无法找到 RANK 变量。  为什么会发生这个错误？在使用 torch.distributed 进行多 GPU 训练时，PyTorch 需要一些环境变量来确...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/30.PyTorch/06.%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/02.DP/" title="DP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">DP</div></div><div class="info-2"><div class="info-item-1"> 单机多卡（ Data Parallel，DP）  简介DataParallel 可以帮助我们（使用单进程控）将模型和数据加载到多个 GPU 中，控制数据在 GPU 之间的流动，协同不同 GPU 上的模型进行并行训练（细粒度的方法有 scatter，gather 等等）。 DP 基于单机多卡，所有设备都负责计算和训练网络，除此之外， device[0] (并非 GPU 真实标号而是输入参数 device_ids 首位) 还要负责整合梯度，更新参数。图 1 即为 GPU 0 作为 device[0] 的例子。从图中我们可以看出，有三个主要过程：  过程一（图中红色部分）：各卡分别计算损失和...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorBoard-%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">TensorBoard 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorBoard-%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9A%84%E5%9F%BA%E6%9C%AC%E9%80%BB%E8%BE%91"><span class="toc-number">2.</span> <span class="toc-text">TensorBoard 可视化的基本逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorBoard-%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%8E%E5%90%AF%E5%8A%A8"><span class="toc-number">3.</span> <span class="toc-text">TensorBoard 的配置与启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorBoard-%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">TensorBoard 模型结构可视化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorBoard-%E5%9B%BE%E5%83%8F%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">TensorBoard 图像可视化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorBoard-%E8%BF%9E%E7%BB%AD%E5%8F%98%E9%87%8F%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-number">6.</span> <span class="toc-text">TensorBoard 连续变量可视化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#writer-add-scalar"><span class="toc-number">6.1.</span> <span class="toc-text">writer.add_scalar()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#writer-add-scalars"><span class="toc-number">6.2.</span> <span class="toc-text">writer.add_scalars()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E8%80%85%E5%8C%BA%E5%88%AB"><span class="toc-number">6.3.</span> <span class="toc-text">两者区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E5%85%B1%E5%90%8C%E7%82%B9"><span class="toc-number">6.4.</span> <span class="toc-text">两种共同点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TensorBoard-%E5%8F%82%E6%95%B0%E5%88%86%E5%B8%83%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-number">7.</span> <span class="toc-text">TensorBoard 参数分布可视化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HISTOGRAMS"><span class="toc-number">7.1.</span> <span class="toc-text">HISTOGRAMS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DISTRIBUTIONS"><span class="toc-number">7.2.</span> <span class="toc-text">DISTRIBUTIONS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E4%BD%BF%E7%94%A8-TensorBoard"><span class="toc-number">8.</span> <span class="toc-text">服务器端使用 TensorBoard</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">9.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">10.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

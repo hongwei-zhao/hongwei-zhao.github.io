@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Self-Attention理论推导 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="理论推导Self-Attention的Input，是一串的Vector，那这个Vector可能是你整个Network的Input，它也可能是某个Hidden Layer的Output，所以用 $a$ 表示它：   Input一排$a$向量以后，Self-Attention要Output另外一排b向量。每一个b都是考虑了所有的a以后才生成出来的，$b^1$ 虑了$a^1 \dots a^4$，$b^">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Self-Attention理论推导">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/04.Transformer/02.Self-Attention%E7%90%86%E8%AE%BA%E6%8E%A8%E5%AF%BC/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="理论推导Self-Attention的Input，是一串的Vector，那这个Vector可能是你整个Network的Input，它也可能是某个Hidden Layer的Output，所以用 $a$ 表示它：   Input一排$a$向量以后，Self-Attention要Output另外一排b向量。每一个b都是考虑了所有的a以后才生成出来的，$b^1$ 虑了$a^1 \dots a^4$，$b^">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.357Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Transformer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Self-Attention理论推导",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/04.Transformer/02.Self-Attention%E7%90%86%E8%AE%BA%E6%8E%A8%E5%AF%BC/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.357Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/04.Transformer/02.Self-Attention%E7%90%86%E8%AE%BA%E6%8E%A8%E5%AF%BC/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Self-Attention理论推导',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">Self-Attention理论推导</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Self-Attention理论推导</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.357Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/Transformer/">Transformer</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="理论推导"><a href="#理论推导" class="headerlink" title="理论推导"></a>理论推导</h2><p>Self-Attention的Input，是一串的Vector，那<strong>这个Vector可能是你整个Network的Input，它也可能是某个Hidden Layer的Output</strong>，所以用 $a$ 表示它：</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002352.png" alt="image-20210404202435331" style="zoom: 50%;" /></div>
+
+<p>Input一排$a$向量以后，Self-Attention要Output另外一排b向量。每一个b都是考虑了所有的a以后才生成出来的，$b^1$ 虑了$a^1 \dots a^4$，$b^2$ 虑了$a^1 \dots a^4$ ，$b^3,b^4$ 是一样，考虑整个input的sequence，才产生出来的。</p>
+<p><strong>关于如何产生$b^1$ 个向量</strong>，这里有一个<strong>特别的机制</strong>，这个机制是根据 $a^1$ 个向量，找出整个很长的sequence里面，到底哪些部分是重要的。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002074.png" alt="image-20210404202942477" style="zoom: 50%;" /></div>
+
+<p><strong>每一个向量跟 $a^1$ 关联的程度，用一个数值叫 $\alpha$ 来表示。</strong></p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002378.png" alt="image-20210404204458431" style="zoom: 60%;" /></div>
+
+<p>计算这个$\alpha$ 数值有各种不同的做法</p>
+<ul>
+<li><p><strong>dot product</strong>：输入的这两个向量分别乘上两个不同的矩阵，左边这个向量乘上$W^q$ 矩阵得到矩阵$q$，右边这个向量乘上$W^k$ 矩阵得到矩阵$k$，再把$q$ $k$ 做dot product，就是把他们做element-wise 的相乘，再全部加起来以后就得到一个 scalar，这个scalar就是$\alpha$，这是一种计算$\alpha$ 方式（Transformer）。</p>
+</li>
+<li><p><strong>Additive</strong>：把同样这两个向量通过$W^q$ $W^k$，得到$q$ $k$，拼接这两个向量，然后输入到Activation Function，再通过一个Transform，然后得到$\alpha$。</p>
+</li>
+</ul>
+<p>那你就要把这边的$a^1$ 跟这边的$a^2 a^3 a^4$，分别都去计算他们之间的关联性，也就是计算他们之间的$\alpha$</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002686.png" alt="image-20210404211656032" style="zoom: 60%;" /></div>
+
+<p>$a^1$ 乘上$W^q$ 到$q^1$，这个$q$ 做<strong>Query</strong>，它就像搜寻相关文章的关键字。接下来，$a^2 a^3 a^4$ 要去把它乘上$W^k$，得到$k$ 个Vector，$k$ 个Vector叫做<strong>Key</strong>，那你把这个<strong>Query $q^1$，跟这个Key $k^2$，算Inner-Product就得到$\alpha$</strong>。我们这边用$\alpha_{1，2}$ 代表说，Query是1提供的，Key是2提供的时候，1跟2他们之间的关联性$\alpha$ 做<strong>Attention的Score</strong>，即Attention的分数，接下来也要跟$a^3,a^4$ 计算</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002138.png" alt="image-20210404211950882" style="zoom: 70%;" /></div>
+
+<p>把$a_3$ 上$W^k$，得到另外一个Key也就是$k^3$，$a^4$ 上$W^k$ 到$k^4$，然后你再把$k^3$ 个Key，跟$q^1$ 个Query做Inner-Product，得到1跟3之间的关联性，得到1跟3的Attention，你把$k^4$ $q^1$ Dot-Product，得到$\alpha_{1，4}$，得到1跟4之间的关联性。其实一般在实作时候，<strong>$q^1$ 会跟自己算关联性</strong>。</p>
+<p>计算出$a^1$ 每一个向量的关联性以后，接下来这边会<strong>接入一个Soft-Max</strong></p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002620.png" alt="image-20210404212945356" style="zoom:80%;" /></div>
+
+<p><strong>这个Soft-Max跟分类的时候的那个Soft-Max是一模一样的</strong>，所以Soft-Max的输出就是一排$\alpha$，所以本来有一排$\alpha$，通过Soft-Max就得到$\alpha’$，这边你<strong>不一定要用Soft-Max，用别的替代也没问题</strong>，比如说有人尝试过说用ReLU，结果发现还比Soft-Max好一点，Soft-Max是最常见的。接下来得到这个$\alpha’$ 后，我们就要根据这个$\alpha’$ 抽取出这个Sequence里面重要的资讯，根据这个$\alpha$ 们已经知道说，哪些向量跟$a^1$ 最有关系的，怎么抽取重要的资讯呢？</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002079.png" alt="image-20210404213559086" style="zoom:80%;" /></div>
+
+<ul>
+<li><p>首先把$a^1$ $a^4$ 每一个向量，乘上$W^v$ 到新的向量，这边分别就是用$v^1 v^2 v^3 v^4$ 表示</p>
+</li>
+<li><p>接下来把这边的$v^1$ $v^4$，每一个向量都去乘上Attention的分数，都去乘上$\alpha’$</p>
+</li>
+<li><p>然后再把它加起来，得到$b^1$</p>
+</li>
+</ul>
+<p>$$<br>b^1&#x3D;\sum_i\alpha’_{1，i}v^i<br>$$</p>
+<p>如果某一个向量它得到的分数越高，比如说如果$a^1$ $a^2$ 关联性很强，这个$\alpha’$ 到的值很大，那我们今天在做Weighted Sum以后，得到的$b^1$ 值，就可能会比较接近$v^2$</p>
+<p>所以<strong>谁的那个Attention的分数最大，谁的那个$v$ 会Dominant你抽出来的结果</strong></p>
+<p>至此，从一整个Sequence 就得到了$b^1$</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002745.png" alt="image-20210409092350116" style="zoom:80%;" /></div>
+
+<p>从这一排 vector 得到 $b^1$，跟从这一排 vector 得到 $b^2$，它的操作是一模一样的。要强调一点是，这边的 $b^1$ 到 $b^4$，它们并<strong>不需要依序产生</strong>，它们是一次同时被计算出来的</p>
+<p>怎么计算这个 $b^2$？我们现在的主角，就变成 $a^2$</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002127.png" alt="image-20210409093744204" style="zoom:80%;" /></div>
+
+<ul>
+<li><p>把 $a^2$ 乘上一个 matrix，变成 $q^2$</p>
+</li>
+<li><p>然后接下来根据 $q^2$，去对$a^1$  $a^4$ 这四个位置，都去计算 attention 的 score</p>
+<ul>
+<li>把 $q^2$ 跟 $k^1$ 做个这个 dot product</li>
+<li>把 $q^2$ 跟 $k^2$ 也做个 dot product</li>
+<li>把 $q^2$ 跟 $k^3$ 也做 dot product</li>
+<li>把 $q^2$ 跟 $k^4$ 也做 dot product，得到四个分数</li>
+</ul>
+</li>
+<li><p>得到这四个分数以后，可能还会做一个 normalization，比如说 softmax，然后得到最后的 attention 的 score，$\alpha’<em>{2，1} \space \alpha’</em>{2，2}  \space \alpha’<em>{2，3}  \space \alpha’</em>{2，4}$ 我们这边用 $\alpha’$ 示经过 normalization 以后的attention score</p>
+</li>
+<li><p>接下来拿这四个数值，分别乘上 $v^1  \space  v^2 \space  v^3 \space  v^4$</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002562.png" alt="image-20210409094148657" style="zoom:80%;" /></div>
+
+<ul>
+<li>把 $\alpha’_{2，1}$ 上 $v^1$</li>
+<li>把 $\alpha’_{2，2}$ 乘上 $v^2$</li>
+<li>把 $\alpha’_{2，3}$ 乘上 $v^3$</li>
+<li>把 $\alpha’_{2，4}$ 乘上 $v^4$，然后全部加起来就是 $b^2$</li>
+</ul>
+<p>$$<br>b^2&#x3D;\sum_iα’_{2，i}v^i<br>$$</p>
+</li>
+</ul>
+<p>同理就可以，由 $a^3$ 乘一个 transform 得到 $q^3$，然后就计算 $b^3$，从 $a^4$ 乘一个 transform 得到 $q^4$，就计算 $b^4$，以上说的是  Self-attention 它运作的过程。</p>
+<h2 id="矩阵形式的Self-Attention"><a href="#矩阵形式的Self-Attention" class="headerlink" title="矩阵形式的Self-Attention"></a>矩阵形式的Self-Attention</h2><p>我们现在已经知道每一个 $a$ 都产生 $q \quad k\quad v$</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202211252144771.png" alt="image-20221125214408693"></p>
+<p>我们每一个 $a$，都乘上一个矩阵，我们这边用 $W^q$ 来表示它，得到 $q^i$，每一个$a$ 要乘上 $W^q$，得到$q^i$，<strong>这些不同的 $a$ 把它合起来，当作一个矩阵来看待</strong></p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002140.png" alt="image-20210409100755718"  /></div>
+
+<p>一样$a^2\space a^3\space a^4$ 都乘上 $W^q$ 得到$q^2 q^3$  $q^4$，那你可以<strong>把 a1 到 a4 拼起来</strong>，看作是一个矩阵，这个矩阵我们用 $I$ 来表示，这个矩阵的四个 column 就是 $a^1$ 到 $a^4$。$I$ 乘上 $W^q$ 就得到另外一个矩阵，我们用 $Q$ 来表示它，这个 $Q$ 就是把 $q^1$ 到 $q^4$ 这四个 vector 拼起来，就是 $Q$ 的四个 column，所以我们从 $a^1$ 到 $a^4$，得到  $q^1$ 到 $q^4$ 操作，其实就是<strong>把$I$ 这个矩阵，乘上另外一个矩阵 $W^q$，得到矩阵$Q$</strong>。$I$ 这个矩阵它里面的 column就是我们 Self-attention 的 input $a^1$ 到 $a^4$；<strong>$W^q$ 是 network 的参数，它是等一下会被learn出来的</strong> ；$Q$ 的四个 column，就是  $q^1$ 到 $q^4$。</p>
+<p>接下来产生 $k$ 跟$v$ 的操作跟 $q$ 是一样的</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002625.png" alt="image-20210409101331347" /></div>
+
+<p>所以每一个 $a$ 得到$q\quad k \quad v$ ，其实就是把输入的这个，vector sequence 乘上三个不同的矩阵。</p>
+<p>下一步是，每一个 $q$ 都会去跟每一个 $k$，去计算这个 inner product，去<strong>得到这个 attention 的分数</strong></p>
+<p>那得到 attention 分数这一件事情，如果从矩阵操作的角度来看，它在做什么样的事情呢</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002193.png" alt="image-20210409102703364" style="zoom: 80%;" /></div>
+
+<p>你就是把 $q^1$ 跟 $k^1$ 做 inner product，得到 $\alpha_{1,1}$，所以 $\alpha_{1,1}$ 是 $q^1$ 跟$k^1$ 的 inner product，那这边我就把这个，$k^1$ 背后的这个向量，把它画成比较宽一点代表说它是 transpose</p>
+<p>同理 $\alpha_{1,2}$ 就是 $q^1$ 跟 $k^2$，做 inner product， $\alpha_{1,3}$  就是 $q^1$ 跟 $k^3$ 做 inner product，这个  $\alpha_{1,4}$  就是 $q^1$ 跟 $k^4$ 做 inner product</p>
+<p>那这个四个步骤的操作，你其实可以把它拼起来，看作是<strong>矩阵跟向量相乘</strong></p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002534.png" alt="image-20210409102832459" /></div>
+
+<p>这四个动作，你可以看作是我们<strong>把 $k^1$ 到 $k^4$ 拼起来，当作是一个矩阵的四个 row</strong></p>
+<p>那我们刚才讲过说，我们不只是 $q^1$，要对$k^1$ 到 $k^4$ 计算 attention，$q^2，q^3，q^4$ 要对 $k^1$ 到 $k^4$ 计算 attention，操作其实都是一模一样的</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002607.png" alt="image-20210409103622596" /></div>
+
+<p>所以这些 <strong>attention 的分数可以看作是两个矩阵的相乘</strong>，一个矩阵它的 row，就是 $k^1$ 到 $k^4$，另外一个矩阵它的 column。 </p>
+<p>我们会在 attention 的分数，<strong>做一下 normalization</strong>，比如说你会做 softmax，你会对这边的每一个 column 做 softmax，让每一个 column 里面的值相加是 1，之前有讲过说，其实这边做 <strong>softmax不是唯一的选项</strong>，你完全可以选择其他的操作，比如说 ReLU 之类的，那其实得到的结果也不会比较差，通过了 softmax 以后，它得到的值有点不一样了，所以我们用 $A’$，来表示通过 softmax 以后的结果。</p>
+<p>我们已经计算出 $A’$，那我们把这个$v^1$ 到 $v^4$ 上这边的 $\alpha$ 以后，就可以得到 $b$</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002010.png" alt="image-20210409105513608" style="zoom:67%;" /></div>
+
+<p><strong>把 $v^1$ 到 $v^4$ 成是V 这个矩阵的四个 column</strong>，把它拼起来，然后接下来你把 $V$ 上$A’$ 的第一个 column 以后，你得到的结果就是 $b^1$</p>
+<p>如果你是用矩阵操作的角度来看它，就是把$A’$ 的第一个 column 乘上 $V$，就得到 $b^1$，然后接下来就是以此类推</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002358.png" alt="image-20210409105935046" style="zoom: 67%;" /></div>
+
+<p>就是以此类推，把 $A’$ 的第二个 column 乘上 $V$，就得到 $b^2$，$A’$ 的第三个 column 乘上 $V$ 就得到 $b^3$，$A’$ 的最后一个 column 乘上 $V$，就得到 $b^4$</p>
+<p>所以我们等于就是把 $A’$ 这个矩阵，乘上 $V$ 这个矩阵，得到 $O$ 这个矩阵，$O$ 这个矩阵里面的每一个 column，就是 Self-attention 的输出，也就是 $b^1$ 到 $b^4$。</p>
+<h2 id="整体回顾Self-attention的矩阵操作"><a href="#整体回顾Self-attention的矩阵操作" class="headerlink" title="整体回顾Self-attention的矩阵操作"></a>整体回顾Self-attention的矩阵操作</h2><div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161002724.png" alt="image-20210409110638357" /></div>
+
+<ul>
+<li><p>$I$ 是 Self-attention 的 input，Self-attention 的 input 是一排的vector，这排 vector 拼起来当作矩阵的 column，就是 $I$</p>
+</li>
+<li><p>这个 input 分别乘上三个矩阵，$W^q$ $W^k$ 跟$W^v$，得到 $Q$ $K$ $V$</p>
+</li>
+<li><p>这三个矩阵，接下来 $Q$ 乘上 $K$ 的 transpose，得到 $A$ 这个矩阵，$A$ 的矩阵你可能会做一些处理，得到 $A’$，那有时候我们会把这个 $A’$，叫做 <strong>Attention Matrix</strong>，<strong>生成 $Q$ 矩阵就是为了得到Attention的score</strong></p>
+</li>
+<li><p>然后接下来你把 $A’$ 再乘上 $V$，就得到 $O$，$O$ 就是 Self-attention 这个 layer 的输出，<strong>生成$V$ 为了计算最后的$b$，也就是矩阵$O$</strong></p>
+</li>
+</ul>
+<p>所以 Self-attention 输入是 $I$，输出是 $O$，那你会发现说虽然是叫 attention，但是<strong>其实 Self-attention layer 里面，唯一需要学的参数，就只有 $W^q$ $W^k$ 跟$W^v$ 而已，只有$W^q$ $W^k$ 跟$W^v$ 未知的</strong>，是需要透过我们的训练资料把它找出来的。但是其他的操作都没有未知的参数，都是我们人为设定好的，都不需要透过 training data 找出来，那这整个就是 Self-attention 的操作，从 $I$ 到 $O$ 就是做了 Self-attention。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/04.Transformer/02.Self-Attention%E7%90%86%E8%AE%BA%E6%8E%A8%E5%AF%BC/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/04.Transformer/02.Self-Attention%E7%90%86%E8%AE%BA%E6%8E%A8%E5%AF%BC/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/Transformer/">Transformer</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/06.Self-Attention%E6%8B%93%E5%B1%95/" title="Self-Attention拓展"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Self-Attention拓展</div></div><div class="info-2"><div class="info-item-1">Self-attention v.s. CNN3我们可以来比较一下，Self-attention 跟 CNN 之间，有什么样的差异或者是关联性 如果我们今天，是用 Self-attention 来处理一张图片，代表说，假设这个是你要考虑的 pixel，那它产生 query，其他 pixel 产生 key，   你今天在做 inner product 的时候，你考虑的不是一个小的receptive field的信息，而是整张影像的资讯 但是今天在做 CNN 的时候，，会画出一个 receptive field，每一个 filter，每一个 neural，只考虑 receptive fiel...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/01.Self-Attention%E6%A6%82%E8%BF%B0/" title="Self-Attention概述"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Self-Attention概述</div></div><div class="info-2"><div class="info-item-1"> self_v7.pptx  Sophisticated Input到目前为止，Network的Input都是一个向量，然后我们的输出，可能是一个数值，这个是Regression，可能是一个类别，这是Classification。   但假设我们遇到更复杂的问题呢，假设我们说输入是多个向量，而且这个输入的向量的数目是会改变的呢? Vector Set as Input 文字处理  假设我们今天Network的输入是一个句子，每一个句子的长度都不一样，每个句子里面词汇的数目都不一样   如果我们把一个句子里面的每一个词汇，都描述成一个向量，那我们的Model的输入，就会是一个Vector ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/30.Bert/" title="Bert"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Bert</div></div><div class="info-2"><div class="info-item-1">Seq2Seq在开始讲解Attention之前，我们先简单回顾一下Seq2Seq模型，传统的机器翻译基本都是基于Seq2Seq模型来做的，该模型分为encoder层与decoder层，并均为RNN或RNN的变体构成，如下图所示：  在encode阶段，第一个节点输入一个词，之后的节点输入的是下一个词与前一个节点的hidden state，最终encoder会输出一个context，这个context又作为decoder的输入，每经过一个decoder的节点就输出一个翻译后的词，并把decoder的hidden state作为下一层的输入。该模型对于短文本的翻译来说效果很好，但是其也存在一...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/07.Transformer%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3_%E5%9B%BE%E8%A7%A3%E6%9C%80%E5%AE%8C%E6%95%B4%E7%89%88/" title="Transformer模型详解_图解最完整版"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Transformer模型详解_图解最完整版</div></div><div class="info-2"><div class="info-item-1">Transformer模型详解（图解最完整版） 前言Transformer由论文《Attention is All You Need》提出，现在是谷歌云TPU推荐的参考模型。论文相关的Tensorflow的代码可以从GitHub获取，其作为Tensor2Tensor包的一部分。哈佛的NLP团队也实现了一个基于PyTorch的版本，并注释该论文。 在本文中，我们将试图把模型简化一点，并逐一介绍里面的核心概念，希望让普通读者也能轻易理解。 Attention is All You Need：Attention Is All You Need 1.Transformer 整体结构首先介绍 Tr...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/11.Transformer%E4%B8%ADFFNs%E7%9A%84%E4%BD%9C%E7%94%A8/" title="Transformer中FFNs的作用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Transformer中FFNs的作用</div></div><div class="info-2"><div class="info-item-1">Transformer 与 FFN 聊一聊 Transformer 中的 FFN  Transformer 的基本单位就是一层 block 这里，一个 block 包含 MSA + FFN，目前公认的说法是， Attention 作为 token-mixer 做 spatial interaction。FFN （又称 MLP）在后面作为 channel-mixer 进一步增强 representation。从 2017 至今，过去绝大部分 Transformer 优化，尤其是针对 NLP tasks 的 Efficient Transformer 都是在 Attention 上的，因为文...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/05.Self-Attention-APP/" title="Self-Attention-APP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Self-Attention-APP</div></div><div class="info-2"><div class="info-item-1">Applications …Self-attention 当然是用得很广，我们已经提过很多次 transformer 这个东西   那我们大家也都知道说，在 NLP 的领域有一个东西叫做 BERT，BERT 里面也用到 Self-attention，所以 Self-attention 在 NLP 上面的应用，是大家都耳熟能详的 但 Self-attention，不是只能用在 NLP 相关的应用上，它还可以用在很多其他的问题上， Self-attention for Speech比如说在做语音的时候，你也可以用 Self-attention，不过在做语音的时候，你可能会对 Self-att...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/08.Transformer%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/" title="Transformer代码实现"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Transformer代码实现</div></div><div class="info-2"><div class="info-item-1">多层Transformer在多层Transformer中，多层编码器先对输入序列进行编码，然后得到最后一个Encoder的输出Memory；解码器先通过Masked Multi-Head Attention对输入序列进行编码，然后将输出结果同Memory通过Encoder-Decoder Attention后得到第1层解码器的输出；接着再将第1层Decoder的输出通过Masked Multi-Head Attention进行编码，最后再将编码后的结果同Memory通过Encoder-Decoder Attention后得到第2层解码器的输出，以此类推得到最后一个Decoder的输出。 ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/06.Self-Attention%E6%8B%93%E5%B1%95/" title="Self-Attention拓展"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Self-Attention拓展</div></div><div class="info-2"><div class="info-item-1">Self-attention v.s. CNN3我们可以来比较一下，Self-attention 跟 CNN 之间，有什么样的差异或者是关联性 如果我们今天，是用 Self-attention 来处理一张图片，代表说，假设这个是你要考虑的 pixel，那它产生 query，其他 pixel 产生 key，   你今天在做 inner product 的时候，你考虑的不是一个小的receptive field的信息，而是整张影像的资讯 但是今天在做 CNN 的时候，，会画出一个 receptive field，每一个 filter，每一个 neural，只考虑 receptive fiel...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%90%86%E8%AE%BA%E6%8E%A8%E5%AF%BC"><span class="toc-number">1.</span> <span class="toc-text">理论推导</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A9%E9%98%B5%E5%BD%A2%E5%BC%8F%E7%9A%84Self-Attention"><span class="toc-number">2.</span> <span class="toc-text">矩阵形式的Self-Attention</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E5%9B%9E%E9%A1%BESelf-attention%E7%9A%84%E7%9F%A9%E9%98%B5%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">整体回顾Self-attention的矩阵操作</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

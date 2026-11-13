@@ -1,0 +1,299 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>优化器 | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一个框架回顾优化算法深度学习优化算法经历了 SGD -&gt; SGDM -&gt; NAG -&gt;AdaGrad -&gt; AdaDelta -&gt; Adam -&gt; Nadam 这样的发展历程。 首先定义：待优化参数： $w$ ，目标函数： $f(w)$ ，初始学习率 $\alpha$。 而后，开始进行迭代优化。在每个epoch $t$ ：  计算目标函数关于当前参数的梯度： $">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优化器">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/05.%E4%BC%98%E5%8C%96%E5%99%A8/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="一个框架回顾优化算法深度学习优化算法经历了 SGD -&gt; SGDM -&gt; NAG -&gt;AdaGrad -&gt; AdaDelta -&gt; Adam -&gt; Nadam 这样的发展历程。 首先定义：待优化参数： $w$ ，目标函数： $f(w)$ ，初始学习率 $\alpha$。 而后，开始进行迭代优化。在每个epoch $t$ ：  计算目标函数关于当前参数的梯度： $">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.354Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="MLTutorials">
+<meta property="article:tag" content="模型优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "优化器",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/05.%E4%BC%98%E5%8C%96%E5%99%A8/",
+  "image": "https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.354Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/05.%E4%BC%98%E5%8C%96%E5%99%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '优化器',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">优化器</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">优化器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.354Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/MLTutorials/">MLTutorials</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/MLTutorials/%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/">模型优化</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="一个框架回顾优化算法"><a href="#一个框架回顾优化算法" class="headerlink" title="一个框架回顾优化算法"></a>一个框架回顾优化算法</h2><p>深度学习优化算法经历了 SGD -&gt; SGDM -&gt; NAG -&gt;AdaGrad -&gt; AdaDelta -&gt; Adam -&gt; Nadam 这样的发展历程。</p>
+<p>首先定义：待优化参数： $w$ ，目标函数： $f(w)$ ，初始学习率 $\alpha$。</p>
+<p>而后，开始进行迭代优化。在每个epoch $t$ ：</p>
+<ol>
+<li>计算目标函数关于当前参数的梯度： $g_t&#x3D;\nabla f(w_t)$</li>
+<li>根据历史梯度计算一阶动量和二阶动量：$m_t &#x3D; \phi(g_1, g_2, \cdots, g_t); V_t &#x3D; \psi(g_1, g_2, \cdots, g_t)$，</li>
+<li>计算当前时刻的下降梯度： $\eta_t &#x3D; \alpha \cdot m_t &#x2F; \sqrt{V_t}$</li>
+<li>根据下降梯度进行更新： $w_{t+1} &#x3D; w_t - \eta_t$</li>
+</ol>
+<p>步骤3、4对于各个算法都是一致的，主要的差别就体现在1和2上。</p>
+<h2 id="SGD"><a href="#SGD" class="headerlink" title="SGD"></a>SGD</h2><p>SGD没有动量的概念，也就是说：</p>
+<p>$$m_t &#x3D; g_t; V_t &#x3D; I^2$$</p>
+<p>代入步骤3，可以看到下降梯度就是最简单的</p>
+<p>$$\eta_t &#x3D; \alpha \cdot g_t $$</p>
+<p>SGD最大的缺点是下降速度慢，而且可能会在沟壑的两边持续震荡，停留在一个局部最优点。</p>
+<h2 id="SGD-with-Momentum"><a href="#SGD-with-Momentum" class="headerlink" title="SGD with Momentum"></a>SGD with Momentum</h2><p>为了抑制SGD的震荡，SGDM认为梯度下降过程可以加入惯性。下坡的时候，如果发现是陡坡，那就利用惯性跑的快一些。SGDM全称是SGD with momentum，在SGD基础上引入了一阶动量：</p>
+<p>$$m_t &#x3D; \beta_1 \cdot m_{t-1} + (1-\beta_1)\cdot g_t$$ </p>
+<p>一阶动量是各个时刻梯度方向的指数移动平均值，约等于最近 $1&#x2F;(1-\beta_1)$ 个时刻的梯度向量和的平均值。</p>
+<p>也就是说，$t$ 时刻的下降方向，不仅由当前点的梯度方向决定，而且由此前累积的下降方向决定。 $\beta_1$ 的经验值为0.9，这就意味着下降方向主要是此前累积的下降方向，并略微偏向当前时刻的下降方向。想象高速公路上汽车转弯，在高速向前的同时略微偏向，急转弯可是要出事的。</p>
+<h2 id="SGD-with-Nesterov-Acceleration"><a href="#SGD-with-Nesterov-Acceleration" class="headerlink" title="SGD with Nesterov Acceleration"></a>SGD with Nesterov Acceleration</h2><p>SGD 还有一个问题是困在局部最优的沟壑里面震荡。想象一下你走到一个盆地，四周都是略高的小山，你觉得没有下坡的方向，那就只能待在这里了。可是如果你爬上高地，就会发现外面的世界还很广阔。因此，我们不能停留在当前位置去观察未来的方向，而要向前一步、多看一步、看远一些。</p>
+<p>NAG全称Nesterov Accelerated Gradient，是在SGD、SGD-M的基础上的进一步改进，改进点在于步骤1。我们知道在时刻t的主要下降方向是由累积动量决定的，自己的梯度方向说了也不算，那与其看当前梯度方向，不如先看看如果跟着累积动量走了一步，那个时候再怎么走。因此，NAG在步骤1，不计算当前位置的梯度方向，而是计算如果按照累积动量走了一步，那个时候的下降方向：</p>
+<p>$g_t&#x3D;\nabla f(w_t-\alpha \cdot m_{t-1} &#x2F; \sqrt{V_{t-1&#125;&#125;)$ </p>
+<p>然后用下一个点的梯度方向，与历史累积动量相结合，计算步骤2中当前时刻的累积动量。</p>
+<h2 id="AdaGrad"><a href="#AdaGrad" class="headerlink" title="AdaGrad"></a>AdaGrad</h2><p>此前我们都没有用到二阶动量。二阶动量的出现，才意味着“自适应学习率”优化算法时代的到来。SGD及其变种以同样的学习率更新每个参数，但深度神经网络往往包含大量的参数，这些参数并不是总会用得到（想想大规模的embedding）。对于经常更新的参数，我们已经积累了大量关于它的知识，不希望被单个样本影响太大，希望学习速率慢一些；对于偶尔更新的参数，我们了解的信息太少，希望能从每个偶然出现的样本身上多学一些，即学习速率大一些。</p>
+<p>怎么样去度量历史更新频率呢？那就是二阶动量——该维度上，迄今为止所有梯度值的平方和：</p>
+<p>$V_t &#x3D; \sum_{\tau&#x3D;1}^{t} g_\tau^2$</p>
+<p>我们再回顾一下步骤3中的下降梯度：</p>
+<p>$\eta_t &#x3D; \alpha \cdot m_t &#x2F; \sqrt{V_t}$ </p>
+<p>可以看出，此时实质上的学习率由 $ \alpha$ 变成了 $ \alpha &#x2F; \sqrt{V_t}$ 。 一般为了避免分母为0，会在分母上加一个小的平滑项。因此$\sqrt{V_t}$ 是恒大于0的，而且参数更新越频繁，二阶动量越大，学习率就越小。</p>
+<p>这一方法在稀疏数据场景下表现非常好。但也存在一些问题：因为$\sqrt{V_t}$ 是单调递增的，会使得学习率单调递减至0，可能会使得训练过程提前结束，即便后续还有数据也无法学到必要的知识。</p>
+<h2 id="AdaDelta-RMSProp"><a href="#AdaDelta-RMSProp" class="headerlink" title="AdaDelta &#x2F; RMSProp"></a>AdaDelta &#x2F; RMSProp</h2><p>由于AdaGrad单调递减的学习率变化过于激进，我们考虑一个改变二阶动量计算方法的策略：不累积全部历史梯度，而只关注过去一段时间窗口的下降梯度。这也就是AdaDelta名称中Delta的来历。</p>
+<p>修改的思路很简单。前面我们讲到，指数移动平均值大约就是过去一段时间的平均值，因此我们用这一方法来计算二阶累积动量：</p>
+<p>$V_t &#x3D; \beta_2 * V_{t-1} + (1-\beta_2) g_t^2$ </p>
+<p>这就避免了二阶动量持续累积、导致训练过程提前结束的问题了。</p>
+<h2 id="Adam"><a href="#Adam" class="headerlink" title="Adam"></a>Adam</h2><p>谈到这里，Adam和Nadam的出现就很自然而然了——它们是前述方法的集大成者。我们看到，SGD-M在SGD基础上增加了一阶动量，AdaGrad和AdaDelta在SGD基础上增加了二阶动量。把一阶动量和二阶动量都用起来，就是Adam了——Adaptive + Momentum。</p>
+<p>SGD的一阶动量：</p>
+<p>$m_t &#x3D; \beta_1 \cdot m_{t-1} + (1-\beta_1)\cdot g_t$</p>
+<p>加上AdaDelta的二阶动量：</p>
+<p>$V_t &#x3D; \beta_2 * V_{t-1} + (1-\beta_2) g_t^2$</p>
+<p>优化算法里最常见的两个超参数 $ \beta_1, \beta_2$ 就都在这里了，前者控制一阶动量，后者控制二阶动量。</p>
+<h2 id="AdamW"><a href="#AdamW" class="headerlink" title="AdamW"></a>AdamW</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/4oq1L3hdWWby9lERDZiF6g">AdamW与Adam的比较，可能AdamW依然是最好的优化器</a></p>
+<ol>
+<li>AdamW 的实现方法与传统的 L2 正则化不同，它直接对权重进行衰减，而不是将其加到损失函数上。 </li>
+<li>实验结果显示，适当调整的 Adam 优化器可以达到或超过 SGD 加 momentum 的准确率，并且通常训练速度更快。 </li>
+<li>在使用 Adam 优化器时，需要适当调整正则化超参数，以确保模型的泛化能力。 <ul>
+<li><strong>初始学习率（lr）</strong>:通常从较大的学习率开始，例如0.001到0.01，然后根据需要进行调整。对于AdamW，可以使用学习率预热（gradual warm-up）策略，逐渐增加学习率，以避免初始训练阶段的不稳定。</li>
+<li><strong>权重衰减（wd）</strong>: 权重衰减通常设置得较小，例如1e-2到1e-5。在使用AdamW时，wd的值可能需要比在SGD中使用L2正则化时大得多。</li>
+<li><strong>动量参数（beta1）</strong>: beta1的常用值在0.9到0.99之间。有时候，可以在训练过程中根据学习率调整beta1，例如使用1cycle策略，在学习率增加时降低beta1，学习率减少时恢复高值。</li>
+<li><strong>二次动量参数（beta2）</strong>: beta2通常被设置得较高，如0.999，以便更好地平滑梯度的估计。对于非常长的训练，有时会选择更接近1的值。</li>
+<li><strong>epsilon（ε）</strong>: 通常设置为一个非常小的值，如1e-8，以确保数值稳定性。</li>
+<li><strong>学习率衰减（lr decay）</strong>: 可以使用步进衰减、余弦衰减或余弦余弦衰减等策略，以逐渐降低学习率，有助于模型收敛。</li>
+<li><strong>批量大小（batch size）</strong>: 选择合适的批量大小对于训练稳定性和计算效率很重要。批量大小通常受到硬件（尤其是GPU内存）的限制。</li>
+<li><strong>训练周期（epochs）</strong>: 确保模型有足够的训练周期来收敛。对于使用AdamW的超级收敛（super-convergence），可能需要的周期比使用SGD时少得多。</li>
+<li><strong>权重初始化</strong>: 使用合适的权重初始化方法，如He初始化或Xavier初始化，可以帮助模型更快地收敛。</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<h2 id="Nadam"><a href="#Nadam" class="headerlink" title="Nadam"></a>Nadam</h2><p>最后是Nadam。我们说Adam是集大成者，但它居然遗漏了Nesterov，这还能忍？必须给它加上，按照NAG的步骤1：</p>
+<p>$g_t&#x3D;\nabla f(w_t-\alpha \cdot m_{t-1} &#x2F; \sqrt{V_t})$ </p>
+<p>这就是Nesterov + Adam &#x3D; Nadam了。</p>
+<p>说到这里，大概可以理解为什么经常有人说 Adam &#x2F; Nadam 目前最主流、最好用的优化算法了。新手上路，先拿来一试，收敛速度嗖嗖滴，效果也是杠杠滴。</p>
+<p>那为什么Adam还老招人黑，被学术界一顿鄙夷？难道只是为了发paper灌水吗？</p>
+<p>请继续阅读：</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32262540">https://zhuanlan.zhihu.com/p/32262540</a> </p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32338983">https://zhuanlan.zhihu.com/p/32338983</a></p>
+<hr>
+<h2 id="补充：指数移动平均值的偏差修正"><a href="#补充：指数移动平均值的偏差修正" class="headerlink" title="补充：指数移动平均值的偏差修正"></a>补充：指数移动平均值的偏差修正</h2><p>前面我们讲到，一阶动量和二阶动量都是按照指数移动平均值进行计算的：</p>
+<p>$m_t &#x3D; \beta_1 \cdot m_{t-1} + (1-\beta_1)\cdot g_t$ </p>
+<p>$V_t &#x3D; \beta_2 \cdot V_{t-1} + (1-\beta_2) \cdot g_t^2$ </p>
+<p>实际使用过程中，参数的经验值是</p>
+<p>$\beta_1&#x3D;0.9, \beta_2&#x3D;0.999$ </p>
+<p>初始化：</p>
+<p>$m_0&#x3D;0, V_0&#x3D;0$ </p>
+<p>这个时候我们看到，在初期， $m_t, V_t$ 都会接近于0，这个估计是有问题的。因此我们常常根据下式进行误差修正：</p>
+<p>$\tilde{m}_t &#x3D; m_t &#x2F; (1-\beta_1^t)$ </p>
+<p>$\tilde{V}_t &#x3D; V_t &#x2F; (1-\beta_2^t)$ </p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32230623">一个框架看懂优化算法之异同 SGD&#x2F;AdaGrad&#x2F;Adam</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/05.%E4%BC%98%E5%8C%96%E5%99%A8/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/05.%E4%BC%98%E5%8C%96%E5%99%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/MLTutorials/">MLTutorials</a><a class="post-meta__tags" href="/blog/tags/%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/">模型优化</a></div><div class="post-share"><div class="social-share" data-image="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/104.PyTorch%E4%BC%98%E5%8C%96%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%AE%AD%E7%BB%83%E7%9A%8417%E7%A7%8D%E6%96%B9%E6%B3%95/" title="PyTorch优化神经网络训练的17种方法"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">PyTorch优化神经网络训练的17种方法</div></div><div class="info-2"><div class="info-item-1">PyTorch | 优化神经网络训练的17种方法 https://mp.weixin.qq.com/s/WUN0150C7Zk1Add7y22jDw   机器学习算法那些事   来源｜efficientdl.com 作者｜LORENZ KUHN 报道｜人工智能前沿讲习 本文介绍在使用 PyTorch 训练深度模型时最省力、最有效的 17 种方法。该文所提方法，都是假设你在 GPU 环境下训练模型。具体内容如下。 考虑换一种学习率 schedule 学习率 schedule 的选择对模型的收敛速度和泛化能力有很大的影响。Leslie N. Smith 等人在论文《Cyclical Lear...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/04.weight_decay/" title="weight_decay"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">weight_decay</div></div><div class="info-2"><div class="info-item-1"> 权重衰减weight_decay参数从入门到精通  1 什么是权重衰减(Weight Decay)Weight Decay是一个正则化技术，作用是抑制模型的过拟合，以此来提高模型的泛化性。 它是通过给损失函数增加模型权重L2范数的惩罚(penalty)来让模型权重不要太大，以此来减小模型的复杂度，从而抑制模型的过拟合。 看完上面那句话，可能很多人已经蒙圈了，这是在说啥。后面我会逐步进行解释，将会逐步回答以下问题：  什么是正则化？ Weight Decay的减小模型参数的思想 L1范数惩罚项和L2范数惩罚项是什么？ 为什么Weight Decay参数是在优化器上，而不是在Loss上。 ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/106.%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E8%B0%83%E5%8F%82%E8%87%AA%E5%8A%A8%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95/" title="机器学习调参自动优化方法"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">机器学习调参自动优化方法</div></div><div class="info-2"><div class="info-item-1"> 机器学习调参自动优化方法https://mp.weixin.qq.com/s/qFhRjBBXXwCKnyPIh5GSiQ?poc_token=HCyh4majWbZFpbSQ_WGjood0-_0r1y-AtxO64-tQ  Datawhale   以下文章来源于宅码  ，作者Ai 宅码 .  print(“Hello, world!”) 本文旨在介绍当前被大家广为所知的超参自动优化方法，像网格搜索、随机搜索、贝叶斯优化和Hyperband，并附有相关的样例代码供大家学习。 一、网格搜索(Grid Search)   网格搜索是暴力搜索，在给定超参搜索空间内，尝试所有超参组合，最后搜...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/104.PyTorch%E4%BC%98%E5%8C%96%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%AE%AD%E7%BB%83%E7%9A%8417%E7%A7%8D%E6%96%B9%E6%B3%95/" title="PyTorch优化神经网络训练的17种方法"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">PyTorch优化神经网络训练的17种方法</div></div><div class="info-2"><div class="info-item-1">PyTorch | 优化神经网络训练的17种方法 https://mp.weixin.qq.com/s/WUN0150C7Zk1Add7y22jDw   机器学习算法那些事   来源｜efficientdl.com 作者｜LORENZ KUHN 报道｜人工智能前沿讲习 本文介绍在使用 PyTorch 训练深度模型时最省力、最有效的 17 种方法。该文所提方法，都是假设你在 GPU 环境下训练模型。具体内容如下。 考虑换一种学习率 schedule 学习率 schedule 的选择对模型的收敛速度和泛化能力有很大的影响。Leslie N. Smith 等人在论文《Cyclical Lear...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/102.%E5%90%84%E7%A7%8DOptimizer%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95%E5%9B%9E%E9%A1%BE%E5%92%8C%E6%80%BB%E7%BB%93/" title="各种Optimizer梯度下降优化算法回顾和总结"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">各种Optimizer梯度下降优化算法回顾和总结</div></div><div class="info-2"><div class="info-item-1">论文阅读笔记：各种Optimizer梯度下降优化算法回顾和总结 不管是使用PyTorch还是TensorFlow，用多了Optimizer优化器封装好的函数，对其内部使用的优化算法却没有仔细研究过，也很难对其优点和缺点进行实用的解释。所以打算以这一篇论文为主线并结合多篇优秀博文，回顾和总结目前主流的优化算法，对于没有深入了解过的算法，正好借这个机会学习一下。 写在前面当前使用的许多优化算法，是对梯度下降法的衍生和优化。在微积分中，对多元函数的参数求 $\theta$ 偏导数，把求得的各个参数的导数以向量的形式写出来就是梯度。梯度就是函数变化最快的地方。梯度下降是迭代法的一种，在求解机器学...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/109.%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/" title="梯度下降"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">梯度下降</div></div><div class="info-2"><div class="info-item-1">梯度下降解决下面的最优化问题：$$\theta^∗&#x3D; \underset{ \theta }{\operatorname{arg\ min&#125;&#125;  L(\theta) \tag1$$  $L$ :lossfunction（损失函数） $\theta$ :parameters（参数）  这里的parameters是复数，即 $\theta$ 指代一系列参数，比如 $w$ 和 $b$ 。 我们要找一组参数 $\theta$ ，让损失函数越小越好，这个问题可以用梯度下降法解决： 假设 $\theta$ 有里面有两个参数 $\theta_1, \theta_2$随机选...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/103.AI%E7%AE%97%E6%B3%95%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%BF%85%E5%A4%87%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%9C%80%E4%BC%98%E5%8C%96%E4%B8%8A/" title="AI算法工程师必备的深度学习最优化上"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">AI算法工程师必备的深度学习最优化上</div></div><div class="info-2"><div class="info-item-1"> AI | 算法工程师必备的深度学习–最优化（上） https://mp.weixin.qq.com/s/DuB0Fvj7ubbg4QudpH8fAw  原创  运筹OR帷幄   运筹OR帷幄   ** ** ** ↑↑↑↑↑  ** ** 点击上方  ** ** 蓝色字  ** ** 关注我们！  **      『运筹OR帷幄』原创 ** 作者：华校专  ** 作者信息： 华校专，曾任阿里巴巴资深算法工程师、智易科技首席算法研究员，现任腾讯高级研究员，《Python 大战机器学习》的作者。 编者按： 算法工程师必备系列更新啦！继上次推出了算法工程师必备的数学基础后，小编继续整理了必要...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/01.MLTutorials/08.%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96/04.weight_decay/" title="weight_decay"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">weight_decay</div></div><div class="info-2"><div class="info-item-1"> 权重衰减weight_decay参数从入门到精通  1 什么是权重衰减(Weight Decay)Weight Decay是一个正则化技术，作用是抑制模型的过拟合，以此来提高模型的泛化性。 它是通过给损失函数增加模型权重L2范数的惩罚(penalty)来让模型权重不要太大，以此来减小模型的复杂度，从而抑制模型的过拟合。 看完上面那句话，可能很多人已经蒙圈了，这是在说啥。后面我会逐步进行解释，将会逐步回答以下问题：  什么是正则化？ Weight Decay的减小模型参数的思想 L1范数惩罚项和L2范数惩罚项是什么？ 为什么Weight Decay参数是在优化器上，而不是在Loss上。 ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E6%A1%86%E6%9E%B6%E5%9B%9E%E9%A1%BE%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">一个框架回顾优化算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SGD"><span class="toc-number">2.</span> <span class="toc-text">SGD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SGD-with-Momentum"><span class="toc-number">3.</span> <span class="toc-text">SGD with Momentum</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SGD-with-Nesterov-Acceleration"><span class="toc-number">4.</span> <span class="toc-text">SGD with Nesterov Acceleration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AdaGrad"><span class="toc-number">5.</span> <span class="toc-text">AdaGrad</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AdaDelta-RMSProp"><span class="toc-number">6.</span> <span class="toc-text">AdaDelta &#x2F; RMSProp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adam"><span class="toc-number">7.</span> <span class="toc-text">Adam</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AdamW"><span class="toc-number">8.</span> <span class="toc-text">AdamW</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nadam"><span class="toc-number">9.</span> <span class="toc-text">Nadam</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9A%E6%8C%87%E6%95%B0%E7%A7%BB%E5%8A%A8%E5%B9%B3%E5%9D%87%E5%80%BC%E7%9A%84%E5%81%8F%E5%B7%AE%E4%BF%AE%E6%AD%A3"><span class="toc-number">10.</span> <span class="toc-text">补充：指数移动平均值的偏差修正</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">11.</span> <span class="toc-text">References</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
