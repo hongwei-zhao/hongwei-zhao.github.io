@@ -1,0 +1,444 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Temp | Hongwei Zhao's Blog</title><meta name="author" content="Hongwei Zhao"><meta name="copyright" content="Hongwei Zhao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="A High-Level Look首先将这个模型看成是一个黑箱操作。在机器翻译中，就是输入一种语言，输出另一种语言。     那么拆开这个黑箱，我们可以看到它是由编码组件、解码组件和它们之间的连接组成。   编码组件部分由一堆编码器（encoder）构成（论文中是将6个编码器叠在一起——数字6没有什么神奇之处，你也可以尝试其他数字）。解码组件部分也是由相同数量（与编码器对应）的解码器（decode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Temp">
+<meta property="og:url" content="https://hongwei-zhao.github.io/blog/2025/11/16/AI/04.Transformer/101.Temp/index.html">
+<meta property="og:site_name" content="Hongwei Zhao&#39;s Blog">
+<meta property="og:description" content="A High-Level Look首先将这个模型看成是一个黑箱操作。在机器翻译中，就是输入一种语言，输出另一种语言。     那么拆开这个黑箱，我们可以看到它是由编码组件、解码组件和它们之间的连接组成。   编码组件部分由一堆编码器（encoder）构成（论文中是将6个编码器叠在一起——数字6没有什么神奇之处，你也可以尝试其他数字）。解码组件部分也是由相同数量（与编码器对应）的解码器（decode">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png">
+<meta property="article:published_time" content="2025-11-16T13:46:24.000Z">
+<meta property="article:modified_time" content="2026-03-01T08:35:20.357Z">
+<meta property="article:author" content="Hongwei Zhao">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Transformer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hongwei-zhao.github.io/blog/img/homepage-bg.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Temp",
+  "url": "https://hongwei-zhao.github.io/blog/2025/11/16/AI/04.Transformer/101.Temp/",
+  "image": "https://hongwei-zhao.github.io/blog/img/homepage-bg.png",
+  "datePublished": "2025-11-16T13:46:24.000Z",
+  "dateModified": "2026-03-01T08:35:20.357Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Hongwei Zhao",
+      "url": "https://hongwei-zhao.github.io/blog"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/04.Transformer/101.Temp/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":400,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3436","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Temp',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/blog/css/categories-cards.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/blog/img/homepage-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/blog/"><span class="site-name">Hongwei Zhao's Blog</span></a><a class="nav-page-title" href="/blog/"><span class="site-name">Temp</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-graduation-cap"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/blog/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></li><li><a class="site-page child" href="/blog/video/"><i class="fa-fw fas fa-video"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/blog/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Temp</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-16T13:46:24.000Z" title="发表于 2025-11-16 21:46:24">2025-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-01T08:35:20.357Z" title="更新于 2026-03-01 16:35:20">2026-03-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/">AI</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/blog/categories/AI/Transformer/">Transformer</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="A-High-Level-Look"><a href="#A-High-Level-Look" class="headerlink" title="A High-Level Look"></a>A High-Level Look</h2><p>首先将这个模型看成是一个黑箱操作。在机器翻译中，就是输入一种语言，输出另一种语言。</p>
+<img style="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202311042102645.png" alt="image-20211204100325983" style="zoom:40%;" align=center/>
+
+
+
+<p>那么拆开这个黑箱，我们可以看到它是由编码组件、解码组件和它们之间的连接组成。</p>
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161003042.png" alt="image-20211204100818589" style="zoom: 40%;" align=center/>
+
+<p>编码组件部分由一堆编码器（encoder）构成（论文中是将6个编码器叠在一起——数字6没有什么神奇之处，你也可以尝试其他数字）。解码组件部分也是由相同数量（与编码器对应）的解码器（decoder）组成的。</p>
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161003154.png" alt="image-20211204100940669" style="zoom: 70%;" />
+
+<p>所有的编码器在结构上都是相同的，但它们没有共享参数。每个编码器都可以分解成两个子层。</p>
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161003617.png" alt="image-20211204101019196" style="zoom:30%;" />
+
+<p>从编码器输入的句子首先会经过一个自注意力（self-attention）层，这层帮助编码器在对每个单词编码时关注输入句子的其他单词。自注意力层的输出会传递到前馈（feed-forward）神经网络中。每个位置的单词对应的前馈神经网络都完全一样（译注：另一种解读就是一层窗口为一个单词的一维卷积神经网络）。</p>
+<p>解码器中也有编码器的自注意力（self-attention）层和前馈（feed-forward）层。除此之外，这两个层之间还有一个注意力层，用来关注输入句子的相关部分（和seq2seq模型的注意力作用相似）。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161003072.png" alt="image-20211204112415496"></p>
+<h2 id="Bringing-The-Tensors-Into-The-Picture"><a href="#Bringing-The-Tensors-Into-The-Picture" class="headerlink" title="Bringing The Tensors Into The Picture"></a>Bringing The Tensors Into The Picture</h2><p>像大部分NLP应用一样，我们首先将每个输入单词通过词嵌入算法转换为词向量。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161003304.png" alt="image-20211204112944004"></p>
+<p>每个单词都被嵌入为512维的向量，我们用这些简单的方框来表示这些向量。</p>
+<p>词嵌入过程只发生在最底层的编码器中。所有的编码器都有一个相同的特点，即它们接收一个向量列表，列表中的每个向量大小为512维。在底层（最开始）编码器中它就是词向量，但是在其他编码器中，它就是下一层编码器的输出（也是一个向量列表）。向量列表大小是我们可以设置的超参数——一般是我们训练集中最长句子的长度。</p>
+<p>将输入序列进行词嵌入之后，每个单词都会流经编码器中的两个子层。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202311042059161.png" alt="image-20231104205925101"></p>
+<p>接下来我们看看Transformer的一个核心特性，在这里输入序列中每个位置的单词都有自己独特的路径流入编码器。在自注意力层中，这些路径之间存在依赖关系。而前馈（feed-forward）层没有这些依赖关系。因此在前馈（feed-forward）层时可以并行执行各种路径。</p>
+<h2 id="Encoding"><a href="#Encoding" class="headerlink" title="Encoding"></a>Encoding</h2><p>如上述已经提到的，一个编码器接收向量列表作为输入，接着将向量列表中的向量传递到自注意力层进行处理，然后传递到前馈神经网络层中，将输出结果传递到下一个编码器中。</p>
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161003271.png" alt="image-20211204113712657" style="zoom:60%;" />
+
+<p>输入序列的每个单词都经过自编码过程。然后，他们各自通过前向传播神经网络——完全相同的网络，而每个向量都分别通过它。</p>
+<h2 id="Self-Attention-at-a-High-Level"><a href="#Self-Attention-at-a-High-Level" class="headerlink" title="Self-Attention at a High Level"></a>Self-Attention at a High Level</h2><p>参考Attention is All You Need 这篇论文，让我们精炼一下它的工作原理。</p>
+<p>例如，下列句子是我们想要翻译的输入句子：</p>
+<blockquote>
+<p>The animal didn’t cross the street because it was too tired</p>
+</blockquote>
+<p>这个“it”在这个句子是指什么呢？它指的是street还是这个animal呢？这对于人类来说是一个简单的问题，但是对于算法则不是。</p>
+<p>当模型处理这个单词“it”的时候，自注意力机制会允许“it”与“animal”建立联系。</p>
+<p>随着模型处理输入序列的每个单词，自注意力会关注整个输入序列的所有单词，帮助模型对本单词更好地进行编码。<br><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161003752.png" alt="image-20211204122402935"></p>
+<p>如果你熟悉RNN（循环神经网络），回忆一下它是如何维持隐藏层的。RNN会将它<strong>已经处理过的</strong>前面的所有单词&#x2F;向量的表示与它正在处理的当前单词&#x2F;向量结合起来。而自注意力机制会将<strong>所有相关单词</strong>的理解融入到我们正在处理的单词中。</p>
+<p>当我们在编码器#5（栈中最上层编码器）中编码“it”这个单词的时，注意力机制的部分会去关注“The Animal”，将它的表示的一部分编入“it”的编码中。</p>
+<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>那接下来，不侷限于 Transformer ，讲一些训练这种 Sequence To Sequence Model 的Tips</p>
+<h3 id="Copy-Mechanism"><a href="#Copy-Mechanism" class="headerlink" title="Copy Mechanism"></a>Copy Mechanism</h3><p>在我们刚才的讨论里面，我们都要求 Decoder 自己产生输出，但是对很多任务而言，也许 <strong>Decoder 没有必要自己创造输出</strong>出来，它需要做的事情，也许是<strong>从输入的东西里面复製</strong>一些东西出来</p>
+<p>像这种复製的行为在哪些任务会用得上呢，一个例子是做聊天机器人</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004250.png" alt="image-20210506160219468" style="zoom: 67%;" /></div>
+
+<ul>
+<li><p>人对机器说:你好 我是库洛洛，</p>
+</li>
+<li><p>机器应该回答说:库洛洛你好 很高兴认识你</p>
+</li>
+</ul>
+<p>对机器来说，它其实<strong>没有必要创造</strong>库洛洛这个词汇，这对机器来说一定会是一个非常怪异的词汇，所以它可能很难，在训练资料里面可能一次也没有出现过，所以它不太可能正确地产生这段词汇出来</p>
+<p>但是假设今天机器它在学的时候，它学到的是看到输入的时候说我是某某某，就直接把某某某，不管这边是什么复製出来说某某某你好</p>
+<p>那这样子机器的<strong>训练显然会比较容易</strong>，它显然比较有可能得到正确的结果，所以复製对于对话来说，可能是一个需要的技术 需要的能力</p>
+<h3 id="Summarization"><a href="#Summarization" class="headerlink" title="Summarization"></a>Summarization</h3><p>或者是在做摘要的时候，你可能更需要 Copy 这样子的技能</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/unclestrong/deep-learning21_note/raw/master/imgbed/image-20210506160548411.png" alt="image-20210506160548411" style="zoom:67%;" /></div>
+
+<p>摘要就是，你要训练一个模型，然后这个<strong>模型去读一篇文章，然后产生这篇文章的摘要</strong></p>
+<p>那这个任务完全是有办法做的，你就是收集大量的文章，那每一篇文章都有人写的摘要，然后你就训练一个，Sequence-To-Sequence 的 Model，就结束了</p>
+<p>你要做这样的任务，<strong>只有一点点的资料是做不起来的</strong>，有的同学收集个几万篇文章，然后训练一个这样的，Sequence-To-Sequence Model，发现结果有点差</p>
+<p>你要训练这种，你要叫机器说合理的句子，通常这个 百万篇文章 是需要的，所以如果你有百万篇文章，那些文章都有人标的摘要，那有时候你会把，直接把文章标题当作摘要，那这样就不需要花太多人力来标，你是可以训练一个，直接可以帮你读一篇文章，做个摘要的模型</p>
+<p>对<strong>摘要</strong>这个任务而言，其实<strong>从文章里面直接复製一些资讯出来</strong>，可能是一个很关键的能力，那 Sequence-To-Sequence Model，有没有办法做到这件事呢，那简单来说就是有，那我们就不会细讲</p>
+<p>最早有从输入复製东西的能力的模型，叫做 Pointer Network</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004824.png" alt="image-20210506161130631" style="zoom: 67%;" /></div>
+
+<p>那这个过去上课是有讲过的，我把<a target="_blank" rel="noopener" href="https://youtu.be/VdOyqNQ9aww">录影</a>放在这边给大家参考，好 那后来还有一个变形，叫做 Copy Network，那你可以看一下这一篇，Copy Mechanism，就是 Sequence-To-Sequence，有没有问题，你看 Sequence-To-Sequence Model，是怎么做到从输入复製东西到输出来的</p>
+<h3 id="Guided-Attention"><a href="#Guided-Attention" class="headerlink" title="Guided Attention"></a>Guided Attention</h3><p>机器就是一个黑盒子，有时候它里面学到什么东西，你实在是搞不清楚，那有时候它会犯<strong>非常低级的错误</strong></p>
+<p>这边举的例子是<strong>语音合成</strong></p>
+<p>你完全可以就是训练一个，Sequence-To-Sequence 的 Model，Transformer 就是一个例子</p>
+<ul>
+<li>收集很多的声音，文字跟声音讯号的对应关係</li>
+<li>然后接下来告诉你的，Sequence-To-Sequence Model ，看到这段中文的句子，你就输出这段声音</li>
+<li>然后就没有然后，就 硬 Train 一发 就结束了，然后机器就可以学会做语音合成了</li>
+</ul>
+<p>像这样的方法做出来结果，其实还不错，</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004133.png" alt="image-20210506161940442" style="zoom:67%;" /></div>
+
+<p>举例来说我叫机器连说 4 次发财，看看它会怎么讲，机器输出的结果是:发财 发财 发财 发财</p>
+<p>就发现很神奇，我输入的发财是明明是同样的词汇，只是重复 4 次，机器居然自己有一些抑扬顿挫，它怎么学到这件事，不知道，它自己训练出来就是这个样子</p>
+<p>那你让它讲 3 次发财也没问题，那它讲 2 次发财也没问题，让它讲 1 次发财，<strong>它不念“发”</strong> </p>
+<p>不知道为什么这样子，就是你这个 Sequence-To-Sequence Model，有时候 Train 出来就是，会产生莫名其妙的结果，<strong>也许在训练资料里面，这种非常短的句子很少</strong>，所以机器不知道要怎么处理这种非常短的句子，你叫它念发财，它把发省略掉只念财，你居然叫它念 4 次的发财，重复 4 次没问题，叫它只念一次，居然会有问题，就是这么的奇怪</p>
+<p>当然其实这个例子并没有那么常出现，就这个用 Sequence-To-Sequence，Learn 出来 TTS，也没有你想像的那么差，这个要找这种差的例子也是挺花时间的，要花很多时间才找得到这种差的例子，但这样子的例子是存在的</p>
+<p>所以怎么办呢</p>
+<p>我们刚才发现说机器居然<strong>漏字</strong>了，输入有一些东西它居然没有看到，我们能不能<strong>够强迫它，一定要把输入的每一个东西通通看过</strong>呢</p>
+<p>这个是有可能的，这招就叫做  Guided Attention </p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/unclestrong/deep-learning21_note/raw/master/imgbed/image-20210506162647905.png" alt="image-20210506162647905" style="zoom:80%;" /></div>
+
+<p>像语音辨识这种任务，你其实很难接受说，你讲一句话，今天辨识出来，居然有一段机器没听到，或语音合成你输入一段文字，语音合出来居然有一段没有念到，这个人很难接受</p>
+<p>那如果是其它应用，比如说 Chat Bot，或者是 Summary，可能就没有那么严格，因为对一个 Chat Bot 来说，输入后一句话，它就回一句话，它到底有没有把整句话看完，其实你 Somehow 也不在乎，你其实也搞不清楚</p>
+<p>但是<strong>对语音辨识 语音合成，Guiding Attention，可能就是一个比较重要的技术</strong></p>
+<p>Guiding Attention 要做的事情就是，<strong>要求机器它在做 Attention 的时候，是有固定的方式的</strong>，举例来说，对语音合成或者是语音辨识来说，我们想像中的 <strong>Attention，应该就是由左向右</strong></p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004859.png" alt="image-20210506163030902" style="zoom:67%;" /></div>
+
+<p>在这个例子里面，我们用红色的这个曲线，来代表 Attention 的分数，这个越高就代表 Attention 的值越大</p>
+<p>我们以语音合成为例，那你的输入就是一串文字，那你在合成声音的时候，显然是<strong>由左念到右</strong>，所以机器应该是，先看最左边输入的词汇产生声音，再看中间的词汇产生声音，再看右边的词汇产生声音</p>
+<p>如果你今天在做语音合成的时候，你发现机器的 Attention，是<strong>颠三倒四的</strong>，它先看最后面，接下来再看前面，那再胡乱看整个句子，那显然有些是做错了，显然有些是，Something is wrong，有些是做错了，</p>
+<p>所以 Guiding Attention 要做的事情就是，强迫 Attention 有一个固定的样貌，那如果你对这个问题，本身就已经有理解知道说，语音合成 TTS 这样的问题，你的 Attention 的分数，Attention 的位置都应该由左向右，那不如就直接把这个限制，放进你的 Training 里面，要求机器学到 Attention，就应该要由左向右</p>
+<p>那这件事怎么做呢，有一些关键词汇我就放在这边，让大家自己 Google 了，比如说某某 Mnotonic Attention，或 Location-Aware 的 Attention，那这个部分也是大坑，也不细讲，那就留给大家自己研究</p>
+<h3 id="Beam-Search"><a href="#Beam-Search" class="headerlink" title="Beam Search"></a>Beam Search</h3><p>Beam Search ，我们这边举一个例子，在这个例子里面我们假设说，我们现在的这个 <strong>Decoder就只能产生两个字</strong>，一个叫做 A 一个叫做 B</p>
+<p>那对 Decoder 而言，它做的事情就是，<strong>每一次在第一个 Time Step，它在 A B 里面决定一个，然后决定了 A 以后，再把 A 当做输入，然后再决定 A B 要选哪一个</strong></p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004412.png" alt="image-20210506163652097" style="zoom: 50%;" /></div>
+
+<p>那举例来说，它可能选 B 当作输入，再决定 A B 要选哪一个，那在我们刚才讲的 Process 里面，每一次 Decoder 都是选，分数最高的那一个</p>
+<p>我们<strong>每次都是选Max 的那一个</strong>，所以假设 A 的分数 0.6，B 的分数 0.4，Decoder 的第一次就会输出 A，然后接下来假设 B 的分数 0.6，A 的分数 0.4，Decoder 就会输出 B，好，然后再假设把 B 当做 Input，就现在输入已经有 A 有 B 了，然后接下来，A 的分数 0.4，B 的分数 0.6，那 Decoder 就会选择输出 B，所以输出就是 A 跟 B 跟 B</p>
+<p>那像这样子每次找分数最高的那个 Token，每次找分数最高的那个字，来当做输出这件事情叫做， Greedy Decoding </p>
+<p>但是 Greedy Decoding，一定是更好的方法吗，有没有可能我们在第一步的时候，先稍微捨弃一点东西</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004940.png" alt="image-20210506164137822"   /></div>
+
+<p>比如说第一步虽然 B 是 0.4，但我们就先选 0.4 这个 B，然后接下来我们选了 B 以后，也许接下来的 B 的可能性就大增，就变成 0.9，然后接下来第三个步骤，B 的可能性也是 0.9</p>
+<p>如果你比较红色的这一条路，跟绿色这条路的话，你会发现说绿色这一条路，虽然一开始第一个步骤，你选了一个比较差的输出，但是<strong>接下来的结果是好的</strong></p>
+<p>这个就跟那个天龙八部的真龙棋局一样，对不对，先堵死自己一块，结果接下来反而赢了</p>
+<p>那所以我，如果我们要怎么找到，这个最好的绿色这一条路呢，也许一个可能是，<strong>爆搜所有可能的路径</strong>，但问题是我们实际上，<strong>并没有办法爆搜所有可能的路径</strong>，因为实际上每一个转捩点可以的选择太多了，如果是在对中文而言，我们中文有 4000 个字，所以这个树每一个地方分叉，都是 4000 个可能的路径，你走两三步以后，你就无法穷举</p>
+<p>所以怎么办呢，有一个演算法叫做  Beam Search ，它用比较有效的方法，找一个 Approximate，找一个估测的 Solution，找一个不是很精准的，不是完全精准的 Solution，这个技术叫做 Beam Search，那这个也留给大家自己 Google，好 </p>
+<p>那这个 Beam Search 这个技术，到底有没有用呢，有趣的事就是，**它有时候有用，有时候没有用，**你会看到有些文献告诉你说，Beam Search 是一个很烂的东西</p>
+<p>举例来说这篇 Paper 叫做，The Curious Case Of Neural Text Degeneration，那这个任务要做的事情是，Sentence Completion，也就是机器先读一段句子，接下来它要把这个句子的后半段，把它完成，你给它一则新闻，或者是一个故事的前半部，哇 它自己发挥它的想像创造力，把这个文章，把故事的后半部把它写完</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004551.png" alt="image-20210506164817398" style="zoom:67%;" /></div>
+
+<p>那你会发现说，Beam Search 在这篇文章里面，一开头就告诉你说，Beam Search 自己有问题：如果你用 Beam Search 的话，会发现说机器不断讲重复的话，它不断开始陷入鬼打墙 无穷迴圈，不断说重复的话</p>
+<p>如果你今天不是用 Beam Search，有加一些随机性，虽然结果不一定完全好，但是看起来至少是比较正常的句子，所以有趣的事情是，有时候对 Decorder 来说，没有找出分数最高的路，反而结果是比较好的</p>
+<p>这个时候你又觉得乱乱的 对不对，就是刚才前一页投影片才说，要找出分数最高的路，现在又要讲说<strong>找出分数最高的路不见得比较好</strong>，到底是怎么回事呢</p>
+<p>那其实这个就是要，<strong>看你的任务的本身的特性</strong></p>
+<ul>
+<li><p>就假设一个任务，它的<strong>答案非常地明确</strong></p>
+<p>举例来说，什么叫答案非常明确呢，比如说语音辨识，说一句话辨识的结果就只有一个可能，就那一串文字就是你唯一可能的正确答案，并没有什么模糊的地带</p>
+<p>对这种任务而言，通常 Beam Search 就会比较有帮助，那什么样的任务</p>
+</li>
+<li><p><strong>你需要机器发挥一点创造力的时候，这时候 Beam Search 就比较没有帮助</strong>，</p>
+<p>举例来说在这边的 Sentence Completion，给你一个句子，给你故事的前半部，后半部有无穷多可能的发展方式，那这种需要有一些创造力的，有不是只有一个答案的任务，往往会比较需要在 Decoder 里面，加入随机性，还有另外一个 Decoder，也非常需要随机性的任务，叫做语音合成，TTS 就是语音合成的缩写</p>
+</li>
+</ul>
+<p>这也许就呼应了一个英文的谚语，就是要<strong>接受没有事情是完美的，那真正的美也许就在不完美之中</strong>，对于 TTS 或 Sentence Completion 来说，Decoder 找出最好的结果，不见得是人类觉得最好的结果，反而是奇怪的结果，那你加入一些随机性，结果反而会是比较好的</p>
+<h3 id="Optimizing-Evaluation-Metrics"><a href="#Optimizing-Evaluation-Metrics" class="headerlink" title="Optimizing Evaluation Metrics?"></a>Optimizing Evaluation Metrics?</h3><p>在作业里面，我们评估的标准用的是，BLEU Score，BLEU Score 是你的 Decoder，先产生一个完整的句子以后，再去跟正确的答案一整句做比较，我们是拿两个句子之间做比较，才算出 BLEU Score</p>
+<p>但我们在训练的时候显然不是这样，<strong>训练</strong>的时候，<strong>每一个词汇是分开考虑的</strong>，训练的时候，我们 Minimize 的是 Cross Entropy，Minimize Cross Entropy，真的可以 Maximize BLEU Score 吗</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004934.png" alt="image-20210506165953175" style="zoom: 67%;" /></div>
+
+<p>不一定，因为这两个根本就是，它们可能有一点点的关联，但它们又没有那么直接相关，它们根本就是两个不同的数值，所以我们 Minimize Cross Entropy，不见得可以让 BLEU Score 比较大</p>
+<p>所以你发现说在助教的程式里面，助教在做 Validation 的时候，并不是拿 Cross Entropy 来挑最好的 Model，而是挑 BLEU Score 最高的那一个 Model，所以我们训练的时候，是看 Cross Entropy，但是我们实际上你作业真正评估的时候，看的是 BLEU Score，所以你 Validation Set，其实应该考虑用 BLEU Score</p>
+<p>那接下来有人就会想说，那我们能不能<strong>在 Training 的时候，就考虑 BLEU Score 呢</strong>，我们能不能够训练的时候就说，我的 Loss 就是，BLEU Score 乘一个负号，那我们要 Minimize 那个 Loss，假设你的 Loss 是，BLEU Score乘一个负号，它也等于就是 Maximize BLEU Score</p>
+<p>但是<strong>这件事实际上没有那么容易</strong>，你当然可以把 BLEU Score，当做你训练的时候，你要最大化的一个目标，但是 BLEU Score 本身很复杂，它是不能微分的，</p>
+<p>这边之所以採用 Cross Entropy，而且是每一个中文的字分开来算，就是因为这样我们才有办法处理，如果你是要计算，两个句子之间的 BLEU Score，这一个 Loss，根本就没有办法做微分，那怎么办呢</p>
+<p>这边就教大家一个口诀，遇到你在 Optimization 无法解决的问题， 用 RL 硬 Train 一发 就对了这样，遇到你无法 Optimize 的 Loss Function，把它当做是 RL 的 Reward，把你的 Decoder 当做是 Agent，它当作是 RL，Reinforcement Learning 的问题硬做</p>
+<p>其实也是有可能可以做的，<strong>有人真的这样试过</strong>，我把 Reference 列在这边给大家参考，当然这是一个比较难的做法，那并没有特别推荐你在作业里面用这一招</p>
+<h3 id="Scheduled-Sampling"><a href="#Scheduled-Sampling" class="headerlink" title="Scheduled Sampling"></a>Scheduled Sampling</h3><p>那我们要讲到，我们刚才反覆提到的问题了，就是<strong>训练跟测试居然是不一致</strong>的</p>
+<p>测试的时候，Decoder 看到的是自己的输出，所以测试的时候，Decoder 会看到一些错误的东西，但是在训练的时候，Decoder 看到的是完全正确的，那这个不一致的现象叫做， Exposure Bias </p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004445.png" alt="image-20210506170906750" style="zoom:67%;" /></div>
+
+<p>假设 Decoder 在训练的时候，永远只看过正确的东西，那在测试的时候，你只要有一个错，那就会<strong>一步错 步步错</strong>，因为对 Decoder 来说，它从来没有看过错的东西，它看到错的东西会非常的惊奇，然后接下来它产生的结果可能都会错掉</p>
+<p>所以要怎么解决这个问题呢</p>
+<p>有一个可以的思考的方向是，<strong>给 Decoder 的输入加一些错误的东西</strong>，就这么直觉，你不要给 Decoder 都是正确的答案，偶尔给它一些错的东西，它反而会学得更好，这一招叫做， Scheduled Sampling ，它不是那个 Schedule Learning Rate，刚才助教有讲 Schedule Learning Rate，那是另外一件事，不相干的事情，这个是 Scheduled Sampling</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004954.png" alt="image-20210506171120911" style="zoom:67%;" /></div>
+
+<p>Scheduled Sampling 其实很早就有了，这个是 15 年的 Paper，很早就有 Scheduled Sampling，在还没有 Transformer，只有 LSTM 的时候，就已经有 Scheduled Sampling，但是 Scheduled Sampling 这一招，它其实会伤害到，Transformer 的平行化的能力，那细节可以再自己去了解一下，所以对 Transformer 来说，它的 Scheduled Sampling，另有招数跟传统的招数，跟原来最早提在，这个 LSTM上被提出来的招数，也不太一样，那我把一些 Reference 的，列在这边给大家参考</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/unclestrong/deep-learning21_note/raw/master/imgbed/image-20210506171143270.png" alt="image-20210506171143270" style="zoom:67%;" /></div>
+
+<p>好 那以上我们就讲完了，Transformer 和种种的训练技巧，这个我们已经讲完了 Encoder，讲完了 Decoder，也讲完了它们中间的关係，也讲了怎么训练，也讲了种种的 Tip</p>
+<p>上图是transformer的一个详细结构，相比本文一开始结束的结构图会更详细些，接下来，我们会按照这个结构图讲解下decoder部分。可以看到decoder部分其实和encoder部分大同小异，不过在最下面额外多了一个<strong>masked mutil-head attetion</strong>，这里的mask也是transformer一个很关键的技术，我们一起来看一下。</p>
+<h4 id="Mask"><a href="#Mask" class="headerlink" title="Mask"></a>Mask</h4><p>mask 表示掩码，它对某些值进行掩盖，使其在参数更新时不产生效果。Transformer 模型里面涉及两种 mask，分别是 padding mask 和 sequence mask。</p>
+<p>其中，padding mask 在所有的 scaled dot-product attention 里面都需要用到，而 sequence mask 只有在 decoder 的 self-attention 里面用到。</p>
+<h5 id="Padding-Mask"><a href="#Padding-Mask" class="headerlink" title="Padding Mask"></a>Padding Mask</h5><p>什么是 padding mask 呢？因为每个批次输入序列长度是不一样的也就是说，我们要对输入序列进行对齐。具体来说，就是给在较短的序列后面填充 0。但是如果输入的序列太长，则是截取左边的内容，把多余的直接舍弃。因为这些填充的位置，其实是没什么意义的，所以我们的attention机制不应该把注意力放在这些位置上，所以我们需要进行一些处理。</p>
+<p>具体的做法是，把这些位置的值加上一个非常大的负数(负无穷)，这样的话，经过 softmax，这些位置的概率就会接近0！</p>
+<p>而我们的 padding mask 实际上是一个张量，每个值都是一个Boolean，值为 false 的地方就是我们要进行处理的地方。</p>
+<h5 id="Sequence-mask"><a href="#Sequence-mask" class="headerlink" title="Sequence mask"></a>Sequence mask</h5><p>文章前面也提到，sequence mask 是为了使得 decoder 不能看见未来的信息。也就是对于一个序列，在 time_step 为 $ t $ 的时刻，我们的解码输出应该只能依赖于 $ t $ 时刻之前的输出，而不能依赖 $t $ 之后的输出。因此我们需要想一个办法，把 $ t $ 之后的信息给隐藏起来。</p>
+<p>那么具体怎么做呢？也很简单：产生一个上三角矩阵，上三角的值全为0。把这个矩阵作用在每一个序列上，就可以达到我们的目的。</p>
+<ul>
+<li>对于 decoder 的 self-attention，里面使用到的 scaled dot-product attention，同时需要padding mask 和 sequence mask 作为 attn_mask，具体实现就是两个mask相加作为attn_mask。</li>
+<li>其他情况，attn_mask 一律等于 padding mask。</li>
+</ul>
+<p>编码器通过处理输入序列开启工作。顶端编码器的输出之后会变转化为一个包含向量$K$（ 键向量 ）和$V$（ 值向量 ）的注意力向量集 。这些向量将被每个解码器用于自身的“编码-解码注意力层”，而这些层可以帮助解码器关注输入序列哪些位置合适：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004289.gif"></p>
+<p>在完成编码阶段后，则开始解码阶段。解码阶段的每个步骤都会输出一个输出序列（在这个例子里，是英语翻译的句子）的元素</p>
+<p>接下来的步骤重复了这个过程，直到到达一个特殊的终止符号，它表示transformer的解码器已经完成了它的输出。每个步骤的输出在下一个时间步被提供给底端解码器，并且就像编码器之前做的那样，这些解码器会输出它们的解码结果 。另外，就像我们对编码器的输入所做的那样，我们会嵌入并添加位置编码给那些解码器，来表示每个单词的位置。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004814.gif" alt="transformer_decoding_2"></p>
+<p>而那些解码器中的自注意力层表现的模式与编码器不同：在解码器中，自注意力层只被允许处理输出序列中更靠前的那些位置。在softmax步骤前，它会把后面的位置给隐去（把它们设为-inf）。</p>
+<p>这个“编码-解码注意力层”工作方式基本就像多头自注意力层一样，只不过它是通过在它下面的层来创造查询矩阵，并且从编码器的输出中取得键&#x2F;值矩阵。</p>
+<h2 id="The-Final-Linear-and-Softmax-Layer"><a href="#The-Final-Linear-and-Softmax-Layer" class="headerlink" title="The Final Linear and Softmax Layer"></a>The Final Linear and Softmax Layer</h2><p>解码组件最后会输出一个实数向量。我们如何把浮点数变成一个单词？这便是线性变换层要做的工作，它之后就是Softmax层。</p>
+<p>线性变换层是一个简单的全连接神经网络，它可以把解码组件产生的向量投射到一个比它大得多的、被称作对数几率（logits）的向量里。</p>
+<p>不妨假设我们的模型从训练集中学习一万个不同的英语单词（我们模型的“输出词表”）。因此对数几率向量为一万个单元格长度的向量——每个单元格对应某一个单词的分数。</p>
+<p>接下来的Softmax 层便会把那些分数变成概率（都为正数、上限1.0）。概率最高的单元格被选中，并且它对应的单词被作为这个时间步的输出。</p>
+<div align=center><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004326.png" alt="image-20211204133929121" style="zoom:67%;" /></div>
+
+<p>这张图片从底部以解码器组件产生的输出向量开始。之后它会转化出一个输出单词。</p>
+<h2 id="Recap-Of-Training"><a href="#Recap-Of-Training" class="headerlink" title="Recap Of Training"></a>Recap Of Training</h2><p>既然我们已经过了一遍完整的transformer的前向传播过程，那我们就可以直观感受一下它的训练过程。</p>
+<p>在训练过程中，一个未经训练的模型会通过一个完全一样的前向传播。但因为我们用有标记的训练集来训练它，所以我们可以用它的输出去与真实的输出做比较。</p>
+<p>为了把这个流程可视化，不妨假设我们的输出词汇仅仅包含六个单词：“a”， “am”， “i”， “thanks”， “student”以及 “eos”（end of sentence的缩写形式）。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004618.png" alt="image-20211204134014280"></p>
+<p>我们模型的输出词表在我们训练之前的预处理流程中就被设定好。</p>
+<p>一旦我们定义了我们的输出词表，我们可以使用一个相同宽度的向量来表示我们词汇表中的每一个单词。这也被认为是一个one-hot 编码。所以，我们可以用下面这个向量来表示单词“am”：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004072.png" alt="image-20211204134031706"></p>
+<h2 id="Loss-function"><a href="#Loss-function" class="headerlink" title="Loss function"></a>Loss function</h2><p>比如说我们正在训练模型，现在是第一步，一个简单的例子——把“merci”翻译为“thanks”。</p>
+<p>这意味着我们想要一个表示单词“thanks”概率分布的输出。但是因为这个模型还没被训练好，所以不太可能现在就出现这个结果。</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004389.jpeg" alt="img"></p>
+<p>因为模型的参数（权重）都被随机的生成，（未经训练的）模型产生的概率分布在每个单元格&#x2F;单词里都赋予了随机的数值。我们可以用真实的输出来比较它，然后用反向传播算法来略微调整所有模型的权重，生成更接近结果的输出。</p>
+<p>你会如何比较两个概率分布呢？我们可以简单地用其中一个减去另一个。更多细节请参考交叉熵和KL散度。</p>
+<p>交叉熵：<a target="_blank" rel="noopener" href="https://colah.github.io/posts/2015-09-Visual-Information/">https://colah.github.io/posts/2015-09-Visual-Information/</a></p>
+<p>KL散度：<a target="_blank" rel="noopener" href="https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained">https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained</a></p>
+<p>但注意到这是一个过于简化的例子。更现实的情况是处理一个句子。例如，输入“je suis étudiant”并期望输出是“i am a student”。那我们就希望我们的模型能够成功地在这些情况下输出概率分布：</p>
+<p>每个概率分布被一个以词表大小（我们的例子里是6，但现实情况通常是3000或10000）为宽度的向量所代表。</p>
+<p>第一个概率分布在与“i”关联的单元格有最高的概率;</p>
+<p>第二个概率分布在与“am”关联的单元格有最高的概率;</p>
+<p>以此类推，第五个输出的分布表示“eos”关联的单元格有最高的概率.</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004675.jpg" alt="img"><br>依据例子训练模型得到的目标概率分布</p>
+<p>在一个足够大的数据集上充分训练后，我们希望模型输出的概率分布看起来像这个样子：</p>
+<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://markdownimg-hw.oss-cn-beijing.aliyuncs.com/image202208161004964.jpg" alt="img"></p>
+<p>我们期望训练过后，模型会输出正确的翻译。当然如果这段话完全来自训练集，它并不是一个很好的评估指标（参考：交叉验证，链接<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=TIgfjmp-4BA%EF%BC%89%E3%80%82%E6%B3%A8%E6%84%8F%E5%88%B0%E6%AF%8F%E4%B8%AA%E4%BD%8D%E7%BD%AE%EF%BC%88%E8%AF%8D%EF%BC%89%E9%83%BD%E5%BE%97%E5%88%B0%E4%BA%86%E4%B8%80%E7%82%B9%E6%A6%82%E7%8E%87%EF%BC%8C%E5%8D%B3%E4%BD%BF%E5%AE%83%E4%B8%8D%E5%A4%AA%E5%8F%AF%E8%83%BD%E6%88%90%E4%B8%BA%E9%82%A3%E4%B8%AA%E6%97%B6%E9%97%B4%E6%AD%A5%E7%9A%84%E8%BE%93%E5%87%BA%E2%80%94%E2%80%94%E8%BF%99%E6%98%AFsoftmax%E7%9A%84%E4%B8%80%E4%B8%AA%E5%BE%88%E6%9C%89%E7%94%A8%E7%9A%84%E6%80%A7%E8%B4%A8%EF%BC%8C%E5%AE%83%E5%8F%AF%E4%BB%A5%E5%B8%AE%E5%8A%A9%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E3%80%82">https://www.youtube.com/watch?v=TIgfjmp-4BA）。注意到每个位置（词）都得到了一点概率，即使它不太可能成为那个时间步的输出——这是softmax的一个很有用的性质，它可以帮助模型训练。</a></p>
+<p>因为这个模型一次只产生一个输出，不妨假设这个模型只选择概率最高的单词，并把剩下的词抛弃。这是其中一种方法（叫贪心解码）。另一个完成这个任务的方法是留住概率最靠高的两个单词（例如I和a），那么在下一步里，跑模型两次：其中一次假设第一个位置输出是单词“I”，而另一次假设第一个位置输出是单词“me”，并且无论哪个版本产生更少的误差，都保留概率最高的两个翻译结果。然后我们为第二和第三个位置重复这一步骤。这个方法被称作集束搜索（beam search）。在我们的例子中，集束宽度是2（因为保留了2个集束的结果，如第一和第二个位置），并且最终也返回两个集束的结果（top_beams也是2）。这些都是可以提前设定的参数。</p>
+<h2 id="Advanced"><a href="#Advanced" class="headerlink" title="Advanced"></a>Advanced</h2><p>我希望通过上文已经让你们了解到Transformer的主要概念了。如果你想在这个领域深入，我建议可以走以下几步：阅读Attention Is All You Need，Transformer博客和Tensor2Tensor announcement，以及看看Łukasz Kaiser的介绍，了解模型和细节。</p>
+<p>Attention Is All You Need：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762">https://arxiv.org/abs/1706.03762</a></p>
+<p>Transformer博客：<a target="_blank" rel="noopener" href="https://ai.googleblog.com/2017/08/transformer-novel-neural-network.html">https://ai.googleblog.com/2017/08/transformer-novel-neural-network.html</a></p>
+<p>Tensor2Tensor announcement：<a target="_blank" rel="noopener" href="https://ai.googleblog.com/2017/06/accelerating-deep-learning-research.html">https://ai.googleblog.com/2017/06/accelerating-deep-learning-research.html</a></p>
+<p>Łukasz Kaiser的介绍：<a target="_blank" rel="noopener" href="https://colab.research.google.com/github/tensorflow/tensor2tensor/blob/master/tensor2tensor/notebooks/hello_t2t.ipynb">https://colab.research.google.com/github/tensorflow/tensor2tensor/blob/master/tensor2tensor/notebooks/hello_t2t.ipynb</a></p>
+<p>接下来可以研究的工作：</p>
+<p>Depthwise Separable Convolutions for Neural Machine Translation</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03059">https://arxiv.org/abs/1706.03059</a></p>
+<p>One Model To Learn Them All</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.05137">https://arxiv.org/abs/1706.05137</a></p>
+<p>Discrete Autoencoders for Sequence Models</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1801.09797">https://arxiv.org/abs/1801.09797</a></p>
+<p>Generating Wikipedia by Summarizing Long Sequences</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1801.10198">https://arxiv.org/abs/1801.10198</a></p>
+<p>Image Transformer</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1802.05751">https://arxiv.org/abs/1802.05751</a></p>
+<p>Training Tips for the Transformer Model</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1804.00247">https://arxiv.org/abs/1804.00247</a></p>
+<p>Self-Attention with Relative Position Representations</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1803.02155">https://arxiv.org/abs/1803.02155</a></p>
+<p>Fast Decoding in Sequence Models using Discrete Latent Variables</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1803.03382">https://arxiv.org/abs/1803.03382</a></p>
+<p>Adafactor: Adaptive Learning Rates with Sublinear Memory Cost</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1804.04235">https://arxiv.org/abs/1804.04235</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog">Hongwei Zhao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://hongwei-zhao.github.io/blog/2025/11/16/AI/04.Transformer/101.Temp/">https://hongwei-zhao.github.io/blog/2025/11/16/AI/04.Transformer/101.Temp/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://hongwei-zhao.github.io/blog" target="_blank">Hongwei Zhao's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/AI/">AI</a><a class="post-meta__tags" href="/blog/tags/Transformer/">Transformer</a></div><div class="post-share"><div class="social-share" data-image="/blog/img/homepage-bg.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/blog/2025/11/16/AI/06.%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/03.DDIM/" title="DDIM"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">DDIM</div></div><div class="info-2"><div class="info-item-1">扩散模型之DDIM Author: [小小将]  Link: [https://zhuanlan.zhihu.com/p/565698027]  “What I cannot create, I do not understand.” – Richard Feynman  上一篇文章https://zhuanlan.zhihu.com/p/563661713介绍了经典扩散模型DDPM的原理和实现，对于扩散模型来说，一个最大的缺点是需要设置较长的扩散步数才能得到好的效果，这导致了生成样本的速度较慢，比如扩散步数为1000的话，那么生成一个样本就要模型推理1000次。这篇文章我们将介绍另外一...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/40.VAE/" title="VAE"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">VAE</div></div><div class="info-2"><div class="info-item-1"> 文章来源：机器学习方法—优雅的模型（一）：变分自编码器（VAE）  1. Introduction2. Motivation  在说 VAE 之前，自然要先说到传统的自编码器 (Autoencoder)。上图即是一个自编码的实例。自编码器类似于一个非线性的 PCA，是一个利用神经网络来给复杂数据降维的模型。现在我们记$X$ 整个数据集的集合，$x_i$ 数据集中的一个样本。 自编码器包含一个编码器$z &#x3D; g(X)$，它的输出$z$ 们称作编码，$z$ 维度往往远远小于输入$X$ 维度。它还包含一个解码器$\tilde{X} &#x3D; f(z)$，这个解码器能够通过编码$...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/05.Self-Attention-APP/" title="Self-Attention-APP"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Self-Attention-APP</div></div><div class="info-2"><div class="info-item-1">Applications …Self-attention 当然是用得很广，我们已经提过很多次 transformer 这个东西   那我们大家也都知道说，在 NLP 的领域有一个东西叫做 BERT，BERT 里面也用到 Self-attention，所以 Self-attention 在 NLP 上面的应用，是大家都耳熟能详的 但 Self-attention，不是只能用在 NLP 相关的应用上，它还可以用在很多其他的问题上， Self-attention for Speech比如说在做语音的时候，你也可以用 Self-attention，不过在做语音的时候，你可能会对 Self-att...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/11.Transformer%E4%B8%ADFFNs%E7%9A%84%E4%BD%9C%E7%94%A8/" title="Transformer中FFNs的作用"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Transformer中FFNs的作用</div></div><div class="info-2"><div class="info-item-1">Transformer 与 FFN 聊一聊 Transformer 中的 FFN  Transformer 的基本单位就是一层 block 这里，一个 block 包含 MSA + FFN，目前公认的说法是， Attention 作为 token-mixer 做 spatial interaction。FFN （又称 MLP）在后面作为 channel-mixer 进一步增强 representation。从 2017 至今，过去绝大部分 Transformer 优化，尤其是针对 NLP tasks 的 Efficient Transformer 都是在 Attention 上的，因为文...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/01.Self-Attention%E6%A6%82%E8%BF%B0/" title="Self-Attention概述"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Self-Attention概述</div></div><div class="info-2"><div class="info-item-1"> self_v7.pptx  Sophisticated Input到目前为止，Network的Input都是一个向量，然后我们的输出，可能是一个数值，这个是Regression，可能是一个类别，这是Classification。   但假设我们遇到更复杂的问题呢，假设我们说输入是多个向量，而且这个输入的向量的数目是会改变的呢? Vector Set as Input 文字处理  假设我们今天Network的输入是一个句子，每一个句子的长度都不一样，每个句子里面词汇的数目都不一样   如果我们把一个句子里面的每一个词汇，都描述成一个向量，那我们的Model的输入，就会是一个Vector ...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/30.Bert/" title="Bert"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Bert</div></div><div class="info-2"><div class="info-item-1">Seq2Seq在开始讲解Attention之前，我们先简单回顾一下Seq2Seq模型，传统的机器翻译基本都是基于Seq2Seq模型来做的，该模型分为encoder层与decoder层，并均为RNN或RNN的变体构成，如下图所示：  在encode阶段，第一个节点输入一个词，之后的节点输入的是下一个词与前一个节点的hidden state，最终encoder会输出一个context，这个context又作为decoder的输入，每经过一个decoder的节点就输出一个翻译后的词，并把decoder的hidden state作为下一层的输入。该模型对于短文本的翻译来说效果很好，但是其也存在一...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/10.Self-Attention%20Q%20K%20V%E7%9A%84%E5%8E%9F%E7%90%86/" title="Self-Attention Q K V的原理"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Self-Attention Q K V的原理</div></div><div class="info-2"><div class="info-item-1"> 文章来源：为什么Self-Attention要通过线性变换计算Q K V，背后的原理或直观解释是什么？  “线性变换”是机器学习中针对数据常用的变换方式，通过线性变换可以将数据进行降维、解耦、筛选精炼等操作。而 Transformer 中的“线性变换”有着十分独特且重要的意义，它是导致 Multi-Head Attention 机制得以成功运行的根基。 但是要彻底了解 Transformer 中独特的“线性变换”机制，你首先要彻底理解 Q、K、V 三矩阵与生成它们的三个线性变换矩阵 $W^{Q}$ ，$W^{K}$，$W^{V}$ 之间的巧妙关系。 1. Q、K、V三者之间的运算关系先...</div></div></div></a><a class="pagination-related" href="/blog/2025/11/16/AI/04.Transformer/08.Transformer%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0/" title="Transformer代码实现"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-16</div><div class="info-item-2">Transformer代码实现</div></div><div class="info-2"><div class="info-item-1">多层Transformer在多层Transformer中，多层编码器先对输入序列进行编码，然后得到最后一个Encoder的输出Memory；解码器先通过Masked Multi-Head Attention对输入序列进行编码，然后将输出结果同Memory通过Encoder-Decoder Attention后得到第1层解码器的输出；接着再将第1层Decoder的输出通过Masked Multi-Head Attention进行编码，最后再将编码后的结果同Memory通过Encoder-Decoder Attention后得到第2层解码器的输出，以此类推得到最后一个Decoder的输出。 ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://avatars.githubusercontent.com/u/Geeks-Z" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Hongwei Zhao</div><div class="author-info-description">AI Researcher & Developer</div><div class="site-data"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">486</div></a><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">105</div></a><a href="/blog/categories/"><div class="headline">分类</div><div class="length-num">110</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hongwei-zhao"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/hongwei-zhao" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！这里分享 AI、机器学习和数学。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#A-High-Level-Look"><span class="toc-number">1.</span> <span class="toc-text">A High-Level Look</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bringing-The-Tensors-Into-The-Picture"><span class="toc-number">2.</span> <span class="toc-text">Bringing The Tensors Into The Picture</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Encoding"><span class="toc-number">3.</span> <span class="toc-text">Encoding</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Self-Attention-at-a-High-Level"><span class="toc-number">4.</span> <span class="toc-text">Self-Attention at a High Level</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tips"><span class="toc-number">5.</span> <span class="toc-text">Tips</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Copy-Mechanism"><span class="toc-number">5.1.</span> <span class="toc-text">Copy Mechanism</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summarization"><span class="toc-number">5.2.</span> <span class="toc-text">Summarization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Guided-Attention"><span class="toc-number">5.3.</span> <span class="toc-text">Guided Attention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Beam-Search"><span class="toc-number">5.4.</span> <span class="toc-text">Beam Search</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Optimizing-Evaluation-Metrics"><span class="toc-number">5.5.</span> <span class="toc-text">Optimizing Evaluation Metrics?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Scheduled-Sampling"><span class="toc-number">5.6.</span> <span class="toc-text">Scheduled Sampling</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Mask"><span class="toc-number">5.6.1.</span> <span class="toc-text">Mask</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Padding-Mask"><span class="toc-number">5.6.1.1.</span> <span class="toc-text">Padding Mask</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Sequence-mask"><span class="toc-number">5.6.1.2.</span> <span class="toc-text">Sequence mask</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Final-Linear-and-Softmax-Layer"><span class="toc-number">6.</span> <span class="toc-text">The Final Linear and Softmax Layer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Recap-Of-Training"><span class="toc-number">7.</span> <span class="toc-text">Recap Of Training</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Loss-function"><span class="toc-number">8.</span> <span class="toc-text">Loss function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Advanced"><span class="toc-number">9.</span> <span class="toc-text">Advanced</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="大模型Auto-Research"/></a><div class="content"><a class="title" href="/blog/2026/08/14/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%A4%A7%E6%A8%A1%E5%9E%8BAuto-Research/" title="大模型Auto-Research">大模型Auto-Research</a><time datetime="2026-08-14T07:04:36.000Z" title="发表于 2026-08-14 15:04:36">2026-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/2026-06-05/" title="06-05"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/blog/img/homepage-bg.png" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="06-05"/></a><div class="content"><a class="title" href="/blog/2026/07/20/2026-06-05/" title="06-05">06-05</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E7%BD%91%E7%AB%99logo%E5%8F%8A%E5%A4%B4%E5%83%8F/%E5%A4%A7%E7%BA%A2%E5%B1%B1%E4%BA%BA%E5%83%8F%E6%98%9F%E7%A9%BA.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="博士论文"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/%E5%8D%9A%E5%A3%AB%E8%AE%BA%E6%96%87/" title="博士论文">博士论文</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E4%BA%A4%E6%98%93%E6%9C%80%E5%A4%A7%E7%9A%84%E6%95%8C%E4%BA%BA%E5%B0%B1%E6%98%AF%E8%B4%AA%E5%A9%AA%E4%B8%8E%E6%81%90%E6%83%A7/photo_2025-08-04_16-05-37.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="GPT绘图"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/16.%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BB%98%E7%A7%91%E7%A0%94%E5%9B%BE/" title="GPT绘图">GPT绘图</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cloud.gyyra.cn/d/%E7%A7%81%E6%9C%89%E4%BA%91/%E7%BD%91%E7%AB%99%E5%9B%BE%E5%BA%8A/%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2%E5%8F%8A%E6%8F%92%E5%9B%BE/%E5%85%B3%E4%BA%8E%E5%8E%A6%E9%97%A8%E7%9A%84%E8%AE%B0%E5%BF%86/%E9%BC%93%E6%B5%AA%E5%B1%BF%E6%97%A5%E5%85%89%E5%B2%A9.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）"/></a><div class="content"><a class="title" href="/blog/2026/07/20/AI/50.%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB%E4%B8%8E%E5%86%99%E4%BD%9C/PaperLaTeX%20%E7%AC%A6%E5%8F%B7%E8%A7%84%E8%8C%83/" title="PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）">PaperLaTeX 符号规范（增量学习文献复核与编译兼容版）</a><time datetime="2026-07-20T01:36:18.000Z" title="发表于 2026-07-20 09:36:18">2026-07-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By Hongwei Zhao</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js?v=5.5.4"></script><script src="/blog/js/main.js?v=5.5.4"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><div class="js-pjax"></div><script defer src="/blog/js/categories-cards.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      true
+        ? pjax.loadUrl('/blog/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
